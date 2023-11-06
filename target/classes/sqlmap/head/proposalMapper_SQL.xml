@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="kr.or.ddit.mapper.head.ProposalMapper">
+  
+  	<select id="selectProposalList" parameterType="pagingVO" resultType="proposalVO">
+		select 
+		b.table_no, b.mem_id, b.field, b.board_title, b.board_content, b.board_regdate, b.board_count, h.ans_content, h.ans_id, h.ans_state, h.ans_date
+		FROM board b
+		LEFT OUTER JOIN hdboard_answer h ON b.table_no = h.table_no and b.mem_id = h.mem_id
+		where b.field = '건의'
+        order by table_no desc
+	</select>
+	
+	<select id="selectProposal" parameterType="int" resultType="proposalVO">
+	    SELECT 
+	        b.table_no, b.mem_id, b.field, b.board_title, b.board_content, b.board_regdate, b.board_count, b.board_state, h.ans_content, h.ans_id, h.ans_state, h.ans_date
+	    FROM board b
+	    LEFT OUTER JOIN hdboard_answer h ON b.table_no = h.table_no AND b.mem_id = h.mem_id
+	    WHERE b.field = '건의' AND b.table_no = #{tableNo}
+	</select>
+	
+	<insert id="proposalInsert" parameterType="proposalVO">
+		INSERT INTO hdboard_answer (
+			table_no,
+			mem_id,
+			ans_id,
+			ans_content,
+			ans_date,
+			ans_state
+			) VALUES (
+				#{tableNo},
+				#{memId},
+				#{ansId},
+				#{ansContent},
+				sysdate,
+				'Y'
+			)
+	</insert>
+
+	
+	<update id="ansStateUpdate" parameterType="proposalVO">
+		UPDATE hdboard_answer
+		SET
+		    ans_state = 'Y'
+		WHERE
+		    table_no = #{tableNo}
+	</update>
+	
+  <sql id="boardSearch">
+		<if test="searchType != null and searchType == 'title'">
+			and (board_title like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'writer'">
+			and (mem_id like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'both'">
+			and (board_title like '%'||#{searchWord}||'%')
+			and (mem_id like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+
+	<sql id="boardlistSearch">
+		<if test="searchStatus != null and searchStatus != '' ">
+			and (field like '%'||#{searchStatus}||'%')
+		</if>
+		<if test="searchWord != null and searchWord != '' ">
+			and (board_title like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+	
+	<select id="selectProposalCount" parameterType="pagingVO" resultType="int">
+		select count(table_no)
+		from board 
+		where 1=1
+		and field = '건의'
+		<include refid="boardSearch"/>
+	</select>
+	
+<!-- 	<update id="incrementHit" parameterType="int"> -->
+<!-- 		update board -->
+<!-- 		set -->
+<!-- 			board_count = board_count + 1 -->
+<!-- 		where table_no = #{tableNo} -->
+<!-- 	</update> -->
+	
+<!-- 	<select id="selectBoardList" parameterType="pagingVO" resultType="boardVO"> -->
+<!-- 	with b as( -->
+<!-- 		select -->
+<!-- 		    row_number() over(order by t.rnum2 desc) rnum, t.* -->
+<!-- 		from( -->
+<!-- 		    select  -->
+<!-- 		        a.*, row_number() over (order by a.table_no desc) rnum2 -->
+<!-- 		    from ( -->
+<!-- 		        select -->
+<!-- 		            table_no, board_title, board_content, -->
+<!-- 		            board_regdate, mem_id, board_count, field -->
+<!-- 		        from board -->
+<!-- 		        where 1=1 -->
+<!-- 		        AND FIELD = '건의' -->
+<!-- 		        <include refid="boardSearch"/> -->
+<!-- 		        order by table_no desc -->
+<!-- 		    )a -->
+<!-- 		) t -->
+<!-- 	) -->
+<!-- 	select * from b -->
+<!-- 	<![CDATA[ -->
+<!-- 		where b.rnum >= #{startRow} and b.rnum <= #{endRow} -->
+<!-- 	]]> -->
+<!-- 	</select> -->
+	
+<!-- 	<select id="selectBoard" parameterType="int" resultMap="boardMap"> -->
+<!-- 	select -->
+<!--         table_no, board_title, board_regdate, board_count, board_content, mem_id -->
+<!--     from board -->
+<!--     where table_no = #{tableNo} -->
+<!--     AND FIELD = '건의' -->
+<!-- 	</select> -->
+	
+<!-- 	<insert id="insertBoard" parameterType="proposalVO" useGeneratedKeys="true"> -->
+<!--     <selectKey keyProperty="tableNo" resultType="int" order="BEFORE"> -->
+<!--         select seq_headboard.nextval from dual -->
+<!--     </selectKey> -->
+<!--     insert into HDBOARD_ANSWER( -->
+<!--         TABLE_NO, MEM_ID, ANS_STATE, ANS_CONTENT, ANS_ID, ANS_DATE -->
+<!--     ) -->
+<!--     select -->
+<!--         pv.TABLE_NO, pv.MEM_ID, '답변완료', pv.ansContent, '관리자', sysdate -->
+<!--     from proposalVO pv -->
+<!--     inner join boardVO bv on pv.TABLE_NO = bv.TABLE_NO -->
+<!--     where pv.MEM_ID = bv.MEM_ID -->
+<!-- </insert> -->
+  
+  
+  </mapper>

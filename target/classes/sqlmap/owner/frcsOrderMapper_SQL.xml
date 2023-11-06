@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsOrderMapper">
+	
+	<resultMap type="orderVO" id="orderMap">
+		<id property="frcsOrderNo" column="frcsorder_no"/>
+		<result property="frcsOrderNo" column="frcsorder_no"/>
+		<result property="frcsOrderDate" column="frcsorder_date"/>
+		<result property="frcsOrderAmt" column="frcsorder_amt"/>
+		<result property="frcsOrderConfm" column="frcsorder_confm"/>
+		<result property="frcsOrderConfmDate" column="frcsorder_confmdate"/>
+		<result property="frcsOrderReturn" column="frcsorder_return"/>
+		<result property="frcsId" column="frcs_id"/>
+		<result property="frcsOrderName" column="frcsorder_name"/>
+		<collection property="orderDetailList" resultMap="orderDetailMap"/>
+	</resultMap>
+	
+	<resultMap type="orderDetailVO" id="orderDetailMap">
+		<id property="frcsOrderNo" column="frcsorder_no"/>
+		<id property="vdprodCd" column="vdprod_cd"/>
+		<result property="frcsOrderNo" column="frcsorder_no"/>
+		<result property="vdprodCd" column="vdprod_cd"/>
+		<result property="frcsOrderQy" column="frcsorder_qy"/>
+		<result property="hdforwardPrice" column="hdforward_price"/>
+		<result property="vdprodName" column="vdprod_name"/>
+	</resultMap>
+	
+	<!-- 제품명 제품코드로 검색 -->
+	<sql id="inventSearch">
+		<if test="searchType !=null and searchType== 'vdprodName'">
+			and (h.vdprod_name like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType !=null and searchType== 'vdprodCd'">
+			and (h.vdprod_cd like '%'||upper(#{searchWord})||'%')		
+		</if>
+	</sql>
+	
+	<!-- 시작 날짜 / 종료 날짜로 검색  -->
+	<sql id="dateSearch">
+		<if test="afterDate !=null and afterDate != '' ">
+			<![CDATA[	
+				 and trunc(frcsorder_date,'DD') >= to_date(#{afterDate},'yy/MM/dd')
+	 		]]>  
+		</if>
+		<if test="beforeDate !=null and beforeDate != '' ">
+			<![CDATA[	
+				 and trunc(frcsorder_date,'DD') <= to_date(#{beforeDate},'yy/MM/dd')
+	 		]]>  
+		</if>
+	</sql>
+	
+	<!-- 재고 발주 가능 리스트 및 가맹점별 현재고량 적정재고량 -->
+	<select id="getInventList" parameterType="string" resultType="inventVO">
+		select h.vdprod_cd, h.vdprod_name, f.invntry_qy, f.proprt_qy, h.hdforward_price, f.frcs_id
+		from frcs_inventory f, head_inventory h
+		where f.vdprod_cd = h.vdprod_cd 
+		and frcs_id = #{frcsId}
+	    order by vdprod_cd asc
+	</select>
+	
+	<!-- 재고 발주 가능 리스트 검색 -->
+	<select id="inventSearch" parameterType="map" resultType="inventVO">
+		select h.vdprod_cd, h.vdprod_name, f.invntry_qy, f.proprt_qy, h.hdforward_price, f.frcs_id
+		from frcs_inventory f, head_inventory h
+		where f.vdprod_cd = h.vdprod_cd 
+		and frcs_id = #{frcsId}
+		<include refid="inventSearch"/>
+	    order by vdprod_cd asc
+	</select>
+	
+	<select id="getFrcsId" parameterType="string" resultType="string">
+		select frcs_id
+		from frcs_ownership
+		where mem_id = #{memId}
+	</select>
+	
+	<!-- 발주 등록 -->
+	<insert id="orderInsert" parameterType="orderVO" useGeneratedKeys="true">
+		<selectKey keyProperty="frcsOrderNo" resultType="string" order="BEFORE">
+			select to_char(sysdate, 'yyyyMMdd')|| '-' ||to_char(seq_order.nextval, 'FM000000') from dual
+		</selectKey>
+		insert into frcsorder(
+			frcsorder_no, frcsorder_date, frcsorder_amt, frcsorder_confm, frcs_id, frcsorder_name
+		) values (
+			#{frcsOrderNo}, sysdate, #{frcsOrderAmt}, '대기', #{frcsId}, #{frcsOrderName}
+		)
+	</insert>
+	
+	<!-- 발주 상세 등록 -->
+	<insert id="orderDetailInsert" parameterType="orderDetailVO" useGeneratedKeys="true">
+		<selectKey keyProperty="frcsOrderNo" resultType="string" order="BEFORE">
+			select to_char(sysdate, 'yyyyMMdd')|| '-' ||to_char(seq_order.currval, 'FM000000') from dual
+		</selectKey>
+		insert into frcsorder_detail(
+			frcsorder_no, vdprod_cd, frcsorder_qy, hdforward_price
+		) values (
+			#{frcsOrderNo}, #{vdprodCd}, #{frcsOrderQy}, #{hdforwardPrice}
+		)
+	</insert>
+	
+	<!-- 발주내역 페이징 -->
+	<select id="selectOrderCount" parameterType="ownerPagingVO" resultType="int">
+		select count(frcsorder_no)
+		from frcsorder
+		where frcs_id = #{frcsId} 
+		<include refid="dateSearch"/>
+	</select>
+
+	<!-- 발주내역 페이징 -->
+	<select id="selectOrderList" parameterType="ownerPagingVO" resultMap="orderMap">
+		select 
+			b.*
+		from (
+			select 
+				a.*, row_number() over (order by a.frcsorder_date desc) rnum
+			from(
+				select frcsorder_no, frcsorder_date, frcsorder_amt, frcsorder_confm, frcsorder_name, frcsorder_return
+				from frcsorder
+				where frcs_id = #{frcsId}
+				<include refid="dateSearch"/>
+				order by frcsorder_date desc
+			)a
+		)b	
+		<![CDATA[	
+ 			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+ 		]]>  
+	</select>
+	
+	<!-- 발주 취소 -->	
+	<update id="orderCancel" parameterType="string">
+		update frcsorder
+		set
+		frcsorder_confm = '취소'
+		where frcsorder_no = #{frcsOrderNo}
+	</update>
+	
+	<!-- 발주 페이지에서 자동발주 내역 불러오기 -->
+	<select id="getAutoList" parameterType="string" resultType="inventVO">
+		select h.vdprod_cd, vdprod_name, invntry_qy, proprt_qy, hdforward_price, atorder_stdrqy, atorder_qy, atorder_at
+		from autoorder a, frcs_inventory f, head_inventory h
+		where f.frcs_id = a.frcs_id and a.vdprod_cd = h.vdprod_cd and h.vdprod_cd = f.vdprod_cd
+		and f.frcs_id = #{frcsId}
+		<![CDATA[	
+ 			and invntry_qy <= atorder_stdrqy and atorder_at ='Y'
+ 		]]>  
+	</select>
+	
+	<!-- 발주 상세내역 조회  -->
+	<select id="getDetail" parameterType="string" resultMap ="orderMap">
+		select f.frcsorder_no, h.vdprod_cd, h.vdprod_name, frcsorder_qy, h.hdforward_price, frcsorder_date, frcsorder_amt
+        from head_inventory h, frcsorder f, frcsorder_detail fd
+        where h.vdprod_cd= fd.vdprod_cd and f.frcsorder_no = fd.frcsorder_no and f.frcsorder_no = #{frcsOrderNo}
+	</select>
+	
+	
+	<!-- 자동발주 리스트 페이징  -->
+	<select id="selectAutoOrderCount" parameterType="ownerPagingVO" resultType="int">
+		select count(autoorder_no)
+		from autoorder a, HEAD_INVENTORY h 
+		where frcs_id = #{frcsId} and h.vdprod_cd= a.vdprod_cd
+		<include refid="inventSearch"/>
+	</select>
+	
+	<!-- 자동발주 리스트 페이징 -->
+	<select id="selectAutoOrderList" parameterType="ownerPagingVO" resultType="autoOrderVO">
+		select 
+			b.*
+		from (
+			select 
+				a.*, row_number() over (order by a.autoorder_no asc) rnum
+			from(
+				select autoorder_no, atorder_stdrqy, atorder_qy, atorder_at, frcs_id, h.vdprod_cd, vdprod_name, hdforward_price
+				from autoorder a, head_inventory h 
+				where frcs_id = #{frcsId} and h.vdprod_cd = a.vdprod_cd
+				<include refid="inventSearch"/>
+				order by autoorder_no asc
+			)a
+		)b	
+		<![CDATA[	
+ 			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+ 		]]>  
+	</select>
+	
+	<!-- 자동발주 모달창 안 제품 검색 -->
+	<select id="getSearch" parameterType="string" resultType="inventVO">
+		select vdprod_cd, vdprod_name, hdforward_price
+		from head_inventory
+		where vdprod_cd like '%'|| upper(#{searchWord})||'%'or vdprod_name like '%'||#{searchWord}||'%'
+	</select>
+
+	<!-- 자동발주 등록 -->	
+	<insert id="insertAutoOrder" parameterType="autoOrderVO" useGeneratedKeys="true">
+		<selectKey keyProperty="autoorderNo" resultType="string" order="BEFORE">
+			select 'auto_'|| to_char(seq_autoorder.nextval, 'FM000000') from dual
+		</selectKey>
+		
+		insert into autoorder (
+			autoorder_no, atorder_stdrqy, atorder_qy, atorder_at, frcs_id, vdprod_cd
+		)values(
+			#{autoorderNo}, #{atorderStdrqy}, #{atorderQy}, 'Y', #{frcsId}, #{vdprodCd}
+		)
+	</insert>
+	
+	<!-- 자동발주 활성화/비활성화 처리 -->
+	<update id="disabledAutoOrder" parameterType="autoOrderVO">
+		update autoorder
+		set
+			atorder_at = #{atorderAt}
+		where autoorder_no = #{autoorderNo}
+	</update>
+	
+	<!-- 자동발주 중복체크 -->
+	<select id="autoOrderCheck" parameterType="autoOrderVO" resultType="int">
+		select count(vdprod_cd)
+		from autoorder
+		where vdprod_cd = #{vdprodCd} and frcs_id = #{frcsId}
+	</select>
+	
+</mapper>

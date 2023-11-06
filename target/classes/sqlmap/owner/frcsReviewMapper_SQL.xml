@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsReviewMapper">
+
+	<select id="frcsReviewList" parameterType="string" resultType="FrcsReviewVO">
+		SELECT
+		    a.review_no
+		  , a.mem_id
+		  , a.resv_no
+		  , a.review_content
+		  , a.review_star
+		  , a.review_regdate
+		  , a.review_yn
+		  , a.frcs_id
+		  , b.ans_no
+		  , b.ans_cn
+		  , b.ans_ymd
+		  , b.ans_id
+		FROM
+		    review a
+		LEFT OUTER JOIN review_answer b ON a.review_no = b.review_no
+		where
+			frcs_id = #{frcsId}
+		order by 
+			review_no desc
+	</select>
+	
+<!-- 	<select id="frcsReviewList" parameterType="string" resultType="FrcsReviewVO"> -->
+<!-- 		SELECT -->
+<!-- 		    review_no -->
+<!-- 		  , mem_id -->
+<!-- 		  , resv_no -->
+<!-- 		  , review_content -->
+<!-- 		  , review_star -->
+<!-- 		  , review_regdate -->
+<!-- 		  , review_yn -->
+<!-- 		  , frcs_id -->
+<!-- 		FROM -->
+<!-- 		    review -->
+<!-- 		where -->
+<!-- 			frcs_id = #{frcsId} -->
+<!-- 		order by  -->
+<!-- 			review_no desc -->
+<!-- 	</select> -->
+	
+	<insert id="reviewAnsInsert" parameterType="frcsReviewVO">
+		<selectKey keyProperty="ansNo" resultType="string" order="BEFORE">
+			select seq_reviewans.nextval from dual
+		</selectKey>
+		INSERT INTO review_answer (
+		    ans_no
+		    , review_no
+		    , mem_id
+		    , resv_no
+		    , ans_cn
+		    , ans_ymd
+		    , ans_id
+		) VALUES (
+		    #{ansNo}
+		  , #{reviewNo}
+		  , #{memId}
+		  , #{resvNo}
+		  , #{ansCn}
+		  , sysdate
+		  , #{ansId}
+		)
+	</insert>
+	
+	<update id="reviewYnUpdate" parameterType="frcsReviewVO">
+		UPDATE review
+		SET
+		    review_yn = 'Y'
+		WHERE
+		    review_no = #{reviewNo}
+	</update>
+	
+	<select id="frcsReviewAns" parameterType="string" resultType="frcsReviewVO">
+		SELECT
+		    ans_no
+		  , review_no
+		  , mem_id
+		  , resv_no
+		  , ans_cn
+		  , ans_ymd
+		  , ans_id
+		FROM
+		    review_answer
+		WHERE
+			review_no = #{reviewNo}
+	</select>
+	
+	<update id="reviewAnsUpdate" parameterType="frcsReviewVO">
+		UPDATE review_answer
+		SET
+		    ans_cn = #{ansCn}
+		WHERE
+		    ans_no = #{ansNo}
+	</update>
+	
+	<delete id="reviewDelete" parameterType="string">
+		DELETE 
+		FROM review
+		WHERE
+		    review_no = #{reviewNo}
+	</delete>
+	
+	<delete id="reviewAnsDelete" parameterType="string">
+		DELETE 
+		FROM review_answer
+		WHERE
+		    review_no = #{reviewNo}
+	</delete>
+	
+	<select id="selectAlarm" parameterType="String" resultType="int">
+ 		select count(*)
+ 		from alarm
+ 		where frcs_id = #{frcsId}
+ 		and ALARM_READ = 'N'
+ 	</select>
+ 	
+ 	
+ 	<select id="selectAlarmList" parameterType="String" resultType="alarmVO">		
+		select 
+			ALARM_NO, ALARM_CONTENT, MEM_ID, ALARM_READ, ALARM_URL, FRCS_ID
+		from
+			alarm 
+		where 
+			frcs_id = #{frcsId}
+		and ALARM_READ = 'N'
+ 	</select>
+ 	
+ 	<update id="updateAlarm" parameterType="int">
+ 		update alarm
+ 		set
+ 			ALARM_READ = 'Y'
+ 		where 
+ 			ALARM_NO = #{alarmNo}
+ 	</update>
+ 	
+
+	<insert id="insertAlarm" parameterType="alarmVO">
+	    INSERT INTO alarm (
+	        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL, ANS_ID
+	    ) VALUES (
+	        SEQ_ALARM.nextval, #{memId}, '리뷰 답변 확인하기!', sysdate, '/elly/myreview/detail.do?memId=' || #{memId}, #{ansId} 
+	    )
+	</insert>
+
+ 	
+ 	<select id="selectMember" parameterType="String" resultType="String">
+		 SELECT DISTINCT review.MEM_ID
+			FROM review
+			LEFT OUTER JOIN alarm ON review.MEM_ID = alarm.MEM_ID
+			and LEFT OUTER JOIN alarm ON review.frcs_id = alarm.frcs_id
+			WHERE review.MEM_ID = #{memId}
+	</select>
+ 
+ 	<delete id="clearAllNotifications" parameterType="String">
+		 delete from alarm
+			where frcs_id = #{frcsId}
+	</delete>
+	
+ 	
+
+</mapper>

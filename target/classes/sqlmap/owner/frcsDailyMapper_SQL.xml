@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsDailyMapper">
+	
+	<!-- 시작 날짜 / 종료 날짜로 검색  -->
+	<sql id="dateSearch">
+		<if test="afterDate !=null and afterDate != '' ">
+			<![CDATA[	
+				 and trunc(selng_date,'DD') >= to_date(#{afterDate},'yy/MM/dd')
+	 		]]>  
+		</if>
+		<if test="beforeDate !=null and beforeDate != '' ">
+			<![CDATA[	
+				 and trunc(selng_date,'DD') <= to_date(#{beforeDate},'yy/MM/dd')
+	 		]]>  
+		</if>
+	</sql>
+	
+	<select id="selectDailySalesCount" parameterType="ownerPagingVO" resultType="int">
+		select count(*)
+			from
+			    (select trunc(selng_date, 'DD') as selng_date, sum(selng_price * selng_qy) as total_price
+			    from dailyselling
+			    where frcs_id = #{frcsId}
+			    group by trunc(selng_date, 'DD')
+			) 
+		<include refid="dateSearch"/>
+	</select>
+	
+	<select id="selectDailySalesList" parameterType="ownerPagingVO" resultType="salesVO">
+		select 
+			b.*
+		from (
+			select 
+				a.*, row_number() over (order by a.selng_date desc) rnum
+			from(
+				select trunc(selng_date, 'DD') as selng_date, sum(selng_price * selng_qy) as total_price from dailyselling
+				where frcs_id = #{frcsId}
+				<include refid="dateSearch"/>
+				group by trunc(selng_date, 'DD')
+				order by selng_date
+			)a
+		)b	
+		<![CDATA[	
+ 			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+ 		]]>  
+	</select>
+
+	<!-- 일일 매출 리스트 출력 (오늘)  -->
+	<select id="getDailySalesList" parameterType="string" resultType="salesVO">
+	    select selng_price, selng_qy, h.menu_cd, frcs_id, selng_date, h.menu_name
+		from dailyselling d, head_menu h 
+		where frcs_id = #{frcsId} and h.menu_cd= d.menu_cd and to_char(selng_date,'yy/MM/dd') = to_char(sysdate,'yy/MM/dd')
+	</select>
+	
+	<!-- 가맹점 메뉴 조회 -->
+	<select id="getMenu" parameterType="string" resultType="frcsMenuVO">
+		select h.menu_cd, sale_yn, frcs_id, h.menu_name, menu_price, menu_cg
+		from frcs_menu f, head_menu h
+		where frcs_id = #{frcsid} and h.menu_cd= f.menu_cd	
+	</select>
+	
+	<!--  일일매출 중복 등록 체크 -->
+	<select id="dailyInsertCheck" parameterType="salesVO" resultType="int">
+		select count(selng_no)
+		from dailyselling
+		where frcs_id = #{frcsId} and trunc(selng_date,'DD') = trunc(#{selngDate},'DD')
+	</select>
+	
+	
+	<!-- 일일 매출 등록 -->
+	<insert id="insertDailySales" parameterType="salesVO" useGeneratedKeys="true">
+		<selectKey keyProperty="selngNo" resultType="string" order="BEFORE">
+			 select 'A'|| to_char(seq_dailysell.nextval, 'FM000000') from dual
+		</selectKey>
+		insert into dailyselling (
+			selng_no, selng_date, selng_price, selng_qy, menu_cd, frcs_id
+		)values(
+			#{selngNo}, #{selngDate}, #{selngPrice}, #{selngQy}, #{menuCd}, #{frcsId}
+		)
+	</insert>
+	
+	<!-- 메뉴별 재료 조회 -->
+	<select id="selectMenu" parameterType="string" resultType="ingredVO">
+		select menu_cd, h.vdprod_cd, ingre_qy, hdforward_price
+		from menu_ingredient m, head_inventory h
+		where menu_cd = #{menuCd} and h.vdprod_cd = m.vdprod_cd
+	</select>
+	
+	<!-- 재고 마이너스 처리 -->
+	<update id="minusInvent" parameterType="ingredVO">
+		update frcs_inventory
+   			 set invntry_qy =  invntry_qy-(#{ingreQy}*#{menuQy})
+   		 where frcs_id = #{frcsId} and vdprod_cd = #{vdprodCd}
+	</update>
+	
+	<!-- 출고 테이블 플러스 처리 -->
+	<insert id="plusDelivery" parameterType="ingredVO">
+		insert into delivery(
+			dlivy_date, frcs_id, vdprod_cd, dlivy_qy, dlivy_price
+		)values(
+			#{selngDate}, #{frcsId}, #{vdprodCd}, (#{ingreQy}*#{menuQy}), #{hdforwardPrice}
+		)
+	</insert>
+	
+	<!-- 일일 매출 수정을 위해 이미 들어가 있는 정보 추출 -->
+	<select id="getUpdateForm" parameterType="salesVO" resultType="salesVO">
+		select h.menu_cd, sale_yn, f.frcs_id, h.menu_name, menu_price,selng_qy, selng_date
+		from frcs_menu f, head_menu h, dailyselling d
+		where f.frcs_id = #{frcsId} and h.menu_cd= f.menu_cd 
+       		 and f.menu_cd = d.menu_cd 
+       		 and d.frcs_id = f.frcs_id and trunc(selng_date,'DD') = trunc(#{selngDate},'DD')
+	</select>
+	
+	<!-- 일일 매출 삭제 전 숫자 카운트 -->
+	<select id="getBeforeCount" parameterType="salesVO" resultType="salesVO">
+		select menu_cd, selng_qy
+		from dailyselling
+		where frcs_id = #{frcsId} and menu_cd = #{menuCd}
+	</select>
+	
+</mapper>

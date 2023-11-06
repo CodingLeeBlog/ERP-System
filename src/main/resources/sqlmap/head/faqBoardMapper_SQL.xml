@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.FaqBoardMapper">
+  
+  	<resultMap type="headBoardVO" id="headBoardMap">
+	 	<result property="boardNo" column="BOARD_NO" />
+		<result property="boardTitle" column="BOARD_TITLE" />
+		<result property="boardContent" column="BOARD_CONTENT" />
+		<result property="tableName" column="TABLE_NAME" />
+		<result property="boardRegdate" column="BOARD_REGDATE" />
+		<result property="boardHit" column="BOARD_HIT" />
+ 	</resultMap>
+  
+  	<sql id="boardSearch">
+		<if test="searchType != null and searchType == 'title'">
+			and (board_title like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'writer'">
+			and (mem_id like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'both'">
+			and (board_title like '%'||#{searchWord}||'%')
+			and (mem_id like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+	
+	<select id="selectBoardCount" parameterType="pagingVO" resultType="int">
+		select count(BOARD_NO)
+		from HEAD_BOARD 
+		where 1=1
+		AND TABLE_NAME = 'faq'
+		<include refid="boardSearch"/>
+	</select>
+	
+	<select id="selectBoardList" parameterType="pagingVO" resultType="headBoardVO">
+	with b as(
+		select
+		    row_number() over(order by t.rnum2 desc) rnum, t.*
+		from(
+		    select 
+		        a.*, row_number() over (order by a.BOARD_NO desc) rnum2
+		    from (
+		        select
+		            BOARD_NO, BOARD_TITLE, BOARD_CONTENT,
+		            BOARD_REGDATE, BOARD_HIT, TABLE_NAME
+		        from HEAD_BOARD
+		        where 1=1
+		        AND TABLE_NAME = 'faq'
+		        <include refid="boardSearch"/>
+		        order by BOARD_NO desc
+		    )a
+		) t
+	)
+	select * from b
+	<![CDATA[
+		where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+	]]>
+	</select>
+  
+  	<update id="incrementHit" parameterType="int">
+		update HEAD_BOARD
+		set
+			BOARD_HIT = BOARD_HIT + 1
+		where BOARD_NO = #{boardNo}
+	</update>
+	
+	
+	<insert id="insertBoard" parameterType="headBoardVO" useGeneratedKeys="true">
+		<selectKey keyProperty="boardNo" resultType="int" order="BEFORE">
+			select seq_headboard.nextval from dual
+		</selectKey>
+		insert into HEAD_BOARD(
+			BOARD_NO, BOARD_TITLE, BOARD_CONTENT, BOARD_REGDATE, TABLE_NAME
+		)values(
+			#{boardNo}, #{boardTitle}, #{boardContent}, sysdate, 'faq'
+		)
+	</insert>
+	
+	<select id="selectBoard" parameterType="int" resultMap="headBoardMap">
+	select
+        BOARD_NO, BOARD_TITLE, BOARD_CONTENT, BOARD_REGDATE, TABLE_NAME
+    from HEAD_BOARD
+    where BOARD_NO = #{boardNo}
+    AND TABLE_NAME = 'faq'
+	</select>
+	
+	<update id="updateBoard" parameterType="headBoardVO">
+		update HEAD_BOARD
+		set
+			board_title = #{boardTitle},
+			board_content = #{boardContent},
+			board_regdate = sysdate
+		where BOARD_NO = #{boardNo}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="int">
+		delete from HEAD_BOARD
+		where BOARD_NO = #{boardNo}
+	</delete>
+	
+
+  </mapper>

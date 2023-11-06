@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.InspectionMapper">
+
+	<sql id="inspectionSearch">
+		<if test="searchType != null and searchType == 'title' ">
+			and (frcs_id like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+
+	<resultMap type="inspectionVO" id="inspectionMap">
+		<id property="frcsId" column="frcs_id"/>
+		<result property="frcsId" column="frcs_id"/>
+		<result property="ipStts" column="ip_stts"/>
+		<result property="ipDate" column="ip_date"/>
+		<result property="tableName" column="table_name"/>
+		<result property="stEduFnshYn" column="st_edu_fnsh_yn"/>
+		<collection property="inspectionFileList" resultMap="attachMap"/>
+	</resultMap>
+	
+	<resultMap type="attachVO" id="attachMap">
+		<id property="attachNo" column="ATTACH_NO"/>
+		<result property="attachNo" column="ATTACH_NO"/>
+		<result property="fileNo" column="FILE_NO"/>
+		<result property="attachOrgname" column="ATTACH_ORGNAME"/>
+		<result property="attachSavename" column="ATTACH_SAVENAME"/>
+		<result property="tableName" column="TABLE_NAME"/>
+		<result property="tablePk" column="TABLE_PK"/>
+		<result property="attachMime" column="ATTACH_MIME"/>
+		<result property="attachSize" column="ATTACH_SIZE"/>
+		<result property="thumbImg" column="THUMB_IMG"/>
+	</resultMap>
+
+ 	<select id="selectInspectionCount" parameterType="pagingVO" resultType="int">
+		select count(frcs_id)
+		from frcs_ipmg
+		where 1=1
+		<include refid="inspectionSearch"/>
+	</select>
+
+	<select id="selectInspectionList" parameterType="pagingVO" resultType="inspectionVO">
+		select 
+			b.*
+		from (
+			select 
+				a.*, row_number() over (order by frcs_id) rnum
+			from(
+				select i.frcs_id,
+			        f.frcs_name,
+			        i.ip_stts,
+			        i.ip_date,
+			        i.st_edu_fnsh_yn,
+			        a.attach_no
+				from frcs_ipmg i
+				left join franchise f on i.frcs_id = f.frcs_id 
+				left join attach a on i.frcs_id = a.table_pk
+			)a
+		)b	
+		<![CDATA[	
+			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<select id="selectFileInfo" parameterType="int" resultType="attachVO">
+		select
+			 ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, ATTACH_SIZE, TABLE_NAME, TABLE_PK
+		from attach
+		where ATTACH_NO = #{attachNo}
+	</select>
+	
+</mapper>

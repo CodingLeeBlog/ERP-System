@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="kr.or.ddit.mapper.head.NoticeBoardMapper">
+  
+  	<resultMap type="headBoardVO" id="headBoardMap">
+ 	<result property="boardNo" column="BOARD_NO" />
+	<result property="boardTitle" column="BOARD_TITLE" />
+	<result property="boardContent" column="BOARD_CONTENT" />
+	<result property="tableName" column="TABLE_NAME" />
+	<result property="boardRegdate" column="BOARD_REGDATE" />
+	<result property="boardHit" column="BOARD_HIT" />
+		<collection property="noticeFileList" resultMap="attachMap"></collection>
+  </resultMap>
+  
+  	<resultMap type="attachVO" id="attachMap">
+		<id property="attachNo" column="ATTACH_NO"/>
+		<result property="attachNo" column="ATTACH_NO"/>
+		<result property="fileNo" column="FILE_NO"/>
+		<result property="attachOrgname" column="ATTACH_ORGNAME"/>
+		<result property="attachSavename" column="ATTACH_SAVENAME"/>
+		<result property="tableName" column="TABLE_NAME"/>
+		<result property="tablePk" column="TABLE_PK"/>
+		<result property="attachMime" column="ATTACH_MIME"/>
+		<result property="attachSize" column="ATTACH_SIZE"/>
+		<result property="thumbImg" column="THUMB_IMG"/>
+	</resultMap>
+  
+  
+  	<sql id="boardSearch">
+		<if test="searchType != null and searchType == 'title'">
+			and (board_title like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'writer'">
+			and (BOARD_CONTENT like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'both'">
+			and (board_title like '%'||#{searchWord}||'%')
+			and (BOARD_CONTENT like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+	
+	<select id="selectBoardCount" parameterType="pagingVO" resultType="int">
+		select count(board_NO)
+		from HEAD_BOARD 
+		where 1=1
+		AND TABLE_NAME = 'notice'
+		<include refid="boardSearch"/>
+	</select>
+	
+	<select id="selectBoardList" parameterType="pagingVO" resultType="headBoardVO">
+	with b as(
+		select
+		    row_number() over(order by t.rnum2 desc) rnum, t.*
+		from(
+		    select 
+		        a.*, row_number() over (order by a.BOARD_NO desc) rnum2
+		    from (
+		        select
+		            BOARD_NO, BOARD_TITLE, BOARD_CONTENT,
+		            BOARD_REGDATE, BOARD_HIT, TABLE_NAME
+		        from HEAD_BOARD
+		        where 1=1
+		        AND TABLE_NAME = 'notice'
+		        <include refid="boardSearch"/>
+		        order by BOARD_NO desc
+		    )a
+		) t
+	)
+	select * from b
+	<![CDATA[
+		where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+	]]>
+	</select>
+  
+  	<update id="incrementHit" parameterType="int">
+		update HEAD_BOARD
+		set
+			BOARD_HIT = BOARD_HIT + 1
+		where BOARD_NO = #{boardNo}
+	</update>
+	
+	
+	<insert id="insertBoard" parameterType="headBoardVO" useGeneratedKeys="true">
+		<selectKey keyProperty="boardNo" resultType="int" order="BEFORE">
+			select seq_headboard.nextval from dual
+		</selectKey>
+		insert into HEAD_BOARD(
+			BOARD_NO, BOARD_TITLE, BOARD_CONTENT, BOARD_REGDATE, TABLE_NAME
+		)values(
+			#{boardNo}, #{boardTitle}, #{boardContent}, sysdate, 'notice'
+		)
+	</insert>
+	
+
+	<select id="selectBoard" parameterType="int" resultMap="headBoardMap">
+		SELECT n.BOARD_NO, n.BOARD_TITLE, n.BOARD_REGDATE, n.BOARD_HIT, n.BOARD_CONTENT, n.TABLE_NAME,
+	        nf.ATTACH_NO, nf.FILE_NO, nf.ATTACH_ORGNAME, nf.ATTACH_SAVENAME, nf.ATTACH_MIME, nf.ATTACH_SIZE, nf.THUMB_IMG, nf.table_pk
+		FROM   HEAD_BOARD N LEFT OUTER JOIN ATTACH NF ON(N.BOARD_NO = NF.TABLE_PK)
+		WHERE  N.BOARD_NO = #{boardNo}
+		AND    N.TABLE_NAME = 'notice'
+<!-- 	    SELECT -->
+<!-- 	        n.BOARD_NO, n.BOARD_TITLE, n.BOARD_REGDATE, n.BOARD_HIT, n.BOARD_CONTENT, n.TABLE_NAME, -->
+<!-- 	        nf.ATTACH_NO, nf.FILE_NO, nf.ATTACH_ORGNAME, nf.ATTACH_SAVENAME, nf.ATTACH_MIME, nf.ATTACH_SIZE, nf.THUMB_IMG, nf.table_pk -->
+<!-- 	    FROM -->
+<!-- 	        HEAD_BOARD n -->
+<!-- 	    LEFT OUTER JOIN -->
+<!-- 	        ATTACH nf ON (n.TABLE_NAME = nf.TABLE_NAME) -->
+<!-- 	    WHERE -->
+<!-- 	        n.BOARD_NO = #{boardNo}  -->
+<!-- 	        AND nf.table_pk = #{boardNo} -->
+<!-- 	        AND n.TABLE_NAME = 'notice'	        -->
+	</select>
+	
+	<update id="updateBoard" parameterType="headBoardVO">
+		update HEAD_BOARD
+		set
+			BOARD_TITLE = #{boardTitle},
+			BOARD_CONTENT = #{boardContent},
+			BOARD_REGDATE = sysdate
+		where BOARD_NO = #{boardNo}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="int">
+		delete from HEAD_BOARD
+		where BOARD_NO = #{boardNo}
+	</delete>
+	
+	<insert id="insertNoticeFile" parameterType="attachVO">
+	  INSERT INTO attach (
+	    ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, ATTACH_SIZE, TABLE_NAME, TABLE_PK
+	  )
+	  VALUES (
+	    seq_attach.nextval, #{fileNo}, #{attachOrgname}, #{attachSavename}, #{attachMime}, #{attachSize}, 'notice', #{tablePk}
+	  )
+	</insert>
+	
+		
+	<select id="selectFileInfo" parameterType="int" resultType="attachVO">
+		select
+			 ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, ATTACH_SIZE, TABLE_NAME, TABLE_PK
+		from attach
+		where ATTACH_NO = #{attachNo}
+	</select>
+	
+		
+	
+	<select id="selectNoticeFile" parameterType="int" resultType="attachVO">
+		select
+			ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, 
+			ATTACH_SIZE, TABLE_NAME
+		from attach
+		where ATTACH_NO = #{attachNo}
+		and TABLE_NAME = 'notice'
+	</select>
+	
+	<delete id="deleteNoticeFile" parameterType="int">
+		delete from attach
+		where ATTACH_NO = #{attachNo}
+	</delete>
+	
+	<delete id="deleteNoticeFileByBoNo" parameterType="int">
+		delete from attach
+		where ATTACH_NO = #{attachNo}
+	</delete>
+	
+	<select id="noticeDownload" parameterType="int" resultType="attachVO">
+		select
+			ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, 
+			ATTACH_SIZE, TABLE_NAME
+		from attach
+			where ATTACH_NO = #{attachNo}
+		and TABLE_NAME = 'notice'
+	</select>
+	
+
+  
+  </mapper>

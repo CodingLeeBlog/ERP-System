@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.FoundationMapper">
+
+	<sql id="frcsSearch">
+		<if test="searchArea != null and searchArea != '' ">
+			and (frcs_add1 like '%'||#{searchArea}||'%') 
+		</if>
+	</sql>
+
+	<select id="selectTotalFrcsCount" resultType="int" parameterType="headPagingVO">
+		select count(frcs_name) as cnt
+		from frcs_ownership a, franchise f, member m
+		where m.mem_id = a.mem_id
+		and a.frcs_id = f.frcs_id
+	</select>
+	
+	<select id="selectFrcsCount" resultType="int" parameterType="headPagingVO">
+		select count(frcs_name) as cnt
+		from frcs_ownership a, franchise f, member m
+		where m.mem_id = a.mem_id
+		and a.frcs_id = f.frcs_id
+		<include refid="frcsSearch" />
+	</select>
+
+	<select id="selectFrcsList" resultType="totalInfoVO" parameterType="headPagingVO">
+		select 
+		         b.*
+		      from (
+		         select 
+		            a.*, row_number() over (order by a.frcs_opdate desc) rnum
+		         from(
+		            SELECT F.*, M.*
+		            FROM 
+		            FRCS_OWNERSHIP A, MEMBER M, FRANCHISE F
+		            WHERE A.MEM_ID = M.MEM_ID
+		            AND A.FRCS_ID = F.FRCS_ID 
+		            <include refid="frcsSearch" />
+		            order by frcs_opdate desc
+		         )a
+		      )b 
+			<![CDATA[
+				where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+			]]>
+	</select>
+	
+	<select id="frcsChart" parameterType="headSalesChartVO" resultType="headSalesChartVO">
+		<if test="type == 'all'">
+			WITH Months AS (
+			    SELECT '2023-01' AS selng_date FROM DUAL
+			    UNION ALL
+			    SELECT '2023-02' FROM DUAL
+			    UNION ALL
+			    SELECT '2023-03' FROM DUAL
+			    UNION ALL
+			    SELECT '2023-04' FROM DUAL
+			    UNION ALL
+			    SELECT '2023-05' FROM DUAL
+			    UNION ALL
+			    SELECT '2023-06' FROM DUAL
+			    UNION ALL
+			    SELECT '2023-07' FROM DUAL
+			    UNION ALL
+			    SELECT '2023-08' FROM DUAL
+			    UNION ALL
+			    SELECT '2023-09' FROM DUAL
+			    UNION ALL
+			    SELECT '2023-10' FROM DUAL
+			    UNION ALL
+			    SELECT '2023-11' FROM DUAL
+			    UNION ALL
+			    SELECT '2023-12' FROM DUAL
+			)
+		</if>
+		
+		
+		<if test="type == 'one'">
+			select to_char(selng_date, 'yyyy-mm-dd') selng_date, sum(selng_price * selng_qy) as sales
+			from dailyselling
+			where frcs_id = #{frcsId}
+		</if>
+		<if test="type != 'one' and type != 'all'">
+			select TO_CHAR(selng_date, 'YYYY-MM') AS selng_date, SUM(selng_qy * selng_price) AS sales
+			from dailyselling
+			where frcs_id = #{frcsId}
+		</if>
+		
+		
+		<if test="type == 'all'">
+			SELECT M.selng_date, NVL(SUM(NVL(SD.SELNG_QY, 0) * NVL(SD.SELNG_PRICE, 0)), 0) AS sales
+			FROM Months M
+			LEFT JOIN Dailyselling SD ON TO_CHAR(SD.SELNG_DATE, 'YYYY-MM') = M.selng_date AND SD.FRCS_ID = #{frcsId}
+			GROUP BY M.selng_date
+			ORDER BY M.selng_date
+		</if>
+
+		<if test="type == 'three'">
+			AND (
+				EXTRACT(MONTH FROM selng_date) = #{month}-3 OR 
+				EXTRACT(MONTH FROM selng_date) = #{month}-2 OR 
+				EXTRACT(MONTH FROM selng_date) = #{month}-1
+			)
+		</if>		
+		<if test="type == 'six'">
+			AND (
+				EXTRACT(MONTH FROM selng_date) = #{month}-6 OR 
+				EXTRACT(MONTH FROM selng_date) = #{month}-5 OR 
+				EXTRACT(MONTH FROM selng_date) = #{month}-4 OR 
+				EXTRACT(MONTH FROM selng_date) = #{month}-3 OR 
+				EXTRACT(MONTH FROM selng_date) = #{month}-2 OR 
+				EXTRACT(MONTH FROM selng_date) = #{month}-1
+			)
+		</if>	
+		
+		<if test="type == 'one'">
+			and to_char(selng_date, 'yyyy-mm') = #{monthStr}
+			group by selng_date
+			ORDER BY selng_date
+		</if>	
+		<if test="type != 'one' and type != 'all'">
+			GROUP BY TO_CHAR(selng_date, 'YYYY-MM')
+			ORDER BY selng_date
+		</if>	
+		
+	</select>
+	
+	
+	<select id="frcsSales" parameterType="headSalesChartVO" resultType="headSalesChartVO">
+		select to_char(selng_date, 'yyyy-mm-dd') selng_date, sum(selng_price * selng_qy) as sales
+			from dailyselling
+			where frcs_id = #{frcsId}
+			group by selng_date
+			order by selng_date
+	</select>
+	
+	 <select id="frcsAllChart" parameterType="headSalesChartVO" resultType="headSalesChartVO">
+         SELECT TO_CHAR(selng_date, 'YYYY-MM') AS selng_date, SUM(selng_qy * selng_price) AS sales
+         FROM dailyselling
+         WHERE frcs_id = #{frcsId} 
+         GROUP BY TO_CHAR(selng_date, 'YYYY-MM')
+         ORDER BY selng_date
+   </select>
+   
+   <select id="frcsThirdMonthChart" parameterType="headSalesChartVO" resultType="headSalesChartVO">
+         SELECT TO_CHAR(selng_date, 'YYYY-MM') AS selngDate, SUM(selng_qy * selng_price) AS sales
+         FROM dailyselling
+         WHERE frcs_id = #{frcsId}
+         AND (EXTRACT(MONTH FROM selng_date) = #{month}-2 OR EXTRACT(MONTH FROM selng_date) = #{month}-1 OR EXTRACT(MONTH FROM selng_date) = #{month})
+         GROUP BY TO_CHAR(selng_date, 'YYYY-MM')
+         ORDER BY selngDate
+   </select>
+   
+   <select id="frcsSixMonthChart" parameterType="headSalesChartVO" resultType="headSalesChartVO">
+   		SELECT TO_CHAR(selng_date, 'YYYY-MM') AS selngDate, SUM(selng_qy * selng_price) AS sales
+         FROM dailyselling
+         WHERE frcs_id = #{frcsId}
+         AND (EXTRACT(MONTH FROM selng_date) = #{month}-5 OR EXTRACT(MONTH FROM selng_date) = #{month}-4 OR EXTRACT(MONTH FROM selng_date) = #{month}-3 OR EXTRACT(MONTH FROM selng_date) = #{month}-2 OR EXTRACT(MONTH FROM selng_date) = #{month}-1 OR EXTRACT(MONTH FROM selng_date) = #{month})
+         GROUP BY TO_CHAR(selng_date, 'YYYY-MM')
+         ORDER BY selngDate
+   </select>
+</mapper>

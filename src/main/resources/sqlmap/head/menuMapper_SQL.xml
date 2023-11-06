@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.MenuMapper">
+
+	<sql id="menuSearch">
+		<if test="searchType != null and searchType == 'menuName' ">
+			and (menu_name like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+
+	<resultMap type="menuVO" id="menuMap">
+		<id property="menuCd" column="menu_cd"/>
+		<result property="menuCd" column="menu_cd"/>
+		<result property="menuName" column="menu_name"/>
+		<result property="menuPrice" column="menu_price"/>
+		<result property="menuCg" column="menu_cg"/>
+		<result property="menuDes" column="menu_des"/>
+		<result property="menuState" column="menu_state"/>
+		<result property="menuRsdate" column="menu_rsdate"/>
+		<result property="menuDeldate" column="menu_deldate"/>
+		<result property="tableName" column="table_name"/>
+		<collection property="menuFileList" resultMap="attachMap"/>
+	</resultMap>
+	
+	<resultMap type="attachVO" id="attachMap">
+		<id property="attachNo" column="ATTACH_NO"/>
+		<result property="attachNo" column="ATTACH_NO"/>
+		<result property="fileNo" column="FILE_NO"/>
+		<result property="attachOrgname" column="ATTACH_ORGNAME"/>
+		<result property="attachSavename" column="ATTACH_SAVENAME"/>
+		<result property="tableName" column="TABLE_NAME"/>
+		<result property="tablePk" column="TABLE_PK"/>
+		<result property="attachMime" column="ATTACH_MIME"/>
+		<result property="attachSize" column="ATTACH_SIZE"/>
+		<result property="thumbImg" column="THUMB_IMG"/>
+	</resultMap>
+
+ 	<select id="selectMenuCount" parameterType="pagingVO" resultType="int">
+		select count(menu_cd)
+		from head_menu
+		where 1=1
+		<include refid="menuSearch"/>
+	</select>
+
+	<select id="selectMenuList" parameterType="pagingVO" resultType="menuVO">
+		select 
+			b.*
+		from (
+			select 
+				a.*, row_number() over (order by menu_cd) rnum
+			from(
+				select menu_cd, menu_name, menu_cg, menu_price, menu_rsdate, menu_des, table_name
+				from head_menu
+			)a
+		)b	
+		<![CDATA[	
+			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- memberMenu -->
+	
+	 <select id="selectMemberMenuCount" parameterType="pagingVO" resultType="int">
+		select count(menu_cd)
+		from head_menu
+		where 1=1
+		and menu_cg = #{searchWord}
+		and menu_state = '활성'
+	</select>
+
+	<select id="menuDetail" parameterType="string" resultMap="menuMap">
+	    select
+	        hm.menu_cd,
+	        hm.menu_name,
+	        hm.menu_cg,
+	        hm.menu_price,
+	        hm.menu_des,
+	        hm.table_name,
+	        a.attach_orgname,
+	        a.attach_savename,
+	        a.attach_mime,
+	        a.attach_size,
+	        a.thumb_img
+	    from head_menu hm
+	    left join attach a on hm.menu_cd = a.table_pk and a.table_name = 'menu'
+	    where hm.menu_cd = #{menuCd}
+	</select>
+
+	
+	<select id="selectFileInfo" parameterType="int" resultType="attachVO">
+		select
+			 ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, ATTACH_SIZE, TABLE_NAME, TABLE_PK
+		from attach
+		where ATTACH_NO = #{attachNo}
+	</select>
+		
+   <select id="selectMenuFile" parameterType="int" resultType="attachVO">
+		select
+			ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, 
+			ATTACH_SIZE, TABLE_NAME
+		from attach
+		where ATTACH_NO = #{attachNo}
+		and table_name = 'menu'
+	</select>
+
+	<insert id="menuRegister" parameterType="menuVO" useGeneratedKeys="true">
+	  <selectKey keyProperty="menuCd" resultType="String" order="BEFORE">
+	   	select 'm' || LPAD(seq_headmenu.nextval, 3, '0') FROM dual
+	  </selectKey>
+	  insert into head_menu (
+	    menu_cd, menu_name, menu_cg, menu_des, menu_price, menu_rsdate, menu_state, table_name
+	  ) values (
+	    #{menuCd}, #{menuName}, #{menuCg}, #{menuDes}, #{menuPrice}, sysdate, '활성', 'menu'
+	  )
+	</insert>
+	
+	<insert id="menuAttachRegister" parameterType="attachVO" useGeneratedKeys="true">
+	  <selectKey keyProperty="attachNo" resultType="int" order="BEFORE">
+	   	select seq_attach.nextval, 1 FROM dual
+	  </selectKey>
+	  INSERT INTO attach (
+	    ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, ATTACH_SIZE, TABLE_NAME, TABLE_PK
+	  )
+	  VALUES (
+	    #{attachNo}, #{fileNo}, #{attachOrgname}, #{attachSavename}, #{attachMime}, #{attachSize}, 'menu', #{tablePk}
+	  )
+	</insert>
+	
+	<update id="menuUpdate" parameterType="menuVO">
+		update head_menu
+		set
+			menu_cd = #{menuCd},
+			menu_name = #{menuName},
+			menu_cg = #{menuCg},
+			menu_des = #{menuDes},
+			menu_price = #{menuPrice},
+			menu_rsdate = sysdate,
+			menu_state = '활성'
+		where menu_cd= #{menuCd} 
+	</update>
+	
+	<delete id="menuDelete" parameterType="map">
+		delete from head_menu
+		where menu_cd = #{menuCd}
+	</delete>
+	
+	<select id="getMenuListByCategory" parameterType="pagingVO" resultMap="menuMap">
+		WITH T AS
+		(
+		    SELECT ROW_NUMBER() OVER(ORDER BY menu_name) RNUM, n.menu_cd, n.menu_name, n.menu_cg, n.menu_des, n.menu_price, n.menu_rsdate, n.menu_state,
+		    nf.ATTACH_NO, nf.FILE_NO, nf.ATTACH_ORGNAME, nf.ATTACH_SAVENAME, nf.ATTACH_MIME, nf.ATTACH_SIZE, nf.THUMB_IMG, nf.table_pk
+		    FROM head_menu N LEFT OUTER JOIN ATTACH NF ON(N.menu_cd = NF.TABLE_PK)
+		    WHERE
+		    N.menu_cg = #{searchWord}
+		    and N.menu_state = '활성'
+		)
+		SELECT * FROM T
+		WHERE T.RNUM BETWEEN (#{currentPage}*6 - 5) AND (#{currentPage}*6)
+	</select>
+
+
+</mapper>

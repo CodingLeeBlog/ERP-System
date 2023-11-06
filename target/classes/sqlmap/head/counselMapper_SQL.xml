@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.CounselMapper">
+
+	<sql id="counselSearch">
+		<if test="searchType != null and searchType == 'ownerName' ">
+			and (owner_name like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+
+	<resultMap type="ownerVO" id="counselMap">
+		<id property="ownerId" column="OWNER_ID"/>
+		<result property="ownerId" column="OWNER_ID"/>
+		<result property="ownerNo" column="OWNER_NO"/>
+		<result property="ownerName" column="OWNER_NAME"/>
+		<result property="ownerBir" column="OWNER_BIR"/>
+		<result property="ownerTel" column="OWNER_TEL"/>
+		<result property="ownerEmail" column="OWNER_EMAIL"/>
+		<result property="ownerArea" column="OWNER_AREA"/>
+		<result property="ownerDong" column="OWNER_DONG"/>
+		<result property="ownerMoney" column="OWNER_MONEY"/>
+		<result property="ownerBuilding" column="OWNER_BUILDING"/>
+		<result property="ownerBuildingadd" column="OWNER_BUILDINGADD"/>
+		<result property="ownerExp" column="OWNER_EXP"/>
+		<result property="ownerHopetime" column="OWNER_HOPETIME"/>
+		<result property="ownerInfocontent" column="OWNER_INFOCONTENT"/>
+		<result property="ownerContentdetail" column="OWNER_CONTENTDETAIL"/>
+		<result property="ownerConst" column="OWNER_CONST"/>
+		<result property="ownerTelyn" column="OWNER_TELYN"/>
+		<result property="ownerYn" column="OWNER_YN"/>
+		<result property="ownerRgdate" column="OWNER_RGDATE"/>
+		<result property="tableName" column="TABLE_NAME"/>
+		<collection property="counselFileList" resultMap="attachMap"/>
+	</resultMap>
+
+	<resultMap type="attachVO" id="attachMap">
+		<id property="attachNo" column="ATTACH_NO"/>
+		<result property="attachNo" column="ATTACH_NO"/>
+		<result property="fileNo" column="FILE_NO"/>
+		<result property="attachOrgname" column="ATTACH_ORGNAME"/>
+		<result property="attachSavename" column="ATTACH_SAVENAME"/>
+		<result property="tableName" column="TABLE_NAME"/>
+		<result property="tablePk" column="TABLE_PK"/>
+		<result property="attachMime" column="ATTACH_MIME"/>
+		<result property="attachSize" column="ATTACH_SIZE"/>
+		<result property="thumbImg" column="THUMB_IMG"/>
+	</resultMap>
+
+	<insert id="counsel" parameterType="ownerVO">
+		insert into owner (
+		owner_id, owner_no, owner_name, owner_bir, owner_tel, owner_email, owner_area, owner_dong, owner_money, owner_building, owner_buildingadd, owner_exp, owner_hopetime, owner_infocontent, owner_contentdetail, owner_rgdate
+		) values (
+			#{ownerId}, '1', #{ownerName}, #{ownerBir}, #{ownerTel}, #{ownerEmail}, #{ownerArea}, #{ownerDong}, #{ownerMoney}, #{ownerBuilding}, #{ownerBuildingadd}, #{ownerExp}, #{ownerHopetime}, #{ownerInfocontent}, #{ownerContentdetail}, #{ownerRgdate}
+		)
+	</insert>
+	
+	<select id="selectCounselList" parameterType="pagingVO" resultType="ownerVO">
+		select 
+			b.*
+		from (
+			select 
+				a.*, row_number() over (order by owner_id) rnum
+			from(
+				select owner_id, owner_name, owner_tel, owner_email, owner_rgdate, owner_telyn, owner_const
+				from owner
+			)a
+		)b	
+		<![CDATA[	
+			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+		]]>	
+	</select>
+
+	 <select id="selectCounselCount" parameterType="pagingVO" resultType="int">
+		select count(owner_no)
+		from owner
+		where 1=1
+		<include refid="counselSearch"/>
+	</select>
+	
+	<select id="counselDetail" parameterType="int" resultMap="counselMap">
+	    select
+	        o.owner_id,
+	        o.owner_rgdate,
+	        o.owner_name,
+	        o.owner_bir,
+	        o.owner_tel,
+	        o.owner_email,
+	        o.owner_area,
+	        o.owner_dong,
+	        o.owner_money,
+	        o.owner_building,
+	        o.owner_buildingadd,
+	        o.owner_exp,
+	        o.owner_hopetime,
+	        o.owner_infocontent,
+	        o.owner_contentdetail,
+	        o.owner_infocontent,
+	        o.owner_const,
+	        o.owner_telyn,
+	        a.attach_orgname,
+	        a.attach_savename,
+	        a.attach_mime,
+	        a.attach_size,
+	        a.thumb_img
+	    from owner o
+	    left join attach a on o.owner_id = a.table_pk and a.table_name = 'owner'
+	    where o.owner_id = #{ownerId}
+	</select>
+	
+	<update id="counselUpdate" parameterType="ownerVO">
+		update owner
+		set
+			owner_const = #{ownerConst},
+			owner_telyn = #{ownerTelyn}
+		where owner_id= #{ownerId} 
+	</update>
+	
+	<insert id="counselAttachRegister" parameterType="attachVO" useGeneratedKeys="true">
+	  <selectKey keyProperty="attachNo" resultType="int" order="BEFORE">
+	   	select seq_attach.nextval, 1 FROM dual
+	  </selectKey>
+	  INSERT INTO attach (
+	    ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, ATTACH_SIZE, TABLE_NAME, TABLE_PK
+	  )
+	  VALUES (
+	    #{attachNo}, #{fileNo}, #{attachOrgname}, #{attachSavename}, #{attachMime}, #{attachSize}, 'owner', #{tablePk}
+	  )
+	</insert>
+
+</mapper>

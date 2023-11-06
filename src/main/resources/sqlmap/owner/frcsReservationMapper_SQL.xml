@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsReservationMapper">
+
+	<select id="frcsResvList" parameterType="string" resultType="frcsResvVO">
+		SELECT
+		    resv_no
+		  , a.mem_id
+		  , a.resv_mcnt
+		  , a.resv_time
+		  , a.resv_date
+		  , a.resv_yn
+		  , a.resv_state
+		  , a.resv_acc_date
+		  , a.resv_note
+		  , a.seat_cd
+		  , a.resv_price
+		  , a.review_yn
+		  , b.frcs_id
+		  , b.mem_id
+		  , c.frcs_name
+		FROM
+		    reservation a
+		left join (select distinct frcs_id, mem_id from mem_menu ) b 
+    		on a.mem_id = b.mem_id
+    	left join franchise c
+    		on b.frcs_id = c.frcs_id
+    	where c.frcs_id = #{frcsId}
+    	order by 
+			resv_no desc
+	</select>
+
+</mapper>

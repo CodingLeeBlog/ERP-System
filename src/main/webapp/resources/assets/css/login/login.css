@@ -1,0 +1,6 @@
+.center-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 브라우저 창의 높이에 맞게 중앙 정렬 */
+}

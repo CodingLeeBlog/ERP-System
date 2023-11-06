@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+	
+	<!-- 회원 페이지 -->
+	<definition name="mainTemplate" template="/WEB-INF/views/mainhome/mainTemplate.jsp">
+		 <put-attribute name="header" value="/WEB-INF/views/mainhome/tiles/header.jsp"/>
+		 <put-attribute name="footer" value="/WEB-INF/views/mainhome/tiles/footer.jsp"/>
+	</definition>
+	
+	<definition name="mainhome/*/*" extends="mainTemplate">
+		<put-attribute name="content" value="/WEB-INF/views/mainhome/{1}/{2}.jsp"></put-attribute>
+	</definition>
+	
+	<definition name="mainhome/*/*/*" extends="mainTemplate">
+		<put-attribute name="content" value="/WEB-INF/views/mainhome/{1}/{2}/{3}.jsp"></put-attribute>
+	</definition>
+	
+	<!-- 회원 마이페이지 -->
+	<definition name="mypageTemplate" template="/WEB-INF/views/mainhome/member/mypage/mypageTemplate.jsp">
+		 <put-attribute name="header" value="/WEB-INF/views/mainhome/member/mypage/tiles/header.jsp"/>
+		 <put-attribute name="footer" value="/WEB-INF/views/mainhome/member/mypage/tiles/footer.jsp"/>
+	</definition>
+	
+	
+	<definition name="mypage/*/*/*" extends="mypageTemplate">
+		<put-attribute name="content" value="/WEB-INF/views/mainhome/{1}/{2}/{3}.jsp"></put-attribute>
+	</definition>
+	
+	
+	<!-- 로그인 페이지 -->
+	<definition name="loginTemplate" template="/WEB-INF/views/login/loginTemplate.jsp"></definition>
+	
+	<definition name="conn/*" extends="loginTemplate">
+		<put-attribute name="content" value="/WEB-INF/views/login/{1}.jsp"></put-attribute>
+	</definition>
+	
+	<!-- 본사 시작-->
+   <definition name="headTemplate" template="/WEB-INF/views/head/headTemplate.jsp">
+      <put-attribute name="header" value="/WEB-INF/views/head/tiles/header.jsp"></put-attribute>
+      <put-attribute name="footer" value="/WEB-INF/views/head/tiles/footer.jsp"></put-attribute>
+   </definition>
+   
+   <definition name="head/*/*" extends="headTemplate">
+      <put-attribute name="content" value="/WEB-INF/views/head/{1}/{2}.jsp"></put-attribute>
+   </definition>
+	
+	<!-- 가맹점 -->
+	<definition name="ownerTemplate" template="/WEB-INF/views/owner/ownerTemplate.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/owner/tiles/header.jsp"/>
+		<put-attribute name="footer" value="/WEB-INF/views/owner/tiles/footer.jsp"/>
+	</definition>
+	
+	<definition name="owner/*/*" extends="ownerTemplate">
+		<put-attribute name="content" value="/WEB-INF/views/owner/{1}/{2}.jsp"/>
+	</definition>
+	
+</tiles-definitions>

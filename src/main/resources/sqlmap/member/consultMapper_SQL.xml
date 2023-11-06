@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.member.ConsultMapper">
+
+<insert id="consult" parameterType="ownerVO">
+	insert into owner (
+	owner_id, owner_no, owner_name, owner_bir, owner_tel, owner_email, owner_area, owner_dong, owner_money, owner_building, owner_buildingadd, owner_exp, owner_hopetime, owner_infocontent, owner_contentdetail
+	) values (
+		#{ownerId}, '1', #{ownerName}, #{ownerBir}, #{ownerTel}, #{ownerEmail}, #{ownerArea}, #{ownerDong}, #{ownerMoney}, #{ownerBuilding}, #{ownerBuildingadd}, #{ownerExp}, #{ownerHopetime}, #{ownerInfocontent}, #{ownerContentdetail}
+	)
+</insert>
+
+</mapper>

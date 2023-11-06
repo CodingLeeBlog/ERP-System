@@ -1,0 +1,17 @@
+package kr.or.ddit.service.head;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import kr.or.ddit.vo.head.HeadPaginationInfoVO;
+import kr.or.ddit.vo.owner.OwnerVO;
+
+public interface ICounselService {
+
+	public int selectCounselCount(HeadPaginationInfoVO<OwnerVO> pagingVO);
+	public List<OwnerVO> selectCounselList(HeadPaginationInfoVO<OwnerVO> pagingVO);
+	public OwnerVO counselDetail(OwnerVO ownerVO);
+	public void counselUpdate(HttpServletRequest req, OwnerVO ownerVO);
+
+}

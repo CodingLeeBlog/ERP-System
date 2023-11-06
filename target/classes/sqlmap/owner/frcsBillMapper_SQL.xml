@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsBillMapper">
+
+	<!-- include를 처리하기 위한 동적 쿼리 -->
+	<sql id="duesSearch">
+		<if test="searchYear != null and searchYear != '' ">
+			and (dues_payde like '%'||#{searchYear}||'%')
+		</if>
+		<if test="searchMonth != null and searchMonth != '' ">
+			and (dues_payde like '_____'||#{searchMonth})
+		</if>
+	</sql>
+	
+	<select id="duesList" parameterType="string" resultType="duesVO">
+		select dues_payde, p.frcs_id, dues_elcty, dues_water, dues_gas, dues_mtht, dues_date, dues_mthtyn
+		from publicdues p, frcs_ownership f
+		where p.frcs_id  = f.frcs_id and f.mem_id= #{memId}
+		order by dues_payde desc
+	</select>
+	
+	<insert id="duesRegister" parameterType="duesVO">
+		insert into publicdues (
+			dues_payde, frcs_id, dues_elcty, dues_water, dues_gas, dues_mtht, dues_date, dues_mthtyn
+		) values (
+			 #{duesPayde}, #{frcsId}, #{duesElcty}, #{duesWater}, #{duesGas}, #{duesMtht}, sysdate , #{duesMthtYN}
+		)
+	</insert>
+	
+	<select id="duesPaydeCheck" parameterType="duesVO" resultType="int">
+		select count(dues_payde)
+	 	from publicdues
+	 	where dues_payde= #{duesPayde} and frcs_id = #{frcsId}
+	</select>
+	
+	<select id="frcsIdInfo" parameterType="String" resultType="String">
+		select frcs_id
+		from frcs_ownership
+		where mem_id = #{memId}
+	</select>
+	
+	<delete id="duesRemove" parameterType="map">
+		delete from publicdues
+		where frcs_id = #{frcsId} and dues_payde = #{duesPayde}
+	</delete>
+
+	<select id="selectDuesCount" parameterType="ownerPagingVO" resultType="int">
+		select count(dues_payde)
+		from publicdues p, frcs_ownership f
+		where p.frcs_id  = f.frcs_id and f.mem_id= #{memId}
+		<include refid="duesSearch"/>
+	</select>
+	
+	<select id="selectDuesList" parameterType="ownerPagingVO" resultType="duesVO" >
+		select 
+			b.*
+		from (
+			select 
+				a.*, row_number() over (order by a.dues_payde desc) rnum
+			from(
+				select
+					dues_payde, p.frcs_id, dues_elcty, dues_water, dues_gas, dues_mtht, dues_date, dues_mthtyn
+				from publicdues p, frcs_ownership f
+				where p.frcs_id  = f.frcs_id and f.mem_id= #{memId}
+				<include refid="duesSearch"/>
+				order by dues_payde desc
+			)a
+		)b	
+		<![CDATA[	
+			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<select id="duesDetail" parameterType="map" resultType="duesVO">
+		select dues_payde, frcs_id, dues_elcty, dues_water, dues_gas, dues_mtht, dues_date, dues_mthtyn
+		from publicdues
+		where frcs_id= #{frcsId} and dues_payde = #{duesPayde} 
+	</select>
+	
+	<!-- 차트 자료  -->
+	<select id="getData" parameterType="string" resultType="duesVO">
+		select dues_elcty, dues_gas, dues_water, dues_mtht, dues_payde
+		from publicdues
+		where frcs_id = #{frcsId} and dues_payde like to_char(sysdate,'yyyy')||'%'
+	</select>
+</mapper>

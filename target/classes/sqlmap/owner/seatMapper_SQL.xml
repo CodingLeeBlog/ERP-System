@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.SeatMapper">
+
+	<select id="frcsSeatList" parameterType="string" resultType="seatVO">
+		SELECT
+		    seat_cd
+		  , seat_angle
+		FROM
+		    frcs_seat
+		where frcs_id = #{frcsId}
+	</select>
+	
+	<insert id="seatRegister" parameterType="seatVO" >
+		insert into FRCS_SEAT(
+			SEAT_CD, FRCS_ID, SEAT_XMAP, SEAT_YMAP, SEAT_ANGLE
+		) values (
+			#{seatCd}, #{frcsId}, 0, 0, #{seatAngle}
+		)
+		
+	</insert>
+	
+	<delete id="seatDelete" parameterType="string">
+		DELETE FROM frcs_seat
+		WHERE frcs_id = #{frcsId}
+	</delete>
+	
+	<!-- 조건을 주고 없는것은 인서트 있는것은 업데이트 하려고 했지만 생각해보니 삭제후 인서트가 좋을듯 -->
+<!-- 	<insert id="seatRegister" parameterType="seatVO" > -->
+<!-- 		MERGE INTO FRCS_SEAT -->
+<!-- 	    USING dual -->
+<!-- 	        ON (SEAT_CD = #{seatCd} and FRCS_ID = 'aaabbb2' ) -->
+<!-- 	    WHEN NOT MATCHED THEN -->
+<!-- 	        INSERT (SEAT_CD, FRCS_ID, SEAT_XMAP, SEAT_YMAP, SEAT_ANGLE) -->
+<!-- 	        VALUES (#{seatCd}, 'aaabbb2', '0', '0', #{seatAngle}) -->
+<!-- 	    WHEN MATCHED THEN -->
+<!-- 	        UPDATE SET -->
+<!-- 	            SEAT_ANGLE = #{seatAngle} -->
+		
+<!-- 	</insert> -->
+	
+<!-- 	<insert id="register" parameterType="FrcsSeatVO"> -->
+<!-- 		insert into FRCS_SEAT( -->
+<!-- 			SEAT_CD, FRCS_ID, SEAT_XMAP, SEAT_YMAP, SEAT_ANGLE -->
+<!-- 		) values ( -->
+<!-- 			#{seatCd}, #{frcsId}, #{seatXmap}, #{seatYmap}, #{seatAngle} -->
+<!-- 		) -->
+<!-- 	</insert> -->
+	
+<!-- 	<select id="frcsSeatList" resultType="FrcsSeatVO"> -->
+<!-- 		SELECT -->
+<!-- 		    seat_cd -->
+<!-- 		  , frcs_id -->
+<!-- 		  , seat_xmap -->
+<!-- 		  , seat_ymap -->
+<!-- 		  , seat_angle -->
+<!-- 		FROM -->
+<!-- 		    frcs_seat -->
+<!-- 	</select> -->
+
+</mapper>

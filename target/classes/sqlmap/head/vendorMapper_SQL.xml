@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.VendorMapper">
+	<sql id="vendorSearch">
+		<if test="searchVendor != null and searchVendor != '' "> and (vd_name like '%'||#{searchVendor}||'%') </if>
+		<if test="searchCategory != null and searchCategory != ''"> and (vd_category like '%'||#{searchCategory}||'%') </if>
+		<if test="vdCategory != null and vdCategory != ''"> and (vd_category = #{vdCategory}) </if>
+	</sql>
+	<resultMap type="vendorVO" id="vendorMap">
+		<id property="vdCode" column="vd_code" />
+		<result property="vdName" column="vd_name" />
+		<result property="vdPhone" column="vd_phone" />
+		<result property="vdPost" column="vd_post" />
+		<result property="vdAdd1" column="vd_add1" />
+		<result property="vdAdd2" column="vd_add2" />
+		<result property="vdManager" column="vd_manager" />
+		<result property="vdEmail" column="vd_email" />
+		<result property="vdCategory" column="vd_category" />
+		<collection property="headInventoryList"
+			resultMap="headInventoryMap" />
+	</resultMap>
+	<resultMap type="headInventoryVO" id="headInventoryMap">
+		<id property="vdprodCd" column="VDPROD_CD" />
+		<result property="vdprodName" column="vdprod_name" />
+		<result property="hdmaxQy" column="hdmax_qy" />
+		<result property="hdremainQy" column="hdremain_qy" />
+		<result property="hdforwardPrice" column="hdforward_price" />
+		<result property="vdprodLifestartday"
+			column="vdprod_lifestartday" />
+		<result property="vdprodLifeendday" column="vdprod_lifeendday" />
+		<result property="hdrtrcvPrice" column="hdrtrcv_price" />
+		<result property="vdCode" column="vd_code" />
+	</resultMap>
+	<select id="selectTotalVendorCount" parameterType="headPagingVO"
+		resultType="int">
+		SELECT COUNT(DISTINCT v.vd_name) AS cnt FROM vendor v JOIN
+		head_inventory hi ON v.vd_code = hi.vd_code WHERE 1=1
+		<include refid="vendorSearch" />
+	</select>
+	<select id="selectTotalVendorList" parameterType="headPagingVO"
+		resultType="vendorVO">
+		select b.* from ( select a.*, row_number() over (order by A.vd_code)
+		rnum from ( select distinct(V.VD_NAME),V.VD_CODE, V.VD_PHONE,
+		V.VD_POST, V.VD_ADD1, V.VD_ADD2, V.VD_MANAGER, V.VD_EMAIL,
+		V.VD_CATEGORY, V.VD_ETC from VENDOR V, HEAD_INVENTORY HI WHERE 1=1 and
+		V.VD_CODE = HI.VD_CODE
+		<include refid="vendorSearch" />
+		)a )b
+<![CDATA[ where b.rnum >= #{startRow} and b.rnum <= #{endRow} ]]>
+	</select>
+	
+	<select id="selectCategoryList" parameterType="vendorVO"
+		resultType="vendorVO">
+		SELECT DISTINCT VD.VD_NAME, VD.VD_CODE FROM VENDOR VD LEFT JOIN
+		HEAD_INVENTORY HI ON VD.VD_CODE = HI.VD_CODE WHERE 1=1 and HI.VD_CODE
+		IS NULL
+		<include refid="vendorSearch" />
+	</select>
+	<select id="selectVendorName" parameterType="vendorVO"
+		resultMap="vendorMap">
+		<!-- select -->
+		<!-- v.vd_code, vd_name, vd_phone, vd_post, vd_add1, vd_add2, vd_manager, 
+			vd_email, vd_category, -->
+		<!-- vdprod_cd, vdprod_name, hdmax_qy, hdremain_qy, hdforward_price, -->
+		<!-- to_char(vdprod_lifestartday, 'yyyy-MM-dd') vdprod_lifestartday, to_char(vdprod_lifeendday, 
+			'yyyy-MM-dd') vdprod_lifeendday, -->
+		<!-- hdrtrcv_price, hi.vd_code -->
+		<!-- from vendor v left outer join head_inventory hi on(v.vd_code = hi.vd_code) -->
+		<!-- where 1=1 -->
+		<!-- and v.vd_code = #{vdCode} -->
+		SELECT DISTINCT A.VDPROD_CD, A.VDPROD_NAME, A.HDMAX_QY, A.HDREMAIN_QY,
+		A.HDFORWARD_PRICE, TO_CHAR(A.VDPROD_LIFESTARTDAY, 'yyyy-MM-dd')
+		VDPROD_LIFESTARTDAY, TO_CHAR(A.VDPROD_LIFEENDDAY, 'yyyy-MM-dd')
+		VDPROD_LIFEENDDAY, A.HDRTRCV_PRICE,A.VD_CODE, A.HDMAX_QY,VD.* FROM
+		VENDOR_INVENTORY A , VENDOR VD WHERE A.VD_CODE = #{vdCode} and VD_name
+		= #{vdName}
+	</select>
+	<insert id="registVendor" parameterType="vendorVO">
+		<foreach collection="list" item="item" separator=" " open="INSERT ALL" close=" SELECT * FROM dual"> 
+		INTO HEAD_INVENTORY (VDPROD_CD, VDPROD_NAME,HDMAX_QY, HDREMAIN_QY, HDFORWARD_PRICE, VDPROD_LIFESTARTDAY,
+			VDPROD_LIFEENDDAY, HDRTRCV_PRICE, VD_CODE) 
+		VALUES (#{item.vdprodCd}, #{item.vdprodName}, #{item.hdmaxQy}, #{item.hdremainQy}, #{item.hdforwardPrice}, #{item.vdprodLifestartday},
+			#{item.vdprodLifeendday}, #{item.hdrtrcvPrice}, #{item.vdCode})
+		</foreach>
+	</insert>
+	
+	<select id="selectVendor" parameterType="string" resultType="vendorVO">
+		select VD_CODE, VD_NAME, VD_PHONE, VD_POST, VD_ADD1, VD_ADD2, VD_MANAGER, VD_EMAIL, VD_CATEGORY, VD_ETC
+		from vendor
+		where vd_code = #{vdCode}
+	</select>
+	
+	<update id="updateVendor" parameterType="vendorVO" >
+		UPDATE vendor
+		SET
+		     VD_NAME = #{vdName}
+		    ,VD_PHONE = #{vdPhone}
+		    ,VD_POST = #{vdPost}
+		    ,VD_ADD1 = #{vdAdd1}
+		    ,VD_ADD2 = #{vdAdd2}
+		    ,VD_MANAGER = #{vdManager}
+		    ,VD_EMAIL = #{vdEmail}
+		    ,VD_CATEGORY = #{vdCategory}
+		WHERE
+		    vd_code = #{vdCode}
+	</update>
+	
+	<delete id="deleteHeadInventory" parameterType="string">
+		DELETE FROM HEAD_INVENTORY
+		WHERE VD_CODE = #{vdCode}
+	</delete>
+	
+	<delete id="deleteVendorInventory" parameterType="string">
+		DELETE FROM VENDOR_INVENTORY
+		WHERE VD_CODE = #{vdCode}
+	</delete>
+	
+	<delete id="deleteVendor" parameterType="string">
+		DELETE FROM VENDOR
+		WHERE VD_CODE = #{vdCode}
+	</delete>
+</mapper>

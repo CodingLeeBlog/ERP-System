@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsInquiryMapper">
+	
+	<select id="frcsInqList" parameterType="string" resultType="frcsInqVO">
+		SELECT
+		    inqry_no
+		  , frcs_id
+		  , inqry_ttl
+		  , inqry_cn
+		  , inqry_ymd
+		  , inqry_yn
+		  , table_name
+		FROM
+		    FRCS_INQUIRY
+		WHERE 
+			frcs_id = #{frcsId}
+		order by 
+			inqry_no desc
+	</select>
+	
+	<insert id="inqInsert" parameterType="frcsInqVO">
+		<selectKey keyProperty="inqryNo" resultType="string" order="BEFORE">
+			select seq_frcsinquiry.nextval from dual
+		</selectKey>
+		INSERT INTO frcs_inquiry (
+		    inqry_no
+		    , frcs_id
+		    , inqry_ttl
+		    , inqry_cn
+		    , inqry_ymd
+		    , inqry_yn
+		    , table_name
+		) VALUES (
+		    #{inqryNo}
+		  , #{frcsId}
+		  , #{inqryTtl}
+		  , #{inqryCn}
+		  , sysdate
+		  , 'N'
+		  , ''
+		)
+	</insert>
+	
+	<select id="frcsInqDetail" parameterType="string" resultType="frcsInqVO">
+		SELECT
+		    inqry_no
+		  , frcs_id
+		  , inqry_ttl
+		  , inqry_cn
+		  , inqry_ymd
+		  , inqry_yn
+		  , table_name
+		FROM
+		    FRCS_INQUIRY
+		WHERE 
+			inqry_no = #{inqryNo}
+	</select>
+	
+	<update id="frcsInqUpdate" parameterType="frcsInqVO">
+		UPDATE frcs_inquiry
+		SET
+		    inqry_ttl = #{inqryTtl}
+		  , inqry_cn = #{inqryCn}
+		WHERE
+	        inqry_no = #{inqryNo}
+	</update>
+	
+	<delete id="frcsInqDelete" parameterType="string">
+		DELETE FROM frcs_inquiry
+		WHERE
+			inqry_no = #{inqryNo}
+	</delete>
+	
+</mapper>

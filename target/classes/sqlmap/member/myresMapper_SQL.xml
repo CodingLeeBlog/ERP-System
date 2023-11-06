@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.member.MyResMapper">
+
+<select id="myResList" parameterType="string" resultType="resVO">
+	select
+		resv_no, a.mem_id, resv_mcnt, resv_time, resv_date, resv_yn, resv_state, resv_acc_date, resv_note, seat_cd, resv_price, b.frcs_id, b.mem_id, c.frcs_name
+	from reservation a 
+    	left join (select distinct frcs_id, mem_id from mem_menu ) b 
+    		on a.mem_id = b.mem_id
+    	left join franchise c
+    		on b.frcs_id = c.frcs_id
+	where a.mem_id = #{memId}
+</select>
+
+<update id="myResUpdate" parameterType="payVO">
+	update reservation
+	set
+		resv_yn = #{payYn}
+	where mem_id = #{memId}
+	and resv_no = #{resvNo}
+</update>
+</mapper>

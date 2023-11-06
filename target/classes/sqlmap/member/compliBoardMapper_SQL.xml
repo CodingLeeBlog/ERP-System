@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.member.CompliBoardMapper">
+  
+	<resultMap type="boardVO" id="boardMap">
+	 	<result property="tableNo" column="TABLE_NO" />
+		<result property="memId" column="MEM_ID" />
+		<result property="field" column="FIELD" />
+		<result property="boardTitle" column="BOARD_TITLE" />
+		<result property="boardContent" column="BOARD_CONTENT" />
+		<result property="boardCount" column="BOARD_COUNT" />
+		<result property="boardRegdate" column="BOARD_REGDATE" />
+	</resultMap>
+	
+  	 <resultMap type="alarmVO" id="alarmMap">
+ 		<result property="alarmNo" column="ALARM_NO"/>
+ 		<result property="memId" column="MEM_ID"/>
+ 		<result property="alarmContent" column="ALARM_CONTENT"/>
+ 		<result property="alarmDate" column="ALARM_DATE"/>
+ 		<result property="alarmRead" column="ALARM_READ"/>
+ 		<result property="alarmUrl" column="ALARM_URL"/>
+ 	</resultMap>
+  	
+  
+  	<sql id="boardSearch">
+		<if test="searchType != null and searchType == 'title'">
+			and (board_title like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'writer'">
+			and (mem_id like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'both'">
+			and (board_title like '%'||#{searchWord}||'%')
+			and (mem_id like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+
+	<sql id="boardlistSearch">
+		<if test="searchStatus != null and searchStatus != '' ">
+			and (field like '%'||#{searchStatus}||'%')
+		</if>
+		<if test="searchWord != null and searchWord != '' ">
+			and (board_title like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+	
+	<select id="selectBoardCount" parameterType="pagingVO" resultType="int">
+		select count(table_no)
+		from board 
+		where 1=1
+		and field = '칭찬'
+		<include refid="boardSearch"/>
+	</select>
+	
+	<select id="selectBoardList" parameterType="pagingVO" resultType="boardVO">
+	with b as(
+		select
+		    row_number() over(order by t.rnum2 desc) rnum, t.*
+		from(
+		    select 
+		        a.*, row_number() over (order by a.table_no desc) rnum2
+		    from (
+		        select
+		            table_no, board_title, board_content,
+		            board_regdate, mem_id, board_count, field
+		        from board
+		        where 1=1
+		        AND FIELD = '칭찬'
+		        <include refid="boardSearch"/>
+		        order by table_no desc
+		    )a
+		) t
+	)
+	select * from b
+	<![CDATA[
+		where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+	]]>
+	</select>
+	
+	
+  
+  	<update id="incrementHit" parameterType="int">
+		update board
+		set
+			board_count = board_count + 1
+		where table_no = #{tableNo}
+	</update>
+	
+	
+	<insert id="insertBoard" parameterType="boardVO" useGeneratedKeys="true">
+		<selectKey keyProperty="tableNo" resultType="int" order="BEFORE">
+			select seq_board.nextval from dual
+		</selectKey>
+		insert into board(
+			table_no, board_title, board_content, board_regdate, mem_id, field
+		)values(
+			#{tableNo}, #{boardTitle}, #{boardContent}, sysdate, #{memId}, '칭찬'
+		)
+	</insert>
+	
+	<select id="selectBoard" parameterType="int" resultMap="boardMap">
+	select
+        table_no, board_title, board_regdate, board_count, board_content, mem_id
+    from board
+    where table_no = #{tableNo}
+    AND FIELD = '칭찬'
+	</select>
+	
+	<update id="updateBoard" parameterType="BoardVO">
+		update board
+		set
+			board_title = #{boardTitle},
+			board_content = #{boardContent},
+			board_regdate = sysdate
+		where table_no = #{tableNo}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="int">
+		delete from board
+		where table_no = #{tableNo}
+	</delete>
+	
+	<select id="myBoardCount" parameterType="pagingVO" resultType="int">
+		select count(table_no)
+		from board 
+		where 1=1
+		<include refid="boardlistSearch"/>
+	</select>
+	
+	
+	
+	<select id="myBoardList" parameterType="pagingVO" resultType="boardVO">
+	with b as(
+		select
+		    row_number() over(order by t.rnum2 desc) rnum, t.*
+		from(
+		    select 
+		        a.*, row_number() over (order by a.table_no desc) rnum2
+		    from (
+		        select
+		            table_no, board_title, board_content,
+		            board_regdate, mem_id, board_count, field
+		        from board
+		        where 1=1
+		        <include refid="boardlistSearch"/>
+		        order by table_no desc
+		    )a
+		) t
+	)
+	select * from b
+	<![CDATA[
+		where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+	]]>
+	</select>
+	
+	<select id="selectAlarm" parameterType="String" resultType="int">
+ 		select count(*)
+ 		from alarm
+ 		where mem_id = #{memId} and ALARM_READ = 'N'
+ 	</select>
+ 	
+ 	
+ 	<select id="selectAlarmList" parameterType="String" resultType="alarmVO">		
+		select 
+			ALARM_NO, ALARM_CONTENT, MEM_ID, ALARM_READ, ALARM_URL
+		from
+			alarm 
+		where 
+			MEM_ID = #{memId} and ALARM_READ = 'N'
+ 	</select>
+ 	
+ 	<update id="updateAlarm" parameterType="int">
+ 		update alarm
+ 		set
+ 			ALARM_READ = 'Y'
+ 		where 
+ 			ALARM_NO = #{alarmNo}
+ 	</update>
+ 	
+
+	<insert id="insertAlarm" parameterType="alarmVO">
+	    INSERT INTO alarm (
+	        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL
+	    ) VALUES (
+	        SEQ_ALARM.nextval, #{memId}, '칭찬 글 등록 완료!', sysdate, '/elly/detail.do?tableNo=' || #{tableNo}
+	    )
+	</insert>
+
+
+ 	
+ 	<select id="selectMember" parameterType="String" resultType="String">
+	  SELECT DISTINCT board.MEM_ID
+	  FROM board
+	  LEFT OUTER JOIN alarm ON board.MEM_ID = alarm.MEM_ID
+	  WHERE board.MEM_ID = #{memId}
+	</select>
+ 
+ 	
+
+  </mapper>

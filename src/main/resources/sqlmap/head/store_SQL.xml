@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.StoreMapper">
+
+	<sql id="frcsSearch">
+		<if test="searchStatus != null and searchStatus != '' ">
+			and (frcs_state like '%'||#{searchStatus}||'%')
+		</if>
+		<if test="searchWord != null and searchWord != '' ">
+			and (frcs_name like '%'||#{searchWord}||'%')
+<!-- 			and (frcs_add1 like '%'||#{searchWord}||'%') -->
+		</if>
+	</sql>
+
+	<sql id="frcsOrder">
+		<if test="searchFrcsId != null and searchFrcsId != '' ">
+			and (fo.frcs_id like '%'||#{searchFrcsId}||'%')
+		</if>
+		<if test="searchFrcsName != null and searchFrcsName != '' ">
+			and (frcs_name like '%'||#{searchFrcsName}||'%')
+		</if>
+		<if test="searchBeforeDate != null and searchBeforeDate != '' ">
+			<![CDATA[
+			AND FO.FRCSORDER_DATE >= TO_CHAR(TO_DATE(#{searchBeforeDate}, 'YY/MM/DD'))
+			]]>
+		</if>
+		<if test="searchAfterDate != null and searchAfterDate != '' ">
+			<![CDATA[
+				AND FO.FRCSORDER_DATE <= TO_CHAR(TO_DATE(#{searchAfterDate}, 'YY/MM/DD'))
+			]]>
+		</if>
+	</sql>
+	
+	<sql id="storeDetailSearch">
+		<if test="storeOrderDetailSearch != null and storeOrderDetailSearch != '' ">
+			and (frcs.frcs_name like '%'||#{storeOrderDetailSearch}||'%')		
+		</if>
+	</sql>
+	
+	<!-- 가맹점조회 -->
+	<select id="selectTotalFrcsCount" resultType="int" parameterType="headPagingVO">
+		select count(frcs_name) as cnt
+		from frcs_ownership a, franchise f, member m
+		where m.mem_id = a.mem_id
+		and a.frcs_id = f.frcs_id
+		<include refid="frcsSearch" />
+	</select>
+
+	<select id="selectTotalFrcsList" parameterType="headPagingVO" resultType="totalInfoVO" >
+		select 
+         b.*
+      from (
+         select 
+            a.*, row_number() over (order by A.ip_stts desc) rnum
+         from(
+            SELECT F.*, M.*, A.IP_STTS, A.IP_DATE, A.TABLE_NAME, A.ST_EDU_FNSH_YN
+            FROM 
+            FRCS_IPMG A, MEMBER M, FRANCHISE F, FRCS_OWNERSHIP O
+            WHERE M.MEM_ID = O.MEM_ID 
+            AND O.FRCS_ID = F.FRCS_ID
+            AND A.FRCS_ID = F.FRCS_ID
+<!--             where 1=1 -->
+            <include refid="frcsSearch" />
+            order by ip_stts desc
+         )a
+      )b 
+        <![CDATA[
+				where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+			]]>
+	</select>
+	<!-- 가맹점 조회 끝 -->
+	
+	<!-- 가맹점 주문내역 시작 -->
+	
+	<select id="totalOrderCount" parameterType="headPagingVO" resultType="int">
+		SELECT COUNT(FRCS_ID) AS cnt
+		FROM (
+			SELECT FO.FRCS_ID, F.FRCS_NAME, F.FRCS_POST, F.FRCS_ADD1, F.FRCS_ADD2, 
+			       TO_CHAR(FO.FRCSORDER_DATE, 'YY/MM/DD') AS ORDER_DATE, SUM(FO.FRCSORDER_AMT) AS FRCSORDER_AMT
+			FROM FRANCHISE F
+			JOIN FRCSORDER FO ON F.FRCS_ID = FO.FRCS_ID
+			WHERE 1=1
+			<include refid="frcsOrder" />
+			GROUP BY FO.FRCS_ID, F.FRCS_NAME, F.FRCS_POST, F.FRCS_ADD1, F.FRCS_ADD2, TO_CHAR(FO.FRCSORDER_DATE, 'YY/MM/DD')
+			ORDER BY FO.FRCS_ID, TO_CHAR(FO.FRCSORDER_DATE, 'YY/MM/DD')
+			)
+	</select>
+	
+	<select id="selectTotalOrderList" parameterType="headPagingVO" resultType="storeOrderHistoryVO">
+		SELECT FO.FRCS_ID, F.FRCS_NAME, F.FRCS_POST, F.FRCS_ADD1, F.FRCS_ADD2, 
+        TO_CHAR(FO.FRCSORDER_DATE, 'YY/MM/DD') AS FRCSORDER_DATE, SUM(FO.FRCSORDER_AMT) AS FRCSORDER_AMT
+		FROM FRANCHISE F
+		JOIN FRCSORDER FO ON F.FRCS_ID = FO.FRCS_ID
+		WHERE 1=1
+		<include refid="frcsOrder" />
+		GROUP BY FO.FRCS_ID, F.FRCS_NAME, F.FRCS_POST, F.FRCS_ADD1, F.FRCS_ADD2, TO_CHAR(FO.FRCSORDER_DATE, 'YY/MM/DD')
+		ORDER BY FO.FRCS_ID, TO_CHAR(FO.FRCSORDER_DATE, 'YY/MM/DD')
+	</select>
+	
+	<select id="selectFrcsNameList" parameterType="storeOrderHistoryVO" resultType="storeOrderHistoryVO">
+		SELECT FO.FRCS_ID, F.FRCS_NAME
+		FROM FRANCHISE F
+		JOIN FRCSORDER FO ON F.FRCS_ID = FO.FRCS_ID
+		GROUP BY FO.FRCS_ID, F.FRCS_NAME
+		ORDER BY FO.FRCS_ID
+	</select>
+	<!-- 가맹점 주문내역 끝 -->
+	
+	<!-- 가맹점 주문상세 시작 -->
+	
+	<select id="selectOrderListDetailsCount" parameterType="headPagingVO" resultType="int">
+		SELECT COUNT(*) AS CNT
+		FROM
+		(SELECT 
+		    F.FRCSORDER_NO, F.FRCSORDER_DATE, F.FRCSORDER_AMT, F.FRCSORDER_CONFM, F.FRCSORDER_CONFMDATE, F.FRCSORDER_RETURN, F.FRCS_ID, F.FRCSORDER_NAME, FD.FRCSORDER_NO,FD.VDPROD_CD, FD.FRCSORDER_QY, HDFORWARD_PRICE
+		FROM FRCSORDER F
+		LEFT OUTER JOIN FRCSORDER_DETAIL FD
+		ON F.FRCSORDER_NO = FD.FRCSORDER_NO
+		WHERE TRUNC(F.FRCSORDER_DATE) = TO_DATE(#{frcsorderDate}, 'YY-MM-DD')
+		)
+	</select>
+	
+	<select id="selectOrderListDetails" parameterType="headPagingVO" resultType="storeOrderHistoryVO">
+		SELECT 
+		 TO_CHAR(F.FRCSORDER_DATE, 'YY-MM-DD HH:MM:SS') FRCSORDER_DATE,  SUM(F.FRCSORDER_AMT) TOTAL_PRICE , F.FRCSORDER_CONFM,
+		 FD.FRCSORDER_NO, 
+		 FRCS.FRCS_ID, FRCS.FRCS_NAME
+		FROM FRCSORDER F, FRCSORDER_DETAIL FD, HEAD_INVENTORY HI, FRANCHISE FRCS
+		WHERE F.FRCSORDER_NO = FD.FRCSORDER_NO
+		AND FD.VDPROD_CD = HI.VDPROD_CD
+		AND FRCS.FRCS_ID = F.FRCS_ID
+		AND TRUNC(F.FRCSORDER_DATE) = TO_DATE(#{frcsorderDate}, 'YY-MM-DD')
+		<include refid="storeDetailSearch" />
+		GROUP BY FRCSORDER_DATE, F.FRCSORDER_CONFM, FD.FRCSORDER_NO, FRCS.FRCS_ID, FRCS.FRCS_NAME
+	</select>
+
+	<select id="selectCheckOne" parameterType="string" resultType="storeOrderHistoryVO"> 
+		SELECT 
+		FD.FRCSORDER_NO, FD.VDPROD_CD, HI.VDPROD_NAME, FD.FRCSORDER_QY, FD.HDFORWARD_PRICE,
+		SUM(FD.FRCSORDER_QY * FD.HDFORWARD_PRICE) AS TOTAL_PRICE 
+		FROM 
+		FRCSORDER_DETAIL FD JOIN FRCSORDER F 
+		ON FD.FRCSORDER_NO = F.FRCSORDER_NO 
+		JOIN HEAD_INVENTORY HI ON FD.VDPROD_CD = HI.VDPROD_CD 
+		WHERE FD.FRCSORDER_NO = #{frcsorderNo} 
+		GROUP BY FD.FRCSORDER_NO, FD.VDPROD_CD, HI.VDPROD_NAME, FD.FRCSORDER_QY,FD.HDFORWARD_PRICE 
+	</select>
+	
+	<!-- 가맹점 주문상세 끝 -->
+	
+	<!-- 가맹점재고 수량 업데이트 시작-->
+		<select id="selectFrcsQy" parameterType="string" resultType="inventoryUpdateVO">
+			SELECT B.VDPROD_CD, A.VDPROD_NAME, A.FRCSORDER_QY,B.INVNTRY_QY, B.PROPRT_QY, B.LASTWRHOUSNG_DATE
+			FROM
+			(
+			    SELECT FI.VDPROD_CD, HI.VDPROD_NAME, FI.FRCSORDER_NO, FI.FRCSORDER_QY, FI.HDFORWARD_PRICE
+			    FROM FRCSORDER_DETAIL FI, HEAD_INVENTORY HI
+			    WHERE FI.VDPROD_CD = HI.VDPROD_CD
+			    AND FRCSORDER_NO = #{frcsorderNo}
+			) A, FRCS_INVENTORY B
+			WHERE A.VDPROD_CD = B.VDPROD_CD
+		</select>
+		
+		<update id="updateFrcsInventory" parameterType="inventoryUpdateVO">
+			UPDATE FRCS_INVENTORY
+			SET
+			     INVNTRY_QY = #{invntryQy}
+			WHERE
+			    VDPROD_CD = #{vdprodCd}
+		</update>
+	<!-- 가맹점재고 수량 업데이트 끝-->
+	
+	<!-- 본사재고 수량 업데이트 시작-->
+		<select id="selectHeadQy" parameterType="string" resultType="inventoryUpdateVO">
+			SELECT FI.VDPROD_CD, HI.VDPROD_NAME, FI.FRCSORDER_NO, FI.FRCSORDER_QY, FI.HDFORWARD_PRICE, HI.HDMAX_QY,HI.HDREMAIN_QY
+			FROM FRCSORDER_DETAIL FI, HEAD_INVENTORY HI
+			WHERE FI.VDPROD_CD = HI.VDPROD_CD
+			AND FRCSORDER_NO = #{frcsorderNo}
+		</select>
+		
+		<update id="updateHeadInventory" parameterType="inventoryUpdateVO">
+			UPDATE HEAD_INVENTORY
+			SET
+			     HDREMAIN_QY = #{hdremainQy}
+			WHERE
+			    VDPROD_CD = #{vdprodCd}
+		</update>
+	<!-- 본사재고 수량 업데이트 끝-->
+	
+	<!-- 가맹점 주문상세 승인 시작 -->
+		<update id="updateOrderDetails" parameterType="string">
+			UPDATE FRCSORDER
+			SET
+			     FRCSORDER_CONFM = '승인',
+			     FRCSORDER_CONFMDATE = SYSDATE
+			WHERE
+			    FRCSORDER_NO = #{frcsorderNo}
+		</update>
+	
+	<!-- 가맹점 주문상세 승인 끝 -->
+	
+	<!-- 반려버튼 클릭 시 모달창에 데이터불러오기 시작 -->
+		<select id="frcsOrderDetails" parameterType="string" resultType="storeOrderHistoryVO">
+			SELECT 
+			 TO_CHAR(F.FRCSORDER_DATE, 'YY-MM-DD') FRCSORDER_DATE,  SUM(F.FRCSORDER_AMT) TOTAL_PRICE , F.FRCSORDER_CONFM,
+			 FD.FRCSORDER_NO, 
+			 FRCS.FRCS_ID, FRCS.FRCS_NAME
+			FROM FRCSORDER F, FRCSORDER_DETAIL FD, HEAD_INVENTORY HI, FRANCHISE FRCS
+			WHERE F.FRCSORDER_NO = FD.FRCSORDER_NO
+			AND FD.VDPROD_CD = HI.VDPROD_CD
+			AND FRCS.FRCS_ID = F.FRCS_ID
+			AND F.FRCSORDER_NO IN(#{frcsorderNo})
+<!-- 			<foreach collection="java.util.List" item="item" index="index" separator="," open="(" close=")"> -->
+<!--                  #{item} -->
+<!--              </foreach> -->
+			GROUP BY FRCSORDER_DATE, F.FRCSORDER_CONFM, FD.FRCSORDER_NO, FRCS.FRCS_ID, FRCS.FRCS_NAME
+		</select>
+	<!-- 반려버튼 클릭 시 모달창에 데이터불러오기 끝 -->
+	
+	<!--  반려사유 입력 후 확인버튼 눌렀을때 상태 업데이트 시작 -->
+		<update id="updateImpossibleOrder" parameterType="storeOrderHistoryVO"> 
+			UPDATE FRCSORDER 
+			SET 
+			FRCSORDER_CONFM = '반려', 
+			FRCSORDER_RETURN = #{frcsorderReturn}, 
+			FRCSORDER_CONFMDATE = SYSDATE 
+			WHERE FRCSORDER_NO = #{frcsorderNo} 
+		</update>
+	<!--  반려사유 입력 후 확인버튼 눌렀을때 상태 업데이트 끝 -->
+	
+	<!-- Excel에 전달해줄 가맹점 조회 리스트 시작 -->
+		<select id="storeList" resultType="totalInfoVO">
+		select 
+			 b.*
+				from (
+				 select 
+				    a.*, row_number() over (order by A.ip_stts desc) rnum
+				 from(
+				    SELECT F.*, M.*, A.IP_STTS, A.IP_DATE, A.TABLE_NAME, A.ST_EDU_FNSH_YN
+				    FROM 
+				    FRCS_IPMG A, MEMBER M, FRANCHISE F, FRCS_OWNERSHIP O
+				    WHERE M.MEM_ID = O.MEM_ID 
+				    AND O.FRCS_ID = F.FRCS_ID
+				    AND A.FRCS_ID = F.FRCS_ID
+				    order by ip_stts desc
+				 )a
+			)b
+		</select>
+	<!-- Excel에 전달해줄 가맹점 조회 리스트 끝 -->
+	
+	<!-- Excel 업로드 시작 -->
+		<update id="registerFranchiseExcel" parameterType="totalInfoVO">
+			UPDATE FRANCHISE
+			SET
+			     FRCS_NAME = #{frcsName},
+			     FRCS_ADD1 = #{frcsAdd1},
+			     FRCS_ADD2 = #{frcsAdd2},
+			     FRCS_STATE = #{frcsState},
+			     FRCS_TEL = #{frcsTel}
+			WHERE
+			    FRCS_ID = #{frcsId}
+		</update>
+		<update id="registerFrcsIpmgExcel" parameterType="totalInfoVO">
+			UPDATE FRCS_IPMG
+			SET
+			     IP_STTS = #{ipStts}
+			WHERE
+			    FRCS_ID = #{frcsId}
+		</update>
+		<update id="registerMemberExcel" parameterType="totalInfoVO">
+			UPDATE MEMBER
+			SET
+			    MEM_NAME = #{memName}
+			WHERE
+			    MEM_ID = #{memId}
+		</update>
+	<!-- Excel 업로드 끝 -->
+	
+	<!--  가맹점 상세조회 시작  -->
+		<select id="selectMemberDetail" parameterType="string" resultType="totalInfoVO"> 
+			SELECT * 
+			FROM MEMBER 
+			WHERE MEM_ID = #{memId} 
+		</select>
+		
+		<select id="selectFrcsDetail" parameterType="string" resultType="totalInfoVO"> 
+			SELECT * 
+			FROM FRANCHISE 
+			WHERE FRCS_NAME = #{frcsName} 
+		</select>
+<!--  가맹점 상세조회 끝  -->
+</mapper>

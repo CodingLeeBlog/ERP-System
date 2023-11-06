@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.MyPageMapper">
+
+<!-- 	<select id="detail" parameterType="String" resultType="FranchiseVO"> -->
+<!--  		select -->
+<!--  			FRCS_ID, FRCS_NAME, FRCS_STATE, FRCS_TEL, FRCS_STDATE,  -->
+<!--  			FRCS_ENDDATE, FRCS_POST, FRCS_ADD1, FRCS_ADD2, FRCS_STTIME,  -->
+<!--  			FRCS_ENDTIME, FRCS_CDATE, FRCS_INSDATE, FRCS_INEDATE, FRCS_OPDATE,  -->
+<!--  			FRCS_XMAP, FRCS_YMAP, FRCS_STAR, FRCS_PSNCPA -->
+<!--  		from FRANCHISE -->
+<!--  		where FRCS_ID = 'aaabbb2' -->
+<!--  	</select> -->
+ 	
+	<select id="detail" parameterType="String" resultType="FranchiseVO">
+ 		SELECT
+		    a.frcs_id
+		  , a.frcs_name
+		  , a.frcs_state
+		  , a.frcs_tel
+		  , a.frcs_stdate
+		  , a.frcs_enddate
+		  , a.frcs_post
+		  , a.frcs_add1
+		  , a.frcs_add2
+		  , a.frcs_sttime
+		  , a.frcs_endtime
+		  , a.frcs_cdate
+		  , a.frcs_insdate
+		  , a.frcs_inedate
+		  , a.frcs_opdate
+		  , a.frcs_xmap
+		  , a.frcs_ymap
+		  , a.frcs_star
+		  , a.frcs_psncpa
+		  , b.MEM_ID
+		  , c.MEM_PW
+		FROM
+		    franchise a
+		    , FRCS_OWNERSHIP b
+		    , MEMBER c
+		where a.frcs_id=b.frcs_id
+		    and a.frcs_id=#{frcsId}
+		    and b.MEM_ID=c.MEM_ID
+ 	</select>
+ 	
+ 	<update id="update" parameterType="franchiseVO">
+ 		update franchise
+		set
+			frcs_tel = #{frcsTel},
+			frcs_post = #{frcsPost},
+			frcs_add1 = #{frcsAdd1}, 
+			frcs_add2 = #{frcsAdd2}
+		where frcs_id= #{frcsId}
+ 	</update>
+
+
+</mapper>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsMenuMapper">
+
+<!-- 	<resultMap type="FrcsMenuVO" id="frcsMenuMap"> -->
+<!-- 		<id property="menuCd" column="menu_cd"/> -->
+<!-- 		<result property="menuCd" column="menu_cd"/> -->
+<!-- 		<result property="frcsId" column="frcs_id"/> -->
+<!-- 		<result property="saleYn" column="sale_yn"/> -->
+<!-- 		<collection property="attachList" resultMap="attachMap"/> -->
+<!-- 		<collection property="menuList" resultMap="menuMap"/> -->
+<!-- 	</resultMap> -->
+	
+<!-- 	<resultMap type="menuVO" id="menuMap"> -->
+<!-- 		<id property="menuCd" column="menu_cd"/> -->
+<!-- 		<result property="menuCd" column="menu_cd"/> -->
+<!-- 		<result property="menuName" column="menu_name"/> -->
+<!-- 		<result property="menuPrice" column="menu_price"/> -->
+<!-- 		<result property="menuCg" column="menu_cg"/> -->
+<!-- 		<result property="menuDes" column="menu_des"/> -->
+<!-- 		<result property="menuState" column="menu_state"/> -->
+<!-- 		<result property="menuRsdate" column="menu_rsdate"/> -->
+<!-- 		<result property="menuDeldate" column="menu_deldate"/> -->
+<!-- 		<result property="tableName" column="table_name"/> -->
+<!-- 	</resultMap> -->
+	
+<!-- 	<resultMap type="attachVO" id="attachMap"> -->
+<!-- 		<id property="attachNo" column="ATTACH_NO"/> -->
+<!-- 		<result property="attachNo" column="ATTACH_NO"/> -->
+<!-- 		<result property="fileNo" column="FILE_NO"/> -->
+<!-- 		<result property="attachOrgname" column="ATTACH_ORGNAME"/> -->
+<!-- 		<result property="attachSavename" column="ATTACH_SAVENAME"/> -->
+<!-- 		<result property="tableName" column="TABLE_NAME"/> -->
+<!-- 		<result property="tablePk" column="TABLE_PK"/> -->
+<!-- 		<result property="attachMime" column="ATTACH_MIME"/> -->
+<!-- 		<result property="attachSize" column="ATTACH_SIZE"/> -->
+<!-- 		<result property="thumbImg" column="THUMB_IMG"/> -->
+<!-- 	</resultMap> -->
+
+	<resultMap type="resVO" id="resMap">
+		<id property="resvNo" column="resv_no"/>
+		<result property="resvNo" column="resv_no"/>
+		<result property="memId" column="mem_id"/>
+		<result property="resvMcnt" column="resv_mcnt"/>
+		<result property="resvTime" column="resv_time"/>
+		<result property="resvDate" column="resv_date"/>
+		<result property="resvYn" column="resv_yn"/>
+		<result property="resvState" column="resv_state"/>
+		<result property="resvAccDate" column="resv_acc_date"/>
+		<result property="resvNote" column="resv_note"/>
+		<result property="seatCd" column="seat_cd"/>
+		<result property="resvPrice" column="resv_price"/>
+		<collection property="menuList" resultMap="menuListMap"/>
+	</resultMap>
+	
+	<resultMap type="menuListVO" id="menuListMap">
+		<result property="menuCd" column="menu_cd"/>
+		<result property="frcsId" column="frcs_id"/>
+		<result property="menuCnt" column="menu_cnt"/>
+	</resultMap>
+
+	<select id="frcsMenuList" parameterType="string" resultType="FrcsMenuVO">
+		SELECT
+		    a.menu_cd
+		  , a.frcs_id
+		  , a.sale_yn
+		  , b.MENU_NAME
+		  , b.MENU_PRICE
+		  , b.MENU_DES
+		  , b.MENU_CG
+		  , b.MENU_STATE
+		  , b.MENU_RSDATE
+		  , b.MENU_DELDATE
+		  , b.TABLE_NAME
+		  , c.attach_no
+		  , c.file_no
+		  , c.attach_orgname
+		  , c.attach_savename
+		  , c.attach_mime
+		  , c.attach_size
+		  , c.table_name
+		  , c.table_pk
+		  , c.thumb_img
+		FROM
+		    frcs_menu a 
+		JOIN head_menu b ON a.menu_cd = b.menu_cd 
+		JOIN attach c ON c.table_name = 'menu' and b.menu_cd = c.table_pk and b.table_name = c.table_name
+		where a.frcs_id = #{frcsId}
+		
+	</select>
+	
+<!-- 	<select id="selectMenuImg" parameterType="string" resultMap="frcsMenuMap" > -->
+<!-- 		SELECT -->
+<!-- 		    a.attach_no -->
+<!-- 		  , a.file_no -->
+<!-- 		  , a.attach_orgname -->
+<!-- 		  , a.attach_savename -->
+<!-- 		  , a.attach_mime -->
+<!-- 		  , a.attach_size -->
+<!-- 		  , a.table_name -->
+<!-- 		  , a.table_pk -->
+<!-- 		  , a.thumb_img -->
+<!-- 		  , b.menu_cd -->
+<!-- 		  , b.frcs_id -->
+<!-- 		  , b.sale_yn -->
+<!-- 		FROM -->
+<!-- 		    frcs_menu b -->
+<!-- 		left join attach a on b.menu_cd = a.table_pk and a.table_name = 'menu' -->
+<!-- 	    where b.frcs_id = #{frcsId} -->
+<!-- 	</select> -->
+	
+	<update id="menuUpdate" parameterType="frcsMenuVO">
+		UPDATE frcs_menu
+		SET
+		    sale_yn = #{saleYn}
+		WHERE
+		        menu_cd = #{menuCd}
+		    AND frcs_id = #{frcsId}
+	</update>
+	
+	<update id="headMenuUpdate" parameterType="frcsMenuVO">
+		UPDATE frcs_menu
+		SET
+			menu_cd = #{menuCd},
+		    sale_yn = #{saleYn}
+		WHERE
+		    frcs_id = #{frcsId}
+	</update>
+	
+	<select id="resfrcsMenuList" parameterType="string" resultType="FrcsMenuVO">
+		select
+		    a.menu_name
+		    , a.menu_price
+		    , a.menu_des
+		    , a.menu_cg
+		    , a.menu_state
+		    , a.menu_rsdate
+		    , a.menu_deldate
+		    , a.table_name
+		    , b.menu_cd
+		    , b.frcs_id
+		    , b.sale_yn
+		    , c.attach_no
+		    , c.file_no
+		    , c.attach_orgname
+		    , c.attach_savename
+		    , c.attach_mime
+		    , c.attach_size
+		    , c.table_name
+		    , c.table_pk
+		    , c.thumb_img
+		from
+		    head_menu a
+		    left join frcs_menu b on a.menu_cd = b.menu_cd
+		    and b.frcs_id = #{frcsId}
+		    left join attach c ON c.table_name = 'menu'
+		    and a.menu_cd = c.table_pk
+		    and a.table_name = c.table_name
+	</select>
+	
+	<insert id="resRegister" parameterType="resVO" useGeneratedKeys="true">
+		insert into reservation (
+			resv_no, mem_id, resv_mcnt, resv_time, resv_date, resv_yn, resv_state, resv_acc_date, resv_note, seat_cd, resv_price, review_yn
+		) values (
+			#{resvNo}, #{memId}, #{resvMcnt}, #{resvTime}, sysdate, 'N', 'Y', sysdate, '안녕하세요', #{seatCd}, #{resvPrice}, 'N'
+		)
+	</insert>
+	
+	<insert id="menuInsert" parameterType="menuListVO" useGeneratedKeys="true">
+		insert into mem_menu (
+			MEM_ID, MENU_CD, FRCS_ID, MENU_CNT
+		) values (
+			#{memId}, #{menuCd}, #{frcsId}, #{menuCnt}
+		)
+	</insert>
+	
+	<delete id="frcsMenuDelete" parameterType="string">
+		DELETE FROM frcs_menu
+		WHERE
+		    frcs_id = #{frcsId}
+	</delete>
+	
+<!-- 	<insert id=""> -->
+	
+<!-- 	</insert> -->
+
+</mapper>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.OfficeLetterMapper">
+
+	<sql id="letterSearch">
+		<if test="searchType != null and searchType == 'title' ">
+			and (hd_lttitle like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+
+	<resultMap type="officeLetterVO" id="officeLetterMap">
+		<id property="hdLtno" column="hd_ltno"/>
+		<result property="hdLtno" column="hd_ltno"/>
+		<result property="hdLttitle" column="hd_lttitle"/>
+		<result property="hdLtsender" column="hd_ltsender"/>
+		<result property="hdLtreciever" column="hd_ltreciever"/>
+		<result property="hdLtcontent" column="hd_ltcontent"/>
+		<result property="hdLtsdate" column="hd_ltsdate"/>
+		<result property="hdLtrdate" column="hd_ltrdate"/>
+		<result property="hdLtstate" column="hd_ltstate"/>
+		<result property="tableName" column="table_name"/>
+		<collection property="officeLetterFileList" resultMap="attachMap"/>
+	</resultMap>
+	
+	<resultMap type="attachVO" id="attachMap">
+		<id property="attachNo" column="ATTACH_NO"/>
+		<result property="attachNo" column="ATTACH_NO"/>
+		<result property="fileNo" column="FILE_NO"/>
+		<result property="attachOrgname" column="ATTACH_ORGNAME"/>
+		<result property="attachSavename" column="ATTACH_SAVENAME"/>
+		<result property="tableName" column="TABLE_NAME"/>
+		<result property="tablePk" column="TABLE_PK"/>
+		<result property="attachMime" column="ATTACH_MIME"/>
+		<result property="attachSize" column="ATTACH_SIZE"/>
+		<result property="thumbImg" column="THUMB_IMG"/>
+	</resultMap>
+
+ 	<select id="selectLetterCount" parameterType="pagingVO" resultType="int">
+		select count(hd_ltno)
+		from head_letter
+		where 1=1
+		<include refid="letterSearch"/>
+	</select>
+
+	<select id="selectLetterList" parameterType="pagingVO" resultType="officeLetterVO">
+		select 
+			b.*
+		from (
+			select 
+				a.*, row_number() over (order by hd_ltno) rnum
+			from(
+				select hd_ltno, hd_lttitle, hd_ltsender, hd_ltreciever, hd_ltcontent, hd_ltsdate, hd_ltrdate, hd_ltstate, table_name
+				from head_letter
+			)a
+		)b	
+		<![CDATA[	
+			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<insert id="officeLetterRegister" parameterType="officeLetterVO" useGeneratedKeys="true">
+		<selectKey keyProperty="hdLtno" resultType="int" order="BEFORE">
+			select seq_headletter.nextval from dual
+		</selectKey>
+	  insert into head_letter (
+	    hd_ltno, hd_lttitle, hd_ltsender, hd_ltreciever, hd_ltcontent, hd_ltsdate, hd_ltrdate, hd_ltstate, table_name
+	  ) values (
+	    #{hdLtno}, #{hdLttitle}, #{hdLtsender}, #{hdLtreciever}, #{hdLtcontent}, sysdate, sysdate, '저장', 'officeLetter'
+	  )
+	</insert>
+	
+	<select id="getFrcsName" resultType="franchiseVO">
+		select frcs_name
+		from franchise
+	</select>
+<!-- 	<select id="menuDetail" parameterType="string" resultMap="menuMap"> -->
+<!-- 	    select -->
+<!-- 	        hm.menu_cd, -->
+<!-- 	        hm.menu_name, -->
+<!-- 	        hm.menu_cg, -->
+<!-- 	        hm.menu_price, -->
+<!-- 	        hm.menu_des, -->
+<!-- 	        hm.table_name, -->
+<!-- 	        a.attach_orgname, -->
+<!-- 	        a.attach_savename, -->
+<!-- 	        a.attach_mime, -->
+<!-- 	        a.attach_size, -->
+<!-- 	        a.thumb_img -->
+<!-- 	    from head_menu hm -->
+<!-- 	    left join attach a on hm.menu_cd = a.table_pk and a.table_name = 'menu' -->
+<!-- 	    where hm.menu_cd = #{menuCd} -->
+<!-- 	</select> -->
+
+	
+<!-- 	<select id="selectFileInfo" parameterType="int" resultType="attachVO"> -->
+<!-- 		select -->
+<!-- 			 ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, ATTACH_SIZE, TABLE_NAME, TABLE_PK -->
+<!-- 		from attach -->
+<!-- 		where ATTACH_NO = #{attachNo} -->
+<!-- 	</select> -->
+		
+<!--    <select id="selectMenuFile" parameterType="int" resultType="attachVO"> -->
+<!-- 		select -->
+<!-- 			ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME,  -->
+<!-- 			ATTACH_SIZE, TABLE_NAME -->
+<!-- 		from attach -->
+<!-- 		where ATTACH_NO = #{attachNo} -->
+<!-- 		and table_name = 'menu' -->
+<!-- 	</select> -->
+
+
+<!-- 	<update id="menuUpdate" parameterType="menuVO"> -->
+<!-- 		update head_menu -->
+<!-- 		set -->
+<!-- 			menu_cd = #{menuCd}, -->
+<!-- 			menu_name = #{menuName}, -->
+<!-- 			menu_cg = #{menuCg}, -->
+<!-- 			menu_des = #{menuDes}, -->
+<!-- 			menu_price = #{menuPrice}, -->
+<!-- 			menu_rsdate = sysdate, -->
+<!-- 			menu_state = '활성' -->
+<!-- 		where menu_cd= #{menuCd}  -->
+<!-- 	</update> -->
+	
+<!-- 	<delete id="menuDelete" parameterType="map"> -->
+<!-- 		delete from head_menu -->
+<!-- 		where menu_cd = #{menuCd} -->
+<!-- 	</delete> -->
+	
+<!-- 	<select id="getMenuListByCategory" parameterType="pagingVO" resultMap="menuMap"> -->
+<!-- 		WITH T AS -->
+<!-- 		( -->
+<!-- 		    SELECT ROW_NUMBER() OVER(ORDER BY menu_name) RNUM, n.menu_cd, n.menu_name, n.menu_cg, n.menu_des, n.menu_price, n.menu_rsdate, n.menu_state, -->
+<!-- 		    nf.ATTACH_NO, nf.FILE_NO, nf.ATTACH_ORGNAME, nf.ATTACH_SAVENAME, nf.ATTACH_MIME, nf.ATTACH_SIZE, nf.THUMB_IMG, nf.table_pk -->
+<!-- 		    FROM head_menu N LEFT OUTER JOIN ATTACH NF ON(N.menu_cd = NF.TABLE_PK) -->
+<!-- 		    WHERE -->
+<!-- 		    N.menu_cg = #{searchWord} -->
+<!-- 		    and N.menu_state = '활성' -->
+<!-- 		) -->
+<!-- 		SELECT * FROM T -->
+<!-- 		WHERE T.RNUM BETWEEN (#{currentPage}*6 - 5) AND (#{currentPage}*6) -->
+<!-- 	</select> -->
+
+
+</mapper>

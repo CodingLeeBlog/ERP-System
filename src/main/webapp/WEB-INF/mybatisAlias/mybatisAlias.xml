@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+
+	<typeAliases>
+		
+		<!-- 회원 -->
+		<typeAlias type="kr.or.ddit.vo.member.MemberVO" alias="memberVO"/>
+		<typeAlias type="kr.or.ddit.vo.member.MemberAuthVO" alias="memberAuthVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.OwnerVO" alias="ownerVO"/>
+		<typeAlias type="kr.or.ddit.vo.member.BoardVO" alias="boardVO"/>
+		<typeAlias type="kr.or.ddit.vo.head.HdBoardAnswerVO" alias="hdBoardAnswer"/>
+		<typeAlias type="kr.or.ddit.vo.head.HeadBoardVO" alias="HeadBoardVO"/>
+		<typeAlias type="kr.or.ddit.vo.AttachVO" alias="AttachVO"/>
+		<typeAlias type="kr.or.ddit.vo.member.PaginationInfoVO" alias="pagingVO"/>
+		<typeAlias type="kr.or.ddit.vo.member.ResVO" alias="resVO"/>
+		<typeAlias type="kr.or.ddit.vo.member.MenuListVO" alias="menuListVO"/>
+		<typeAlias type="kr.or.ddit.vo.member.MyCouponVO" alias="myCouponVO"/>
+		<typeAlias type="kr.or.ddit.vo.AlarmVO" alias="alarmVO"/>
+		<typeAlias type="kr.or.ddit.vo.member.ReviewVO" alias="reviewVO"/>
+		<typeAlias type="kr.or.ddit.vo.member.PayVO" alias="payVO"/>
+		
+		<!-- 가맹점 -->
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsPublicDuesVO" alias="duesVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.OwnerPaginationInfoVO" alias="ownerPagingVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsSeatVO" alias="seatVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FranchiseVO" alias="franchiseVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsInventoryVO" alias="inventVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.DeliveryVO" alias="delVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsMenuVO" alias="frcsMenuVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsOrderVO" alias="orderVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsOrderDetailVO" alias="orderDetailVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsInquiryVO" alias="frcsInqVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsOwnershipVO" alias="ownershipVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsAutoOrderVO" alias="autoOrderVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsDailySalesVO" alias="salesVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsReviewVO" alias="FrcsReviewVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsMenuIngredientVO" alias="ingredVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsReservationVO" alias="frcsResvVO"/>
+		
+		<!-- 본사 -->
+		<typeAlias type="kr.or.ddit.vo.head.MenuVO" alias="menuVO"/>
+		<typeAlias type="kr.or.ddit.vo.head.OfficeLetterVO" alias="officeLetterVO"/>
+		<typeAlias type="kr.or.ddit.vo.head.InspectionVO" alias="inspectionVO"/>
+		<typeAlias type="kr.or.ddit.vo.head.ProposalVO" alias="proposalVO"/>
+		<typeAlias type="kr.or.ddit.vo.head.TotalInfoVO" alias="totalInfoVO"/>
+		<typeAlias type="kr.or.ddit.vo.head.HeadPaginationInfoVO" alias="headPagingVO" />
+		<typeAlias type="kr.or.ddit.vo.head.HeadSalesChartVO" alias="headSalesChartVO" />
+		<typeAlias type="kr.or.ddit.vo.head.VendorVO" alias="vendorVO" />
+		<typeAlias type="kr.or.ddit.vo.head.HeadInventoryVO" alias="headInventoryVO" />
+		<typeAlias type="kr.or.ddit.vo.head.StoreOrderHistoryVO" alias="storeOrderHistoryVO" />
+		<typeAlias type="kr.or.ddit.vo.head.InventoryUpdateVO" alias="inventoryUpdateVO" />
+		<typeAlias type="kr.or.ddit.vo.head.CancleModalVO" alias="cancleModalVO" />
+		<typeAlias type="kr.or.ddit.vo.head.CouponVO" alias="couponVO" />
+	</typeAliases>
+	
+</configuration>

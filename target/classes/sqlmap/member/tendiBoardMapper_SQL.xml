@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="kr.or.ddit.mapper.member.TendiBoardMapper">
+  
+  	<resultMap type="boardVO" id="boardMap">
+ 	<result property="tableNo" column="TABLE_NO" />
+	<result property="memId" column="MEM_ID" />
+	<result property="field" column="FIELD" />
+	<result property="boardTitle" column="BOARD_TITLE" />
+	<result property="boardContent" column="BOARD_CONTENT" />
+	<result property="boardCount" column="BOARD_COUNT" />
+	<result property="boardRegdate" column="BOARD_REGDATE" />
+  </resultMap>
+  <resultMap type="hdBoardAnswer" id="hdBoardAnswerMap">
+ 	<result property="tableNo" column="TABLE_NO" />
+	<result property="memId" column="MEM_ID" />
+	<result property="ansState" column="ANS_STATE" />
+	<result property="ansContent" column="ANS_CONTENT" />
+	<result property="ansDate" column="ANS_DATE" />
+	<result property="ansId" column="ANS_ID" />
+  </resultMap>
+  
+  	<sql id="boardSearch">
+		<if test="searchType != null and searchType == 'title'">
+			and (board_title like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'writer'">
+			and (mem_id like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'both'">
+			and (board_title like '%'||#{searchWord}||'%')
+			and (mem_id like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+	
+	<select id="selectBoardCount" parameterType="pagingVO" resultType="int">
+		select count(table_no)
+		from board 
+		where 1=1
+		and field = '건의'
+		<include refid="boardSearch"/>
+	</select>
+	
+	<select id="selectBoardList" parameterType="pagingVO" resultType="boardVO">
+		with b as(
+			select
+			    row_number() over(order by t.rnum2 desc) rnum, t.*
+			from(
+			    select 
+			        a.*, row_number() over (order by a.table_no desc) rnum2
+			    from (
+			        select
+			            table_no, board_title, board_content,
+			            board_regdate, mem_id, board_count, field
+			        from board
+			        where 1=1
+			        AND FIELD = '건의'
+			        <include refid="boardSearch"/>
+			        order by table_no desc
+			    )a
+			) t
+		)
+		select * from b 
+		<![CDATA[
+			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+		]]>
+	</select>
+  
+  	<update id="incrementHit" parameterType="int">
+		update board
+		set
+			board_count = board_count + 1
+		where table_no = #{tableNo}
+	</update>
+	
+	
+	<insert id="insertBoard" parameterType="boardVO" useGeneratedKeys="true">
+		<selectKey keyProperty="tableNo" resultType="int" order="BEFORE">
+			select seq_board.nextval from dual
+		</selectKey>
+		insert into board(
+			table_no, board_title, board_content, board_regdate, mem_id, field
+		)values(
+			#{tableNo}, #{boardTitle}, #{boardContent}, sysdate, #{memId}, '건의'
+		)
+	</insert>
+	
+	<select id="selectBoard" parameterType="int" resultMap="boardMap">
+	select
+        table_no, board_title, board_regdate, board_count, board_content, mem_id
+    from board
+    where table_no = #{tableNo}
+    AND FIELD = '건의'
+	</select>
+	
+	<!-- 댓글 추가 기능 -->
+	<select id="selectBoardAnswer" parameterType="int" resultMap="hdBoardAnswerMap">
+	select
+		ans_state, ans_content, ans_date, ans_id, table_no, mem_id
+    from HDBOARD_ANSWER
+    where table_no = #{tableNo}
+	</select>
+	
+	<update id="updateBoard" parameterType="BoardVO">
+		update board
+		set
+			board_title = #{boardTitle},
+			board_content = #{boardContent},
+			board_regdate = sysdate
+		where table_no = #{tableNo}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="int">
+		delete from board
+		where table_no = #{tableNo}
+	</delete>
+	
+  
+  </mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.member.MemberReviewMapper">
+
+<insert id="create" parameterType="reviewVO" useGeneratedKeys="true">
+	<selectKey keyProperty="reviewNo" resultType="int" order="BEFORE">
+		select seq_review.nextval from dual
+	</selectKey>
+	insert into review (
+		review_no, mem_id, resv_no, review_content, review_star, review_regdate, review_yn, frcs_id
+	) values (
+		#{reviewNo}, #{memId}, #{resvNo}, #{reviewContent}, #{reviewStar}, sysdate, 'N', #{frcsId}
+	)
+</insert>
+
+<select id="myReviewList" parameterType="string" resultType="reviewVO">
+	select 
+		review_no, mem_id, resv_no, review_content, review_star, review_regdate, review_yn, frcs_id
+	from
+		review
+	where mem_id = #{memId}
+</select>
+
+
+<select id="selectMemberReviewAlarm" parameterType="String" resultType="int">
+	select count(*)
+	from alarm
+	where mem_id = #{memId}
+	and ALARM_READ = 'N'
+</select>
+	
+	
+<select id="selectMemberReviewAlarmList" parameterType="String" resultType="alarmVO">		
+	select 
+		ALARM_NO, ALARM_CONTENT, MEM_ID, ALARM_READ, ALARM_URL, ANS_ID
+	from
+		alarm 
+	where 
+		MEM_ID = #{memId}
+		and ALARM_READ = 'N'
+</select>
+	
+<update id="updateMemberReviewAlarm" parameterType="int">
+	update alarm
+	set
+		ALARM_READ = 'Y'
+	where 
+		ALARM_NO = #{alarmNo}
+</update>
+	
+
+<insert id="insertMemberReviewAlarm" parameterType="alarmVO">
+    INSERT INTO alarm (
+        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL, FRCS_ID
+    ) VALUES (
+        SEQ_ALARM.nextval, #{memId}, '리뷰 등록 완료!', sysdate, '/owner/review.do?', #{frcsId}
+    )
+</insert>
+
+
+<select id="selectMember" parameterType="String" resultType="String">
+	SELECT DISTINCT RA.MEM_ID
+	FROM REVIEW_ANSWER RA
+		LEFT OUTER JOIN alarm A ON RA.MEM_ID = A.MEM_ID
+	AND RA.ans_id = A.ans_id
+	WHERE RA.MEM_ID = #{alarmNo}
+</select>
+
+
+<delete id="deleteMemberReviewAlarm" parameterType="int">
+	delete from alarm
+	where ALARM_NO = #{alarmNo}
+</delete>
+
+
+<delete id="deleteclearAllAlarm" parameterType="String">
+	delete from alarm
+	where ANS_ID = #{ansId}
+</delete>
+	
+
+</mapper>
