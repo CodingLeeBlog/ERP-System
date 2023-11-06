@@ -117,6 +117,26 @@
 		where owner_id= #{ownerId} 
 	</update>
 	
+	<select id="frcsCheck" parameterType="string" resultType="franchiseVO">
+		select
+			FRCS_ID, FRCS_NAME, FRCS_STATE, FRCS_TEL, FRCS_STDATE, FRCS_ENDDATE, FRCS_POST, FRCS_ADD1, FRCS_ADD2, 
+	  		FRCS_STTIME, FRCS_ENDTIME, FRCS_CDATE, FRCS_INSDATE, FRCS_INEDATE, FRCS_OPDATE, FRCS_XMAP, FRCS_YMAP, FRCS_STAR, FRCS_PSNCPA
+		from franchise
+		where frcs_name = #{frcsName}
+	</select>
+	
+	<insert id="counselRegister" parameterType="franchiseVO">
+	  INSERT INTO franchise (
+		  FRCS_ID, FRCS_NAME, FRCS_STATE, FRCS_TEL, FRCS_STDATE, FRCS_ENDDATE, FRCS_POST, FRCS_ADD1, FRCS_ADD2, 
+		  FRCS_STTIME, FRCS_ENDTIME, FRCS_CDATE, FRCS_INSDATE, FRCS_INEDATE, FRCS_OPDATE, FRCS_XMAP, FRCS_YMAP, FRCS_STAR, FRCS_PSNCPA
+		  )
+		  VALUES (
+		    #{frcsId}, #{frcsName}, #{frcsState}, #{frcsTel}, #{frcsStdate}, #{frcsEnddate}, #{frcsPost}, #{frcsAdd1},
+		    #{frcsAdd2}, #{frcsSttime}, #{frcsEndtime}, #{frcsCdate}, #{frcsInsdate}, #{frcsInedate}, #{frcsOpdate}, #{frcsXmap},
+		    #{frcsYmap}, #{frcsStar}, #{frcsPsncpa}
+		  )
+	</insert>
+	
 	<insert id="counselAttachRegister" parameterType="attachVO" useGeneratedKeys="true">
 	  <selectKey keyProperty="attachNo" resultType="int" order="BEFORE">
 	   	select seq_attach.nextval, 1 FROM dual

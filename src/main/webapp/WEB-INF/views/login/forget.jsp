@@ -10,10 +10,10 @@
 
 <div class="d-flex justify-content-center">
     <div class="container-fluid">
-        <div class="row col-12">
-            <div class="col-md-4 m-0 p-0">
+        <div class="row">
+            <div class="col-md-4 m-0 p-0 bg-white">
             </div>
-            <div class="col-md-4 mx-auto p-0 center-div">
+            <div class="col-md-4 mx-auto p-0 center-div bg-white">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="mb-5">
@@ -26,38 +26,38 @@
                         </div>
 						<div class="mb-5 md-d-none">
                         </div>
-                        <div id="nameForm">
-	                        <div class="col-md-12 text-left p-0 mb-3 m-0">
+                        <div id="nameForm ps-0 pe-0">
+	                        <div class="col-md-12 text-left mb-3">
 	                            <span class="fs-4">이름</span>
 	                        </div>
-	                        <div class="col-md-12 text-left p-0 mb-3 m-0">
+	                        <div class="col-md-12 text-left mb-3">
 	                            <input type="text" id="memName" name="memName" class="form-control" placeholder="이름 입력해주세요"/>
 	                        </div>
                         </div>
                         <div id="emailForm">
-	                        <div class="col-md-12 text-left p-0 mb-3 m-0">
+	                        <div class="col-md-12 text-left mb-3">
 	                            <span class="fs-4">이메일</span>
 	                        </div>
-	                        <div class="col-md-12 text-left p-0 mb-3 m-0">
+	                        <div class="col-md-12 text-left mb-3">
 	                            <input type="text" id="memEmail" name="memEmail" class="form-control" placeholder="이메일 입력해주세요"/>
 	                        </div>
                         </div>
                         <div id="idForm" style="display: none;">
-							<div class="col-md-12 text-left p-0 mb-3 m-0">
+							<div class="col-md-12 text-left mb-3">
 	                            <span class="fs-4">아이디</span>
 	                        </div>
-	                        <div class="col-md-12 text-left p-0 mb-3 m-0">
+	                        <div class="col-md-12 text-left mb-3">
 	                            <input type="text" id="memId" name="memId" class="form-control" placeholder="아이디 입력해주세요"/>
 	                        </div>
                         </div>
-                        <button class="btn btn-primary mt-3 mb-5" id="idFindBtn" type="button">아이디 찾기</button>
+                        <button class="btn btn-secondary mt-3 mb-5" id="idFindBtn" type="button">아이디 찾기</button>
                         <div class="text-center">
-                        	<p>비밀번호가 기억나지 않으세요?<a href="/elly/findpw.do">&nbsp비밀번호 찾기</a></p>
+                        	<p>비밀번호가 기억나지 않으세요?<a href="#pwBtn">&nbsp비밀번호 찾기</a></p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 m-0 p-0">
+            <div class="col-md-4 m-0 p-0 bg-white">
             </div>
         </div>
     </div>
@@ -95,10 +95,6 @@ $(function(){
 			contentType : "application/json; charset=utf-8",
 			success : function(result){
 				console.log("result : " + result.memId);
-// 				if(result != null){
-// 					alert(result.memId)
-// 					id.text(result.memId)
-// 				}
 			}
 		});
 	});

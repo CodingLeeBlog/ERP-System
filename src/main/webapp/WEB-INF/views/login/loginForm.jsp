@@ -40,7 +40,7 @@
                     <div class="mb-4" style="color: black">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="checkbox-signin" name="remember-me">로그인 상태 유지
-                            <a href="/elly/forget.do"><span style="display: inline-block; float: right; color: black;">아이디 찾기 | 비밀번호 찾기</span></a>
+                            <div id="findInfo" style="display: inline-block; float: right; color: rgb(183 183 183);">아이디 찾기 | 비밀번호 찾기</div>
                         </div>
                     </div>
                     <div class="d-grid mb-0 text-center" style="font-size: 20px">
@@ -92,14 +92,90 @@
     </div>
 </div>
 
+<!-- 아이디 패스워드 찾기 모달창 -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="color: black">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="d-flex justify-content-center">
+				    <div class="container-fluid">
+				        <div class="row">
+				            <div class="col-md p-0 center-div bg-white">
+				                <div class="container-fluid">
+				                    <div class="row">
+				                        <div class="mb-5">
+				                        </div>
+										<div class="col-1">
+										</div>
+											<button id="idBtn" class="col" style="color: black; text-align: center; font-size: 20px; height: 50px; border: 2px black solid;">아이디 찾기</button>
+										<div class="col-1">
+										</div>
+											<button id="pwBtn" class="col" style="color: black; text-align: center; font-size: 20px; border: 0px; background-color: white">비밀번호 찾기</button>
+										<div class="col-1">
+										</div>
+										<div class="mb-5 md-d-none">
+				                        </div>
+				                        <div id="nameForm ps-0 pe-0">
+					                        <div class="col-md-12 text-left mb-3">
+					                            <span class="fs-4">이름</span>
+					                        </div>
+					                        <div class="col-md-12 text-left mb-3">
+					                            <input type="text" id="memName" name="memName" class="form-control" placeholder="이름 입력해주세요"/>
+					                        </div>
+				                        </div>
+				                        <div id="emailForm">
+					                        <div class="col-md-12 text-left mb-3">
+					                            <span class="fs-4">이메일</span>
+					                        </div>
+					                        <div class="col-md-12 text-left mb-3">
+					                            <input type="text" id="memEmail" name="memEmail" class="form-control" placeholder="이메일 입력해주세요"/>
+					                        </div>
+				                        </div>
+				                        <div id="idForm" style="display: none;">
+											<div class="col-md-12 text-left mb-3">
+					                            <span class="fs-4">아이디</span>
+					                        </div>
+					                        <div class="col-md-12 text-left mb-3">
+					                            <input type="text" id="memIdChk" name="memIdChk" class="form-control" placeholder="아이디 입력해주세요"/>
+					                        </div>
+				                        </div>
+				                        <button class="btn btn-secondary mt-3 mb-3" id="idFindBtn" type="button">아이디 찾기</button>
+				                        <button class="btn btn-secondary mt-3 mb-3" id="pwFindBtn" type="button" style="display: none;">비밀번호 찾기</button>
+				                        <div class="d-flex justify-content-center">
+				                        	<div>비밀번호가 기억나지 않으세요?</div>
+				                        	&nbsp;
+				                        	<div style="color: rgb(183 183 183);">비밀번호 찾기</div>
+				                        </div>
+				                    </div>
+				                </div>
+				            </div>
+				        </div>
+				    </div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- Vendor js -->
 <script src="${pageContext.request.contextPath }/resources/assets/js/vendor.min.js"></script>
 
 <script type="text/javascript">
 $(function(){
+	
+	// 회원가입 버튼
 	var signForm = $("#signForm");
+	
+	// 로그인 버튼
 	var loginBtn = $("#loginBtn");
 	
+	// 아이디 패스워드 찾기 버튼
+	var findInfo = $("#findInfo");
+	
+	// 로그인 버튼 클릭 이벤트
 	loginBtn.on("click", function(){
 		var id = $("#memId").val();
 		var pw = $("#memPw").val();
@@ -115,5 +191,104 @@ $(function(){
 		}
 		signForm.submit();
 	});
+	
+	findInfo.on("click", function(){
+		$('#exampleModal').modal('show');
+	})
+	
+	// 아이디 & 비밀번호 탭 전환
+	var idBtn = $("#idBtn")
+	var pwBtn = $("#pwBtn")
+	
+	// 아이디 & 비밀번호 찾기 버튼
+	var idFindBtn = $("#idFindBtn")
+	var pwFindBtn = $("#pwFindBtn")
+
+	idBtn.on("click", function(){
+		
+		$(this).css("background-color", "rgb(221 221 221)");
+		$(this).css("border", "2px black solid")
+		$("#pwBtn").css("background-color", "transparent");
+		$("#pwBtn").css("border", "0px");
+		
+		var idForm = $("#idForm")
+		
+		idForm.hide();
+		idFindBtn.show();
+		pwFindBtn.hide();
+		
+		idFindBtn.html('아이디 찾기')
+	})
+	
+	pwBtn.on("click", function(){
+		
+		$(this).css("background-color", "rgb(221 221 221)");
+		$(this).css("border", "2px black solid")
+		$("#idBtn").css("background-color", "transparent");
+		$("#idBtn").css("border", "0px");
+
+		var idForm = $("#idForm")
+		
+		idForm.show();
+		idFindBtn.hide();
+		pwFindBtn.show();
+		
+		idFindBtn.html('비밀번호 찾기')
+	})
+	
+	// 아이디 찾기 버튼 클릭 이벤트
+	idFindBtn.on("click", function(){
+		
+		var memName = $("#memName").val();
+		var memEmail = $("#memEmail").val();
+		
+		var userObject = {
+			memName : memName,
+			memEmail : memEmail
+		}
+		
+		$.ajax({
+			type : "post",
+			url : "/elly/findid.do",
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+			},
+			data : JSON.stringify(userObject),
+			contentType : "application/json; charset=utf-8",
+			success : function(result){
+				console.log("result : " + result.memId);
+				alert(result.memId);
+			}
+		});
+	});
+	
+	// 아이디 찾기 버튼 클릭 이벤트
+	pwFindBtn.on("click", function(){
+		
+		var memName = $("#memName").val();
+		var memEmail = $("#memEmail").val();
+		var memIdChk = $("#memIdChk").val();
+		
+		var userObject = {
+			memName : memName,
+			memEmail : memEmail,
+			memId : memIdChk
+		}
+		
+		$.ajax({
+			type : "post",
+			url : "/elly/findpw.do",
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+			},
+			data : JSON.stringify(userObject),
+			contentType : "application/json; charset=utf-8",
+			success : function(result){
+				console.log("result : " + result.memPw);
+				alert("이메일로 전송되었습니다 !");
+			}
+		});
+	});
+	
 })
 </script>

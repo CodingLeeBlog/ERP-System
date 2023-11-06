@@ -27,6 +27,7 @@
 	<result property="auth" column="auth"/>
 </resultMap>
 
+<!-- 아이디 중복 확인 -->
 <select id="idCheck" parameterType="string" resultType="memberVO">
 	select
 		mem_id, mem_pw, mem_name, mem_bir, mem_tel, mem_email, mem_rescnt, mem_revcnt, mem_post, mem_add1, mem_add2, mem_regdate
@@ -34,7 +35,24 @@
 	where mem_id = #{memId}
 </select>
 
-<insert id="create" parameterType="memberVO">
+<!-- 창업문의 일련번호 확인 -->
+<select id="ownerIdCheck" parameterType="string" resultType="ownerVO">
+	select
+		owner_id, owner_no, owner_name, owner_bir, owner_tel, owner_email, owner_area, owner_dong, owner_money, owner_building, owner_buildingadd, owner_exp, owner_hopetime, owner_infocontent, owner_contentdetail, owner_const, owner_telyn, owner_yn, table_no, owner_rgdate
+	from owner
+	where owner_id = #{ownerId}
+</select>
+
+<!-- 가맹점 아이디 확인 -->
+<select id="frcsIdCheck" parameterType="string" resultType="franchiseVO">
+	select
+		frcs_id, frcs_name, frcs_state, frcs_tel, frcs_stdate, frcs_enddate, frcs_post, frcs_add1, frcs_add2, frcs_sttime, frcs_endtime, frcs_cdate, frcs_insdate, frcs_inedate, frcs_opdate, frcs_xmap, frcs_ymap, frcs_star, frcs_psncpa
+	from franchise
+	where frcs_id = #{frcsId}
+</select>
+
+<!-- 회원가입 -->
+<insert id="membercreate" parameterType="memberVO">
 	insert into member (
 		mem_id, mem_pw, mem_name, mem_bir, mem_tel, mem_email, mem_rescnt, mem_revcnt, mem_grade, mem_post, mem_add1, mem_add2, mem_regdate, enabled
 	) values (
@@ -42,19 +60,44 @@
 	)
 </insert>
 
-<insert id="signupAuth" parameterType="string">
+<!-- 회원가입시 일반회원 역할 부여 -->
+<insert id="signupmemberAuth" parameterType="string">
 	insert into member_auth values( #{memId}, 'ROLE_MEMBER')
 </insert>
 
-<select id="loginCheck" parameterType="memberVO" resultType="memberVO">
-	select
-		mem_id, mem_pw, mem_name, mem_bir, mem_tel, mem_email, mem_rescnt, mem_revcnt, mem_post, mem_add1, mem_add2, mem_regdate
-	from member
-	where mem_id = #{memId}
-	and mem_pw = #{memPw}
-</select>
+<!-- 회원가입 -->
+<insert id="ownercreate" parameterType="memberVO">
+	insert into member (
+		mem_id, mem_pw, mem_name, mem_bir, mem_tel, mem_email, mem_rescnt, mem_revcnt, mem_post, mem_add1, mem_add2, mem_regdate, enabled
+	) values (
+		#{memId}, #{memPw}, #{memName}, #{memBir}, #{memTel}, #{memEmail}, 0, 0, #{memPost}, #{memAdd1}, #{memAdd2}, sysdate, '1'
+	)
+</insert>
 
+<!-- 회원가입시 가맹점주 역할 부여 -->
+<insert id="signupownerAuth" parameterType="string">
+	insert into member_auth values( #{memId}, 'ROLE_OWNER')
+</insert>
 
+<!-- 회원가입시 가맹점주 역할 부여 -->
+<insert id="createfrcsownerShip" parameterType="memberVO">
+	insert into frcs_ownership (
+		mem_id, frcs_id, owner_id
+	) values ( 
+		#{memId}, #{frcsId}, #{ownerId}
+	)
+</insert>
+
+<!-- 로그인 기능 -->
+<!-- <select id="loginCheck" parameterType="memberVO" resultType="memberVO"> -->
+<!-- 	select -->
+<!-- 		mem_id, mem_pw, mem_name, mem_bir, mem_tel, mem_email, mem_rescnt, mem_revcnt, mem_post, mem_add1, mem_add2, mem_regdate -->
+<!-- 	from member -->
+<!-- 	where mem_id = #{memId} -->
+<!-- 	and mem_pw = #{memPw} -->
+<!-- </select> -->
+
+<!-- 로그인 기능 -->
 <select id="readByMemId" parameterType="string" resultMap="memberMap">
 	select
 	    m.mem_id, mem_pw, mem_name, mem_bir, mem_tel, mem_email, 
@@ -69,6 +112,13 @@
    		mem_id
 	from member
 	where mem_name = #{memName} and mem_email = #{memEmail}
+</select>
+
+<select id="findPw" parameterType="String" resultType="memberVO">
+	select 
+   		mem_pw
+	from member
+	where mem_name = #{memName} and mem_email = #{memEmail} and mem_id = #{memId}
 </select>
 
 <select id="selectMember" parameterType="string" resultType="memberVO">

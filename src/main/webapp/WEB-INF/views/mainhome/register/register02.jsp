@@ -27,13 +27,15 @@
 						<div class="mb-3" style="font-size: 30px;">회원정보 입력</div>
 					</div>
 				</div>
+				
+				<!-- 사용자에 따른 회원가입 구분 -->
 				<div class="row mb-5">
 					<div class="col-1">
 					</div>
-						<button id="memberTap" class="col" style="color: black; text-align: center; font-size: 30px;">일반회원</button>
+						<button id="memberTap" class="col" style="color: black; text-align: center; font-size: 30px; height: 75px; border: 2px black solid;">일반회원</button>
 					<div class="col-1">
 					</div>
-						<button id="ownerTap" class="col" style="color: black; text-align: center; font-size: 30px;">가맹점주</button>
+						<button id="ownerTap" class="col" style="color: black; text-align: center; font-size: 30px; border: 0px; background-color: white">가맹점주</button>
 					<div class="col-1">
 					</div>
 				</div>
@@ -41,17 +43,16 @@
 				<div class="row mb-5">
 					<div class="" style="color: black; font-size: 20px;">&#8251; 표기된 항목은 필수입력 항목입니다.</div>
 				</div>
-			<form action="/elly/register02.do" method="post" id="signupForm" name="signupForm" >
 				<div class="mb-5" style="color: rgb(0, 0, 0); border-bottom: 1px solid;"></div>
-				<div class="row mb-3" id="frcsIdTap" style="color: black; font-size: 20px; display: none">
-					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 가맹점 코드</div>
+				<div class="row mb-3" id="ownerIdTap" style="color: black; font-size: 20px; display: none">
+					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 일련번호</div>
 					<div class="col-10">
 						<div class="row">
 							<div class="col-4">
-								<input type="text" class="form-control" id="frcsId" name="frcsId" style="width: 334px" min="6" max="20" placeholder="가맹점 코드를 입력하세요" value="">
+								<input type="text" class="form-control" id="ownerId" name="ownerId" style="width: 334px" min="6" max="20" placeholder="가맹점주 일련번호를 입력하세요" value="">
 							</div>
 							<div class="col-4">
-								<input type="button" class="btn btn-secondary btn-flat" id="frcsIdCheckBtn" value="중복확인"/>
+								<input type="button" class="btn btn-secondary btn-flat" id="ownerIdCheckBtn" value="번호인증"/>
 							</div>
 						</div>
 					</div>
@@ -61,7 +62,7 @@
 					<div class="col-10">
 						<div class="row">
 							<div class="col-4">
-								<input type="text" class="form-control" id="memId" name="memId" style="width: 334px" min="6" max="20" placeholder="아이디를 입력하세요" value="">
+								<input type="text" class="form-control" id="memIdChk" name="memId" style="width: 334px" min="4" max="20" placeholder="아이디를 입력하세요" value="">
 							</div>
 							<div class="col-4">
 								<input type="button" class="btn btn-secondary btn-flat" id="idCheckBtn" value="중복확인"/>
@@ -72,7 +73,7 @@
 				<div class="row mb-3" style="color: black; font-size: 20px;">
 					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 패스워드</div>
 					<div class="col-auto">
-						<input type="password" class="form-control" id="memPw" name="memPw" style="width: 334px"placeholder="패스워드를 입력하세요" value="" maxlength="16">
+						<input type="password" class="form-control" id="memPw" name="memPw" style="width: 334px" min="6" max="20" placeholder="4자리 이상 입력해주세요" value="">
 					</div>
 				</div>
 				<div class="row mb-3" style="color: black; font-size: 20px;">
@@ -153,6 +154,25 @@
 						</div>
 					</div>
 				</div>
+				<div class="row mb-3" id="frcsIdTap" style="color: black; font-size: 20px; display: none">
+					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 가맹점 코드</div>
+					<div class="col-10">
+						<div class="row">
+							<div class="col-4">
+								<input type="text" class="form-control" id="frcsId" name="frcsId" style="width: 334px" min="6" max="20" placeholder="가맹점 코드를 입력하세요" value="">
+							</div>
+							<div class="col-4">
+								<input type="button" class="btn btn-secondary btn-flat" id="frcsIdCheckBtn" value="가맹점인증"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row mb-3" id="frcsNameTap" style="color: black; font-size: 20px; display: none">
+					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 가맹점명</div>
+					<div class="col-auto">
+						<input type="text" class="form-control" name="frcsName" id="frcsName" style="width: 334px" min="6" max="20" placeholder="가맹점명" value="">
+					</div>
+				</div>
 				<div class="mt-5 mb-5" style="color: rgb(0, 0, 0); border-bottom: 1px solid;"></div>
 				<div class="row mb-5">
 					<div class="col-2">
@@ -161,8 +181,6 @@
 					<div class="col-2">
 					</div>
 				</div>
-				<sec:csrfInput/>
-			</form>
 			</div>
 			<div class="col-2 bg-white">
 			</div>
@@ -176,10 +194,15 @@ $(function(){
 	// 일반회원 & 가맹점주 구분
 	var memberTap = $("#memberTap");
 	var ownerTap = $("#ownerTap");
+	var selectFlag = false;
 	
 	// 아이디 중복체크
 	var idCheckBtn = $("#idCheckBtn");
 	var idCheckFlag = false;
+	
+	// 일련번호 아이디 체크
+	var ownerIdCheckBtn = $("#ownerIdCheckBtn");
+	var ownerIdCheckFlag = false;
 	
 	// 가맹점 아이디 중복체크
 	var frcsIdCheckBtn = $("#frcsIdCheckBtn");
@@ -195,18 +218,36 @@ $(function(){
 	var mailCheckBtn2 = $("#mailCheckBtn2");
 	var mailCheckInput = $(".mailCheckInput");
 
+	// 회원탭
 	memberTap.on("click", function(){
+		$(this).css("background-color", "rgb(221 221 221)");
+		$(this).css("border", "2px black solid")
+		$("#ownerTap").css("background-color", "transparent");
+		$("#ownerTap").css("border", "0px");
+		$("#ownerIdTap").css("display", "none");
 		$("#frcsIdTap").css("display", "none");
+		$("#frcsNameTap").css("display", "none");
+		selectFlag = false;
+		console.log(selectFlag)
 	});
 	
+	// 가맹점주탭
 	ownerTap.on("click", function(){
+		$(this).css("background-color", "rgb(221 221 221)");
+		$(this).css("border", "2px black solid")
+		$("#memberTap").css("background-color", "transparent");
+		$("#memberTap").css("border", "0px");
+		$("#ownerIdTap").css("display", "");
 		$("#frcsIdTap").css("display", "");
+		$("#frcsNameTap").css("display", "");
+		selectFlag = true;
+		console.log(selectFlag)
 	});
 	
 	// 회원 아이디 중복 확인
 	idCheckBtn.on("click", function(){
-		var id =  $("#memId").val();
-		
+		var id =  $("#memIdChk").val();
+		console.log(id)
 		if(id == null || id == ""){
 			alert("아이디를 입력해주세요.");
 			return false;
@@ -238,12 +279,54 @@ $(function(){
 		});
 	});
 	
-	// 가맹점 코드 중복 확인
+	// 가맹점 본인인증
+	ownerIdCheckBtn.on("click", function(){
+		var ownerId =  $("#ownerId").val();
+		
+		if(ownerId == null || ownerId == ""){
+			alert("가맹점 일련번호를 입력해주세요.");
+			return false;
+		}
+		
+		var data = {
+				ownerId : ownerId
+		};
+		
+		$.ajax({
+			type : "post",
+			url : "/elly/ownerIdCheck.do",
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+			},
+			data: JSON.stringify(data),
+			contentType : "application/json; charset=utf-8",
+			success : function(res){
+				console.log("창업 상담자 일련번호 : " + res.ownerTel);
+				
+				ownerIdCheckFlag = true;
+				
+				var memTel = res.ownerTel.split('-');
+				var memTel1 = memTel[0];
+				var memTel2 = memTel[1];
+				var memTel3 = memTel[2];
+				
+				$("#memName").val(res.ownerName);
+				$("#memBir").val(res.ownerBir);
+				$("#mobile1").val(memTel1);
+				$("#mobile2").val(memTel2);
+				$("#mobile3").val(memTel3);
+				$("#memEmail").val(res.ownerEmail);
+				
+			}
+		});
+	});
+	
+	// 가맹점 본인인증
 	frcsIdCheckBtn.on("click", function(){
 		var frcsId =  $("#frcsId").val();
 		
-		if(id == null || id == ""){
-			alert("아이디를 입력해주세요.");
+		if(frcsId == null || frcsId == ""){
+			alert("가맹점 코드를 입력해주세요.");
 			return false;
 		}
 		
@@ -253,7 +336,7 @@ $(function(){
 		
 		$.ajax({
 			type : "post",
-			url : "/elly/idCheck.do",
+			url : "/elly/frcsIdCheck.do",
 			beforeSend: function(xhr){
 				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
 			},
@@ -261,14 +344,10 @@ $(function(){
 			contentType : "application/json; charset=utf-8",
 			success : function(res){
 				console.log("아이디 중복 확인 결과 : " + res);
-				if(res == "NOTEXIST"){					
-					alert("사용 가능한 가맹점 코드입니다!");
 				
-					// 가입하기 버튼을 클릭할때 아이디 중복 체크를 했는지 여부
-					frcsIdCheckFlag = true; 
-				}else{
-					alert("이미 사용중인 가맹점 코드입니다!")
-				}
+				frcsIdCheckFlag = true;
+				
+				$("#frcsName").val(res.frcsName)
 			}
 		});
 	});
@@ -311,7 +390,8 @@ $(function(){
 	});
 	
 	signupBtn.on("click",function(){
-		var id = $("#memId").val();
+		
+		var id = $("#memIdChk").val();
 		var pw = $("#memPw").val();
 		var name = $("#memName").val();
 		var bir = $("#memBir").val(); 
@@ -321,11 +401,14 @@ $(function(){
 		var memAdd1 = $("#memAdd1").val();
 		var memAdd2 = $("#memAdd2").val();
 		
+		var ownerId = $("#ownerId").val();
+		var frcsId = $("#frcsId").val();
 		
 		if(id == null || id == ""){			
 			alert("아이디를 입력해주세요.");
 			return false;
 		}
+		
 		if(pw == null || pw == ""){			
 			alert("비밀번호를 입력해주세요.");
 			return false;
@@ -347,12 +430,48 @@ $(function(){
 			return false;
 		}
 		
-		if(idCheckFlag){
-			signupForm.submit();
+		if(selectFlag == false) {
+			var data = {
+					memId : id,
+					memPw : pw,
+					memName : name,
+					memBir : bir,
+					memTel : $("#memTel").val(),
+					memEmail : memEmail,
+					memPost : memPost,
+					memAdd1 : memAdd1,
+					memAdd2 : memAdd2
+			}	
 		}else {
-			alert("아이디 중복 체크를 진행해주세요!");
-		}
-
+			var data = {
+					ownerId : ownerId,
+					memId : id,
+					memPw : pw,
+					memName : name,
+					memBir : bir,
+					memTel : $("#memTel").val(),
+					memEmail : memEmail,
+					memPost : memPost,
+					memAdd1 : memAdd1,
+					memAdd2 : memAdd2,
+					frcsId : frcsId
+			}	
+		};
+		
+		
+		$.ajax({
+			type : "post",
+			url : "/elly/register02.do",
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+			},
+			data: JSON.stringify(data),
+			contentType : "application/json; charset=utf-8",
+			success : function(res){
+				
+			}
+		});
+		
 	});
 	
 	imgFile.on("change", function(event){

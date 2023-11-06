@@ -24,5 +24,6 @@ public class MemberVO {
 	private Date memRegdate;
 	private String enabled;
 	private String ownerId;
+	private String frcsId;
 	List<MemberAuthVO> authList;
 }

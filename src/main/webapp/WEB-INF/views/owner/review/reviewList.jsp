@@ -49,7 +49,7 @@
 	                                        <th class="all" style="width: 20px;">
 	                                            <div class="form-check">
 	                                                <input type="checkbox" class="form-check-input" id="checkAll" name="checkbox">
-	                                                <label class="form-check-label" for="customCheck1">&nbsp;</label>
+	                                                <label class="form-check-label" for="checkAll">&nbsp;</label>
 	                                            </div>
 	                                        </th>
 	                                        <th class="all">No.</th>
@@ -74,7 +74,7 @@
 				                                        <td>
 				                                            <div class="form-check">
 				                                                <input type="checkbox" class="form-check-input" id="check${review.reviewNo }" name="checkbox" value="${review.reviewNo }">
-				                                                <label class="form-check-label" for="customCheck2">&nbsp;</label>
+				                                                <label class="form-check-label" for="check${review.reviewNo }">&nbsp;</label>
 				                                            </div>
 				                                        </td>
 				                                        <td>${review.reviewNo }</td>

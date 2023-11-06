@@ -96,7 +96,6 @@
 						<div class="mb-5">원하는 시간을 선택해주세요.</div>
 						<div class="d-flex text-center mb-3">
 						    <div class="col">
-<!-- 						        <input type="text" name="resvTime" value="15시" style="text-align:center; width: 150px;" /> -->
 								<button class="resvTimeBtn" id="resvTimeBtn">15시</button>
 						    </div>
 						    <div class="col">
@@ -399,7 +398,7 @@ $(function(){
 		
 		
 		for(var i = 0; i < menuArr.length; i++){			
-			newMenu += '<div class="d-flex mt-3 selectMenu">'; 
+			newMenu += '<div class="d-flex mt-3 selectMenu" id="' + menuArr[i].split("_")[0] + '">';
 			newMenu += '<button type="button" class="col-1 selectMenuMinus" style="display: flex; justify-content: center; align-items: center; background-color: white; border: none;">&#10134;</button>';
 			newMenu += '<div class="col-1 menuCnt" style="display: flex; justify-content: center; align-items: center;">' + menuArr[i].split("_")[3] + '</div>';
 			newMenu += '<div class="col-1" style="display: flex; justify-content: center; align-items: center;">x</div>';
@@ -425,12 +424,14 @@ $(function(){
 		
 		var price = 0;
 		var menuFlag = true;
-		var menuCd = $(this).closest('.row').find('.menuCd').val();
+		var menuCd = $(this).closest('.selectMenu').attr('id');
 		var menuName = $(this).closest('.selectMenu').find('.menuName').text();
 		var menuPrice = parseInt($(this).closest('.selectMenu').find('.menuPrice').text());
 		var menuCnt = $(this).closest('.selectMenu').find('.menuCnt').text();
+		var newMenu = "";
 		
 		console.log(menuCnt)
+		console.log(selectMenuList)
 		
 		for(var i = 0; i < menuArr.length; i++){
 			if(menuCd == menuArr[i].split("_")[0]){

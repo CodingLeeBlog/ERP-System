@@ -29,7 +29,17 @@ public class MenuMemberController {
 
 	@Inject
 	private IMenuService menuService;
-	// /elly/menu.do?searchWord=마른안주
+	
+	
+	/**
+	 * 메인 홈페이지 메뉴 안내 페이지 리턴 기능
+	 * pagingVO를 통한 페이지네이션 기능
+	 * @param currentPage
+	 * @param searchType
+	 * @param searchWord
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/menu.do", method=RequestMethod.GET)
 	public String menu(
 			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,

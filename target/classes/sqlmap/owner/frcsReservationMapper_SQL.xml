@@ -6,8 +6,7 @@
 
 	<select id="frcsResvList" parameterType="string" resultType="frcsResvVO">
 		SELECT
-		    resv_no
-		  , a.mem_id
+		    a.resv_no
 		  , a.resv_mcnt
 		  , a.resv_time
 		  , a.resv_date
@@ -20,16 +19,21 @@
 		  , a.review_yn
 		  , b.frcs_id
 		  , b.mem_id
-		  , c.frcs_name
 		FROM
 		    reservation a
 		left join (select distinct frcs_id, mem_id from mem_menu ) b 
     		on a.mem_id = b.mem_id
-    	left join franchise c
-    		on b.frcs_id = c.frcs_id
-    	where c.frcs_id = #{frcsId}
+    	where b.frcs_id = #{frcsId}
     	order by 
-			resv_no desc
+			a.resv_date desc
 	</select>
+	
+	<update id="resvStateUpdate" parameterType="string">
+		UPDATE reservation
+		SET
+		    resv_state = '예약취소'
+		WHERE
+		    resv_no = #{resvNo}
+	</update>
 
 </mapper>

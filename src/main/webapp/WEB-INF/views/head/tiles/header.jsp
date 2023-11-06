@@ -589,7 +589,7 @@
                                       <a href="/head/faqlist.do">FAQ</a>
                                   </li>
                                   <li>
-                                      <a href="/head/compliment.do">칭찬합니다</a>
+                                      <a href="/head/complimentList.do">칭찬합니다</a>
                                   </li>
                                   <li>
                                       <a href="/head/proposalList.do">건의합니다</a>

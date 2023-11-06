@@ -617,18 +617,17 @@ $(function(){
         // 페이지 로드시 1회 실행
         updateNotificationBadge();
 
-        // 30초마다 업데이트
+        // 3초마다 업데이트
         setInterval(function () {
             updateNotificationBadge();
         }, 3000);
     });
     
-    //조회
+    //알림조회
     function updateNotificationBadge() {
         var data = {
             memId: $("#memId").val(),
             frcsId: $("#frcsId").val()
-            // 다른 필요한 프로퍼티 추가
         };
 
         $.ajax({
@@ -650,7 +649,6 @@ $(function(){
                 }
             }
         });
-        
     }
     
     //배지
@@ -666,7 +664,7 @@ $(function(){
         }
     }
 
-    //조회
+    //append로 최종 보내기
     function updateNotificationList(rst) {
         $("#alims").empty();
         var str = "";
@@ -686,7 +684,7 @@ $(function(){
         
     }
     
-
+	//소켓
     function connection() {
         ws.onopen = function () {
             console.log('Info: connection opened.');
@@ -707,76 +705,71 @@ $(function(){
     }
 });
 
-//눌렀을때 반응
-$(document).on("click", ".clsAlarm", function () {
-    console.log("clsAlarm");
-    let alarmNo = $(this).data("alarmNo");
-    console.log("alarmNo: " + alarmNo);
-    location.href = "/owner/updateAlarm.do?alarmNo=" + alarmNo;
-});
+		//알림 눌렀을때 반응
+		$(document).on("click", ".clsAlarm", function () {
+		    console.log("clsAlarm");
+		    let alarmNo = $(this).data("alarmNo");
+		    console.log("alarmNo: " + alarmNo);
+		    location.href = "/owner/updateAlarm.do?alarmNo=" + alarmNo;
+		});
+		
+		//1개삭제
+		$(document).on("click", ".clsHref", function(event) {
+		    event.preventDefault(); // 링크의 기본 동작(페이지 이동)을 방지합니다.
+		
+		    let alarmNo = $(this).data("alarmNo");
+		    console.log("clsHref alarmNo : " + alarmNo);
+		
+		    var data = { 
+		    		alarmNo : alarmNo 
+		    	}
+		    
+		      $.ajax({
+		          type: "POST",
+		          url: "/elly/deleteAlarm.do",
+		          beforeSend: function (xhr) {
+		              xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		          },
+		          data: JSON.stringify(data),
+		          contentType: "application/json; charset=utf-8",
+		          success: function(response) {
+		              if (response === "OK") {
+		                  console.log("항목 삭제에 성공했습니다.");
+		                  $("#alims").empty();
+		              } else {
+		                  console.log("항목 삭제에  실패했습니다.");
+		              }
+		          }
+		      });
+		  });
 
-//1개삭제
-$(document).on("click", ".clsHref", function(event) {
-    event.preventDefault(); // 링크의 기본 동작(페이지 이동)을 방지합니다.
-
-    let alarmNo = $(this).data("alarmNo");
-    console.log("clsHref alarmNo : " + alarmNo);
-
-    var data = { 
-    		alarmNo : alarmNo 
-    	}
-    
-    if (confirm("정말로 삭제하시겠습니까?")) {
-        $.ajax({
-            type: "POST",
-            url: "/elly/deleteAlarm.do",
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-            },
-            data: JSON.stringify(data),
-            contentType: "application/json; charset=utf-8",
-            success: function(response) {
-                if (response === "OK") {
-                    console.log("항목 삭제에 성공했습니다.");
-                    $("#alims").empty();
-                } else {
-                    console.log("항목 삭제에  실패했습니다.");
-                }
-            }
-        });
-    }
-});
-
-//전체삭제
-$(document).on("click", ".clearAll", function(event) {
-    event.preventDefault(); // 링크의 기본 동작(페이지 이동)을 방지합니다.
-
-    let frcsId = $(this).data("frcsId");
-
-    var data = { 
-    		frcsId : frcsId 
-    	}
-    
-    if (confirm("정말로 모두 삭제하시겠습니까?")) {
-        $.ajax({
-            type: "POST",
-            url: "/owner/clearAllNotifications.do",
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-            },
-            data: JSON.stringify(data),
-            contentType: "application/json; charset=utf-8",
-            success: function(response) {
-                if (response === "OK") {
-                    console.log("항목 삭제에 성공했습니다.");
-	                $("#alims").empty();
-                } else {
-                    console.log("항목 삭제에  실패했습니다.");
-                }
-            }
-        });
-    }
-});
-
+		//전체삭제
+		$(document).on("click", ".clearAll", function(event) {
+	    event.preventDefault(); // 링크의 기본 동작(페이지 이동)을 방지합니다.
+	
+	    let frcsId = $(this).data("frcsId");
+	
+	    var data = { 
+	    		frcsId : frcsId 
+	    	}
+	    
+	        $.ajax({
+	            type: "POST",
+	            url: "/owner/clearAllNotifications.do",
+	            beforeSend: function (xhr) {
+	                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	            },
+	            data: JSON.stringify(data),
+	            contentType: "application/json; charset=utf-8",
+	            success: function(response) {
+	                if (response === "OK") {
+	                    console.log("항목 삭제에 성공했습니다.");
+		                $("#alims").empty();
+	                } else {
+	                    console.log("항목 삭제에  실패했습니다.");
+	                }
+	            }
+	        });
+		});
 
 </script>

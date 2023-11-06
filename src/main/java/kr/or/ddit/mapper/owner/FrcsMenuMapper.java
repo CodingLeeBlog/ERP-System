@@ -2,6 +2,7 @@ package kr.or.ddit.mapper.owner;
 
 import java.util.List;
 
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.member.MenuListVO;
 import kr.or.ddit.vo.member.ResVO;
@@ -18,5 +19,6 @@ public interface FrcsMenuMapper {
 	public FrcsMenuVO selectMenuImg(String frcsId);
 	public void frcsMenuDelete(String frcsId);
 	public int frcsMenuInsert(FrcsMenuVO frcsMenuVO);
+	public void insertResAlarm(AlarmVO alarmVO);
 
 }

@@ -11,10 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.velocity.runtime.log.Log;
 import org.springframework.stereotype.Service;
 
+import kr.or.ddit.ServiceResult;
 import kr.or.ddit.mapper.head.CounselMapper;
 import kr.or.ddit.service.head.ICounselService;
 import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
+import kr.or.ddit.vo.member.MemberVO;
+import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.OwnerVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -93,5 +96,35 @@ public class CounselServiceImpl implements ICounselService {
 	            counselMapper.counselAttachRegister(attachVO);
 	        }
 	    }
-	}	
+	}
+
+	@Override
+	public ServiceResult frcsCheck(String frcsName) {
+		ServiceResult result = null;
+		FranchiseVO frcs = counselMapper.frcsCheck(frcsName);
+		if(frcs != null) {
+			result = ServiceResult.EXIST;
+		}else {
+			result = ServiceResult.NOTEXIST;
+		}
+		return result;
+	}
+
+	 private String lastId = "fr0001"; // 초기 마지막 아이디
+
+    @Override
+    public String makeFrcsId() {
+        int lastIdNumber = Integer.parseInt(lastId.substring(2));
+        int nextIdNumber = lastIdNumber + 1;
+        String newFrcsId = String.format("fr%04d", nextIdNumber);
+
+        lastId = newFrcsId; // 다음 호출을 위해 마지막 아이디 업데이트
+        return newFrcsId;
+    }
+
+	@Override
+	public void counselRegister(FranchiseVO frcsVO) {
+		counselMapper.counselRegister(frcsVO);
+	}
+
 }

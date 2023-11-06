@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="kr.or.ddit.mapper.head.ComplimentMapper">
+  
+  	<select id="selectComplimentList" parameterType="pagingVO" resultType="proposalVO">
+		select 
+		b.table_no, b.mem_id, b.field, b.board_title, b.board_content, b.board_regdate, b.board_count, h.ans_content, h.ans_id, h.ans_state, h.ans_date
+		FROM board b
+		LEFT OUTER JOIN hdboard_answer h ON b.table_no = h.table_no and b.mem_id = h.mem_id
+		where b.field = '칭찬'
+        order by table_no desc
+	</select>
+	
+	<select id="selectCompliment" parameterType="int" resultType="proposalVO">
+	    SELECT 
+	        b.table_no, b.mem_id, b.field, b.board_title, b.board_content, b.board_regdate, b.board_count, b.board_state, h.ans_content, h.ans_id, h.ans_state, h.ans_date
+	    FROM board b
+	    LEFT OUTER JOIN hdboard_answer h ON b.table_no = h.table_no AND b.mem_id = h.mem_id
+	    WHERE b.field = '칭찬' AND b.table_no = #{tableNo}
+	</select>
+	
+  <sql id="boardSearch">
+		<if test="searchType != null and searchType == 'title'">
+			and (board_title like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'writer'">
+			and (mem_id like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'both'">
+			and (board_title like '%'||#{searchWord}||'%')
+			and (mem_id like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+
+	<sql id="boardlistSearch">
+		<if test="searchStatus != null and searchStatus != '' ">
+			and (field like '%'||#{searchStatus}||'%')
+		</if>
+		<if test="searchWord != null and searchWord != '' ">
+			and (board_title like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+	
+	<select id="selectComplimentCount" parameterType="pagingVO" resultType="int">
+		select count(table_no)
+		from board 
+		where 1=1
+		and field = '칭찬'
+		<include refid="boardSearch"/>
+	</select>
+	
+  
+  
+  </mapper>

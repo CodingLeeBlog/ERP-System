@@ -1,0 +1,226 @@
+package kr.or.ddit.controller.head.orderdeal;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.ServiceResult;
+import kr.or.ddit.service.head.IStoreService;
+import kr.or.ddit.vo.head.HeadPaginationInfoVO;
+import kr.or.ddit.vo.head.StoreOrderHistoryVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Controller
+@RequestMapping("/head")
+public class StoreOrderHistory {
+
+	@Inject
+	private IStoreService service;
+	
+	@RequestMapping(value = "/storeOrderHistory.do")
+	public String storeOrderHistory(
+			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
+			@RequestParam(required = false) String searchFrcsId,
+			@RequestParam(required = false) String searchFrcsName,
+			@RequestParam(required = false) String searchBeforeDate,
+			@RequestParam(required = false) String searchAfterDate,
+			Model model) {
+		log.info("storeOrderHistory() GET -> 시작");
+		
+		HeadPaginationInfoVO<StoreOrderHistoryVO> pagingVO = new HeadPaginationInfoVO<StoreOrderHistoryVO>();
+		
+		if(StringUtils.isNotBlank(searchFrcsId)) {
+			pagingVO.setSearchFrcsId(searchFrcsId);
+		}
+		
+		if(StringUtils.isNotBlank(searchFrcsName)) {
+			pagingVO.setSearchFrcsName(searchFrcsName);
+		}
+		
+		if(StringUtils.isNotBlank(searchBeforeDate)) {
+			pagingVO.setSearchBeforeDate(searchBeforeDate);
+		}
+		
+		if(StringUtils.isNotBlank(searchAfterDate)) {
+			pagingVO.setSearchAfterDate(searchAfterDate);
+		}
+		
+		pagingVO.setCurrentPage(currentPage);
+		int totalRecord = service.totalOrderCount(pagingVO);
+		pagingVO.setTotalRecord(totalRecord);
+		
+		List<StoreOrderHistoryVO> dataList = service.selectTotalOrderList(pagingVO);
+		pagingVO.setDataList(dataList);
+		
+		int totalPrice = 0;
+		for(StoreOrderHistoryVO soh : dataList) {
+			totalPrice += Integer.parseInt(soh.getFrcsorderAmt());
+		}
+		pagingVO.setTotalPrice(totalPrice);
+		
+		StoreOrderHistoryVO soh = new StoreOrderHistoryVO();
+		
+		List<StoreOrderHistoryVO> frcsList = service.selectFrcsNameList(soh);
+		
+		if(frcsList.size() != 0) {
+			for (StoreOrderHistoryVO so : frcsList) {
+				log.info("가맹점코드 => " + so.getFrcsId());
+				log.info("가맹점이름 => " + so.getFrcsName());
+			}
+		}
+		
+		model.addAttribute("pagingVO", pagingVO);
+		model.addAttribute("frcsList", frcsList);
+		
+		return "head/orderDeal/storeOrderHistory";
+	}
+	
+	@RequestMapping(value = "/storeOrderHistoryDetails.do")
+	public String storeOrderHistoryDetails(
+			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
+			@RequestParam(required = false) String storeOrderDetailSearch,
+			@RequestParam(name="frcsId", required = false) String frcsId,
+			@RequestParam(name="frcsorderDate", required = false) String frcsorderDate,
+			Model model) {
+		log.info("storeOrderHistoryDetails() GET -> 시작");
+		
+		log.info("넘어온 frcsId -> " + frcsId);
+		log.info("넘어온 frcsorderDate -> " + frcsorderDate);
+		
+		HeadPaginationInfoVO<StoreOrderHistoryVO> pagingVO = new HeadPaginationInfoVO<StoreOrderHistoryVO>();
+		
+		if(StringUtils.isNotBlank(storeOrderDetailSearch)) {
+			pagingVO.setStoreOrderDetailSearch(storeOrderDetailSearch);
+		}
+		
+		// /commitBtn.do에서 승인 완료됐을시 다시 상세보기 페이지로가기위해 쿼리스트링값을 받아옴
+		if(StringUtils.isNotBlank(frcsId)) {
+			pagingVO.setFrcsId(frcsId);
+		}
+		
+		// /commitBtn.do에서 승인 완료됐을시 다시 상세보기 페이지로가기위해 쿼리스트링값을 받아옴
+		if(StringUtils.isNotBlank(frcsorderDate)) {
+			pagingVO.setFrcsorderDate(frcsorderDate);
+		}
+		
+		pagingVO.setCurrentPage(currentPage);
+		int totalRecord = service.selectOrderListDetailsCount(pagingVO);
+		pagingVO.setTotalRecord(totalRecord);
+		
+		List<StoreOrderHistoryVO> dataList = service.selectOrderListDetails(pagingVO);
+		pagingVO.setDataList(dataList);
+		
+		int totalPrice = 0;
+		if(dataList.size() != 0) {
+			for (StoreOrderHistoryVO soh : dataList) {
+				totalPrice += soh.getTotalPrice();
+			}
+		}
+		
+		log.info("totalPrice ->" + totalPrice);
+		
+		pagingVO.setTotalPrice(totalPrice);
+		
+		model.addAttribute("pagingVO", pagingVO);
+		model.addAttribute("frcsId", frcsId);
+		model.addAttribute("frcsorderDate", frcsorderDate);
+		
+		return "head/orderDeal/storeOrderHistoryDetails";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/checkOne.do", method = RequestMethod.POST)
+	public ResponseEntity<List<StoreOrderHistoryVO>> checkOne(
+			String frcsorderNo ){
+		
+		log.info("checkOne() -> 시작");
+		
+		log.info("frcsorderNo값 -> " + frcsorderNo);
+		
+		List<StoreOrderHistoryVO> frcsOrderDetail = service.selectCheckOne(frcsorderNo);
+		
+		return new ResponseEntity<List<StoreOrderHistoryVO>>(frcsOrderDetail,HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/commitBtn.do", method = RequestMethod.POST, consumes = "application/json; charset=utf-8")
+	public ResponseEntity<ServiceResult> commitBtn(
+			@RequestBody List<StoreOrderHistoryVO> storeOrderHistoryVO ){
+
+		log.info("checkOne() -> 시작");
+		
+		log.info("storeOrderHistoryVO값 -> " + storeOrderHistoryVO.toString());
+		
+		ServiceResult result = null;
+		
+		for (StoreOrderHistoryVO soh : storeOrderHistoryVO) {
+			String frcsorderNo = soh.getFrcsorderNo().toString();
+			result = service.updateOrderDetails(frcsorderNo);
+			
+			if(result == ServiceResult.FAILED) {
+				log.info("주문상세 승인처리중 오류 발생!!");
+				log.info("오류발생된 발주번호 -> " + frcsorderNo);
+			}
+		}
+		
+		return new ResponseEntity<ServiceResult>(result,HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/cancleModal.do", method = RequestMethod.POST, consumes = "application/json; charset=utf-8")
+	public ResponseEntity<List<StoreOrderHistoryVO>> cancleModal(
+			@RequestBody List<StoreOrderHistoryVO> frcsorderNo){
+		
+		log.info("cancleModal() -> 시작");
+		//{checkData=[{frcsorderNo=20231013-0057}, {frcsorderNo=20231013-0056}]}
+		log.info("cancleModal->frcsorderNo : " + frcsorderNo);
+		
+		List<StoreOrderHistoryVO> orderList = new ArrayList<StoreOrderHistoryVO>();
+		
+		for (StoreOrderHistoryVO soh : frcsorderNo) {
+			String frcsorderNumber = soh.getFrcsorderNo().toString();
+			StoreOrderHistoryVO sohVO = service.frcsOrderDetails(frcsorderNumber);
+			orderList.add(sohVO);
+		}
+		
+		return new ResponseEntity<List<StoreOrderHistoryVO>>(orderList,HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/cancleModalButton.do", method = RequestMethod.POST, consumes = "application/json; charset=utf-8")
+	public ResponseEntity<ServiceResult> cancleModalButton(
+			@RequestBody List<StoreOrderHistoryVO> storeOrderHistoryVO){
+		
+		log.info("cancleModalButton() -> 시작");
+		log.info("cancleModalButton -> storeOrderHistoryVO : " + storeOrderHistoryVO.toString() + "\n");
+		
+		ServiceResult result = null;
+		
+		for (StoreOrderHistoryVO soh : storeOrderHistoryVO) {
+			String frcsorderNo = soh.getFrcsorderNo().toString();
+			String frcsorderReturn = soh.getFrcsorderReturn().toString();
+			
+			log.info("frcsorderNo -> " + frcsorderNo);
+			log.info("frcsorderReturn -> " + frcsorderReturn);
+			
+			result = service.updateImpossibleOrder(soh);
+			
+		}
+		
+		return new ResponseEntity<ServiceResult>(result,HttpStatus.OK);
+	}
+}

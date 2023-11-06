@@ -74,6 +74,10 @@
 		<!-- sweetAlert cdn -->
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
 		<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
+  	
+  		<!-- kakao map cdn -->
+  		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=806a49ec63336f4fd1e46074f5163d44&libraries=services"></script>
+  
     </head>
 
     <body>
@@ -861,6 +865,9 @@
         
         <!-- Bootstrap Timepicker Plugin js -->
         <script src="${pageContext.request.contextPath }/resources/assets/vendor/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
+        
+        <!-- Input Mask Plugin js -->
+        <script src="${pageContext.request.contextPath }/resources/assets/vendor/jquery-mask-plugin/jquery.mask.min.js"></script>
         
     </body>
 </html> 

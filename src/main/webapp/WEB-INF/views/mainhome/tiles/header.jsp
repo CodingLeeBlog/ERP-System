@@ -213,7 +213,7 @@ $(function(){
 		                    		alarmNo : alarmNo 
 		                    	}
 		            	    
-		            	    if (confirm("정말로 삭제하시겠습니까?")) {
+// 		            	    if (confirm("정말로 삭제하시겠습니까?")) {
 		            	        $.ajax({
 		            	            type: "POST",
 		            	            url: "/elly/deleteAlarm.do",
@@ -230,7 +230,7 @@ $(function(){
 		            	                }
 		            	            }
 		            	        });
-		            	    }
+// 		            	    }
 		            	});
 		                
 		               //전체삭제
@@ -253,7 +253,7 @@ $(function(){
 					            ansId : ansId 
 					        }
 					
-					        if (confirm("정말로 삭제하시겠습니까?")) {
+// 					        if (confirm("정말로 삭제하시겠습니까?")) {
 					            $.ajax({
 					                type: "POST",
 					                url: "/elly/deleteclearAllAlarm.do",
@@ -272,7 +272,7 @@ $(function(){
 					                    }
 					                }
 					            });
-					        }
+// 					        }
 					    } else {
 					        console.log("모든 알림의 ansId가 null입니다.");
 					    }

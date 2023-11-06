@@ -318,7 +318,7 @@
 			                    		alarmNo : alarmNo 
 			                    	}
 			            	    
-			            	    if (confirm("정말로 삭제하시겠습니까?")) {
+// 			            	    if (confirm("정말로 삭제하시겠습니까?")) {
 			            	        $.ajax({
 			            	            type: "POST",
 			            	            url: "/elly/deleteAlarm.do",
@@ -335,7 +335,7 @@
 			            	                }
 			            	            }
 			            	        });
-			            	    }
+// 			            	    }
 			            	});
 			                
 			               //전체삭제
@@ -358,7 +358,7 @@
 						            ansId : ansId 
 						        }
 						
-						        if (confirm("정말로 삭제하시겠습니까?")) {
+// 						        if (confirm("정말로 삭제하시겠습니까?")) {
 						            $.ajax({
 						                type: "POST",
 						                url: "/elly/deleteclearAllAlarm.do",
@@ -377,13 +377,11 @@
 						                    }
 						                }
 						            });
-						        }
+// 						        }
 						    } else {
 						        console.log("모든 알림의 ansId가 null입니다.");
 						    }
 						});
-
-			                
 			                if (showBadge) {
 			                    $("#noti-badge").css({
 			                        display: "inline-block",

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,6 @@ import kr.or.ddit.vo.member.MyCouponVO;
 import kr.or.ddit.vo.member.ResVO;
 import kr.or.ddit.vo.member.ReviewVO;
 import kr.or.ddit.vo.owner.FrcsMenuVO;
-import kr.or.ddit.vo.owner.FrcsReviewVO;
 import kr.or.ddit.vo.owner.FrcsSeatVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,6 +48,14 @@ public class ResMemberController {
 	@Inject
 	private IMemberReviewService memberreviewService;
 	
+	/**
+	 * 매장을 선택 후 예약 페이지 리턴 기능
+	 * 
+	 * @param memId
+	 * @param frcsId
+	 * @param model
+	 * @return
+	 */
 	@PreAuthorize("hasRole('ROLE_MEMBER')")
 	@RequestMapping(value = "/store/res.do", method = RequestMethod.GET)
 	public String mapForm(String memId, String frcsId, Model model) {
@@ -73,15 +79,31 @@ public class ResMemberController {
 		return "mainhome/store/resForm";
 	}
 	
+	/**
+	 * 예약 페이지 회원 예약 기능
+	 * 
+	 * @param resVO
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/store/res.do", method = RequestMethod.POST)
-	public ResponseEntity<ServiceResult> frcsOrder(@RequestBody ResVO resVO) {
+	public ResponseEntity<ServiceResult> frcsOrder(@RequestBody ResVO resVO, AlarmVO alarmVO) {
 
-		ServiceResult result = menuService.resRegister(resVO);
+		ServiceResult result = menuService.resRegister(resVO, alarmVO);
 	    
 		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
 	
+	/**
+	 * 매장 페이지에서 리뷰 등록 기능
+	 * 예약을 했을 경우 리뷰 버튼이 생기고 예약을 안 했을 경우 기존 예약 버튼 생성
+	 * 
+	 * @param ra
+	 * @param alarmVO
+	 * @param reviewVO
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/store/review.do" , method = RequestMethod.POST)
 	public String reviewSuccess(
 			RedirectAttributes ra,

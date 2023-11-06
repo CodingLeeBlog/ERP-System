@@ -41,6 +41,7 @@
 		<typeAlias type="kr.or.ddit.vo.owner.FrcsReviewVO" alias="FrcsReviewVO"/>
 		<typeAlias type="kr.or.ddit.vo.owner.FrcsMenuIngredientVO" alias="ingredVO"/>
 		<typeAlias type="kr.or.ddit.vo.owner.FrcsReservationVO" alias="frcsResvVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsEmployeeVO" alias="frcsEmpVO"/>
 		
 		<!-- 본사 -->
 		<typeAlias type="kr.or.ddit.vo.head.MenuVO" alias="menuVO"/>

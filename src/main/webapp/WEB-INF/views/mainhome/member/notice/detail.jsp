@@ -37,7 +37,7 @@
 			<div class="col-1 bg-white">
 			</div>
 			<div class="col-10 bg-white">
-				<div class="mt-5 mb-5">
+				<div class="row mt-5 mb-5">
 					<nav id="navbar" class="navbar order-last order-lg-0">
 						<ul>
 							<li class="me-5">
@@ -59,40 +59,39 @@
 						<i class="bi bi-list mobile-nav-toggle"></i>
 					</nav>
 				</div>
-<!-- 메뉴 mini bar 끝-->				
+				<!-- 메뉴 mini bar 끝-->				
 				
-<!-- 제목 시작 -->
-				<div class="mb-5">
+				<!-- 제목 시작 -->
+				<div class="row mb-5">
 					<p class="d-flex justify-content-center" style="color: black; font-size: 2.5rem;">공지사항</p>
 				</div>
-<!-- 제목 끝 -->
+				<!-- 제목 끝 -->
 				
-<!-- 게시판 영역 시작 -->
-				<div class="mb-4" style="color: rgb(0, 0, 0); border-bottom: 3px solid;"></div>
-					<div class="container-fluid ps-0 pe-0" style="color: rgb(0, 0, 0);">
-						<div class="row text-center">
-						<input type="hidden" name="boardNo" id="boardNo" value="${headBoardVO.boardNo }"/>
-							<table style="height: 20px;">
-							  <tbody>
-								   <tr>
-								     <td class="align-baseline text-center mx-auto fs-5 text" style="width: 1200px;">${headBoardVO.boardTitle }</td>
-								     <td class="align-text-top text-end pe-5 fs-5 text"><fmt:formatDate value="${headBoardVO.boardRegdate }" pattern="yyyy. MM. dd"/></td>
-								   </tr>
-								 </tbody>
-							</table>
-						</div>
-					<div class="mt-4 mb-4" style="color: rgb(0, 0, 0); border-bottom: 1px solid;"></div>
-                 		 <div class="text-center">${headBoardVO.boardContent }</div>
-                 		 <div class="mb-4" style="color: rgb(0, 0, 0); border-bottom: 3px solid;"></div>
-                 	 <div class="d-flex justify-content-center">
-                    	 <button type="button" id="btnList" class="btn btn-dark btn-lg">목록</button>
-                 	 </div>
-                  <br><br><br>
+				<!-- 게시판 영역 시작 -->
+				<div>
+					<div class="text-end pe-3 mb-4" style="color: black; font-size: 20px"><fmt:formatDate value="${headBoardVO.boardRegdate }" pattern="yyyy. MM. dd"/></div>
 				</div>
-          		 </div>
-				<div class="col-1 bg-white"></div>
-             </div>
-          </div>
+				<div class="mb-4" style="color: rgb(0, 0, 0); border-bottom: 3px solid;"></div>
+				<div class="row">
+					<div>
+						<div class="text-center" style="color: black; font-size: 40px">${headBoardVO.boardTitle }</div>
+					</div>
+				</div>
+				<div class="mt-4 mb-4" style="color: rgb(0, 0, 0); border-bottom: 1px solid;"></div>
+				<div class="mb-5" style="color: rgb(0, 0, 0);">
+					<div class="row text-center">
+						<input type="hidden" name="boardNo" id="boardNo" value="${headBoardVO.boardNo }"/>
+					</div>
+					<div class="text-center pt-5 pb-5">${headBoardVO.boardContent }</div>
+				<div class="mt-4 mb-4" style="color: rgb(0, 0, 0); border-bottom: 3px solid;"></div>
+				<div class="d-flex justify-content-center">
+					<button type="button" id="btnList" class="btn btn-dark btn-lg">목록</button>
+				</div>
+				</div>
+			</div>
+			<div class="col-1 bg-white"></div>
+         </div>
+      </div>
 	<sec:csrfInput/>
 </div>
 <!-- 게시판 영역 끝 -->

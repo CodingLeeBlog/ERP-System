@@ -20,4 +20,9 @@ public class FrcsReservationVO {
 	private int resvPrice;
 	private String reviewYn;
 	
+	private String menuCd;
+	private String frcsId;
+	private String menuCnt;
+	
+	private String menuName;
 }

@@ -25,6 +25,8 @@ public class SocketTest extends TextWebSocketHandler{
 	
 	// 소켓에 접속한 인원들을 담기 위한 리스트 객체 생성
 	List<WebSocketSession> sessionList = new ArrayList<WebSocketSession>();
+	
+	//1:1로 하는 경우
 	Map<String, WebSocketSession> userSessions = new HashMap<String, WebSocketSession>();
 	
 	@Override
@@ -45,7 +47,6 @@ public class SocketTest extends TextWebSocketHandler{
 		log.info("handleTextMessage() 실행...!! 메세지 전송 시도 성공...!");
 		log.info("메세지야 들어오아라..."+ message.getPayload().toString()); 
 		
-		
 		String senderId = getId(session);
 		log.info("소켓 컨트롤러에서 로그인한 아이디 값 추출 : "+senderId);
 		
@@ -56,33 +57,32 @@ public class SocketTest extends TextWebSocketHandler{
 			
 			if(strs != null && strs.length == 1) {
 				String memId = strs[0];
+//				String ansId = strs[1];
+//				String frcdId = strs[2];
 //				String alarmContent = strs[1];
 //				String alarmCnt = strs[2];
 //				String alarmNo = strs[3];
 //				String alarmRead = strs[4];
 //				String alarmDate = strs[5];
 //				String tableNo = strs[6];
-//				
+
 				WebSocketSession memIdSession = userSessions.get(memId);
 				log.info("memIdSession >>>>>>>>>>>>>" + memIdSession);
-
-//				if("board".equals(alarmContent) && memIdSession != null) {
-//					TextMessage tmpMsg = new TextMessage(memId + "님이"
-//				+ "<a href='/elly/detail.do?tableNo=" + tableNo + "' style=\"color: black\">"
-//				+ " 에 글을 달았습니다!</a>");
-//					
-//				memIdSession.sendMessage(tmpMsg);
-//				
 				
 				if(memIdSession != null) {
 					TextMessage tmpMsg = new TextMessage("");
 					memIdSession.sendMessage(tmpMsg);
 				}
+				
+
+//				if("board".equals(alarmContent) && memIdSession != null) {
+//					TextMessage tmpMsg = new TextMessage(memId + "님이"
+//				+ "<a href='/elly/detail.do?tableNo=" + tableNo + "' style=\"color: black\">"
+//				+ " 에 글을 달았습니다!</a>");
+//				memIdSession.sendMessage(tmpMsg);
 			}
-			
 		}
 	}
-		
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {

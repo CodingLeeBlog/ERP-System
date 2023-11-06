@@ -10,6 +10,7 @@ import kr.or.ddit.mapper.head.CouponMapper;
 import kr.or.ddit.mapper.member.ConsultMapper;
 import kr.or.ddit.service.member.IMemberService;
 import kr.or.ddit.vo.member.MemberVO;
+import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.OwnerVO;
 
 @Service
@@ -37,11 +38,11 @@ public class MemberServiceImpl implements IMemberService {
 	}
 
 	@Override
-	public ServiceResult create(MemberVO memberVO) {
+	public ServiceResult membercreate(MemberVO memberVO) {
 		ServiceResult result = null;
-		int status = loginMapper.create(memberVO);
+		int status = loginMapper.membercreate(memberVO);
 		if(status > 0) {
-			loginMapper.signupAuth(memberVO.getMemId());
+			loginMapper.signupmemberAuth(memberVO.getMemId());
 			result = ServiceResult.OK;
 		}else {
 			result = ServiceResult.FAILED;
@@ -49,22 +50,22 @@ public class MemberServiceImpl implements IMemberService {
 		return result;
 	}
 
-	@Override
-	public MemberVO loginCheck(MemberVO memberVO) {
-		return loginMapper.loginCheck(memberVO);
-	}
+//	@Override
+//	public MemberVO loginCheck(MemberVO memberVO) {
+//		return loginMapper.loginCheck(memberVO);
+//	}
 
-	@Override
-	public ServiceResult consult(OwnerVO ownerVO) {
-		ServiceResult result = null;
-		int status = consultMapper.consult(ownerVO);
-		if(status > 0) {
-			result = ServiceResult.OK;
-		}else {
-			result = ServiceResult.FAILED;
-		}
-		return result;		
-	}
+//	@Override
+//	public ServiceResult consult(OwnerVO ownerVO) {
+//		ServiceResult result = null;
+//		int status = consultMapper.consult(ownerVO);
+//		if(status > 0) {
+//			result = ServiceResult.OK;
+//		}else {
+//			result = ServiceResult.FAILED;
+//		}
+//		return result;		
+//	}
 
 	@Override
 	public MemberVO findId(MemberVO member) {
@@ -74,7 +75,8 @@ public class MemberServiceImpl implements IMemberService {
 
 	@Override
 	public MemberVO findPw(MemberVO member) {
-		return null;
+		MemberVO result = loginMapper.findPw(member);
+		return result;
 	}
 
 	@Override
@@ -94,5 +96,42 @@ public class MemberServiceImpl implements IMemberService {
 		return result;
 	}
 
+	@Override
+	public OwnerVO ownerIdCheck(String ownerId) {
+		OwnerVO result = loginMapper.ownerIdCheck(ownerId);
+		return result;
+	}
 	
+	@Override
+	public FranchiseVO frcsIdCheck(String frcsId) {
+		FranchiseVO result = loginMapper.frcsIdCheck(frcsId);
+		return result;
+	}
+
+	@Override
+	public ServiceResult ownercreate(MemberVO memberVO) {
+		ServiceResult result = null;
+		int status = loginMapper.ownercreate(memberVO);
+		if(status > 0) {
+			loginMapper.signupownerAuth(memberVO.getMemId());
+			loginMapper.createfrcsownerShip(memberVO);
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
+
+	@Override
+	public ServiceResult consult(OwnerVO ownerVO) {
+		ServiceResult result = null;
+		int status = consultMapper.consult(ownerVO);
+		if(status > 0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
+
 }

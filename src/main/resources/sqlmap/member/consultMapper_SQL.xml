@@ -6,9 +6,9 @@
 
 <insert id="consult" parameterType="ownerVO">
 	insert into owner (
-	owner_id, owner_no, owner_name, owner_bir, owner_tel, owner_email, owner_area, owner_dong, owner_money, owner_building, owner_buildingadd, owner_exp, owner_hopetime, owner_infocontent, owner_contentdetail
+	owner_id, owner_no, owner_name, owner_bir, owner_tel, owner_email, owner_area, owner_dong, owner_money, owner_building, owner_buildingadd, owner_exp, owner_hopetime, owner_infocontent, owner_contentdetail, owner_rgdate
 	) values (
-		#{ownerId}, '1', #{ownerName}, #{ownerBir}, #{ownerTel}, #{ownerEmail}, #{ownerArea}, #{ownerDong}, #{ownerMoney}, #{ownerBuilding}, #{ownerBuildingadd}, #{ownerExp}, #{ownerHopetime}, #{ownerInfocontent}, #{ownerContentdetail}
+		#{ownerId}, '1', #{ownerName}, #{ownerBir}, #{ownerTel}, #{ownerEmail}, #{ownerArea}, #{ownerDong}, #{ownerMoney}, #{ownerBuilding}, #{ownerBuildingadd}, #{ownerExp}, #{ownerHopetime}, #{ownerInfocontent}, #{ownerContentdetail}, sysdate
 	)
 </insert>
 

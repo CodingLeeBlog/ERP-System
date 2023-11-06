@@ -56,7 +56,7 @@
 					<div class="" style="color: black; font-size: 20px;">&#8251; 표기된 항목은 필수입력 항목입니다.</div>
 				</div>
 				
-			<form action="/elly/consult.do" method="post" id="signupForm" name="signupForm">
+<!-- 			<form action="/elly/consult.do" method="post" id="signupForm" name="signupForm"> -->
 				<div class="mb-5" style="color: rgb(0, 0, 0); border-bottom: 1px solid;"></div>
 				<input type="hidden" name="ownerId" id="ownerId"/>
 				<div class="row mb-3" style="color: black; font-size: 20px;">
@@ -108,25 +108,6 @@
 						<div class="row" style="font-size: 15px;">
 							<div class="point successEmailChk">이메일 입력후 인증번호 보내기를 해주십시오.</div>
 							<div class="text02 fc05 mt10">※ 개인 정보 분리/저장에 대한 고지 및 포인트 소멸에 대해 이메일로 안내 드립니다.</div>
-						</div>
-					</div>
-				</div>
-				<div class="row mb-3" style="color: black; font-size: 20px;">
-					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 주소</div>
-					<div class="col-10">
-						<div class="mb-3 d-flex">
-							<input class="form-control me-3" type="text" id="ownerPost" name="ownerPost" style="width: 155px; min-width: 155px" readonly="readonly" value="" maxlength="5">
-							<button type="button" onclick="DaumPostcode()" class="btn btn-secondary btn-flat">우편번호 찾기</button>
-						</div>
-						<div class="mb-3">
-							<input class="form-control" type="text" id="ownerAdd1" name="ownerAdd1" style="width: 600px;" value="">
-						</div>
-						<div class="mb-3">
-							<input class="form-control" type="text" id="ownerAdd2" name="ownerAdd2" style="width: 600px;" value="">
-						</div>
-						<div style="font-size: 15px;">
-							<div class="text02 fc05 mt10">※ 주소 입력은 선택 사항 입니다.</div>
-							<div class="text02 fc05 mt10">※ 단, 주소가 없는 경우 이벤트 참여 시 경품 발송에 제약을 받을 수 있습니다.</div>
 						</div>
 					</div>
 				</div>
@@ -213,8 +194,8 @@
 					<div class="col-2">
 					</div>
 				</div>
-				<sec:csrfInput/>
-			</form>
+<%-- 				<sec:csrfInput/> --%>
+<!-- 			</form> -->
 			</div>
 			<div class="col-2 bg-white">
 			</div>
@@ -452,22 +433,57 @@ $(function(){
 	signupBtn.on("click", function(){
 		
 		var id = $("#ownerId").val(Math.floor(Math.random() * 89999999) + 10000000);
-		var name = $("#ownerName").val();
-		var bir = $("#ownerBir").val(); 
+		var ownerName = $("#ownerName").val();
+		var ownerBir = $("#ownerBir").val(); 
 		var tel = $("#ownerTel").val($("#mobile1").val() + '-' + $("#mobile2").val() + '-' + $("#mobile3").val());
 		var ownerEmail = $("#ownerEmail").val();
 		var ownerArea = $("#ownerArea").val();
 		var ownerDong = $("#ownerDong").val();
-		var ownerMoney = $("#ownerMoney").val();
-		var ownerBuilding = $("#ownerBuilding").val();
+// 		var ownerMoney = $("#ownerMoney").val();
+		var ownerMoney = $("#ownerMoney option:selected").val();
+// 		var ownerBuilding = $("#ownerBuilding").val();
+		var ownerBuilding = $("input[name='ownerBuilding']:checked").val();
 		var ownerBuildingadd = $("#ownerBuildingadd").val();
-		var ownerExp = $("#ownerExp").val();
+// 		var ownerExp = $("#ownerExp").val();
+		var ownerExp = $("#ownerExp option:selected").val();
 		var ownerHopetime = $("#ownerHopetime").val();
 		var ownerArea = $("#ownerArea").val();
-		var ownerInfocontent = $("#ownerInfocontent").val();
+// 		var ownerInfocontent = $("#ownerInfocontent").val();
+		var ownerInfocontent = $("input[name='ownerInfocontent']:checked").val();
 		var ownerContentdetail = $("#ownerContentdetail").val();
 		
-		signupForm.submit();
+		var data = {
+				ownerId : $("#ownerId").val(),
+				ownerName : ownerName,
+				ownerBir : ownerBir,
+				ownerTel : $("#ownerTel").val(),
+				ownerEmail : ownerEmail,
+				ownerArea : ownerArea,
+				ownerDong : ownerDong,
+				ownerMoney : ownerMoney,
+				ownerBuilding : ownerBuilding,
+				ownerBuildingadd : ownerBuildingadd,
+				ownerExp : ownerExp,
+				ownerHopetime : ownerHopetime,
+				ownerArea : ownerArea,
+				ownerInfocontent : ownerInfocontent,
+				ownerContentdetail : ownerContentdetail
+		};
+			
+			$.ajax({
+				type : "post",
+				url : "/elly/consult.do",
+				beforeSend: function(xhr){
+					xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+				},
+				data: JSON.stringify(data),
+				contentType : "application/json; charset=utf-8",
+				success : function(res){
+					
+				}
+			});
+		
+// 		signupForm.submit();
 	});
 });
 

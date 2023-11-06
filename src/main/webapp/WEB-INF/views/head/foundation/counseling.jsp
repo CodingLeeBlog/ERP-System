@@ -242,31 +242,31 @@
 			            </div>
 			            <div class="modal-body">
 		            		<div class="mb-3">
-		            			<label for="ownerFile8" class="col-form-label">가맹점코드</label>
+		            			<label for="frcsId1" class="col-form-label">가맹점코드</label>
 		            			<div class="col-10 d-flex justify-content-between">
 		            			    <div class="col-3">
-		            					<input type="text" class="form-control" id="inspFile" style="width: 155px; min-width: 155px" readonly="readonly">
+		            					<input type="text" class="form-control frcsId1" name="frcsId" id="frcsId1" style="width: 155px; min-width: 155px" readonly="readonly">
 		            				</div>
 								    <div class="col-10">
-								        <button type="button" class="btn btn-success btn-flat">생성</button>
+								        <button type="button" class="btn btn-success btn-flat" id="makeBtn">생성</button>
 								    </div>
 		            			</div>
 		            		</div>
 		                    <div class="mb-3">
-		                        <label for="" class="col-form-label">가맹점명</label>
+		                        <label for="frcsName1" class="col-form-label">가맹점명</label>
 		                        <div class="col-10 d-flex justify-content-between">
 		            			    <div class="col-3">
-			                        	<input type="text" class="form-control" name="" id="" style="width: 155px; min-width: 155px">
+			                        	<input type="text" class="form-control" name="frcsName" id="frcsName1" style="width: 155px; min-width: 155px">
 			                        </div>
 								    <div class="col-10">
-								        <button type="button" class="btn btn-success btn-flat">중복검사</button>
+								        <button type="button" class="btn btn-success btn-flat" id="frcsCheckBtn">중복검사</button>
 								    </div>
 								</div>
 		                    </div>
 		            		<div class="row g-2">
 		                        <div class="mb-3 col-md-6">
-		                        	<label for="" class="col-form-label">운영상태</label>
-			                        <select class="form-select form-select-sm mb-3" id="inspScore" name="score">
+		                        	<label for="frcsState1" class="col-form-label">운영상태</label>
+			                        <select class="form-select form-select-sm mb-3" id="frcsState1" name="frcsState">
 										<option selected>선택</option>
 										<option value="개점예정">개점예정</option>
 										<option value="휴업중">휴업중</option>
@@ -274,25 +274,25 @@
 									</select>
 		                        </div>
 		                        <div class="mb-3 col-md-6">
-		                        	<label for="" class="col-form-label">전화번호</label>
-			                        <input type="text" class="form-control" name="" id="">
+		                        	<label for="frcsTel1" class="col-form-label">전화번호</label>
+			                        <input type="text" class="form-control" name="frcsTel" id="frcsTel1">
 		                        </div>
 		                    </div>
 		            		<div class="row g-2">
 		                        <div class="mb-3 col-md-6">
-		                        	<label for="" class="col-form-label">가맹등록일자</label>
-			                        <input type="date" class="form-control" name="" id="">
+		                        	<label for="frcsStdate1" class="col-form-label">가맹등록일자</label>
+			                        <input type="date" class="form-control" name="frcsStdate" id="frcsStdate1">
 		                        </div>
 		                        <div class="mb-3 col-md-6">
-		                        	<label for="" class="col-form-label">계약만료일자</label>
-			                        <input type="date" class="form-control" name="" id="">
+		                        	<label for="frcsEnddate1" class="col-form-label">계약만료일자</label>
+			                        <input type="date" class="form-control" name="frcsEnddate" id="frcsEnddate1">
 		                        </div>
 		                    </div>
 							<div class="mb-3">
 							    <label for="memPost" class="col-form-label">주소</label>
 							    <div class="col-10 d-flex justify-content-between">
 								    <div class="col-3">
-								        <input type="text" class="form-control" id="memPost" name="memPost" style="width: 155px; min-width: 155px" readonly="readonly" value="" maxlength="5">
+								        <input type="text" class="form-control" id="frcsPost1" name="frcsPost" style="width: 155px; min-width: 155px" readonly="readonly" value="" maxlength="5">
 								    </div>
 								    <div class="col-10">
 								        <button type="button" onclick="DaumPostcode()" class="btn btn-secondary btn-flat">우편번호 찾기</button>
@@ -300,63 +300,63 @@
 							    </div>
 							</div>
 							<div class="mb-3">
-								<label for="" class="col-form-label">기본주소</label>
-								<input type="text" class="form-control" id="memAdd1" name="memAdd1" readonly="readonly">
+								<label for="frcsAdd3" class="col-form-label">기본주소</label>
+								<input type="text" class="form-control" id="frcsAdd3" name="frcsAdd1" readonly="readonly">
 							</div>
 							<div class="mb-3">
-								<label for="" class="col-form-label">상세주소</label>
-								<input type="text" class="form-control" id="memAdd2" name="memAdd2">
+								<label for="frcsAdd4" class="col-form-label">상세주소</label>
+								<input type="text" class="form-control" id="frcsAdd4" name="frcsAdd2">
 							</div>
 		            		<div class="row g-2">
 		                        <div class="mb-3 col-md-6">
-		                        	<label for="" class="col-form-label">영업시작시간</label>
-			                        <input type="text" class="form-control" name="" id="">
+		                        	<label for="frcsSttime1" class="col-form-label">영업시작시간</label>
+			                        <input type="text" class="form-control" name="frcsSttime" id="frcsSttime1">
 		                        </div>
 		                        <div class="mb-3 col-md-6">
-		                        	<label for="" class="col-form-label">영업종료시간</label>
-			                        <input type="text" class="form-control" name="" id="">
+		                        	<label for="frcsEndtime1" class="col-form-label">영업종료시간</label>
+			                        <input type="text" class="form-control" name="frcsEndtime" id="frcsEndtime1">
 		                        </div>
 		                    </div>
 		            		<div class="row g-4">
 		                        <div class="mb-3 col-md-3">
-		                        	<label for="" class="col-form-label">계약체결일자</label>
-			                        <input type="date" class="form-control" name="" id="">
+		                        	<label for="frcsCdate1" class="col-form-label">계약체결일자</label>
+			                        <input type="date" class="form-control" name="frcsCdate" id="frcsCdate1">
 		                        </div>
 		                        <div class="mb-3 col-md-3">
-		                        	<label for="" class="col-form-label">예상완공일</label>
-			                        <input type="date" class="form-control" name="" id="">
+		                        	<label for="frcsInsdate1" class="col-form-label">예상완공일</label>
+			                        <input type="date" class="form-control" name="frcsInsdate" id="frcsInsdate1">
 		                        </div>
 		                        <div class="mb-3 col-md-3">
-		                        	<label for="" class="col-form-label">그랜드오픈일자</label>
-			                        <input type="date" class="form-control" name="" id="">
+		                        	<label for="frcsOpdate1" class="col-form-label">그랜드오픈일자</label>
+			                        <input type="date" class="form-control" name="frcsOpdate" id="frcsOpdate1">
 		                        </div>
 		                        <div class="mb-3 col-md-3">
-		                        	<label for="" class="col-form-label">최종점검일자</label>
-			                        <input type="date" class="form-control" name="" id="">
+		                        	<label for="frcsInedate1" class="col-form-label">최종점검일자</label>
+			                        <input type="date" class="form-control" name="frcsInedate" id="frcsInedate1">
 		                        </div>
 		                    </div>
 		            		<div class="row g-4">
 		                        <div class="mb-3 col-md-3">
-		                        	<label for="" class="col-form-label">가맹점X좌표</label>
-			                        <input type="text" class="form-control" name="" id="">
+		                        	<label for="frcsXmap1" class="col-form-label">가맹점X좌표</label>
+			                        <input type="text" class="form-control" name="frcsXmap" id="frcsXmap1">
 		                        </div>
 		                        <div class="mb-3 col-md-3">
-		                        	<label for="" class="col-form-label">가맹점Y좌표</label>
-			                        <input type="text" class="form-control" name="" id="">
+		                        	<label for="frcsYmap1" class="col-form-label">가맹점Y좌표</label>
+			                        <input type="text" class="form-control" name="frcsYmap" id="frcsYmap1">
 		                        </div>
 		                        <div class="mb-3 col-md-3">
-		                        	<label for="" class="col-form-label">가맹점별점</label>
-			                        <input type="text" class="form-control" name="" id="">
+		                        	<label for="frcsStar1" class="col-form-label">가맹점별점</label>
+			                        <input type="text" class="form-control" name="frcsStar" id="frcsStar1">
 		                        </div>
 		                        <div class="mb-3 col-md-3">
-		                        	<label for="" class="col-form-label">가맹점수용인원</label>
-			                        <input type="text" class="form-control" name="" id="">
+		                        	<label for="frcsPsncpa1" class="col-form-label">가맹점수용인원</label>
+			                        <input type="text" class="form-control" name="frcsPsncpa" id="frcsPsncpa1">
 		                        </div>
 		                    </div>
 			            </div>
 			            <div class="modal-footer">
 			                <a href="javascript:void(0);" class="btn btn-light" data-bs-dismiss="modal">취소</a>
-			                <button type="button" class="btn btn-primary">저장</button>
+			                <button type="button" class="btn btn-primary" id="regBtn">저장</button>
 			            </div>
 			        </div>
 			    </div>
@@ -445,7 +445,13 @@ $(function() {
 	var mailCheckBtn = $("#mailCheckBtn");
 	var updateBtn = $("#updateBtn");
 	var saveBtn = $("#saveBtn");
-	var isEditMode = false; // 수정 모드인지 여부를 저장하는 변수
+	// 수정 모드인지 여부를 저장하는 변수
+	var isEditMode = false; 
+	// 가맹점 등록 버튼
+	var regBtn = $("#regBtn"); 
+	// 가맹점 중복체크
+	var frcsCheckBtn = $("#frcsCheckBtn");
+	var frcsCheckFlag = false;
 
 	// 페이징
 	pagingArea.on("click", "a", function(event){
@@ -453,6 +459,38 @@ $(function() {
 		var pageNo = $(this).data("page");
 		searchForm.find("#page").val(pageNo);
 		searchForm.submit();
+	});
+	
+	// 가맹점 중복체크
+	frcsCheckBtn.on("click", function(){
+		var name =  $("#frcsName1").val();
+		
+		if(name == null || name == ""){
+			alert("가맹점을 입력해주세요.");
+			return false;
+		}
+		
+		var data = {
+			frcsName : name
+		};
+		
+		$.ajax({
+			type : "post",
+			url : "/head/frcsCheck.do",
+			beforeSend: function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+			},
+			data: JSON.stringify(data), // 방법 2)
+			contentType : "application/json; charset=utf-8", // 방법 2)
+			success : function(res){
+				if(res == "NOTEXIST"){ // 아이디 사용 가능					
+					alert("사용 가능한 가맹점명입니다!");
+					frcsCheckFlag = true; // 가입하기 버튼을 클릭할때 아이디 중복 체크를 했는지 여부
+				}else{				   // 아이디 사용 불가능
+					alert("이미 사용중인 가맹점명입니다!")
+				}
+			}
+		});
 	});
 	
 	// 상세보기
@@ -533,6 +571,78 @@ $(function() {
         	}
 	    });
 	});
+	
+	// 가맹점 등록 
+	$('#regBtn').on('click', function() {
+// 		var frcsId1 = $("#frcsId1").val();
+// 		var frcsName1 = $("#frcsName1").val();
+// 		var frcsState1 = $("#frcsState1").val();
+// 		var frcsTel1 = $("#frcsTel1").val();
+// 		var frcsStdate1 = $("#frcsStdate1").val();
+// 		var frcsEnddate1 = $("#frcsEnddate1").val();
+// 		var frcsPost1 = $("#frcsPost1").val();
+// 		var frcsAdd3 = $("#frcsAdd3").val();
+// 		var frcsAdd4 = $("#frcsAdd4").val();
+// 		var frcsSttime1 = $("#frcsSttime1").val();
+// 		var frcsEndtime1 = $("#frcsEndtime1").val();
+// 		var frcsCdate1 = $("#frcsCdate1").val();
+// 		var frcsInsdate1 = $("#frcsInsdate1").val();
+// 		var frcsInedate1 = $("#frcsInedate1").val();
+// 		var frcsOpdate1 = $("#frcsOpdate1").val();
+// 		var frcsXmap1 = $("#frcsXmap1").val();
+// 		var frcsYmap1 = $("#frcsYmap1").val();
+// 		var frcsStar1 = $("#frcsStar1").val();
+// 		var frcsPsncpa1 = $("#frcsPsncpa1").val();
+		
+		var data = {
+				frcsId : $("#frcsId1").val(),
+				frcsName : $("#frcsName1").val(),
+				frcsState : $("#frcsState1").val(),
+				frcsTel : $("#frcsTel1").val(),
+				frcsStdate : $("#frcsStdate1").val(),
+				frcsEnddate : $("#frcsEnddate1").val(),
+				frcsPost : $("#frcsPost1").val(),
+				frcsAdd1 : $("#frcsAdd3").val(),
+				frcsAdd2 : $("#frcsAdd4").val(),
+				frcsSttime : $("#frcsSttime1").val(),
+				frcsEndtime : $("#frcsEndtime1").val(),
+				frcsCdate : $("#frcsCdate1").val(),
+				frcsInsdate : $("#frcsInsdate1").val(),
+				frcsOpdate : $("#frcsOpdate1").val(),
+				frcsInedate : $("#frcsInedate1").val(),
+				frcsXmap : $("#frcsXmap1").val(),
+				frcsYmap : $("#frcsYmap1").val(),
+				frcsStar : $("#frcsStar1").val(),
+				frcsPsncpa : $("#frcsPsncpa1").val()
+		};
+		
+		        // 서버로 데이터를 전송
+		        $.ajax({
+		            url: "/head/counselRegister.do",
+		        	type: "post",
+	                data: JSON.stringify(data),
+	                contentType: "application/json; charset=utf-8",
+		            beforeSend: function(xhr) {
+		                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+		            },
+		            success: function(res) {
+		                Swal.fire({
+		                    title: '알림창',
+		                    text: '등록이 완료되었습니다.',
+		                    icon: 'success',
+		                }).then((result) => {
+		                    if (result.isConfirmed) {
+		                        location.href = "/head/counseling.do"; 
+		                    }
+		                });
+		                console.log(res.result);
+		            },
+		            error: function(err) {
+		                alert("데이터 저장 중 오류가 발생했습니다.", err);
+		                console.log(data);
+		            }
+		        });
+		     });
 	
 	// 수정 버튼 클릭 시
 	$('#saveBtn').on('click', function() {
@@ -619,12 +729,32 @@ $(function() {
 	            } 
 
 	            // 우편번호와 주소 정보를 해당 필드에 넣는다.
-	            document.getElementById('memPost').value = data.zonecode;
-	            document.getElementById("memAdd1").value = addr;
+	            document.getElementById('frcsPost1').value = data.zonecode;
+	            document.getElementById("frcsAdd3").value = addr;
 	            // 커서를 상세주소 필드로 이동한다.
-	            document.getElementById("memAdd2").focus();
+	            document.getElementById("frcsAdd4").focus();
 	        }
 	    }).open();
 	};
+	
+	document.getElementById("makeBtn").addEventListener("click", function () {
+	    $.ajax({
+	        type: "POST",
+	        url: "/head/frcsIdMake.do",
+	        beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function (response) {
+                var frcsIdInputs = document.getElementsByClassName("frcsId1");
+                for (var i = 0; i < frcsIdInputs.length; i++) {
+                    frcsIdInputs[i].value = response;
+                }
+            },
+	        error: function () {
+	            console.error("서버 요청 실패");
+	        }
+	    });
+	});
+
 
 </script>

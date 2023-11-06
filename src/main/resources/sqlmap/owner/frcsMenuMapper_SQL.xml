@@ -182,8 +182,13 @@
 		    frcs_id = #{frcsId}
 	</delete>
 	
-<!-- 	<insert id=""> -->
-	
-<!-- 	</insert> -->
+<!-- 	예약 완료시 알람데이터 넣기  -->
+	<insert id="insertResAlarm" parameterType="alarmVO">
+	    INSERT INTO alarm (
+	        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL, FRCS_ID
+	    ) VALUES (
+	        SEQ_ALARM.nextval, #{memId}, '예약 완료!', sysdate, '/owner/res.do', #{frcsId}
+	    )
+	</insert>
 
 </mapper>

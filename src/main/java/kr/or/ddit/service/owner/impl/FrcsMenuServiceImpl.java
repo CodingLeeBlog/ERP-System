@@ -10,6 +10,7 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.mapper.member.MyCouponMapper;
 import kr.or.ddit.mapper.owner.FrcsMenuMapper;
 import kr.or.ddit.service.owner.IFrcsMenuService;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.member.MenuListVO;
 import kr.or.ddit.vo.member.ResVO;
@@ -39,12 +40,21 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 	 *
 	 */
 	@Override
-	public ServiceResult resRegister(ResVO resVO) {
+	public ServiceResult resRegister(ResVO resVO, AlarmVO alarmVO) {
 		ServiceResult result = null;
 		
 		int status = frcsmenuMapper.resRegister(resVO);
 		
 		if(status > 0) {
+			
+			// 예약 완료시 알람데이터 넣기 
+			String memId = resVO.getMemId(); // 작성자 가져오기 
+			String frcsId = resVO.getFrcsId(); // 작성자 가져오기 
+			alarmVO.setMemId(memId);
+			alarmVO.setFrcsId(frcsId);
+			
+			// 알람데이터 넣기 
+			frcsmenuMapper.insertResAlarm(alarmVO);
 			
 			List<MenuListVO> menuList = resVO.getMenuList();
 			
