@@ -1,6 +1,7 @@
 package kr.or.ddit.controller.head;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.mail.internet.MimeMessage;
@@ -20,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.or.ddit.ServiceResult;
 import kr.or.ddit.service.head.ICounselService;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
+import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.OwnerVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -85,6 +88,33 @@ public class CounselingController {
 		
 		ResponseEntity<String> entity = new ResponseEntity<String>("{\"result\": \"OK\"}", HttpStatus.OK);
 		return entity;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/counselRegister.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public ResponseEntity<String> counselRegister(@RequestBody FranchiseVO frcsVO) {
+	    log.info("frcsId : " + frcsVO.getFrcsId());
+	    
+	    counselService.counselRegister(frcsVO); // counselService 메서드에는 HttpServletRequest를 사용하지 않도록 변경해야 합니다.
+	    
+	    ResponseEntity<String> entity = new ResponseEntity<String>("{\"result\": \"OK\"}", HttpStatus.OK);
+	    return entity;
+	}
+	
+	@RequestMapping(value = "/frcsIdMake.do", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity <String> makeFrcsId(Model model) {
+	    String newFrcsId = counselService.makeFrcsId();
+//	    model.addAttribute("newFrcsId", newFrcsId);
+		return new ResponseEntity<String> (newFrcsId, HttpStatus.OK) ;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/frcsCheck.do", method = RequestMethod.POST)
+	public ResponseEntity<ServiceResult> frcsCheck (@RequestBody Map<String, String> map){
+		String name = map.get("frcsName").toString();
+		ServiceResult result = counselService.frcsCheck(name);
+		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/counselMail.do", method = RequestMethod.GET)

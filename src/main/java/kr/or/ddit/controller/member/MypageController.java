@@ -384,6 +384,12 @@ public class MypageController {
 		return "mypage/member/mypage/mypageBoard";
 	}
 	
+	/**
+	 * 회원페이지 예약 내역 결제 정보 추가 기능
+	 * 
+	 * @param payVO
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/mypage/pay.do")
 	public ResponseEntity<ServiceResult> registerPay (@RequestBody	PayVO payVO){

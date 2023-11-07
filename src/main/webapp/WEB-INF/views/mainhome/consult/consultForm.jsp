@@ -55,8 +55,6 @@
 				<div class="row mt-5 mb-5">
 					<div class="" style="color: black; font-size: 20px;">&#8251; 표기된 항목은 필수입력 항목입니다.</div>
 				</div>
-				
-<!-- 			<form action="/elly/consult.do" method="post" id="signupForm" name="signupForm"> -->
 				<div class="mb-5" style="color: rgb(0, 0, 0); border-bottom: 1px solid;"></div>
 				<input type="hidden" name="ownerId" id="ownerId"/>
 				<div class="row mb-3" style="color: black; font-size: 20px;">
@@ -194,193 +192,26 @@
 					<div class="col-2">
 					</div>
 				</div>
-<%-- 				<sec:csrfInput/> --%>
-<!-- 			</form> -->
 			</div>
 			<div class="col-2 bg-white">
 			</div>
 		</div>
 	</div>
-
-
-
-
-
-
-
-<!-- 	<div class=""> -->
-<!-- 		<div class="container-fluid"> -->
-<!-- 			<div class="row"> -->
-<!-- 				<div class="col-2 bg-white"> -->
-<!-- 				</div> -->
-<!-- 				<div class="col-8 bg-white"> -->
-				
-<!-- 					개인정보 동의 수집 시작 -->
-<!-- 					<div class="pt-5 pb-5 text-dark" style="font-size: 50px">개인정보 수집 및 활용동의</div> -->
-<!-- 					<div class="border border-dark pt-3"> -->
-<!-- 					<ol> -->
-<!-- 					    <li class="text-dark"> -->
-<!-- 							개인정보의 수집 및 이용 목적<br> -->
-<!-- 							가맹 관련 문의 확인 및 답변을 위한 연락통지, 처리결과 통보 등을 목적으로 개인정보를 처리합니다. -->
-<!-- 					    </li> -->
-<!-- 					    <li class="text-dark"> -->
-<!-- 							처리하는 개인정보 항목<br> -->
-<!-- 							- 필수항목 : 이름, 연락처,창업희망지역,창업예상비용,상가 보유 유무,문의내용,문의내용상세 (접속 IP 정보, 쿠키, 서비스 이용 기록, 접속 로그)<br> -->
-<!-- 							- 선택항목 : 나이, 이메일, 상가주소, 창업경험, 상담희망시간 -->
-<!-- 					    </li> -->
-<!-- 					    <li class="text-dark"> -->
-<!-- 							개인정보의 처리 및 보유 기간<br> -->
-<!-- 							① 법령에 따른 개인정보 보유.이용기간 또는 정보주체로부터 개인정보를 수집 시에 동의 받은 개인정보 보유, 이용기간 내에서 개인정보를 처리, 보유합니다.<br> -->
-<!-- 							② 개인정보의 보유 기간은 5년입니다. -->
-<!-- 					    </li> -->
-<!-- 					</ol> -->
-<!-- 					</div> -->
-<!-- 					<div class="pt-3 pb-5 text-dark"> -->
-<!-- 						<input type="checkbox" name="privacy_agree" id="inquiryPolicyCheck"> -->
-<!-- 						<label for="inquiryPolicyCheck" class="b_ff_m b_c_l text-dark">위 개인정보 수집 및 활용에 동의합니다.</label> -->
-<!-- 					</div> -->
-<!-- 					개인정보 동의 수집 끝 -->
-					
-<!-- 					상담자 정보 시작 -->
-<!-- 					<form action="/elly/consult.do" method="post" id="signupForm" name="signupForm"> -->
-<!-- 						<h2 class="text-dark mb-2">※ 표기된 항목은 필수입력 항목입니다.</h2> -->
-<!-- 							<table class="table p-5 table-bg-black" border="1"> -->
-<!-- 								<caption class="indent text-dark">상담자 정보 입력사항</caption> -->
-<!-- 								<colgroup> -->
-<!-- 									<col width="20%"> -->
-<!-- 									<col width="*"> -->
-<!-- 								</colgroup> -->
-<!-- 								<tbody> -->
-<!-- 									<input type="hidden" name="ownerId" id="ownerId"/> -->
-<!-- 									<tr> -->
-<!-- 										<th>이름</th> -->
-<!-- 										<td> -->
-<!-- 											<input type="text" name="ownerName" id="ownerName"> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr> -->
-<!-- 										<th>휴대폰 번호</th> -->
-<!-- 										<td> -->
-<!-- 											<input type="hidden" id="ownerTel" name="ownerTel" value=""> -->
-<!-- 											<input type="text" id="mobile1" name="mobile1" style="width: 144px;" placeholder="" value=""  maxlength="3"> -->
-<!-- 											- <input type="text" id="mobile2" name="mobile2" style="width: 144px;" placeholder="" value=""  maxlength="4"> -->
-<!-- 											- <input type="text" id="mobile3" name="mobile3" style="width: 144px;" placeholder="" value=""  maxlength="4"> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr> -->
-<!-- 										<th>생년월일</th> -->
-<!-- 										<td> -->
-<!-- 											<input type="text" name="ownerBir" id="ownerBir"> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr> -->
-<!-- 										<th>이메일</th> -->
-<!-- 										<td> -->
-<!-- 										<div class="form-group email-form"> -->
-<!-- 											<input type="text" class="form-control mb-2" name="ownerEmail" id="ownerEmail" placeholder="이메일" > -->
-<!-- 											<button type="button" class="btn btn-dark mb-2" id="mailCheckBtn">본인인증</button> -->
-<!-- 											<div class="mail-check-box"> -->
-<!-- 												<input type="text" class="form-control mailCheckInput mb-2" id="ownerEmailAuth" placeholder="인증번호 6자리를 입력해주세요!" disabled="disabled" maxlength="6"> -->
-<!-- 												<button type="button" class="btn btn-dark mb-2" id="mailCheckBtn2">이메일인증</button> -->
-<!-- 												<input type="hidden" id="ownerEmailDoubleCheck" name="ownerEmailDoubleCheck"> -->
-<!-- 												<span class="point successEmailChk">이메일 입력후 인증번호 보내기를 해주십시오.</span> -->
-<!-- 											</div> -->
-<!-- 											<span id="mail-check-warn"></span> -->
-<!-- 										</div> -->
-<!-- 										<p class="text02 fc05 mt10">※ 개인 정보 분리/저장에 대한 고지 및 포인트 소멸에 대해 이메일로 안내 드립니다.</p> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr> -->
-<!-- 										<th>창업 희망 지역</th> -->
-<!-- 										<td> -->
-<!-- 											<input type="text" name="ownerArea" id="ownerArea"> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr> -->
-<!-- 										<th>창업 희망동</th> -->
-<!-- 										<td> -->
-<!-- 											<input type="text" name="ownerDong" id="ownerDong"> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr> -->
-<!-- 										<th>창업 예상 비용</th> -->
-<!-- 										<td> -->
-<!-- 											<select id="ownerMoney" name="ownerMoney"> -->
-<!-- 												<option value="1억원 미만">1억원 미만</option> -->
-<!-- 												<option value="1억 5천만원 미만">1억 5천만원 미만</option> -->
-<!-- 												<option value="2억원">2억원</option> -->
-<!-- 												<option value="2억 5천만원">2억 5천만원</option> -->
-<!-- 												<option value="3억 이상">3억 이상</option> -->
-<!-- 											</select> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr> -->
-<!-- 										<th>상가 보유 유무</th> -->
-<!-- 										<td> -->
-<!-- 											<input type="radio" name="ownerBuilding" id="ownerBuilding" value="유" checked="checked">&nbsp유 -->
-<!-- 											<span class="nbsp"></span> -->
-<!-- 											<input type="radio" name="ownerBuilding" id="ownerBuilding" value="무">&nbsp무 -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr> -->
-<!-- 										<th>상가 주소</th> -->
-<!-- 										<td> -->
-<!-- 											<input type="text" name="ownerBuildingadd" id="ownerBuildingadd"> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr> -->
-<!-- 										<th>창업 경험</th> -->
-<!-- 										<td> -->
-<!-- 											<select id="ownerExp" name="ownerExp"> -->
-<!-- 												<option value="없음">없음</option> -->
-<!-- 												<option value="치킨&amp;호프">치킨&amp;호프</option> -->
-<!-- 												<option value="주류업">주류업</option> -->
-<!-- 												<option value="일반음식점">일반음식점</option> -->
-<!-- 												<option value="카페&amp;디저트">카페&amp;디저트</option> -->
-<!-- 												<option value="기타">기타</option> -->
-<!-- 											</select> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr> -->
-<!-- 										<th>상담 희망 시간</th> -->
-<!-- 										<td> -->
-<!-- 											<input type="text" name="ownerHopetime" id="ownerHopetime"> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr> -->
-<!-- 										<th>문의 내용</th> -->
-<!-- 										<td> -->
-<!-- 											<input type="radio" name="ownerInfocontent" id="ownerInfocontent" value="신규창업" checked="checked">&nbsp신규창업 -->
-<!-- 											<span class="nbsp"></span> -->
-<!-- 											<input type="radio" name="ownerInfocontent" id="ownerInfocontent" value="업종변경">&nbsp업종변경 -->
-<!-- 											<span class="nbsp"></span> -->
-<!-- 											<input type="radio" name="ownerInfocontent" id="ownerInfocontent" value="단순문의">&nbsp단순문의 -->
-<!-- 											<span class="nbsp"></span> -->
-<!-- 											<input type="radio" name="ownerInfocontent" id="ownerInfocontent" value="입점제안">&nbsp입점제안 -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 									<tr> -->
-<!-- 										<th>문의 내용 상세</th> -->
-<!-- 										<td> -->
-<!-- 											<textarea name="ownerContentdetail" id="ownerContentdetail"></textarea> -->
-<!-- 										</td> -->
-<!-- 									</tr> -->
-<!-- 								</tbody> -->
-<!-- 							</table> -->
-<!-- 							<button type="button" class="btn btn-dark text-light mb-5" id="signupBtn">문의하기</button> -->
-<%-- 							<sec:csrfInput/> --%>
-<!-- 						</form> -->
-<!-- 						상담자 정보 끝 -->
-<!-- 				</div> -->
-<!-- 				<div class="col-2 bg-white"> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-
-
-
-<!-- 	</div> -->
 </main>
+
+<!-- 창업 문의 완료시 모달창 -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="color: black">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 600px;">
+		<div class="modal-content">
+			<div class="modal-body">
+			</div>
+			<div class="modal-footer">
+				 <a href="/elly/main.do"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></a>
+			</div>
+		</div>
+	</div>
+</div>
+
 <script>
 
 $(function(){
@@ -409,6 +240,7 @@ $(function(){
 	            code = data;
         	}
 	    });
+		
 	});
 	
 	mailCheckBtn2.on("click", function(){
@@ -439,16 +271,12 @@ $(function(){
 		var ownerEmail = $("#ownerEmail").val();
 		var ownerArea = $("#ownerArea").val();
 		var ownerDong = $("#ownerDong").val();
-// 		var ownerMoney = $("#ownerMoney").val();
 		var ownerMoney = $("#ownerMoney option:selected").val();
-// 		var ownerBuilding = $("#ownerBuilding").val();
 		var ownerBuilding = $("input[name='ownerBuilding']:checked").val();
 		var ownerBuildingadd = $("#ownerBuildingadd").val();
-// 		var ownerExp = $("#ownerExp").val();
 		var ownerExp = $("#ownerExp option:selected").val();
 		var ownerHopetime = $("#ownerHopetime").val();
 		var ownerArea = $("#ownerArea").val();
-// 		var ownerInfocontent = $("#ownerInfocontent").val();
 		var ownerInfocontent = $("input[name='ownerInfocontent']:checked").val();
 		var ownerContentdetail = $("#ownerContentdetail").val();
 		
@@ -479,11 +307,37 @@ $(function(){
 				data: JSON.stringify(data),
 				contentType : "application/json; charset=utf-8",
 				success : function(res){
-					
+					var msg = '<div class="container-fluid">'
+						msg += '<div class="row">'
+						msg += '<div class="col-1"></div>'
+						msg += '<div class="col">'
+						msg += '<div class="row justify-content-center mt-4 mb-4">'
+						msg += '<img src="${pageContext.request.contextPath }/resources/assets/images/consult_success.png" style="height: 20%; width: 20%;" alt="">'
+						msg += '</div>'
+						msg += '<div class="row mb-4">'
+						msg += '<div class="col text-center" style="font-size:30px">창업 문의 완료</div>'
+						msg += '</div>'
+						msg += '<div class="row mb-4">'
+						msg += '<div class="col text-center">고객님의 문의번호는 ' + $("#ownerId").val() + ' 입니다.</div>'
+						msg += '</div>'
+						msg += '<div class="row mb-4">'
+						msg += '<div class="col text-center">문의해주신 내용은 본사에서 검토, 승인 후 </div>'
+						msg += '</div>'
+						msg += '<div class="row mb-4">'
+						msg += '<div class="col text-center">창업문의 시 입력하신 이메일로 가맹점 코드를 보내드립니다.</div>'
+						msg += '</div>'
+						msg += '<div class="row mb-4">'
+						msg += '<div class="col text-center">감사합니다.</div>'
+						msg += '</div>'
+						msg += '</div>'
+						msg += '<div class="col-1"></div>'
+						msg += '</div>'
+						msg += '</div>'
+					$(".modal-body").html(msg);
 				}
 			});
-		
-// 		signupForm.submit();
+			
+		$('#exampleModal').modal('show');
 	});
 });
 
