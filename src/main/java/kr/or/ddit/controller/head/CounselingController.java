@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +40,7 @@ public class CounselingController {
 	@Autowired
 	private JavaMailSender emailSender;
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/counseling.do", method=RequestMethod.GET)
 	public String ownerList(
 		@RequestParam(name="page", required = false, defaultValue = "1")int currentPage,
@@ -90,6 +92,7 @@ public class CounselingController {
 		return entity;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@ResponseBody
 	@RequestMapping(value = "/counselRegister.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public ResponseEntity<String> counselRegister(@RequestBody FranchiseVO frcsVO) {
@@ -124,8 +127,8 @@ public class CounselingController {
 	    
 	    String from = "qweiop1541@naver.com"; //보내는 이 메일주소
 	    String to = email;
-	    String title = "가맹점 회원가입시 필요한 인증번호 입니다.";
-	    String content = "[인증번호] "+ serti +" 입니다. <br/> 인증번호 확인란에 기입해주십시오.";
+	    String title = "가맹점 회원가입시 필요한 가맹점 코드입니다.";
+	    String content = "[가맹점 코드] "+ serti +" 입니다. <br/> 인증번호 확인란에 기입해주십시오.";
 	    String num = "";
 	    try {
 	    	MimeMessage mail = emailSender.createMimeMessage();

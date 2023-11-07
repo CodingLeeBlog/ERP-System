@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <div class="content-page">
 	<div class="content">
 
@@ -29,66 +31,69 @@
 						<div class="card-body">
 
 							<div class="mt-3">
-								<h5 class="font-18">${inqVO.inqryTtl }</h5>
 
-								<hr />
-
-								<div class="d-flex mb-1 mt-1">
-									<div class="w-100 overflow-hidden">
-										<small class="float-end">${inqVO.inqryYmd }</small>
+								<div class="overflow-hidden">
+									<h5 class="font-18 d-inline">${inqVO.inqryTtl }</h5>
+									<div class="float-end ">
+										<fmt:formatDate value="${inqVO.inqryYmd }" pattern="yyyy-MM-dd"/>
 									</div>
 								</div>
+								
+								<hr />
 
-								<p>${inqVO.inqryCn }</p>
+								<div class="my-3 overflow-auto" style="height: 300px" >
+									${inqVO.inqryCn }
+								</div>
 								
 								<hr />
 								
 <!-- 								답변이 달리면 보이도록하기 -->
-								<h5 class="mb-3">문의답변</h5>
-
-								<hr />
+								<c:if test="${frcsInq.inqryYn eq 'Y'}">
+									<h5 class="mb-3">문의답변</h5>
+									<hr />
+								</c:if>
 
 <!-- 								첨부파일이 있으면 보이도록하기 -->
-								<h5 class="mb-3">첨부파일</h5>
-
-								<div class="row">
-									<div class="col-xl-4">
-										<div class="card mb-1 shadow-none border">
-											<div class="p-2">
-												<div class="row align-items-center">
-													<div class="col-auto">
-														<div class="avatar-sm">
-															<span
-																class="avatar-title bg-primary-lighten text-primary rounded">
-																.ZIP </span>
+								<c:if test="${not empty frcsInq.tableName}">
+									<h5 class="mt-3 mb-3">첨부파일</h5>
+									<div class="row">
+										<div class="col-xl-4">
+											<div class="card mb-1 shadow-none border">
+												<div class="p-2">
+													<div class="row align-items-center">
+														<div class="col-auto">
+															<div class="avatar-sm">
+																<span
+																	class="avatar-title bg-primary-lighten text-primary rounded">
+																	.ZIP </span>
+															</div>
 														</div>
-													</div>
-													<div class="col ps-0">
-														<a href="javascript:void(0);" class="text-muted fw-bold">Hyper-admin-design.zip</a>
-														<p class="mb-0">2.3 MB</p>
-													</div>
-													<div class="col-auto">
-														<!-- Button -->
-														<a href="javascript:void(0);"
-															class="btn btn-link btn-lg text-muted"> <i
-															class="ri-download-2-line"></i>
-														</a>
+														<div class="col ps-0">
+															<a href="javascript:void(0);" class="text-muted fw-bold">Hyper-admin-design.zip</a>
+															<p class="mb-0">2.3 MB</p>
+														</div>
+														<div class="col-auto">
+															<!-- Button -->
+															<a href="javascript:void(0);"
+																class="btn btn-link btn-lg text-muted"> <i
+																class="ri-download-2-line"></i>
+															</a>
+														</div>
 													</div>
 												</div>
 											</div>
 										</div>
+										<!-- end col -->
 									</div>
-									<!-- end col -->
-									
-								</div>
-								<!-- end row-->
+									<!-- end row-->
+								</c:if>
 
 								<form action="/owner/inqDelete.do" method="post" id="procForm">
 									<input type="hidden" name="inqryNo" value="${inqVO.inqryNo}"/>
 									<sec:csrfInput/>
 								</form>
 
-								<div class="mt-5 text-xl-end">
+								<div class="mt-4 text-xl-end">
 									<button type="button" class="btn btn-light me-2" id="listBtn">목록</button>
 <!-- 									답글달리기 전까지 수정,삭제 가능하게?? -->
 									<button type="button" class="btn btn-light me-2" id="delBtn">삭제</button>

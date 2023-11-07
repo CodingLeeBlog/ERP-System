@@ -27,9 +27,12 @@
 		<result property="hdmaxQy" column="hdmax_qy" />
 		<result property="hdremainQy" column="hdremain_qy" />
 		<result property="hdforwardPrice" column="hdforward_price" />
-		<result property="vdprodLifestartday"
-			column="vdprod_lifestartday" />
-		<result property="vdprodLifeendday" column="vdprod_lifeendday" />
+		<result property="vdmaxQy" column="vdmax_qy" />
+		<result property="vdremainQy" column="vdremain_qy" />
+		<result property="vdforwardPrice" column="vdforward_price" />
+		<result property="vdrtrcvPrice" column="vdrtrcv_price" />
+		<result property="hdprodLifestartday" column="hdprod_lifestartday" />
+		<result property="hdprodLifeendday" column="hdprod_lifeendday" />
 		<result property="hdrtrcvPrice" column="hdrtrcv_price" />
 		<result property="vdCode" column="vd_code" />
 	</resultMap>
@@ -70,19 +73,20 @@
 		<!-- from vendor v left outer join head_inventory hi on(v.vd_code = hi.vd_code) -->
 		<!-- where 1=1 -->
 		<!-- and v.vd_code = #{vdCode} -->
-		SELECT DISTINCT A.VDPROD_CD, A.VDPROD_NAME, A.HDMAX_QY, A.HDREMAIN_QY,
-		A.HDFORWARD_PRICE, TO_CHAR(A.VDPROD_LIFESTARTDAY, 'yyyy-MM-dd')
-		VDPROD_LIFESTARTDAY, TO_CHAR(A.VDPROD_LIFEENDDAY, 'yyyy-MM-dd')
-		VDPROD_LIFEENDDAY, A.HDRTRCV_PRICE,A.VD_CODE, A.HDMAX_QY,VD.* FROM
+		SELECT DISTINCT 
+		A.VDPROD_CD, A.VDPROD_NAME, A.VDMAX_QY, A.VDREMAIN_QY,
+		A.VDFORWARD_PRICE, TO_CHAR(A.VDPROD_LIFESTARTDAY, 'yyyy-MM-dd')
+		HDPROD_LIFESTARTDAY, TO_CHAR(A.VDPROD_LIFEENDDAY, 'yyyy-MM-dd')
+		HDPROD_LIFEENDDAY, A.VDRTRCV_PRICE,A.VD_CODE, A.VDMAX_QY,VD.* FROM
 		VENDOR_INVENTORY A , VENDOR VD WHERE A.VD_CODE = #{vdCode} and VD_name
 		= #{vdName}
 	</select>
 	<insert id="registVendor" parameterType="vendorVO">
 		<foreach collection="list" item="item" separator=" " open="INSERT ALL" close=" SELECT * FROM dual"> 
-		INTO HEAD_INVENTORY (VDPROD_CD, VDPROD_NAME,HDMAX_QY, HDREMAIN_QY, HDFORWARD_PRICE, VDPROD_LIFESTARTDAY,
-			VDPROD_LIFEENDDAY, HDRTRCV_PRICE, VD_CODE) 
-		VALUES (#{item.vdprodCd}, #{item.vdprodName}, #{item.hdmaxQy}, #{item.hdremainQy}, #{item.hdforwardPrice}, #{item.vdprodLifestartday},
-			#{item.vdprodLifeendday}, #{item.hdrtrcvPrice}, #{item.vdCode})
+		INTO HEAD_INVENTORY (VDPROD_CD, VDPROD_NAME,HDMAX_QY, HDREMAIN_QY, HDFORWARD_PRICE, HDPROD_LIFESTARTDAY,
+			HDPROD_LIFEENDDAY, HDRTRCV_PRICE, VD_CODE) 
+		VALUES (#{item.vdprodCd}, #{item.vdprodName}, #{item.vdmaxQy}, #{item.vdremainQy}, #{item.vdforwardPrice}, #{item.vdprodLifestartday},
+			#{item.vdprodLifeendday}, #{item.vdrtrcvPrice}, #{item.vdCode})
 		</foreach>
 	</insert>
 	

@@ -130,7 +130,7 @@
 			</nav>
 		</sec:authorize>
 	</div>
-	<input type="hidden" name="" id="memId" value="${memId }"/>
+<input type="hidden" name="" id="memId" value="${memId }"/>
 </header>
  	
  	<!-- Vendor js 있어야하는 기능 -->
@@ -151,6 +151,7 @@ $(function(){
 		logoutForm.submit();
 	});
 	
+	
 	$(document).ready(function () {
     // 페이지 로드시 1회 실행
     updateNotificationBadge();
@@ -160,10 +161,10 @@ $(function(){
         updateNotificationBadge();
     }, 3000);
 	});
-		var ws = new WebSocket("ws://localhost/handler");
 
-		connection();
-		function updateNotificationBadge() {
+	let showBadge = false;
+	
+	function updateNotificationBadge() {
 			
 		    var data = {
 		        memId: $("#memId").val()
@@ -171,7 +172,7 @@ $(function(){
 
 		    $.ajax({
 		        type: "post",
-		        url: "/elly/selectAlarmMemberReview.do",
+		        url: "/elly/selectAlarm.do",
 		        beforeSend: function (xhr) {
 		            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 		        },
@@ -180,15 +181,19 @@ $(function(){
 		        success: function (rst) {
 		            if (rst == null || rst.length == 0) {
 		                console.log('null');
+		                showBadge = false;
+		                $("#noti-badge").css({
+	                        display: "none"
+	                    });
 		            } else {
 		                console.log("rst : " + JSON.stringify(rst));
 
-		                $("#alims").empty(); // 이전 알림 내용을 지웁니다.
-		                let showBadge = false;
+		                $("#alims").empty();
+		              
+		                showBadge = true;
 		                let str = "";
 
 		                $.each(rst, function (idx, data) {
-		                    if (data.ansId != null && data.ansId != '') {
 		                        showBadge = true;
 		                        str += "<a href='" + data.alarmUrl + "' class='dropdown-item p-0 notify-item card unread-noti shadow-none mb-2 mt-2'>";
 		                        str += "<div class='notify-icon'></div>";
@@ -197,133 +202,90 @@ $(function(){
 		                        str += "</div>";
 		                        str += "<div class='col-3 clsHref text-center' data-alarm-no='" + data.alarmNo + "'>x</div>";
 		                        str += "</div></a>";
-		                    }
 		                });
 
 		                $("#alims").append(str);
 
-		                //1개 삭제
-		                $(".clsHref").on("click", function(event) {
-		            	    event.preventDefault(); // 링크의 기본 동작(페이지 이동)을 방지합니다.
-
-		            	    let alarmNo = $(this).data("alarmNo");
-		            	    console.log("clsHref alarmNo : " + alarmNo);
-
-		                    var data = { 
-		                    		alarmNo : alarmNo 
-		                    	}
-		            	    
-// 		            	    if (confirm("정말로 삭제하시겠습니까?")) {
-		            	        $.ajax({
-		            	            type: "POST",
-		            	            url: "/elly/deleteAlarm.do",
-		            	            beforeSend: function (xhr) {
-		            	                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-		            	            },
-		            	            data: JSON.stringify(data),
-		            	            contentType: "application/json; charset=utf-8",
-		            	            success: function(response) {
-		            	                if (response === "OK") {
-		            	                    console.log("항목 삭제에 성공했습니다.");
-		            	                } else {
-		            	                    console.log("항목 삭제에  실패했습니다.");
-		            	                }
-		            	            }
-		            	        });
-// 		            	    }
-		            	});
 		                
-		               //전체삭제
-					$(".clearAll").on("click", function(event) {
-					    event.preventDefault(); // 링크의 기본 동작(페이지 이동)을 방지합니다.
-					
-					    let ansId = null;
-					
-					    for (let i = 0; i < rst.length; i++) {
-					        if (rst[i].ansId !== null) {
-					            ansId = rst[i].ansId;
-					            break; // 첫 번째로 찾은 값을 사용하고 루프 종료
-					        }
-					    }
-					
-					    if (ansId !== null) {
-					        console.log("clearAll ansId : " + ansId);
-					
-					        var data = { 
-					            ansId : ansId 
-					        }
-					
-// 					        if (confirm("정말로 삭제하시겠습니까?")) {
-					            $.ajax({
-					                type: "POST",
-					                url: "/elly/deleteclearAllAlarm.do",
-					                beforeSend: function (xhr) {
-					                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-					                },
-					                data: JSON.stringify(data),
-					                contentType: "application/json; charset=utf-8",
-					                success: function(response) {
-					                    if (response === "OK") {
-					                        $("#alims").empty();
-					                        $("#noti-badge").css("display", "none");
-					                        console.log("항목 삭제에 성공했습니다.");
-					                    } else {
-					                        console.log("항목 삭제에 실패했습니다.");
-					                    }
-					                }
-					            });
-// 					        }
-					    } else {
-					        console.log("모든 알림의 ansId가 null입니다.");
-					    }
-					});
+                //1개 삭제
+                $(".clsHref").on("click", function(event) {
+            	    event.preventDefault(); // 링크의 기본 동작(페이지 이동)을 방지합니다.
 
-		                
-		                if (showBadge) {
-		                    $("#noti-badge").css({
-		                        display: "inline-block",
-		                        position: "absolute",
-		                        left: "40%",
-		                        top: "15%",
-		                        borderRadius: "50%",
-		                        height: "7px",
-		                        width: "7px",
-		                        backgroundColor: "#fa5c7c"
-		                    });
-		                } else {
-		                    $("#noti-badge").css({
-		                        display: "none"
-		                    });
-		                }
-		            }
-		        }
-		    });
-		}
-			
-    function connection(){
-   	 // 소켓을 오픈하는 부분
-   	 ws.onopen = function(){
-   	 console.log('Info : connection opend.');
-   	 };
-   	 
-   	 // handleTextMessage 핸들러 메소드에서 처리하여 보내준  Message를 받는 부분
-   	 // split으로 잘라 배열에 담아 div 영역에 alert로 표시하였다.
-   	 ws.onmessage = function(event){
-    	console.log("메세지받는부분 : ", event.data+'\n');
-    	var str = event.data.split("<br>");
-    };
-   	 
-    // 세션이 연결이 종료되는 부분
-   	 ws.onclose = function(event){
-   	 console.log('Info : 세션이 연결이 종료되었습니다.');
-   	 };
-    // 소켓 에러가 발생했을 때 실행되는 부분
-    ws.onerror = function(error){
-    	console.log('Error : ', error);
-    };
-   };
+            	    let alarmNo = $(this).data("alarmNo");
+            	    console.log("clsHref alarmNo : " + alarmNo);
+
+                    var data = { 
+                    		alarmNo : alarmNo 
+                    	}
+            	    
+            	        $.ajax({
+            	            type: "POST",
+            	            url: "/elly/deleteAlarm.do",
+            	            beforeSend: function (xhr) {
+            	                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            	            },
+            	            data: JSON.stringify(data),
+            	            contentType: "application/json; charset=utf-8",
+            	            success: function(response) {
+            	                if (response === "OK") {
+            	                	$("#alims").empty();
+            	                    console.log("항목 삭제에 성공했습니다.");
+            	                } else {
+            	                    console.log("항목 삭제에  실패했습니다.");
+            	                }
+            	            }
+            	        });
+	            	});
+
+	            //전체삭제
+				$(".clearAll").on("click", function(event) {
+				    event.preventDefault(); // 링크의 기본 동작 방지
+				    let memId = $(this).data("memId");
+				    var data = {
+				       		memId: $("#memId").val()
+				    };
+				    
+			        $.ajax({
+			            type: "POST",
+			            url: "/elly/deleteclearAllAlarm.do",
+			            beforeSend: function (xhr) {
+			                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+			            },
+			            data: JSON.stringify(data),
+			            contentType: "application/json; charset=utf-8",
+			            success: function(response) {
+			                if (response === "OK") {
+			                    console.log("항목 삭제에 성공했습니다.");
+				                $("#alims").empty();
+
+           	                    $("#noti-badge").css({
+          		                        display: "none"
+          		                    });
+				                
+			                } else {
+			                    console.log("항목 삭제에  실패했습니다.");
+			                }
+			            }
+			      	});
+				});
+
+	            if (showBadge == true) {
+	                    $("#noti-badge").css({
+	                        display: "inline-block",
+	                        position: "absolute",
+	                        left: "40%",
+	                        top: "15%",
+	                        borderRadius: "50%",
+	                        height: "7px",
+	                        width: "7px",
+	                        backgroundColor: "#fa5c7c"
+	                    });
+	                }
+	            }
+	        }
+	    });
+	}
 });
-//end alarm
 	
 //동적 요소 클릭
 $(document).on("click",".clsAlarm",function(){
@@ -332,6 +294,5 @@ $(document).on("click",".clsAlarm",function(){
 	location.href = "/elly/updateAlarm.do?alarmNo="+alarmNo;
 	console.log("alarmNo : " + alarmNo);
 });
-
 
 </script>

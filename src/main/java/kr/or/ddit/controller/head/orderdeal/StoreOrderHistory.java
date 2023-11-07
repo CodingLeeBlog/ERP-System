@@ -163,7 +163,9 @@ public class StoreOrderHistory {
 
 		log.info("checkOne() -> 시작");
 		
-		log.info("storeOrderHistoryVO값 -> " + storeOrderHistoryVO.toString());
+		for (StoreOrderHistoryVO stohVO : storeOrderHistoryVO) {
+			log.debug("승인버튼눌렀을시 넘어오는 VO데이터 -> {}", stohVO.toString());
+		}
 		
 		ServiceResult result = null;
 		

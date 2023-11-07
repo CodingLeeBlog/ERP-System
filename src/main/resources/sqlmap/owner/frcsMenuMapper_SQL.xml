@@ -182,13 +182,26 @@
 		    frcs_id = #{frcsId}
 	</delete>
 	
-<!-- 	예약 완료시 알람데이터 넣기  -->
+	<!-- 예약 완료시 가맹점에게 보낼 알람데이터 넣기  -->
 	<insert id="insertResAlarm" parameterType="alarmVO">
 	    INSERT INTO alarm (
-	        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL, FRCS_ID
+	        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL, RECEIVEMEM_ID, TBL_NAME, TBL_NO
 	    ) VALUES (
-	        SEQ_ALARM.nextval, #{memId}, '예약 완료!', sysdate, '/owner/res.do', #{frcsId}
+	        SEQ_ALARM.nextval, #{memId}, '예약 완료!', sysdate, '/owner/resv.do', #{receiveMemId}, #{tblName}, #{tblNo}
 	    )
 	</insert>
+	
+	<!-- 리뷰. 매장의 지점장 mem_id 구하기 -->
+	<select id="getReceiveMemId" parameterType="String" resultType="String">
+	SELECT A.MEM_ID
+	FROM   FRCS_OWNERSHIP A
+	WHERE  A.FRCS_ID = (
+	            select b.frcs_id
+	            from reservation a 
+	                left join (select distinct frcs_id, mem_id from mem_menu ) b  on(a.mem_id = b.mem_id)
+	                left join franchise c on(b.frcs_id = c.frcs_id)
+	            where a.resv_no = #{resvNo}
+	        )
+	</select>
 
 </mapper>

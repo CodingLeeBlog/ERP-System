@@ -70,11 +70,13 @@ public class TendiBoardController {
 		return "mainhome/member/tendiboard/list";
 	}
 	
+	
 	@PreAuthorize("hasRole('ROLE_MEMBER')")
 	@RequestMapping(value = "/tendidetail.do" )
 	public String boardDetail(int tableNo, Model model) {
 		BoardVO boardVO = tendiboardService.selectBoard(tableNo);
-		//댓글 추가 기능
+		
+		//본사 답변
 		HdBoardAnswerVO hdBoardAnswer = tendiboardService.selectBoardAnswer(tableNo);
 		log.info("hdBoardAnswer->hdBoardAnswer : " + tableNo);
 		
@@ -97,7 +99,7 @@ public class TendiBoardController {
 			HttpServletRequest req,
 			HttpSession session,
 			RedirectAttributes ra,
-			BoardVO boardVO, Model model, MemberVO memberVO) {
+			AlarmVO alarmVO, BoardVO boardVO, Model model, MemberVO memberVO) {
 		String goPage="";
 		
 		
@@ -118,7 +120,7 @@ public class TendiBoardController {
 			
 			boardVO.setMemId(user.getUsername());
 			
-			ServiceResult result = tendiboardService.insertBoard(req, boardVO);
+			ServiceResult result = tendiboardService.insertBoard(req, boardVO, alarmVO);
 			
 			if(result.equals(ServiceResult.OK)) {
 				goPage = "redirect:/elly/tendidetail.do?tableNo=" + boardVO.getTableNo();

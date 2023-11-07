@@ -19,7 +19,7 @@ public interface ITendiBoardService {
 
 	public BoardVO selectBoard(int tableNo);
 
-	public ServiceResult insertBoard(HttpServletRequest req, BoardVO boardVO);
+	public ServiceResult insertBoard(HttpServletRequest req, BoardVO boardVO, AlarmVO alarmVO);
 
 	public ServiceResult deleteBoard(HttpServletRequest req, int tableNo);
 

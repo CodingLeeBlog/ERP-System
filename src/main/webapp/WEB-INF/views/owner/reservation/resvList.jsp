@@ -66,7 +66,7 @@
 	                                	<c:choose>
 	                                		<c:when test="${empty resvList }">
 	                                			<tr class="text-center">
-													<td colspan="8" class="text-dark font-weight-bolder">예약이 존재하지 않습니다.</td>
+													<td colspan="9" class="text-dark font-weight-bolder">예약이 존재하지 않습니다.</td>
 												</tr>
 	                                		</c:when>
 	                                		<c:otherwise>

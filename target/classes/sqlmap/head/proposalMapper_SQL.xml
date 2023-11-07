@@ -78,6 +78,50 @@
 		<include refid="boardSearch"/>
 	</select>
 	
+	<!-- 본사 홈페이지 알림 시작 -->
+ 	<select id="selectAlarmList" parameterType="String" resultType="alarmVO">		
+		select 
+			ALARM_NO, ALARM_CONTENT, MEM_ID, ALARM_READ, ALARM_URL, RECEIVEMEM_ID
+		from alarm
+		where RECEIVEMEM_ID = #{memId} 
+		and ALARM_READ = 'N'
+ 	</select>
+ 	
+ 	<update id="updateAlarm" parameterType="int">
+ 		update alarm
+ 		set
+ 			ALARM_READ = 'Y'
+ 		where 
+ 			ALARM_NO = #{alarmNo}
+ 	</update>
+ 
+	<delete id="deleteAlarm" parameterType="int">
+		delete from alarm
+		where ALARM_NO = #{alarmNo}
+	</delete>
+	
+	<delete id="deleteclearAllAlarm" parameterType="String">
+		delete from alarm
+		where RECEIVEMEM_ID = #{memId}
+	</delete>
+		
+	<!-- 본사에서 일반홈페이지에게 하는 답변 부분 -->
+	<insert id="insertProposalAlarm" parameterType="alarmVO">
+	    INSERT INTO alarm (
+	        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL, RECEIVEMEM_ID, TBL_NAME, TBL_NO
+	    ) VALUES (
+	        SEQ_ALARM.nextval, #{memId}, '게시판 답변 완료!', sysdate, '/elly/tendidetail.do?tableNo=' || #{tableNo}, #{receiveMemId}, #{tblName}, #{tblNo}
+	    )
+	</insert>
+	
+	<!-- 게시글. 답변을 받는 MEMBER 의 아이디 구하기 -->
+	<select id="getReceiveMemId" parameterType="int" resultType="String">
+	 	SELECT MEM_ID
+	 	FROM HDBOARD_ANSWER
+	 	WHERE TABLE_NO = #{tableNo}
+	</select>
+	
+	
 <!-- 	<update id="incrementHit" parameterType="int"> -->
 <!-- 		update board -->
 <!-- 		set -->

@@ -4,6 +4,39 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.mapper.owner.FrcsInquiryMapper">
 	
+	<resultMap type="frcsInqVO" id="frcsInqMap">
+		<result property="inqryNo" column="inqry_no"/>
+		<result property="frcsId" column="frcs_id"/>
+		<result property="inqryTtl" column="inqry_ttl"/>
+		<result property="inqryCn" column="inqry_cn"/>
+		<result property="inqryYmd" column="inqry_ymd"/>
+		<result property="inqryYn" column="inqry_yn"/>
+		<result property="tableName" column="table_name"/>
+		<collection property="inqFileList" resultMap="attachMap"></collection>
+	</resultMap>
+	
+	<resultMap type="attachVO" id="attachMap">
+		<id property="attachNo" column="ATTACH_NO"/>
+		<result property="attachNo" column="ATTACH_NO"/>
+		<result property="fileNo" column="FILE_NO"/>
+		<result property="attachOrgname" column="ATTACH_ORGNAME"/>
+		<result property="attachSavename" column="ATTACH_SAVENAME"/>
+		<result property="tableName" column="TABLE_NAME"/>
+		<result property="tablePk" column="TABLE_PK"/>
+		<result property="attachMime" column="ATTACH_MIME"/>
+		<result property="attachSize" column="ATTACH_SIZE"/>
+		<result property="thumbImg" column="THUMB_IMG"/>
+	</resultMap>
+	
+	<sql id="inqSearch">
+		<if test="searchType != null and searchType == 'title'">
+			and (inqry_ttl like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'content'">
+			and (inqry_cn like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+	
 	<select id="frcsInqList" parameterType="string" resultType="frcsInqVO">
 		SELECT
 		    inqry_no
@@ -21,7 +54,46 @@
 			inqry_no desc
 	</select>
 	
-	<insert id="inqInsert" parameterType="frcsInqVO">
+	<select id="selectInqCount" parameterType="pagingVO" resultType="int">
+		SELECT
+		    count(inqry_no)
+		FROM
+		    FRCS_INQUIRY
+		WHERE 
+			1 = 1
+		<include refid="inqSearch"/>
+	</select>
+	
+	<select id="selectInqList" parameterType="pagingVO" resultType="frcsInqVO">
+		select 
+			b.*
+		from(
+			select 
+				a.*, row_number() over (order by a.inqry_no desc) rnum
+			from (
+				SELECT
+				    inqry_no
+				  , frcs_id
+				  , inqry_ttl
+				  , inqry_cn
+				  , inqry_ymd
+				  , inqry_yn
+				  , table_name
+				FROM
+				    FRCS_INQUIRY
+				WHERE 
+					1 = 1
+				<include refid="inqSearch"/>
+				order by 
+					inqry_no desc
+			) a
+		) b
+		<![CDATA[
+			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<insert id="inqInsert" parameterType="frcsInqVO" useGeneratedKeys="true">
 		<selectKey keyProperty="inqryNo" resultType="string" order="BEFORE">
 			select seq_frcsinquiry.nextval from dual
 		</selectKey>
@@ -40,9 +112,35 @@
 		  , #{inqryCn}
 		  , sysdate
 		  , 'N'
-		  , ''
+		  , 'frcsInquiry'
 		)
 	</insert>
+	
+	<select id="selectInq" parameterType="string" resultMap="frcsInqMap">
+		SELECT
+		    i.inqry_no
+		  , i.frcs_id
+		  , i.inqry_ttl
+		  , i.inqry_cn
+		  , i.inqry_ymd
+		  , i.inqry_yn
+		  , i.table_name
+		  , a.attach_no
+		  , a.file_no
+		  , a.attach_orgname
+		  , a.attach_savename
+		  , a.attach_mime
+		  , a.attach_size
+		  , a.table_name
+		  , a.table_pk
+		  , a.thumb_img
+		FROM
+		    FRCS_INQUIRY i LEFT OUTER JOIN ATTACH a ON(i.inqry_no = a.table_pk)
+		WHERE 
+			i.inqry_no = #{inqryNo}
+		AND
+			i.table_name = 'frcsInquiry'
+	</select>
 	
 	<select id="frcsInqDetail" parameterType="string" resultType="frcsInqVO">
 		SELECT
@@ -72,6 +170,69 @@
 		DELETE FROM frcs_inquiry
 		WHERE
 			inqry_no = #{inqryNo}
+	</delete>
+	
+	<insert id="insertInqFile" parameterType="attachVO">
+	  INSERT INTO attach (
+	    ATTACH_NO
+	    , FILE_NO
+	    , ATTACH_ORGNAME
+	    , ATTACH_SAVENAME
+	    , ATTACH_MIME
+	    , ATTACH_SIZE
+	    , TABLE_NAME
+	    , TABLE_PK
+	  )
+	  VALUES (
+	    seq_attach.nextval
+	    , #{fileNo}
+	    , #{attachOrgname}
+	    , #{attachSavename}
+	    , #{attachMime}
+	    , #{attachSize}
+	    , 'frcsInquiry'
+	    , #{tablePk}
+	  )
+	</insert>
+	
+	<select id="selectFileInfo" parameterType="int" resultType="attachVO">
+		select
+			 ATTACH_NO
+			 , FILE_NO
+			 , ATTACH_ORGNAME
+			 , ATTACH_SAVENAME
+			 , ATTACH_MIME
+			 , ATTACH_SIZE
+			 , TABLE_NAME
+			 , TABLE_PK
+		from 
+			attach
+		where 
+			ATTACH_NO = #{attachNo}
+	</select>
+	
+	<delete id="deleteInqFileByInqNo" parameterType="string">
+		delete from attach
+		where ATTACH_NO = #{attachNo}
+	</delete>
+	
+	<select id="selectInqFile" parameterType="int" resultType="attachVO">
+		select
+			ATTACH_NO
+			, FILE_NO
+			, ATTACH_ORGNAME
+			, ATTACH_SAVENAME
+			, ATTACH_MIME
+			, ATTACH_SIZE
+			, TABLE_NAME
+		from attach
+		where ATTACH_NO = #{attachNo}
+		and TABLE_NAME = 'frcsInquiry'
+	</select>
+	
+	<delete id="deleteInqFile" parameterType="int">
+		delete from attach
+		where ATTACH_NO = #{attachNo}
 	</delete>
 	
 </mapper>

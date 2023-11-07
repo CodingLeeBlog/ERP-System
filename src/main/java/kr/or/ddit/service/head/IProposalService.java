@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import kr.or.ddit.ServiceResult;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.ProposalVO;
 import kr.or.ddit.vo.member.BoardVO;
@@ -19,8 +20,18 @@ public interface IProposalService {
 
 	public ProposalVO selectProposal(int tableNo);
 
-	public ServiceResult proposalInsert(ProposalVO proposalVO);
+	public ServiceResult proposalInsert(ProposalVO proposalVO, AlarmVO alarmVO);
 
 	public void ansStateUpdate(ProposalVO proposalVO);
+
+	//본사 알림
+	public List<AlarmVO> selectAlarmList(String memId);
+
+	public void updateAlarm(int alarmNo);
+
+	public ServiceResult deleteAlarm(int alarmNo);
+
+	public ServiceResult deleteclearAllAlarm(String memId);
+
 
 }

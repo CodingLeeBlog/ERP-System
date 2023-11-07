@@ -1,5 +1,7 @@
 package kr.or.ddit.service.owner.impl;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,6 +10,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import kr.or.ddit.ServiceResult;
@@ -64,45 +67,87 @@ public class FrcsDailySaleServiceImpl implements IFrcsDailySaleService {
 		return result;
 	}
 	
+	
 	// 일일 매출 등록
 	@Override
 	public ServiceResult insertDailySales(List<FrcsDailySalesVO> salesList) {
 		ServiceResult result = null;
-		
-		int cnt = 1;
-		for(int i=0; i<salesList.size(); i++) {
+		int count = 0;
+		for(int i=0; i<salesList.size(); i++) {	// 매출등록한 메뉴수만큼 for문을 돌려
 			FrcsDailySalesVO salesVO = salesList.get(i);
 			String frcsId= salesVO.getFrcsId();
 			int status = mapper.insertDailySales(salesVO);	// 일일 메뉴 등록
 
+			// 일일 메뉴 등록에 성공하면
 			if(status > 0) {
 				String menuCd = salesVO.getMenuCd();	// 메뉴코드
 				int menuQy = salesVO.getSelngQy();		// 메뉴판매갯수
-				Date selngDate = salesVO.getSelngDate();	// 일일 매출 날짜
+				Date selngDate = salesVO.getSelngDate(); // 일일매출에 넣었던 날짜 데이터
 				
-				// 메뉴코드로 필요한 재료들 찾기..
+				// Date타입을 문자열로 바꾸고 > 문자열중 .을 기준으로 나눠서 
+				SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd HH:mm:ss.SSSSSS");
+				String selngDateStr = sdf.format(selngDate);
+//				System.out.println("selngDateStr : " + selngDateStr);
+//				String preStr = selngDateStr.substring(0,16);	// 23/10/24 09:00:00
+//				String postStr = selngDateStr.substring(16); // .0000000000
+//				String str[] = StringUtils.split(selngDateStr,'.');
+//				String preStr = str[0];	// 23/10/24 09:00:00
+//				String postStr = str[1];// 0000000000
+//				postDouble = Double.parseDouble(postStr);	// 0.0
+//				System.out.println("preStr" + preStr);
+				
+				
+				// 메뉴코드당 필요한 재료들을 찾는다...
 				List<FrcsMenuIngredientVO> ingredList = mapper.selectMenu(menuCd);
 				
 					for(int j=0; j<ingredList.size(); j++) {	// 재료 리스트만큼 for문
 						FrcsMenuIngredientVO ingredVO = ingredList.get(j);	
 						ingredVO.setFrcsId(frcsId);	
 						ingredVO.setMenuQy(menuQy);	// 메뉴 판매개수
+						ingredVO.setSelngDate(selngDate);	// 날짜 범위를 주기위한 조건 값(datepicker로 선택한 날짜)	
 						
-
-						 
-						// selngDate 겹치지 않게 1초씩 증가
-						if(i>=1) {
-							Calendar cal = Calendar.getInstance();
-							cal.setTime(selngDate);
-							cal.add(Calendar.SECOND, cnt++);
-							selngDate = cal.getTime();
-							ingredVO.setSelngDate(selngDate);
-						}else {
-							ingredVO.setSelngDate(selngDate);	// 판매 날짜
+						// 날짜, 가맹점ID, 메뉴코드가 일치하는 데이터들 중, 가장 최신의 데이터 1개를 가져온다.
+						String dlivyDate = mapper.selectRecentDelivery(ingredVO);
+						
+						String resultLine = "";
+						String frontDateText = "";
+						if(StringUtils.isBlank(dlivyDate)) {	// 처음 등록
+							frontDateText = selngDateStr.split("\\.")[0];
+							count++;
+						}else {	// 기존것 가지고 재등록
+							String[] splitData = dlivyDate.split("\\.");
+							frontDateText = splitData[0];
+							int after = Integer.parseInt(splitData[1]);
+							count = after = after + 1;
 						}
 						
+						if(count < 10) {	// 1의자리
+							resultLine = "00000" + count;
+						}else if(count > 9 && count < 100) {	// 10의자리
+							resultLine = "0000" + count;
+						}else if(count > 99 && count < 1000) {	// 100의자리
+							resultLine = "000" + count;
+						}else {									// 1000의자리
+							resultLine = "00" + count;
+						}
+						
+						selngDateStr = frontDateText + "."+ resultLine;
+						
 						mapper.minusInvent(ingredVO);	// 재고 -처리
-						mapper.plusDelivery(ingredVO); // 출고 테이블에 insert
+					
+						
+						DateFormat df = new SimpleDateFormat("yy/MM/dd HH:mm:ss.SSSSSS");
+						try {
+							Date date = df.parse(selngDateStr);
+							long time = date.getTime();
+							
+							Timestamp selngDate2 = new Timestamp(time);
+							
+							ingredVO.setSelngDate2(selngDate2);
+							mapper.plusDelivery(ingredVO);
+						} catch (ParseException e) {
+							e.printStackTrace();
+						}
 					}
 					result = ServiceResult.OK;
 			}else {
@@ -123,16 +168,16 @@ public class FrcsDailySaleServiceImpl implements IFrcsDailySaleService {
 	@Override
 	public ServiceResult updateDailySales(List<FrcsDailySalesVO> salesList) {
 		ServiceResult result = null;
+		int count = 0;	// 중복 안되게 count처리하는
 		
-		for(int i=0; i<salesList.size(); i++) {
-//			
+		for(int i=0; i<salesList.size(); i++) {		// 등록 메뉴개수
 			FrcsDailySalesVO salesVO = salesList.get(i);
 			String frcsId = salesVO.getFrcsId();
 			
-			String selngDateStr = salesVO.getSelngDateStr();
-			Date selngDate = null;
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			String selngDateStr = salesVO.getSelngDateStr();	// string 타입으로 들어온 날짜 (타임스탬프 형식)
 			
+			Date selngDate = null;
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");	// 내역 조회 및 새로운 내역 insert를 위해 
 			try {
 				selngDate = sdf.parse(selngDateStr);
 			} catch (ParseException e) {
@@ -140,21 +185,18 @@ public class FrcsDailySaleServiceImpl implements IFrcsDailySaleService {
 			}
 			System.out.println(selngDate);
 			salesVO.setSelngDate(selngDate);
-			
+//			
 //			// 매출 수정 전 메뉴와 메뉴 갯수 확인
 			List<FrcsDailySalesVO> beforeList = mapper.getBeforeCount(salesVO);
 //			
-			// 매출내역이 존재하지 않는다면
+			// 매출내역에 해당 메뉴가 존재하지 않는다면
 			if(beforeList.isEmpty()) {
-				
-				int newInsertStatus = mapper.insertDailySales(salesVO);
+				int newInsertStatus = mapper.insertDailySales(salesVO);	// 일일 매출 등록
 				
 				// 일일 매출테이블에 insert를 성공하면
 				if(newInsertStatus > 0) {
-					
 					String menuCd = salesVO.getMenuCd();	// 메뉴코드
 					int menuQy = salesVO.getSelngQy();		// 메뉴판매갯수
-//					String frcsId = salesVO.getFrcsId();	// 가맹점코드
 					
 					// 메뉴코드로 필요한 재료들 찾기..
 					List<FrcsMenuIngredientVO> ingredList = mapper.selectMenu(menuCd);
@@ -163,65 +205,151 @@ public class FrcsDailySaleServiceImpl implements IFrcsDailySaleService {
 	                    FrcsMenuIngredientVO ingredVO = ingredList.get(j);
 	                    ingredVO.setFrcsId(frcsId);
 	                    ingredVO.setMenuQy(menuQy);
+	                    ingredVO.setSelngDate(selngDate); 	
 	                    
-	                    Calendar cal = Calendar.getInstance();
-	                    cal.setTime(selngDate);
-	                    cal.add(Calendar.MINUTE, i * 10 + j);
-	                    ingredVO.setSelngDate(cal.getTime());
-
-	                    mapper.minusInvent(ingredVO);
-	                    mapper.plusDelivery(ingredVO);
+	                    // 날짜, 가맹점Id, 메뉴코드가 일치하는 데이터들 중 가장 최신의 데이터 1개를 가져온다.
+	                    String dlivyDate = mapper.selectRecentDelivery(ingredVO);
+	                    
+	                    String resultLine = "";
+	                    String frontDateText = "";
+	                    
+	                    // 비어있다면 처음 등록하는 제품
+	                    if(StringUtils.isBlank(dlivyDate)) {
+	                    	frontDateText = selngDateStr.split("\\.")[0];
+	                    	count++;
+	                    }else {	// 기존것 가지고 재등록
+	                    	String []splitDate = dlivyDate.split("\\.");
+	                    	frontDateText = splitDate[0];
+	                    	int after = Integer.parseInt(splitDate[1]);
+	                    	count = after = after + 1;
+	                    }
+	                    
+	                    if(count<10) {	// 1의 자리
+	                    	resultLine = "00000"+count;
+	                    }else if(count > 9 && count < 100){	// 10의 자리
+	                    	resultLine = "0000"+count;
+	                    }else if(count > 99 && count < 1000) {	// 100의 자리
+	                    	resultLine = "000"+count;
+	                    }else {		// 1000의 자리
+	                    	resultLine = "00"+count;
+	                    }
+	                    
+	                    selngDateStr = frontDateText + "." + resultLine;
+	                    
+	                    mapper.minusInvent(ingredVO);	// 재고 - 처리
+	                    
+	                    
+	                    DateFormat df = new SimpleDateFormat("yy/MM/dd HH:mm:ss.SSSSSS");
+	                    try {
+	                    	Date date = df.parse(selngDateStr);
+	                    	long time = date.getTime();
+	                    	
+	                    	Timestamp selngDate2 = new Timestamp(time);
+	                    	
+	                    	ingredVO.setSelngDate2(selngDate2);
+	                    	mapper.plusDelivery(ingredVO);
+	                    }catch(ParseException e) {
+	                    	e.printStackTrace();
+	                    }
 	                }
 	                result = ServiceResult.OK;
 	            } else {
 	                result = ServiceResult.FAILED;
 	                break;
 				}
-			// 매출내역이 이미 존재한다면
+		
+			// 매출내역에 이미 해당 메뉴가 존재한다면
 			}else {
-				for(int z=0; z<beforeList.size(); z++) {
+				for(int z=0; z<beforeList.size(); z++) {	// 이건 사실상 무조건 1?
+					
+					System.out.println("beforeList.size() : " + beforeList.size());
 					System.out.println("수정 전 메뉴와 메뉴 갯수 : " + beforeList.get(z).getMenuCd());
 					System.out.println("수정 전 메뉴와 메뉴 갯수 : " + beforeList.get(z).getSelngQy());
-					int beforeCount = beforeList.get(z).getSelngQy();
+					int beforeCount = beforeList.get(z).getSelngQy();	// 이전 갯수
 
-				// update해주고
-				int updateStatus = mapper.updateSales(salesVO);
+				// 일일 매출은 업데이트 해주고
+				int updateStatus = mapper.updateSales(salesVO);	
 				
+				// 일일 매출 업데이트 성공 시
 				if(updateStatus > 0 ) {
+					
 					// 수정 후 메뉴와 메뉴 개수를 체크
-					// 매출 수정 전 메뉴와 메뉴 갯수 확인
 					List<FrcsDailySalesVO> afterList = mapper.getBeforeCount(salesVO);
 					
-					for(int k=0; k<afterList.size(); k++) {
+					for(int k=0; k<afterList.size(); k++) {	// 이것도 사실상 1?
 						System.out.println("수정 후 메뉴와 메뉴 갯수 : " + afterList.get(k).getMenuCd());
 						System.out.println("수정 후 메뉴와 메뉴 갯수 : " + afterList.get(k).getSelngQy());
 						int afterCount = afterList.get(k).getSelngQy();
 						String menuCd = afterList.get(k).getMenuCd();
 						
-						int count = beforeCount- afterCount;
+						int cnt = beforeCount- afterCount;
 						
 						// count가 양수라면 팔린 메뉴개수를 줄인것
 						// 그만큼 다시 재고현황을 플러스 처리 / 출고테이블에는 마이너스로 insert
 						// count가 음수라면 팔린 메뉴개수를 늘린것
 						// 그만큼 재고현황을 마이너스 처리 / 출고테이블에는 플러스로 insert
-						
+						 
 						// 메뉴코드로 필요한 재료들 찾기..
 						List<FrcsMenuIngredientVO> ingredList = mapper.selectMenu(menuCd);
 						
 							for(int y=0; y<ingredList.size(); y++) {	// 재료 리스트만큼 for문
 								FrcsMenuIngredientVO ingredVO = ingredList.get(y);	
 								ingredVO.setFrcsId(frcsId);	
-								ingredVO.setMenuQy(count);	// 메뉴 판매개수
-
-							// selngDate 겹치지 않게 1초씩 증가
-								Calendar cal = Calendar.getInstance();
-								cal.setTime(selngDate);
-								cal.add(Calendar.MINUTE, i * 33 + k);
-								selngDate = cal.getTime();
+								ingredVO.setMenuQy(cnt);	// 메뉴 판매개수
 								ingredVO.setSelngDate(selngDate);
 								
-							mapper.minusInvent(ingredVO);	// 재고 -처리
-							mapper.plusDelivery(ingredVO); // 출고 테이블에 insert
+								 // 날짜, 가맹점Id, 메뉴코드가 일치하는 데이터들 중 가장 최신의 데이터 1개를 가져온다.
+			                    String dlivyDate = mapper.selectRecentDelivery(ingredVO);
+			                    
+			                    String resultLine = "";
+			                    String frontDateText = "";
+			                    
+			                    int count2 = 0;
+			                    
+			                    // 비어있다면 처음 등록하는 제품
+			                    if(StringUtils.isBlank(dlivyDate)) {
+			                    	frontDateText = selngDateStr.split("\\.")[0];
+			                    	count2++;
+			                    }else {	// 기존것 가지고 재등록
+//			                    	String []splitDate = dlivyDate.split("\\.");
+			                    	frontDateText = dlivyDate.substring(0,19);
+			                    	String temp = dlivyDate.substring(20,23);
+			                    	System.out.println("frontDateText : " + frontDateText);
+			                    	System.out.println("temp : " + temp);
+			                    	int after = Integer.parseInt(temp);
+			                    	System.out.println("after : " + after);
+//			                    	frontDateText = splitDate[0];
+//			                    	int after = Integer.parseInt(splitDate[1]);
+			                    	System.out.println("after : " + after);
+			                    	count2 = after = after + 1;
+			                    	System.out.println("count : " + count2);
+			                    }
+			                    
+			                    if(count2<10) {	// 1의 자리
+			                    	resultLine = "00"+count2;
+			                    }else if(count > 9 && count2 < 100){	// 10의 자리
+			                    	resultLine = "0"+count2;
+			                    }else {		// 1000의 자리
+			                    	resultLine = ""+count2;
+			                    }
+			                    
+			                    selngDateStr = frontDateText + "." + resultLine;
+			                    System.out.println("selngDateStr : " + selngDateStr);
+								mapper.minusInvent(ingredVO);	// 재고 -처리
+						
+								DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+								
+								try {
+									Date date = df.parse(selngDateStr);
+									long time = date.getTime();
+									
+									Timestamp selngDate2 = new Timestamp(time);
+
+									ingredVO.setSelngDate2(selngDate2);
+									mapper.plusDelivery(ingredVO);
+								} catch (ParseException e) {
+									e.printStackTrace();
+								}
 						}
 					}
 					result = ServiceResult.OK;
@@ -235,54 +363,26 @@ public class FrcsDailySaleServiceImpl implements IFrcsDailySaleService {
 	}
 		return result;
 	}
+
+	// 주간차트를 위한 데이터 불러오기
+	@Override
+	public int[] getDate(String frcsId) {
+		
+		int[] chartArr = new int[14];
+		int index = 0;
+		
+		// 지난주 월요일부터 이번주 일요일까지 데이터 돌림
+		for(int i=-7; i<7; i++) {
+			FrcsDailySalesVO salesVO = new FrcsDailySalesVO();
+			salesVO.setCnt(i);
+			salesVO.setFrcsId(frcsId);
+			int price = mapper.getDate(salesVO);
+			chartArr[index] = price;
+			index++;
+		}
+		return chartArr;
+	}
 }
-
-
-//	@Override
-//	public ServiceResult updateDailySales(List<FrcsDailySalesVO> salesList) {
-//		ServiceResult result = null;
-//		
-//		System.out.println("salesList.size() : " + salesList.size());
-//		
-//		// 넘어온 데이터의 수만큼 for문을 돌려 vo객체에 하나씩 담아줌
-//		for(int i=0; i<salesList.size(); i++) {
-//			System.out.println(salesList.get(0));
-//			System.out.println(salesList.get(1));
-//			FrcsDailySalesVO salesVO = salesList.get(i);
-//			System.out.println("salesVO : "+ salesVO);
-//
-//			// vo객체에 메뉴코드, 메뉴가격, 메뉴개수가 들어있음.
-//			// 매출 수정 전 메뉴와 메뉴 갯수 확인
-//			List<FrcsDailySalesVO> beforeList = mapper.getBeforeCount(salesVO);
-//			
-//			for(int j=0; j<beforeList.size(); j++) {
-//				
-//			System.out.println("beforeList : " + beforeList);
-//			System.out.println("수정 전 메뉴와 메뉴 갯수 : " + beforeList.get(j).getMenuCd());
-//			System.out.println("수정 전 메뉴와 메뉴 갯수 : " + beforeList.get(j).getSelngQy());
-//			}
-//		}
-//		
-//		
-//		
-//		// 매출 삭제
-//		
-//		// 매출 삭제 후 메뉴 수 확인
-//		
-//		// 수정 전 메뉴수에서 매출 수정 후를 뺐을때 0보다 작으면 메뉴를 추가한것이니
-//		// 그만큼 더 재고 -처리하고 출고테이블에 insert해준다.
-//		
-//		// 수정 전 메뉴수에서 매출 수정 후를 뺐을 때 0보다 크면 메뉴를 줄인것이니
-//		// 그만큼 재고를 +처리하고 출고테이블에도 -처리 해준다.
-//		
-//		return result;
-//	}
-
-//	// 모달창 메뉴 검색
-//	@Override
-//	public List<FrcsMenuVO> getMenuSearchList(String frcsId, String inputText) {
-//		return mapper.getMenuSearchList(frcsId, inputText);
-//	}
 
 
 

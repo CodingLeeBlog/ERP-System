@@ -279,7 +279,7 @@ $(function(){
 		
 		$.ajax({
 			type : "post",
-			url : "/head/vendorList.do",
+			url : "/head/selectPurchaseVendorName.do",
 			beforeSend : function(xhr){
 				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 			},
@@ -331,16 +331,16 @@ $(function(){
 					html += "<tr class='checkBtn'>";
 					html += "	<td class='chk'>";
 					html += "		<div class='form-check'>";
-					html += "			<input type='checkbox' class='form-check-input' id='vendorCheck" + checkboxId +"' value='" + headInventoryVO.vdprodCd + "," + headInventoryVO.vdprodName + "," + headInventoryVO.vdCode +"," + headInventoryVO.hdremainQy +"," + headInventoryVO.hdforwardPrice +"," + headInventoryVO.vdprodLifestartday + "," + headInventoryVO.vdprodLifeendday + "," + headInventoryVO.hdrtrcvPrice + "," + headInventoryVO.hdmaxQy + "'>";
+					html += "			<input type='checkbox' class='form-check-input' id='vendorCheck" + checkboxId +"' value='" + headInventoryVO.vdprodCd + "," + headInventoryVO.vdprodName + "," + headInventoryVO.vdCode +"," + headInventoryVO.vdremainQy +"," + headInventoryVO.vdforwardPrice +"," + headInventoryVO.hdprodLifestartday + "," + headInventoryVO.hdprodLifeendday + "," + headInventoryVO.vdrtrcvPrice + "," + headInventoryVO.vdmaxQy + "'>";
 					html += "			<label class='form-check-label' for='vendorCheck" + checkboxId + "'>&nbsp;</label>";
 					html += "	</td>";
 					checkboxId++;
 					html += "	<td>"+headInventoryVO.vdprodCd+"</td>";
 					html += "	<td>"+headInventoryVO.vdprodName+"</td>";
 					html += "	<td>"+headInventoryVO.vdCode+"</td>";
-					html += "	<td>"+headInventoryVO.hdremainQy+"</td>";
+					html += "	<td>"+headInventoryVO.vdremainQy+"</td>";
 // 					html += "	<td>"+headInventoryVO.hdforwardPrice+"/"+headInventoryVO.hdrtrcvPrice+"</td>";
-					html += "	<td>"+headInventoryVO.hdforwardPrice+"</td>";
+					html += "	<td>"+headInventoryVO.vdforwardPrice+"</td>";
 					html += "	<td>"+headInventoryVO.vdprodLifestartday+"</td>";
 					html += "	<td>"+headInventoryVO.vdprodLifeendday+"</td>";
 					html += "</tr>";
@@ -367,12 +367,12 @@ $(function(){
 	                vdprodCd: values[0], // 첫 번째 값
 	                vdprodName: values[1], // 두 번째 값
 	                vdCode: values[2], 
-	                hdremainQy: values[3], 
-	                hdforwardPrice: values[4], 
+	                vdremainQy: values[3], 
+	                vdforwardPrice: values[4], 
 	                vdprodLifestartday: values[5], 
 	                vdprodLifeendday: values[6],
-	                hdrtrcvPrice: values[7],
-	                hdmaxQy: values[8]
+	                vdrtrcvPrice: values[7],
+	                vdmaxQy: values[8]
 	            });
         	}
         });
@@ -387,6 +387,7 @@ $(function(){
             beforeSend : function(xhr){
 				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 			},
+			contentType: "application/json; charset=UTF-8",
             data: dataObject, // 전송할 데이터
             success: function(res) {
             		alert("등록성공!!");	

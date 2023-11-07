@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <div class="content-page">
 	<div class="content">
 	
@@ -41,17 +42,18 @@
 	                        </div>
 	
 	                        <div class="table-responsive">
-	                            <table class="table table-centered table-nowrap mb-0">
+	                            <table class="table table-centered w-100">
 	                                <thead class="table-light">
 	                                    <tr>
-	                                        <th style="width: 20px;">
+	                                        <th class="all" style="width: 20px;">
 	                                            <div class="form-check">
-	                                                <input type="checkbox" class="form-check-input" id="customCheck1">
-	                                                <label class="form-check-label" for="customCheck1">&nbsp;</label>
+	                                                <input type="checkbox" class="form-check-input" id="checkAll" name="checkbox">
+	                                                <label class="form-check-label" for="checkAll">&nbsp;</label>
 	                                            </div>
 	                                        </th>
 	                                        <th>No.</th>
 	                                        <th>제목</th>
+	                                        <th>내용</th>
 	                                        <th>작성일</th>
 	                                        <th>답변여부</th>
 	                                    </tr>
@@ -69,19 +71,28 @@
 				                                    <tr>
 				                                        <td>
 				                                            <div class="form-check">
-				                                                <input type="checkbox" class="form-check-input" id="customCheck2">
-				                                                <label class="form-check-label" for="customCheck2">&nbsp;</label>
+				                                                <input type="checkbox" class="form-check-input" id="check${frcsInq.inqryNo }" name="checkbox" value="${frcsInq.inqryNo }">
+				                                                <label class="form-check-label" for="check${frcsInq.inqryNo }">&nbsp;</label>
 				                                            </div>
 				                                        </td>
 				                                        <td>${frcsInq.inqryNo }</td>
 				                                        <td>
 				                                            <a href="/owner/inqDetail.do?inqryNo=${frcsInq.inqryNo }" class="text-body fw-bold">${frcsInq.inqryTtl }</a>
 				                                        </td>
-				                                        <td>${frcsInq.inqryYmd }</td>
+				                                        <!-- 내용 일정 글자 초과시 뒤에 ...으로 표시하기 -->
+				                                        <td><p><a href="/owner/inqDetail.do?inqryNo=${frcsInq.inqryNo }" class="text-body ">${frcsInq.inqryCn }</a></p></td>
+				                                        <td><fmt:formatDate value="${frcsInq.inqryYmd }" pattern="yyyy-MM-dd"/></td>
 				                                        <td>
-				                                            <h5><span class="badge badge-info-lighten">
-				                                            	${frcsInq.inqryYn }
-				                                            </span></h5>
+				                                            <c:if test="${frcsInq.inqryYn eq 'N'}">
+					                                            <h5><span class="badge badge-info-lighten">
+					                                            	답변대기중
+					                                            </span></h5>
+				                                            </c:if>
+				                                            <c:if test="${frcsInq.inqryYn eq 'Y'}">
+					                                            <h5><span class="badge badge-info-lighten">
+					                                            	답변완료
+					                                            </span></h5>
+				                                            </c:if>
 				                                        </td>
 				                                    </tr>
 		                                		</c:forEach>
@@ -97,7 +108,7 @@
 	                        <div class="col-xl-12 mt-2">
 	                            <div class="text-xl-end mt-xl-0 mt-2">
 	                                <button type="button" class="btn btn-danger mb-2 me-2" id="subBtn">문의하기</button>
-	                                <button type="button" class="btn btn-light mb-2">삭제</button>
+	                                <button type="button" class="btn btn-light mb-2" id="delBtn">삭제</button>
 	                            </div>
 	                        </div>
 	                    </div> <!-- end card-body-->
@@ -114,9 +125,72 @@
 <script type="text/javascript">
 $(function(){
 	var subBtn = $("#subBtn");
+	var delBtn = $("#delBtn");
 	
+	// 문의 등록하기
 	subBtn.on("click", function(){
 		window.location.href="/owner/inqForm.do";
 	});
+	
+	
+	// 문의 선택 삭제하기
+	delBtn.on('click', function() {
+		var selectedItems = [];
+		
+		 $("input:checkbox[name='checkbox']:checked").each(function () {
+             selectedItems.push({ inqryNo: $(this).val()});
+         });
+		 
+		 if (selectedItems.length > 0) {
+             $.ajax({
+                 type: "POST",
+                 url: "/owner/inqDelete.do",
+                 beforeSend: function(xhr){
+     				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+     			 },
+                 data: JSON.stringify(selectedItems),
+                 contentType: "application/json;charset=UTF-8",
+                 success: function (response) {
+                     console.log("삭제 성공:", response);
+                     alert("삭제되었습니다!");
+                     location.reload();
+                 },
+                 error: function (error) {
+                     console.error("삭제 실패:", error);
+                     alert("다시 시도해주세요!");
+                 }
+             });
+         } else {
+             alert("삭제할 문의를 선택하세요.");
+         }
+	});
+	
+	
+	// 전체 선택 체크박스
+	var checkAll = document.getElementById('checkAll');
+	
+	// 다른 모든 체크박스들
+	var checkboxes = document.getElementsByName('checkbox');
+	
+	// 전체 선택 체크박스의 클릭 이벤트 처리
+	checkAll.addEventListener('click', function() {
+	    for (var i = 0; i < checkboxes.length; i++) {
+	        checkboxes[i].checked = checkAll.checked;
+	    }
+	});
+	
+	// 다른 체크박스 중 하나라도 선택이 해제되면 전체 선택 체크박스도 해제
+	for (var i = 0; i < checkboxes.length; i++) {
+	    checkboxes[i].addEventListener('click', function() {
+	        checkAll.checked = true;
+	        for (var j = 0; j < checkboxes.length; j++) {
+	            if (!checkboxes[j].checked) {
+	                checkAll.checked = false;
+	                break;
+	            }
+	        }
+	    });
+	}
+	
 });
 </script>

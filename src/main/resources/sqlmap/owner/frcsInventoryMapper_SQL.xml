@@ -30,7 +30,7 @@
 			and (h.vdprod_name like '%'||#{searchWord}||'%')
 		</if>
 		<if test="searchType !=null and searchType== 'vdprodCd'">
-			and (h.vdprod_cd like '%'||#{searchWord}||'%')		
+			and (h.vdprod_cd like '%'||upper(#{searchWord})||'%')		
 		</if>
 	</sql>
 

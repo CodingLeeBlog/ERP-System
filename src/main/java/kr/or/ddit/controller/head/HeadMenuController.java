@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -43,6 +44,7 @@ public class HeadMenuController {
 	@Inject
 	private IMenuService menuService;
 
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/menu.do", method=RequestMethod.GET)
 	public String menuList(
 			@RequestParam(name="page", required = false, defaultValue = "1")int currentPage,
@@ -89,6 +91,7 @@ public class HeadMenuController {
 //	@Autowired
 //	private ImageUpload imageUploadController;
 
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@ResponseBody
 	@RequestMapping(value = "/menuRegister.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public ResponseEntity<String> menuRegister(
@@ -145,8 +148,7 @@ public class HeadMenuController {
 	    return new ResponseEntity<MenuVO>(menuVO, HttpStatus.OK);
 	}
 
-
-	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value="/menuDelete.do", method = RequestMethod.POST)
 	public String menuDelete(@RequestParam("menuCd")String menuCd) {
 		menuService.menuDelete(menuCd);

@@ -151,137 +151,36 @@
                         </div>
                     </li>
 
-          <!-- 알림창 시작 -->
+         	      	 <!-- 알림창 시작 -->
                       <li class="dropdown notification-list">
-                          <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                          <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" id="alarmBtn" href="#" role="button" aria-haspopup="false" aria-expanded="false">
                               <i class="ri-notification-3-line font-22 text-white"></i>
-                              <span class="noti-icon-badge"></span>
+                                <span id="noti-badge" class="noti-icon-badge" style="display: none;"></span>
                           </a>
                           <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg py-0">
                               <div class="p-2 border-top-0 border-start-0 border-end-0 border-dashed border">
                                   <div class="row align-items-center">
                                       <div class="col">
-                                          <h6 class="m-0 font-16 fw-semibold"> Notification</h6>
+                                          <h6 class="m-0 font-16 fw-semibold">알림</h6>
                                       </div>
                                       <div class="col-auto">
-                                          <a href="javascript: void(0);" class="text-dark text-decoration-underline">
+                                          <a href="javascript: void(0);" class="text-dark text-decoration-underline clearAll">
                                               <small>Clear All</small>
                                           </a>
                                       </div>
                                   </div>
                               </div>
 
-                              <div class="px-2" style="max-height: 300px;" data-simplebar>
+							  <!-- /////////////////// 알림들 시작 /////////////////////////// -->
+                              <div class="px-2" data-simplebar id="alims"></div>
 
-                                  <h5 class="text-muted font-13 fw-normal mt-2">Today</h5>
-                                  <!-- item-->
-
-                                  <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card unread-noti shadow-none mb-2">
-                                      <div class="card-body">
-                                          <span class="float-end noti-close-btn text-muted"><i class="mdi mdi-close"></i></span>
-                                          <div class="d-flex align-items-center">
-                                              <div class="flex-shrink-0">
-                                                  <div class="notify-icon bg-primary">
-                                                      <i class="mdi mdi-comment-account-outline"></i>
-                                                  </div>
-                                              </div>
-                                              <div class="flex-grow-1 text-truncate ms-2">
-                                                  <h5 class="noti-item-title fw-semibold font-14">Datacorp <small class="fw-normal text-muted ms-1">1 min ago</small></h5>
-                                                  <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on Admin</small>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </a>
-
-                                  <!-- item-->
-                                  <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
-                                      <div class="card-body">
-                                          <span class="float-end noti-close-btn text-muted"><i class="mdi mdi-close"></i></span>
-                                          <div class="d-flex align-items-center">
-                                              <div class="flex-shrink-0">
-                                                  <div class="notify-icon bg-info">
-                                                      <i class="mdi mdi-account-plus"></i>
-                                                  </div>
-                                              </div>
-                                              <div class="flex-grow-1 text-truncate ms-2">
-                                                  <h5 class="noti-item-title fw-semibold font-14">Admin <small class="fw-normal text-muted ms-1">1 hours ago</small></h5>
-                                                  <small class="noti-item-subtitle text-muted">New user registered</small>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </a>
-
-                                  <h5 class="text-muted font-13 fw-normal mt-0">Yesterday</h5>
-
-                                  <!-- item-->
-                                  <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
-                                      <div class="card-body">
-                                          <span class="float-end noti-close-btn text-muted"><i class="mdi mdi-close"></i></span>
-                                          <div class="d-flex align-items-center">
-                                              <div class="flex-shrink-0">
-                                                  <div class="notify-icon">
-                                                      <img src="${pageContext.request.contextPath }/resources/assets/images/users/avatar-2.jpg" class="img-fluid rounded-circle" alt="" />
-                                                  </div>
-                                              </div>
-                                              <div class="flex-grow-1 text-truncate ms-2">
-                                                  <h5 class="noti-item-title fw-semibold font-14">Cristina Pride <small class="fw-normal text-muted ms-1">1 day ago</small></h5>
-                                                  <small class="noti-item-subtitle text-muted">Hi, How are you? What about our next meeting</small>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </a>
-
-                                  <h5 class="text-muted font-13 fw-normal mt-0">30 Dec 2021</h5>
-
-                                  <!-- item-->
-                                  <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
-                                      <div class="card-body">
-                                          <span class="float-end noti-close-btn text-muted"><i class="mdi mdi-close"></i></span>
-                                          <div class="d-flex align-items-center">
-                                              <div class="flex-shrink-0">
-                                                  <div class="notify-icon bg-primary">
-                                                      <i class="mdi mdi-comment-account-outline"></i>
-                                                  </div>
-                                              </div>
-                                              <div class="flex-grow-1 text-truncate ms-2">
-                                                  <h5 class="noti-item-title fw-semibold font-14">Datacorp</h5>
-                                                  <small class="noti-item-subtitle text-muted">Caleb Flakelar commented on Admin</small>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </a>
-
-                                  <!-- item-->
-                                  <a href="javascript:void(0);" class="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
-                                      <div class="card-body">
-                                          <span class="float-end noti-close-btn text-muted"><i class="mdi mdi-close"></i></span>
-                                          <div class="d-flex align-items-center">
-                                              <div class="flex-shrink-0">
-                                                  <div class="notify-icon">
-                                                      <img src="${pageContext.request.contextPath }/resources/assets/images/users/avatar-4.jpg" class="img-fluid rounded-circle" alt="" />
-                                                  </div>
-                                              </div>
-                                              <div class="flex-grow-1 text-truncate ms-2">
-                                                  <h5 class="noti-item-title fw-semibold font-14">Karen Robinson</h5>
-                                                  <small class="noti-item-subtitle text-muted">Wow ! this admin looks good and awesome design</small>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </a>
-
-                                  <div class="text-center">
-                                      <i class="mdi mdi-dots-circle mdi-spin text-muted h3 mt-0"></i>
-                                  </div>
-                              </div>
 
                               <!-- 알림창의 모두보기-->
-                              <a href="javascript:void(0);" class="dropdown-item text-center text-primary notify-item border-top py-2">
-                                  View All
-                              </a>
+                              <a href="javascript:void(0);" class="dropdown-item text-center text-primary notify-item border-top py-2">닫기</a>
 
-             <!-- 알림창의 끝-->
                           </div>
                       </li>
+             		  <!-- 알림창의 끝-->
 
                       <!-- 어플리케이션 시작 -->
                       <li class="dropdown d-none d-sm-inline-block">
@@ -473,9 +372,6 @@
                                   <li>
                                       <a href="/head/plan.do">개점일정계획</a>
                                   </li>
-                                  <li>
-                                      <a href="/head/facility.do">시설관리</a>
-                                  </li>
                               </ul>
                           </div>
                       </li>
@@ -523,6 +419,9 @@
                                   </li>
                                   <li>
                                       <a href="/head/purchaseList.do">매입내역관리</a>
+                                  </li>
+                                  <li>
+                                      <a href="/head/headInventoryList.do">본사재고관리</a>
                                   </li>
                                   <li>
                                       <a href="/head/customerList.do">거래처관리</a>
@@ -604,14 +503,213 @@
               </div>
           </div>
         </div>
+ 	<sec:authentication property="principal.member" var="member"/>
+    <input type="hidden" name="" id="memId" value="${member.memId }"/>
+    
         <!-- ========== Left Sidebar End ========== -->
 <script type="text/javascript">
-   $(function(){
-	  var logoutForm = $("#logoutForm");
-	  var logoutButton = $("#logoutButton");
-	  
-	  logoutButton.on("click", function(){
-		  logoutForm.submit();
-	  });
-   });   	
+$(function(){
+	var logoutForm = $("#logoutForm");
+	var logoutButton = $("#logoutButton");
+	var alarmBtn = $("#alarmBtn");
+	var alarmCount = 0;
+
+	checkNotificationCount();
+	
+	// 알람 갯수에 따른 배치 깜빡임 시작/멈춤 이벤트
+// 	setTimeout(() => {
+// 	    if(alarmCount > 0){
+// 	    	startBlinking();
+// 	    }else{
+// 	    	stopBlinking();
+// 	    }
+// 	}, 300);
+	
+	logoutButton.on("click", function() {
+		logoutForm.submit();
+	});
+	
+// 	setInterval(() => {
+// 		checkNotificationCountCheck();	
+// 	}, 500);
+	
+	// 알람 아이콘을 클릭했을때
+	alarmBtn.on("click", function(){
+		updateNotificationBadge();	// 알람 목록 가져오기
+		stopBlinking();
+	});
+	
+	
+	// 배찌 깜빡이기 위한 이벤트 그룹
+	var blinkInterval;
+    var badge = $("#noti-badge");
+	function blinkBadge() {
+	    badge.css("display", badge.css("display") === "none" ? "inline-block" : "none");
+	}
+
+// 	function startBlinking() {
+// 		blinkInterval = setInterval(blinkBadge, 300); // 0.3초 간격으로 깜빡임
+// 	}
+
+	function stopBlinking(str) {
+		clearInterval(blinkInterval);
+		badge.css("display", "none");
+		if(str == "noequals"){
+			startBlinking();
+		}
+	}
+	// 배찌 깜빡이기 위한 이벤트 그룹 end
+	
+	function checkNotificationCount(){
+		var data = {
+				memId : $("#memId").val()
+			};
+
+			$.ajax({
+				type : "post",
+				url : "/head/selectAlarm.do",
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader("${_csrf.headerName}",
+							"${_csrf.token}");
+				},
+				data : JSON.stringify(data),
+				contentType : "application/json; charset=utf-8",
+				success : function(rst) {
+					alarmCount = rst.length;
+				}
+			});
+	}
+	
+	function checkNotificationCountCheck(){
+		var data = {
+				memId : $("#memId").val()
+			};
+
+			$.ajax({
+				type : "post",
+				url : "/head/selectAlarm.do",
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader("${_csrf.headerName}",
+							"${_csrf.token}");
+				},
+				data : JSON.stringify(data),
+				contentType : "application/json; charset=utf-8",
+				success : function(rst) {
+					var flag = false;
+					if(rst.length != alarmCount){
+						stopBlinking('noequals');
+					}else{
+						console.log("뭐니?");
+					}
+				}
+			});
+	}
+	
+	//알림 조회
+	function updateNotificationBadge() {
+		var data = {
+			memId : $("#memId").val()
+		};
+
+		$.ajax({
+			type : "post",
+			url : "/head/selectAlarm.do",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("${_csrf.headerName}",
+						"${_csrf.token}");
+			},
+			data : JSON.stringify(data),
+			contentType : "application/json; charset=utf-8",
+			success : function(rst) {
+				updateNotificationList(rst);
+				alarmCount = rst.length;
+			}
+		});
+	}
+	
+	//append로 알림 리스트 보내기
+	function updateNotificationList(rst) {
+		$("#alims").empty();
+		var str = "";
+		$.each(rst,	function(idx, data) {
+			str += "<a href='" + data.alarmUrl + "' class='dropdown-item p-0 notify-item card unread-noti shadow-none mb-2 mt-2'>";
+			str += "<div class='card-body'>";
+			str += "<span class='float-end noti-close-btn text-muted'></span>";
+			str += "<div class='d-flex align-items-center'><div class='flex-shrink-0'><div class='notify-icon bg-primary'><i class='mdi mdi-comment-account-outline'></i>";
+			str += "</i></div></div>";
+			str += "<div class='flex-grow-1 text-truncate ms-3 mb-1 clsAlarm' data-alarm-no='" + data.alarmNo + "'><h5 class='noti-item-title fw-semibold font-14'></h5>"
+					+ data.alarmContent + "</div>";
+			str += "<div class='col-3 clsHref' data-alarm-no='" + data.alarmNo + "'><i class='mdi mdi-close ms-3'></i></div>";
+			str += "</div></a>";
+		});
+		$("#alims").append(str);
+	}
+	
+
+	//알림 눌렀을때 '읽음 처리'
+	$(document).on("click", ".clsAlarm", function() {
+		console.log("clsAlarm");
+		let alarmNo = $(this).data("alarmNo");
+		console.log("alarmNo: " + alarmNo);
+		location.href = "/head/updateAlarm.do?alarmNo=" + alarmNo;
+	});
+
+	//알림 1개 삭제
+	$(document).on("click",".clsHref",function(event) {
+		event.preventDefault(); // 링크의 기본 동작 방지
+
+		let alarmNo = $(this).data("alarmNo");
+		console.log("clsHref alarmNo : " + alarmNo);
+
+		var data = {
+			alarmNo : alarmNo
+		}
+
+		$.ajax({
+			type : "POST",
+			url : "/head/deleteAlarm.do",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("${_csrf.headerName}",
+						"${_csrf.token}");
+			},
+			data : JSON.stringify(data),
+			contentType : "application/json; charset=utf-8",
+			success : function(response) {
+				if (response === "OK") {
+					console.log("항목 삭제에 성공했습니다.");
+					$("#alims").empty();
+				} else {
+					console.log("항목 삭제에  실패했습니다.");
+				}
+			}
+		});
+	});
+
+	//알림 전체 삭제
+	$(document).on("click",".clearAll",function(event) {
+		event.preventDefault(); // 링크의 기본 동작 방지
+		let memId = $(this).data("memId");
+		var data = {
+			memId : $("#memId").val()
+		};
+		$.ajax({
+			type : "POST",
+			url : "/head/deleteclearAllAlarm.do",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("${_csrf.headerName}",
+						"${_csrf.token}");
+			},
+			data : JSON.stringify(data),
+			contentType : "application/json; charset=utf-8",
+			success : function(response) {
+				if (response === "OK") {
+					console.log("항목 삭제에 성공했습니다.");
+					$("#alims").empty();
+				} else {
+					console.log("항목 삭제에  실패했습니다.");
+				}
+			}
+		});
+	});
+});
 </script>

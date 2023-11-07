@@ -73,7 +73,7 @@ public class MypageController {
 			String memId, Model model
 			){
 		
-		PaginationInfoVO<BoardVO> pagingVO = new PaginationInfoVO<BoardVO>(5,5);
+		PaginationInfoVO<BoardVO> pagingVO = new PaginationInfoVO<BoardVO>();
 				
 		pagingVO.setCurrentPage(currentPage);  
 		int totalRecord = compliboardService.myBoardCount(pagingVO); //총 게시글 수
@@ -135,7 +135,7 @@ public class MypageController {
 			String memId, Model model
 			){
 		
-		PaginationInfoVO<BoardVO> pagingVO = new PaginationInfoVO<BoardVO>(5,5);
+		PaginationInfoVO<BoardVO> pagingVO = new PaginationInfoVO<BoardVO>();
 			
 		
 		if(StringUtils.isNotBlank(searchStatus)) {
@@ -275,6 +275,7 @@ public class MypageController {
 		
 		return "mypage/member/mypage/myreviewList";
 	}
+	
 	
 	/**
 	 * 회원페이지(Mypage) Aside 회원 게시판 조회 기능

@@ -1,5 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <div class="content-page">
 	<div class="content">
 
@@ -23,69 +25,356 @@
 			<!-- end page title -->
 
 			<!-- 탭 -->
-			<ul class="nav nav-tabs nav-bordered mb-3">
-				<li class="nav-item"><a href="#work" data-bs-toggle="tab"
-					aria-expanded="true" class="nav-link active"> <i
-						class="mdi mdi-home-variant d-md-none d-block"></i> <span
-						class="d-none d-md-block">근무</span>
-				</a></li>
-				<li class="nav-item"><a href="#" data-bs-toggle="tab"
-					aria-expanded="false" class="nav-link"> <i
-						class="mdi mdi-account-circle d-md-none d-block"></i> <span
-						class="d-none d-md-block">퇴직</span>
-				</a></li>
+			<ul class="nav nav-tabs nav-bordered mb-3 position-relative">
+				<li class="nav-item">
+					<a href="#work" data-bs-toggle="tab" aria-expanded="true" class="nav-link active"> 
+						<i class="mdi mdi-home-variant d-md-none d-block"></i> 
+						<span class="d-none d-md-block">근무</span>
+					</a>
+				</li>
+				<li class="nav-item">
+					<a href="#resign" data-bs-toggle="tab" aria-expanded="false" class="nav-link"> 
+						<i class="mdi mdi-account-circle d-md-none d-block"></i> 
+						<span class="d-none d-md-block">퇴직</span>
+					</a>
+				</li>
+				<li  class="position-absolute top-0 end-0">
+					<button type="button" class="btn btn-light me-2" id="delBtn">
+						<i class="mdi mdi-minus-circle me-2"></i>삭제
+					</button>
+					<button type="button" class="btn btn-primary " data-bs-toggle="modal" data-bs-target="#register">
+						<i class="mdi mdi-plus-circle me-2"></i>새직원 등록
+					</button>
+				</li>
 			</ul>
 
-
+			<!-- 근무탭 --------------------------------------------------------------------------------- -->
 			<div class="tab-content">
 				<div class="tab-pane show active" id="work">
 					<div class="row">
 			
-			            <div class="col-md-6 col-xxl-3">
-			                <div class="card">
-			                    <div class="card-body">
-			                    
-<!-- 			                        <div class="dropdown float-end"> -->
-<!-- 			                            <a href="#" class="dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false"> -->
-<!-- 			                                <i class="mdi mdi-dots-vertical"></i> -->
-<!-- 			                            </a> -->
-<!-- 			                            <div class="dropdown-menu dropdown-menu-end"> -->
-<!-- 			                                <a href="javascript:void(0);" class="dropdown-item">수정</a> -->
-<!-- 			                                <a href="javascript:void(0);" class="dropdown-item">삭제</a> -->
-<!-- 			                                <a href="javascript:void(0);" class="dropdown-item">퇴직</a> -->
-<!-- 			                            </div> -->
-<!-- 			                        </div> -->
-			
-			                        <div class="text-center">
-			                            <img src="${pageContext.request.contextPath }/resources/assets/images/users/avatar-2.jpg" class="rounded-circle avatar-md img-thumbnail" alt="friend">
-			                            <h4 class="mt-3 my-1"><a href="pages-profile-2.html" class="text-reset">홍길동</a></h4>
-			                            <hr class="bg-dark-lighten my-2">
-			                            <h5 class="mt-2 fw-semibold text-muted">총괄 매니저</h5>
-			                            <p class="mb-0 text-muted"><i class="mdi mdi-cellphone me-1"></i><b>연락처 :</b> 010-1234-5678</p>
-			                            <p class="mb-0 text-muted"><i class="mdi mdi-cake-variant me-1"></i><b>생년월일 :</b> 1990.08.01</p>
-			                            <p class="mb-0 text-muted"><i class="mdi mdi-cash me-1"></i><b>급여 :</b> 3,000,000 원</p>
-			                            <p class="mb-0 text-muted"><i class="mdi mdi-badge-account-horizontal me-1"></i><b>직원코드 :</b> E23022501</p>
-			                        
-			                            <div class="row mt-3">
-			                                <div class="col-4">
-			                                    <a href="javascript:void(0);" class="btn w-100 btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="보건증"><i class="mdi mdi-hospital-box-outline"></i></a>
-			                                </div>
-			                                <div class="col-4">
-			                                    <a href="javascript:void(0);" class="btn w-100 btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="이력서"><i class="mdi mdi-account-box-multiple-outline"></i></a>
-			                                </div>
-			                                <div class="col-4">
-			                                    <a href="javascript:void(0);" class="btn w-100 btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="재직증명서"><i class="mdi mdi-file-document-multiple-outline"></i></a>
-			                                </div>
-			                            </div>
-			                        </div>
-			                    </div>
-			                </div>
-			            </div> <!-- End col -->
-			
-			        </div> <!-- End row -->
-			
+						<!-- 근무중인 직원 -->
+						<c:set value="${empList }" var="empList"/>
+						<c:forEach items="${empList }" var="emp">
+							<c:if test="${emp.frcsEmpYn eq 'Y'}">
+					            <div class="col-md-6 col-xxl-3">
+					                <div class="card">
+					                    <div class="card-body">
+					                    
+					                    	<div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="check${emp.frcsEmpCd }" name="checkbox" value="${emp.frcsEmpCd }">
+                                                <label class="form-check-label" for="check${emp.frcsEmpCd }">&nbsp;</label>
+                                            </div>
+					
+					                        <div class="text-center">
+					                        	<div>
+					                        		<a href="#" class="text-body" data-bs-toggle="modal" data-bs-target="#detail${emp.frcsEmpCd }">
+					                            	<img src="${pageContext.request.contextPath }/resources/assets/images/users/avatar-2.jpg" class="rounded-circle avatar-md img-thumbnail" alt="friend"></a>
+					                        	</div>
+					                            <h4 class="mt-3 my-1">
+					                           		<a href="#" class="text-body" data-bs-toggle="modal" data-bs-target="#detail${emp.frcsEmpCd }">${emp.frcsEmpNm }</a>
+					                            </h4>
+					                            <hr class="bg-dark-lighten my-2">
+					                            <h5 class="mt-2 fw-semibold text-muted">${emp.frcsEmpRspofc }</h5>
+					                            <p class="mb-0 text-muted"><i class="mdi mdi-cellphone me-1"></i><b>연락처 :</b> ${emp.frcsEmpTelno }</p>
+					                            <p class="mb-0 text-muted"><i class="mdi mdi-cake-variant me-1"></i><b>생년월일 :</b> <fmt:formatDate value="${emp.frcsEmpBrdt }" pattern="yyyy-MM-dd"/></p>
+					                            <p class="mb-0 text-muted"><i class="mdi mdi-cash me-1"></i><b>급여 :</b> ${emp.frcsEmpSalary } 원</p>
+					                            <p class="mb-0 text-muted"><i class="mdi mdi-badge-account-horizontal me-1"></i><b>직원코드 :</b> ${emp.frcsEmpCd }</p>
+					                        
+					                            <div class="row mt-3">
+					                                <div class="col-4">
+					                                    <a href="javascript:void(0);" class="btn w-100 btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="보건증"><i class="mdi mdi-hospital-box-outline"></i></a>
+					                                </div>
+					                                <div class="col-4">
+					                                    <a href="javascript:void(0);" class="btn w-100 btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="이력서"><i class="mdi mdi-account-box-multiple-outline"></i></a>
+					                                </div>
+					                                <div class="col-4">
+					                                    <a href="javascript:void(0);" class="btn w-100 btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="재직증명서"><i class="mdi mdi-file-document-multiple-outline"></i></a>
+					                                </div>
+					                            </div>
+					                        </div>
+					                        
+					                    </div>
+					                </div>
+					            </div> <!-- End col -->
+							</c:if>
+						</c:forEach>
+						
+					</div> <!-- End row -->
 				</div>
 			</div>
+					
+			<!-- 퇴직탭 ---------------------------------------------------------------------------------- -->	
+			<div class="tab-content">
+				<div class="tab-pane show" id="resign">
+					<div class="row">
+						
+						<!-- 퇴직한 직원 -->
+						<c:forEach items="${empList }" var="emp">
+							<c:if test="${emp.frcsEmpYn eq 'N'}">
+					            <div class="col-md-6 col-xxl-3">
+					                <div class="card">
+					                    <div class="card-body">
+					                    
+					                    	<div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="check${emp.frcsEmpCd }" name="checkbox" value="${emp.frcsEmpCd }">
+                                                <label class="form-check-label" for="check${emp.frcsEmpCd }">&nbsp;</label>
+                                            </div>
+					
+					                        <div class="text-center">
+					                        	<div>
+					                        		<a href="#" class="text-body" data-bs-toggle="modal" data-bs-target="#detail${emp.frcsEmpCd }">
+					                            	<img src="${pageContext.request.contextPath }/resources/assets/images/users/avatar-2.jpg" class="rounded-circle avatar-md img-thumbnail" alt="friend"></a>
+					                            </div>
+					                            <h4 class="mt-3 my-1">
+					                            	<a href="#" class="text-body" data-bs-toggle="modal" data-bs-target="#detail${emp.frcsEmpCd }">${emp.frcsEmpNm }</a>
+					                            </h4>
+					                            <hr class="bg-dark-lighten my-2">
+					                            <h5 class="mt-2 fw-semibold text-muted">${emp.frcsEmpRspofc }</h5>
+					                            <p class="mb-0 text-muted"><i class="mdi mdi-cellphone me-1"></i><b>연락처 :</b> ${emp.frcsEmpTelno }</p>
+					                            <p class="mb-0 text-muted"><i class="mdi mdi-cake-variant me-1"></i><b>생년월일 :</b> <fmt:formatDate value="${emp.frcsEmpBrdt }" pattern="yyyy-MM-dd"/></p>
+					                            <p class="mb-0 text-muted"><i class="mdi mdi-cash me-1"></i><b>급여 :</b> ${emp.frcsEmpSalary } 원</p>
+					                            <p class="mb-0 text-muted"><i class="mdi mdi-badge-account-horizontal me-1"></i><b>직원코드 :</b> ${emp.frcsEmpCd }</p>
+					                        
+					                            <div class="row mt-3">
+					                                <div class="col-4">
+					                                    <a href="javascript:void(0);" class="btn w-100 btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="보건증"><i class="mdi mdi-hospital-box-outline"></i></a>
+					                                </div>
+					                                <div class="col-4">
+					                                    <a href="javascript:void(0);" class="btn w-100 btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="이력서"><i class="mdi mdi-account-box-multiple-outline"></i></a>
+					                                </div>
+					                                <div class="col-4">
+					                                    <a href="javascript:void(0);" class="btn w-100 btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="재직증명서"><i class="mdi mdi-file-document-multiple-outline"></i></a>
+					                                </div>
+					                            </div>
+					                            
+					                        </div>
+					                    </div>
+					                </div>
+					            </div> <!-- End col -->
+							</c:if>
+						</c:forEach>
+			
+			        </div> <!-- End row -->
+				</div>
+			</div>
+			
+			<!-- 직원 상세보기 모달 ------------------------------------------------------------------------- -->
+			<c:forEach items="${empList }" var="emp">
+				<div class="modal fade" id="detail${emp.frcsEmpCd }" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							
+							<div class="modal-header">
+								<h4 class="modal-title" id="myCenterModalLabel">${emp.frcsEmpNm } 직원 상세정보</h4>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+							</div>
+							
+							<div class="modal-body" id="modal">
+					        	<form action="/owner/empUpdate.do" id="udtForm" method="post">
+					        	
+					        		<input id="frcsEmpCd" name="frcsEmpCd" class="form-control" type="hidden" value="${emp.frcsEmpCd }">
+					        	
+					        		<div class="row mb-2">
+										<label class="col-3 col-form-label">프로필이미지</label>
+										<div class="col-9">
+											<input id="frcsEmpProfileimg" name="frcsEmpProfileimg" class="form-control" type="file">
+										</div>
+									</div>
+								
+									<div class="row mb-2">
+										<label class="col-3 col-form-label">이름</label>
+										<div class="col-9">
+											<input id="frcsEmpNmD" name="frcsEmpNm" type="text" value="${emp.frcsEmpNm }" class="form-control-plaintext" readonly>
+										</div> 
+									</div>
+									
+									<div class="row mb-2">
+										<label for="example-select" class="col-3 col-form-label">직책</label>
+										<div class="col-9">
+											<input id="frcsEmpRspofcD" name="frcsEmpRspofc" type="text" value="${emp.frcsEmpRspofc }" class="form-control-plaintext" readonly>
+										</div>
+									</div>
+									
+									<div class="row mb-2">
+										<label class="col-3 col-form-label">연락처</label>
+										<div class="col-9">
+											<input id="frcsEmpTelnoD" name="frcsEmpTelno" type="text" value="${emp.frcsEmpTelno }" class="form-control-plaintext" readonly data-toggle="input-mask" data-mask-format="000-0000-0000" placeholder="000-0000-0000" maxlength="13">
+										</div>	
+									</div>
+
+									<div class="row mb-2">
+										<label for="example-date" class="col-3 col-form-label">생년월일</label>
+										<div class="col-9">
+											<input id="frcsEmpBrdtD" name="frcsEmpBrdt" type="text" value="<fmt:formatDate value="${emp.frcsEmpBrdt }" pattern="yyyy-MM-dd"/>" class="form-control-plaintext" readonly >
+										</div>
+									</div>
+									
+									<div class="row mb-2">
+										<label for="salary" class="col-3 col-form-label">급여</label>
+										<div class="col-9 ">
+											<input id="frcsEmpSalaryD" name="frcsEmpSalary" type="text" value="${emp.frcsEmpSalary }" class="form-control-plaintext" readonly>
+										</div>
+									</div>
+									
+									<div class="row mb-2">
+										<label for="example-select" class="col-3 col-form-label">근무여부</label>
+										<div class="col-9">
+											<input id="frcsEmpYnD" name="frcsEmpYn" type="text" value="${emp.frcsEmpYn }" class="form-control-plaintext" readonly>
+										</div>
+									</div>
+									
+									<div class="row mb-2">
+										<label class="col-3 col-form-label">보건증</label>
+										<div class="col-9">
+											<input id="tableName" name="tableName" class="form-control" type="file" >
+										</div>
+									</div>
+									
+									<div class="row mb-2">
+										<label class="col-3 col-form-label">이력서</label>
+										<div class="col-9">
+<!-- 											<input class="form-control" type="file" id="inputGroupFile04"> -->
+										</div>
+									</div>
+									
+									<div class="row mb-2">
+										<label class="col-3 col-form-label">재직증명서</label>
+										<div class="col-9">
+<!-- 											<input class="form-control" type="file" id="inputGroupFile04"> -->
+										</div>
+									</div>
+								
+								<sec:csrfInput/>	
+					        	</form>
+							</div>
+							
+							<div class="modal-footer">
+								<button type="button" class="btn btn-light"	data-bs-dismiss="modal">닫기</button>
+ 								<button type="button" class="btn btn-light"	id="udtBtn">수정</button>
+ 								<button type="button" class="btn btn-light"	id="regBtn" style="display:none">저장</button>
+							</div>
+							
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal-dialog -->
+				</div>
+				<!-- /.modal -->
+			</c:forEach>
+			
+			<!-- 새직원 등록 모달 ------------------------------------------------------------------------- -->
+			<c:forEach items="${empList }" var="emp">
+				<div class="modal fade" id="register" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							
+							<div class="modal-header">
+								<h4 class="modal-title" id="myCenterModalLabel">새직원 등록</h4>
+								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+							</div>
+							
+							<div class="modal-body" id="modal">
+				        		<form class="ps-3 pe-3" action="/owner/empInsert.do" method="post" id="regForm">
+									
+									<div class="row mb-2">
+										<label class="col-3 col-form-label">프로필이미지</label>
+										<div class="col-9">
+											<input class="form-control" type="file" id="frcsEmpProfileimg" name="frcsEmpProfileimg">
+										</div>
+									</div>
+								
+									<div class="row mb-2">
+										<label class="col-3 col-form-label">이름</label>
+										<div class="col-9">
+											<input id="frcsEmpNmR" name="frcsEmpNm" type="text" class="form-control">
+										</div> 
+									</div>
+									
+									<div class="row mb-2">
+										<label for="example-select" class="col-3 col-form-label">직책</label>
+										<div class="col-9">
+											<select class="form-select" id="frcsEmpRspofcR" name="frcsEmpRspofc">
+										        <option>총괄매니저</option>
+										        <option>매니저</option>
+										        <option>아르바이트</option>
+										    </select>
+										</div>
+									</div>
+									
+									<div class="row mb-2">
+										<label class="col-3 col-form-label">연락처</label>
+										<div class="col-9">
+											<input id="frcsEmpTelnoR" name="frcsEmpTelno" type="text" class="form-control" data-toggle="input-mask" data-mask-format="000-0000-0000" placeholder="000-0000-0000" maxlength="13">
+										</div>	
+									</div>
+
+									<div class="row mb-2">
+										<label for="frcsEmpBrdt" class="col-3 col-form-label">생년월일</label>
+										<div class="col-9">
+											<input class="form-control" type="date" id="frcsEmpBrdtR" name="frcsEmpBrdt">
+										</div>
+									</div>
+									
+									<div class="row mb-2">
+										<label for="salary" class="col-3 col-form-label">급여</label>
+										<div class="col-9 ">
+											<div class="input-group input-group-merge">
+												<input id="frcsEmpSalaryR" name="frcsEmpSalary" type="text" class="form-control">
+												<div class="input-group-text" data-password="false">
+										            <span>원</span>
+										        </div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="row mb-2">
+										<label for="example-select" class="col-3 col-form-label">근무여부</label>
+										<div class="col-9">
+											<select class="form-select" id="frcsEmpYnR" name="frcsEmpYn">
+										        <option value="Y">근무</option>
+										        <option value="N">퇴직</option>
+										    </select>
+										</div>
+									</div>
+									
+									<div class="row mb-2">
+										<label class="col-3 col-form-label">보건증</label>
+										<div class="col-9">
+											<input class="form-control" type="file" id="tableName" name="tableName">
+										</div>
+									</div>
+									
+									<div class="row mb-2">
+										<label class="col-3 col-form-label">이력서</label>
+										<div class="col-9">
+											<input class="form-control" type="file" id="tableName" name="tableName">
+										</div>
+									</div>
+									
+									<div class="row mb-2">
+										<label class="col-3 col-form-label">재직증명서</label>
+										<div class="col-9">
+											<input class="form-control" type="file" id="tableName" name="tableName">
+										</div>
+									</div>
+									
+								<sec:csrfInput/>
+	                        	</form>
+							</div>
+							
+							<div class="modal-footer">
+								<button type="button" class="btn btn-light"	data-bs-dismiss="modal">닫기</button>
+ 								<button type="button" class="btn btn-light"	id="subBtn">등록</button>
+							</div>
+							
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal-dialog -->
+				</div>
+				<!-- /.modal -->
+			</c:forEach>
 			
 		</div>
 		<!-- container -->
@@ -93,3 +382,166 @@
 	<!-- content -->
 
 </div>
+
+<script type="text/javascript">
+$(function(){
+	var subBtn = $("#subBtn");
+	var udtBtn = $("#udtBtn");
+	var delBtn = $("#delBtn");
+	var regBtn = $("#regBtn");
+	var regForm = $("#regForm");
+	var udtForm = $("#udtForm");
+	
+	subBtn.on("click", function(){
+		regForm.submit();
+	});
+	
+	udtBtn.on('click', function() {
+		
+		// input 요소의 readonly 속성을 제거
+	    var inputElements = document.querySelectorAll('.form-control-plaintext');
+	    inputElements.forEach(function(inputElement) {
+	    	// class 속성을 변경하여 form-control로 변경
+	        inputElement.classList.remove('form-control-plaintext');
+	        inputElement.classList.add('form-control');
+	  		// readonly 속성 제거
+	        inputElement.removeAttribute('readonly');
+	    });
+		
+	    
+	    // 직책
+	    // 새로운 <select> 엘리먼트 생성
+	    var frcsEmpRspofc = document.getElementById('frcsEmpRspofcD');
+	    var selectElement = document.createElement('select');
+	    selectElement.className = 'form-select';
+	    selectElement.id = 'frcsEmpRspofcR';
+	    selectElement.name = 'frcsEmpRspofc';
+	    selectElement.value = frcsEmpRspofc.value;
+	    
+	    // <select> 엘리먼트에 옵션 추가
+	    var options = ['총괄매니저', '매니저', '아르바이트'];
+	    for (var i = 0; i < options.length; i++) {
+	        var option = document.createElement('option');
+	        option.value = options[i];
+	        option.text = options[i];
+	        selectElement.appendChild(option);
+	    }
+	    
+	    // 기존의 <input> 엘리먼트를 찾아 교체
+	    var inputElement = document.getElementById('frcsEmpRspofcD');
+	    var parentElement = inputElement.parentElement;
+	    parentElement.replaceChild(selectElement, inputElement);
+	    
+	    
+	    // 생년월일
+	    var frcsEmpBrdtD = document.getElementById("frcsEmpBrdtD");
+	    frcsEmpBrdtD.type = "date";
+	    
+	    
+	    // 급여
+		// frcsEmpSalaryD 요소를 가져옵니다
+	    var frcsEmpSalaryD = document.getElementById("frcsEmpSalaryD");
+
+	    // frcsEmpSalaryR 요소를 만들기
+	    var inputGroupDiv = document.createElement("div");
+	    inputGroupDiv.className = "input-group input-group-merge";
+	    
+	    var salaryElement = document.createElement("input");
+	    salaryElement.id = "frcsEmpSalaryR";
+	    salaryElement.name = "frcsEmpSalary";
+	    salaryElement.type = "text";
+	    salaryElement.className = "form-control";
+	    salaryElement.value = frcsEmpSalaryD.value;
+
+	    var inputGroupTextDiv = document.createElement("div");
+	    inputGroupTextDiv.className = "input-group-text";
+	    inputGroupTextDiv.setAttribute("data-password", "false");
+
+	    var spanElement = document.createElement("span");
+	    spanElement.textContent = "원";
+
+	    // 생성된 요소들을 조합하여 DOM에 추가합니다
+	    inputGroupTextDiv.appendChild(spanElement);
+	    inputGroupDiv.appendChild(salaryElement);
+	    inputGroupDiv.appendChild(inputGroupTextDiv);
+
+	    // frcsEmpSalaryD 요소를 대체합니다
+	    frcsEmpSalaryD.parentNode.replaceChild(inputGroupDiv, frcsEmpSalaryD);
+	    
+	    
+	    // 근무여부
+		// frcsEmpYnD 요소를 가져옵니다
+	    var frcsEmpYnD = document.getElementById("frcsEmpYnD");
+
+	    // frcsEmpYnR 요소를 만들기
+	    var selectElement2 = document.createElement("select");
+	    selectElement2.className = "form-select";
+	    selectElement2.id = "frcsEmpYnR";
+	    selectElement2.name = "frcsEmpYn";
+
+	    // 옵션 요소들을 생성하여 추가합니다
+	    var options2 = [
+	        { value: "Y", text: "근무" },
+	        { value: "N", text: "퇴직" }
+	    ];
+
+	    options2.forEach(function(option) {
+	        var option2 = document.createElement("option");
+	        option2.value = option.value;
+	        option2.textContent = option.text;
+	        selectElement2.appendChild(option2);
+	    });
+
+	    // frcsEmpYnD 요소를 대체합니다
+	    frcsEmpYnD.parentNode.replaceChild(selectElement2, frcsEmpYnD);
+	    
+	    // 수정버튼 숨기기
+	    var udtBtn2 = document.getElementById("udtBtn");
+	    udtBtn2.style.display = 'none';
+	    
+	    // 저장버튼 나타내기
+	    var regBtn2 = document.getElementById("regBtn");
+	    regBtn2.style.display = 'block';
+	});
+	
+	// 수정>저장 업데이트
+	regBtn.on('click', function() {
+		udtForm.submit();
+	});
+	
+	// 선택 삭제
+	delBtn.on('click', function() {
+		var selectedItems = [];
+		
+		 $("input:checkbox[name='checkbox']:checked").each(function () {
+             selectedItems.push({ frcsEmpCd: $(this).val()});
+         });
+		 
+		 if (selectedItems.length > 0) {
+             $.ajax({
+                 type: "POST",
+                 url: "/owner/empDelete.do",
+                 beforeSend: function(xhr){
+     				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+     			 },
+                 data: JSON.stringify(selectedItems),
+                 contentType: "application/json;charset=UTF-8",
+                 success: function (response) {
+                     console.log("삭제 성공:", response);
+                     alert("삭제되었습니다!");
+                     location.reload();
+                 },
+                 error: function (error) {
+                     console.error("삭제 실패:", error);
+                     alert("다시 시도해주세요!");
+                     
+                 }
+             });
+         } else {
+             alert("삭제할 리뷰를 선택하세요.");
+         }
+		 
+	});
+	
+});
+</script>

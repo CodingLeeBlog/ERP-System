@@ -12,15 +12,15 @@ public interface IMemberReviewService {
 
 	public List<ReviewVO> myReviewList(String memId);
 
-	public int selectMemberReviewAlarm(String ansId);
+	//일반홈페이지 알림
+	public List<AlarmVO> selectAlarmList(String memId);
 
-	public List<AlarmVO> selectMemberReviewAlarmList(String ansId);
+	public void updateAlarm(int alarmNo);
 
-	public void updateMemberReviewAlarm(int alarmNo);
+	public ServiceResult deleteAlarm(int alarmNo);
 
-	public ServiceResult deleteMemberReviewAlarm(int alarmNo);
+	public ServiceResult deleteclearAllAlarm(String memId);
 
-	public ServiceResult deleteclearAllAlarm(String ansId);
 
 
 }

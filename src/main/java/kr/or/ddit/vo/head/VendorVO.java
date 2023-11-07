@@ -17,18 +17,25 @@ public class VendorVO {
 	private String vdEmail;
 	private String vdCategory;
 
-	private String vdprodCd;
-	private String vdprodName;
+
 	private String hdmaxQy;
 	private String hdremainQy;
 	private String hdforwardPrice;
 	private String hdrtrcvPrice;
+	private String hdprodLifestartday;
+	private String hdprodLifeendday;
 	
+	private String vdprodCd;
+	private String vdprodName;
+	private String vdmaxQy;
 	private String vdremainQy;
 	private String vdforwardPrice;
+	private String vdrtrcvPrice;
 	private String vdprodLifestartday;
 	private String vdprodLifeendday;
 	private String vdEtc;
+	
+
 	
 	private String result;
 	private List<HeadInventoryVO> headInventoryList;

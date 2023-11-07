@@ -2,6 +2,8 @@ package kr.or.ddit.mapper.owner;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import kr.or.ddit.vo.owner.FrcsDailySalesVO;
 import kr.or.ddit.vo.owner.FrcsMenuIngredientVO;
 import kr.or.ddit.vo.owner.FrcsMenuVO;
@@ -39,6 +41,18 @@ public interface FrcsDailyMapper {
 	
 	// 일일 매출 삭제 전 숫자 카운트
 	public List<FrcsDailySalesVO> getBeforeCount(FrcsDailySalesVO salesVO);
+	
+	// 모달창 안 메뉴 검색
+	public List<FrcsMenuVO> getMenuSearchList(@Param("frcsId")String frcsId, @Param("inputText")String inputText);
+	
+	// 일일 매출 수정
+	public int updateSales(FrcsDailySalesVO salesVO);
+	
+	// 주간 차트를 위한 데이터 불러오기
+	public int getDate(FrcsDailySalesVO salesVO);
+	
+	// 날짜, 가맹점ID, 메뉴코드가 일치하는 데이터들 중, 가장 최신의 데이터 1개를 가져온다.
+	public String selectRecentDelivery(FrcsMenuIngredientVO ingredVO);
 
 
 

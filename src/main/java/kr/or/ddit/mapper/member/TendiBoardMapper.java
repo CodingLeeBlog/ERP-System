@@ -28,5 +28,10 @@ public interface TendiBoardMapper {
 
 	public HdBoardAnswerVO selectBoardAnswer(int tableNo);
 
+	//게시글 등록 알림 데이터 넣기
+	public void insertTendiAlarm(AlarmVO alarmVO);
+
+	public String getReceiveMemId(int tableNo);
+
 	
 }

@@ -18,23 +18,13 @@ public interface ICompliBoardService {
 
 	public BoardVO selectBoard(int tableNo);
 
-//	public ServiceResult insertBoard(HttpServletRequest req, BoardVO boardVO);
-
 	public ServiceResult deleteBoard(HttpServletRequest req, int tableNo);
 
 	public ServiceResult updateBoard(HttpServletRequest req, BoardVO boardVO);
 
 	public List<BoardVO> myBoardList(PaginationInfoVO<BoardVO> pagingVO);
 
-	public void updateAlarm(int alarmNo);
-
-	public int selectAlarm(String memId);
-
-	public List<AlarmVO> selectAlarmList(String memId);
-
-	public int countAlarm(String tableNo);
-
-	public ServiceResult insertBoard(HttpServletRequest req, BoardVO boardVO, AlarmVO alarmVO);
+	public ServiceResult insertBoard(HttpServletRequest req, BoardVO boardVO);
 
 	public int myBoardCount(PaginationInfoVO<BoardVO> pagingVO);
 	

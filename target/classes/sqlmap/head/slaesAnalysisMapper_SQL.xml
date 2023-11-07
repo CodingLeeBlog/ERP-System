@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.SlaesAnalysisMapper">
+
+<select id="headfrcsbillChart" resultType="headsalesTotalVO">
+select
+    sum(frcs_amt) as frcs_amt
+    , sum(frcs_rowal) as frcs_rowal
+    , sum(order_amt) as order_amt
+from frcsbill
+</select>
+
+<select id="headfrcsdailysellingChart" resultType="headsalesTotalVO">
+select 
+    sum(a.frcsorder_qy * (c.hdforward_price - c.hdrtrcv_price)) as selng_price
+from frcsorder_detail a
+    left join frcsorder b 
+on a.frcsorder_no = b.frcsorder_no
+    left join head_inventory c
+on a.vdprod_cd = c.vdprod_cd
+    where b.frcsorder_confm = '승인'
+</select>
+
+</mapper>

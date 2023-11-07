@@ -58,7 +58,7 @@ public class StoreServiceImpl implements IStoreService{
 		
 		// 가맹점재고 수량 업데이트
 		List<InventoryUpdateVO> frcs = mapper.selectFrcsQy(frcsorderNo);
-		for (InventoryUpdateVO qy : frcs) {
+		for (InventoryUpdateVO  qy : frcs) {
 			String vdprodCd = qy.getVdprodCd();
 			int invntryQy = qy.getInvntryQy();
 			int frcsorderQy = qy.getFrcsorderQy();

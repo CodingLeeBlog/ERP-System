@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/head")
 public class MaintenanceCostController {
 
-	@RequestMapping(value = "/maintenanceCost.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/maintenanceCost.do")
 	public String maintenanceCost(Model model) {
 		log.info("maintenanceCost() GET -> 시작");
 		return "head/store/maintenanceCost";

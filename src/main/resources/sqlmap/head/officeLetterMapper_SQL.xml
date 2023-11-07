@@ -65,9 +65,9 @@
 			select seq_headletter.nextval from dual
 		</selectKey>
 	  insert into head_letter (
-	    hd_ltno, hd_lttitle, hd_ltsender, hd_ltreciever, hd_ltcontent, hd_ltsdate, hd_ltrdate, hd_ltstate, table_name
+	    hd_ltno, hd_lttitle, hd_ltcontent, hd_ltsdate, hd_ltstate, table_name
 	  ) values (
-	    #{hdLtno}, #{hdLttitle}, #{hdLtsender}, #{hdLtreciever}, #{hdLtcontent}, sysdate, sysdate, '저장', 'officeLetter'
+	    #{hdLtno}, #{hdLttitle}, #{hdLtcontent}, sysdate, '저장', 'officeLetter'
 	  )
 	</insert>
 	
@@ -75,73 +75,36 @@
 		select frcs_name
 		from franchise
 	</select>
-<!-- 	<select id="menuDetail" parameterType="string" resultMap="menuMap"> -->
-<!-- 	    select -->
-<!-- 	        hm.menu_cd, -->
-<!-- 	        hm.menu_name, -->
-<!-- 	        hm.menu_cg, -->
-<!-- 	        hm.menu_price, -->
-<!-- 	        hm.menu_des, -->
-<!-- 	        hm.table_name, -->
-<!-- 	        a.attach_orgname, -->
-<!-- 	        a.attach_savename, -->
-<!-- 	        a.attach_mime, -->
-<!-- 	        a.attach_size, -->
-<!-- 	        a.thumb_img -->
-<!-- 	    from head_menu hm -->
-<!-- 	    left join attach a on hm.menu_cd = a.table_pk and a.table_name = 'menu' -->
-<!-- 	    where hm.menu_cd = #{menuCd} -->
-<!-- 	</select> -->
-
 	
-<!-- 	<select id="selectFileInfo" parameterType="int" resultType="attachVO"> -->
-<!-- 		select -->
-<!-- 			 ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, ATTACH_SIZE, TABLE_NAME, TABLE_PK -->
-<!-- 		from attach -->
-<!-- 		where ATTACH_NO = #{attachNo} -->
-<!-- 	</select> -->
-		
-<!--    <select id="selectMenuFile" parameterType="int" resultType="attachVO"> -->
-<!-- 		select -->
-<!-- 			ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME,  -->
-<!-- 			ATTACH_SIZE, TABLE_NAME -->
-<!-- 		from attach -->
-<!-- 		where ATTACH_NO = #{attachNo} -->
-<!-- 		and table_name = 'menu' -->
-<!-- 	</select> -->
-
-
-<!-- 	<update id="menuUpdate" parameterType="menuVO"> -->
-<!-- 		update head_menu -->
-<!-- 		set -->
-<!-- 			menu_cd = #{menuCd}, -->
-<!-- 			menu_name = #{menuName}, -->
-<!-- 			menu_cg = #{menuCg}, -->
-<!-- 			menu_des = #{menuDes}, -->
-<!-- 			menu_price = #{menuPrice}, -->
-<!-- 			menu_rsdate = sysdate, -->
-<!-- 			menu_state = '활성' -->
-<!-- 		where menu_cd= #{menuCd}  -->
-<!-- 	</update> -->
+	<insert id="officeLetterAttachRegister" parameterType="attachVO" useGeneratedKeys="true">
+	  <selectKey keyProperty="attachNo" resultType="int" order="BEFORE">
+	   	select seq_attach.nextval, 1 FROM dual
+	  </selectKey>
+	  INSERT INTO attach (
+	    ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, ATTACH_SIZE, TABLE_NAME, TABLE_PK
+	  )
+	  VALUES (
+	    #{attachNo}, #{fileNo}, #{attachOrgname}, #{attachSavename}, #{attachMime}, #{attachSize}, 'officeLetter', #{tablePk}
+	  )
+	</insert>
 	
-<!-- 	<delete id="menuDelete" parameterType="map"> -->
-<!-- 		delete from head_menu -->
-<!-- 		where menu_cd = #{menuCd} -->
-<!-- 	</delete> -->
+	<delete id="officeLetterDelete" parameterType="map">
+		delete from head_letter
+		where hd_ltno = #{hdLtno}
+	</delete>
 	
-<!-- 	<select id="getMenuListByCategory" parameterType="pagingVO" resultMap="menuMap"> -->
-<!-- 		WITH T AS -->
-<!-- 		( -->
-<!-- 		    SELECT ROW_NUMBER() OVER(ORDER BY menu_name) RNUM, n.menu_cd, n.menu_name, n.menu_cg, n.menu_des, n.menu_price, n.menu_rsdate, n.menu_state, -->
-<!-- 		    nf.ATTACH_NO, nf.FILE_NO, nf.ATTACH_ORGNAME, nf.ATTACH_SAVENAME, nf.ATTACH_MIME, nf.ATTACH_SIZE, nf.THUMB_IMG, nf.table_pk -->
-<!-- 		    FROM head_menu N LEFT OUTER JOIN ATTACH NF ON(N.menu_cd = NF.TABLE_PK) -->
-<!-- 		    WHERE -->
-<!-- 		    N.menu_cg = #{searchWord} -->
-<!-- 		    and N.menu_state = '활성' -->
-<!-- 		) -->
-<!-- 		SELECT * FROM T -->
-<!-- 		WHERE T.RNUM BETWEEN (#{currentPage}*6 - 5) AND (#{currentPage}*6) -->
-<!-- 	</select> -->
-
+	<update id="officeLetterUpdate" parameterType="officeLetterVO">
+		UPDATE head_letter AS hl
+		SET
+		    hl.hd_ltsender = '관리자',
+		    hl.hd_ltrdate = sysdate
+		WHERE
+		    hl.hd_ltno = #{hdLtno}
+		    AND EXISTS (
+		        SELECT 1
+		        FROM franchise AS f
+		        WHERE f.frcsName = hl.hd_ltreciever
+		    );
+	</update>
 
 </mapper>

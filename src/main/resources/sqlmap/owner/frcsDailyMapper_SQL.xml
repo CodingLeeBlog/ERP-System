@@ -26,6 +26,7 @@
 			    where frcs_id = #{frcsId}
 			    group by trunc(selng_date, 'DD')
 			) 
+			where 1=1
 		<include refid="dateSearch"/>
 	</select>
 	
@@ -101,24 +102,86 @@
 		insert into delivery(
 			dlivy_date, frcs_id, vdprod_cd, dlivy_qy, dlivy_price
 		)values(
-			#{selngDate}, #{frcsId}, #{vdprodCd}, (#{ingreQy}*#{menuQy}), #{hdforwardPrice}
+			#{selngDate2}, #{frcsId}, #{vdprodCd}, (#{ingreQy}*#{menuQy}), #{hdforwardPrice}
 		)
 	</insert>
 	
 	<!-- 일일 매출 수정을 위해 이미 들어가 있는 정보 추출 -->
 	<select id="getUpdateForm" parameterType="salesVO" resultType="salesVO">
-		select h.menu_cd, sale_yn, f.frcs_id, h.menu_name, menu_price,selng_qy, selng_date
+		select h.menu_cd, sale_yn, f.frcs_id, h.menu_name, menu_price, selng_qy, selng_date
 		from frcs_menu f, head_menu h, dailyselling d
 		where f.frcs_id = #{frcsId} and h.menu_cd= f.menu_cd 
        		 and f.menu_cd = d.menu_cd 
        		 and d.frcs_id = f.frcs_id and trunc(selng_date,'DD') = trunc(#{selngDate},'DD')
 	</select>
 	
-	<!-- 일일 매출 삭제 전 숫자 카운트 -->
+	<!-- 일일 매출 수정 전 숫자 카운트 -->
 	<select id="getBeforeCount" parameterType="salesVO" resultType="salesVO">
 		select menu_cd, selng_qy
 		from dailyselling
-		where frcs_id = #{frcsId} and menu_cd = #{menuCd}
+		where frcs_id = #{frcsId} and menu_cd = #{menuCd} and trunc(selng_date,'DD') =  trunc(#{selngDate},'DD')
+	</select>
+	
+	<!-- 모달창 안 메뉴검색 -->
+<!-- 	<select id="getMenuSearchList" parameterType="string" resultType="frcsMenuVO"> -->
+<!-- 		select h.menu_cd, sale_yn, frcs_id, h.menu_name, menu_price, menu_cg -->
+<!-- 		from frcs_menu f, head_menu h -->
+<!-- 		where frcs_id = #{frcsId} and h.menu_cd= f.menu_cd -->
+<!-- 		and h.menu_name like '%' || #{inputText} || '%'  -->
+<!-- 	</select> -->
+	
+	<!-- 매출 내역 업데이트 --> 
+	<update id="updateSales" parameterType="salesVO">
+		update dailyselling
+			set selng_qy = #{selngQy}
+		where frcs_id = #{frcsId} and trunc(selng_date, 'DD') = trunc(#{selngDate},'DD')
+		and menu_cd = #{menuCd}
+	</update>
+	
+	<!-- 날짜, 가맹점ID, 메뉴코드가 일치하는 데이터들 중, 가장 최신의 데이터 1개를 가져온다. -->
+	<select id="selectRecentDelivery" parameterType="ingredVO" resultType="string">
+<!-- 		select  -->
+<!-- 			to_char(dlivy_date, 'yyyy-MM-dd HH24:MI:SS.FF') dlivy_date -->
+<!-- 		from delivery -->
+<!-- 		where DLIVY_DATE between #{selngDate} and #{selngDate} -->
+<!-- 		and FRCS_ID = #{frcsId} -->
+<!-- 		and VDPROD_CD = #{vdprodCd} -->
+<!-- 		<![CDATA[ -->
+<!--  			and rownum < 2   -->
+<!--   		]]>  -->
+<!-- 		order by 1 desc -->
+
+<!-- 			select to_char(dlivy_date, 'yyyy-MM-dd HH24:MI:SS.FF') dlivy_date  -->
+<!-- 			from delivery  -->
+<!-- 			where trunc(dlivy_date,'DD') = #{selngDate} and -->
+<!-- 			frcs_id = #{frcsId} and vdprod_cd = #{vdprodCd} -->
+<!-- 		<![CDATA[ -->
+<!-- 			and rownum < 2   -->
+<!--   		]]> -->
+<!-- 			order by 1 desc -->
+			
+		SELECT TO_CHAR(dlivy_date, 'yyyy-MM-dd HH24:MI:SS.FF') dlivy_date
+		FROM (
+		  SELECT dlivy_date
+		  FROM delivery
+		  WHERE TRUNC(dlivy_date, 'DD') = #{selngDate}
+		  AND frcs_id = #{frcsId}
+		  AND vdprod_cd = #{vdprodCd}
+		  ORDER BY dlivy_date DESC
+		)
+		<![CDATA[
+ 		WHERE ROWNUM < 2
+ 		]]> 
+	</select>
+	
+	<!-- 주간 차트를 위한 데이터 -->
+	<select id="getDate" parameterType="salesVO" resultType="int">
+	SELECT 
+		(SELECT NVL(SUM(selng_price * selng_qy), 0)
+		FROM dailyselling
+		WHERE TRUNC(selng_date, 'DD') = TRUNC(sysdate, 'IW') + #{cnt}
+		AND frcs_id = #{frcsId}) 
+	FROM dual
 	</select>
 	
 </mapper>

@@ -80,9 +80,12 @@ public class OwnerPurchaseSalesController {
         // 가맹점 메뉴 정보
         List<FrcsMenuVO> frcsMenuList = service.getMenu(frcsId);
         
+        
         model.addAttribute("frcsId",frcsId);
 //        model.addAttribute("dailySaleList", dailySaleList);	// 가맹점 일일매출
         model.addAttribute("frcsMenuList", frcsMenuList);	// 가맹점 메뉴정보
+        
+        
         
         return "owner/purchaseSales/dailySales";
     }
@@ -103,7 +106,6 @@ public class OwnerPurchaseSalesController {
 	public ResponseEntity<ServiceResult> insertDailySales(@RequestBody List<FrcsDailySalesVO> salesList){
 		
 		log.info("FrcsDailySalesVO : " + salesList);
-		
 		ServiceResult result = service.insertDailySales(salesList);
 		
 		return new ResponseEntity<ServiceResult>(result,HttpStatus.OK);
@@ -131,9 +133,6 @@ public class OwnerPurchaseSalesController {
 		saleVO.setSelngDate(selngDate);
 		saleVO.setFrcsId(frcsId);
 		
-//		log.info("salesVO.getSelngDate()" + saleVO.getSelngDate());
-//		log.info(saleVO.getFrcsId());
-		
 		List<FrcsDailySalesVO> insertList = service.getUpdateForm(saleVO);
 		
 		return new ResponseEntity<List<FrcsDailySalesVO>>(insertList, HttpStatus.OK);
@@ -141,12 +140,37 @@ public class OwnerPurchaseSalesController {
 	
 	// 일일 매출 수정
 	@ResponseBody
-	@RequestMapping(value="/dailySalesUpdate.do", method = RequestMethod.POST)
+	@RequestMapping(value="/dailyUpdate.do", method = RequestMethod.POST)
 	public ResponseEntity<ServiceResult> updateDailySales(@RequestBody List<FrcsDailySalesVO> salesList){
 	
 		ServiceResult result = service.updateDailySales(salesList);
 		
 		return new ResponseEntity<ServiceResult>(result,HttpStatus.OK);
 	}
+	
+	// 주간차트
+	@ResponseBody
+	@RequestMapping(value="/dailySalesChart.do", method = RequestMethod.POST)
+	public ResponseEntity<int[]> chartDate(String frcsId){
+		
+		int[] chartArr = service.getDate(frcsId);
+		
+		return new ResponseEntity<int[]>(chartArr,HttpStatus.OK);
+	}
+	
+	
+//	
+//	// 메뉴 검색
+//	@ResponseBody
+//	@RequestMapping(value="/menuSearch.do", method = RequestMethod.POST)
+//	public ResponseEntity<List<FrcsMenuVO>> menuSearch(@RequestBody Map<String, String> map){
+//		
+//		String frcsId = map.get("frcsId").toString();
+//		String inputText = map.get("inputText").toString();
+//		
+//		List<FrcsMenuVO> menuList = service.getMenuSearchList(frcsId,inputText);
+//		
+//		return new ResponseEntity<List<FrcsMenuVO>>(menuList, HttpStatus.OK);
+//	}
 	
 }

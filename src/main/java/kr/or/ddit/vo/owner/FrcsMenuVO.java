@@ -26,4 +26,6 @@ public class FrcsMenuVO {
 
 	public List<AttachVO> attachList;
 	public List<MenuVO> menuList;
+	
+	private Date selngDate;
 }

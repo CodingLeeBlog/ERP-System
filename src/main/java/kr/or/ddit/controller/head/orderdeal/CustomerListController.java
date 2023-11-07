@@ -98,7 +98,7 @@ public class CustomerListController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/vendorRegister.do", produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/vendorRegister.do", consumes = "application/json; charset=UTF-8")
 	public ResponseEntity<String> vendorRegister(
 			@RequestBody List<VendorVO> vendorVO,
 			Model model) {
@@ -107,6 +107,8 @@ public class CustomerListController {
 		if(vendorVO.size() != 0) {
 			for (VendorVO data : vendorVO) {
 				log.info("vdprodCd : " + data.getVdprodCd() + ", vdCode : " + data.getVdCode() + ", vdprodName : " + data.getVdprodName());
+				log.info("vdremainQy : " + data.getVdremainQy() + ", vdforwardPrice : " + data.getVdforwardPrice() + ", vdprodLifestartday : " + data.getVdprodLifestartday());
+				log.info("vdprodLifeendday : " + data.getVdprodLifeendday() + ", vdrtrcvPrice : " + data.getVdrtrcvPrice() + ", vdmaxQy : " + data.getVdmaxQy());
 			}
 		}
 		

@@ -11,15 +11,17 @@ public class AlarmVO {
 	private Date alarmDate;
 	private String alarmRead;
 	private String alarmContent;
-	private String memId;
 	private String alarmUrl;
-	private String frcsId;
-	private String ansId;
-	
+	private String memId; //보내는 사람 memId
+	private String receiveMemId; //받는 사람 memId
+	private String tblName;	//테이블명
+	private String tblNo;	//그 테이블의 기본키
 
-	//alarmUrl에 넣기 위한 변수
+	//alarm에 넣기 위한 변수
 	private int tableNo;
 	private int reviewNo;
+	private String resvNo;
+	private String ansNo;
 	
 	
 }

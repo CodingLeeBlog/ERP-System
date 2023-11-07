@@ -12,8 +12,13 @@ public class HeadInventoryVO {
 	private String hdrtrcvPrice;
 	private String vdCode;
 	
+	private String vdmaxQy;
 	private String vdremainQy;
 	private String vdforwardPrice;
+	private String vdrtrcvPrice;
+	private String hdprodLifestartday;
+	private String hdprodLifeendday;
+	
 	private String vdprodLifestartday;
 	private String vdprodLifeendday;
 }

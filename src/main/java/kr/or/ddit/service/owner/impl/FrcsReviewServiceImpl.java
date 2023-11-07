@@ -12,6 +12,7 @@ import kr.or.ddit.mapper.owner.FrcsReviewMapper;
 import kr.or.ddit.service.owner.IFrcsReviewService;
 import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.owner.FrcsReviewVO;
+import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 
 @Service
 public class FrcsReviewServiceImpl implements IFrcsReviewService {
@@ -29,15 +30,24 @@ public class FrcsReviewServiceImpl implements IFrcsReviewService {
 		ServiceResult result = null;
 		int status = mapper.reviewAnsInsert(frcsReviewVO);
 		if(status > 0) {
+			// 리뷰 답변 알람데이터 넣기
+			String frcsId = frcsReviewVO.getFrcsId(); //답변자의 가맹점 코드
+			String ansNo = frcsReviewVO.getAnsNo(); // 답변 번호
+			alarmVO.setAnsNo(ansNo);
+			//1) FROM
+			String memIdfrcs = this.mapper.getMemFrcs(frcsId); //가맹점 코드를 mem_Id로 만들기 위함
+			alarmVO.setMemId(memIdfrcs);
+			//2) WHAT
+			alarmVO.setTblName("REVIEW_ANSWER");
+			alarmVO.setTblNo(ansNo);
+			//3) TO
+			String receiveMemId = this.mapper.getReceiveMemId(ansNo);
 			
-			// 알람데이터 넣기 
-			String memId = frcsReviewVO.getMemId(); // 작성자 가져오기 
-			String ansId = frcsReviewVO.getAnsId(); // 답변자 가져오기 
-			frcsReviewVO.setMemId(memId);
-			frcsReviewVO.setAnsId(ansId);
+			alarmVO.setReceiveMemId(receiveMemId);
 			
 			// 알람데이터 넣기 
 			mapper.insertAlarm(alarmVO);
+			
 			
 			result = ServiceResult.OK;
 		}else {
@@ -86,15 +96,10 @@ public class FrcsReviewServiceImpl implements IFrcsReviewService {
 	}
 
 
+	//가맹점 알림 시작
 	@Override
-	public int selectAlarm(String frcsId) {
-		int alarmCnt = mapper.selectAlarm(frcsId);
-		return alarmCnt;
-	}
-
-	@Override
-	public List<AlarmVO> selectAlarmList(String frcsId) {
-		return mapper.selectAlarmList(frcsId);
+	public List<AlarmVO> selectAlarmList(String memId) {
+		return mapper.selectAlarmList(memId);
 	}
 
 	@Override
@@ -102,11 +107,12 @@ public class FrcsReviewServiceImpl implements IFrcsReviewService {
 		mapper.updateAlarm(alarmNo);
 	}
 
+	//1개 삭제
 	@Override
-	public ServiceResult clearAllNotifications(String frcsId) {
+	public ServiceResult deleteAlarm(int alarmNo) {
 		ServiceResult result = null;
 		
-		int status = mapper.clearAllNotifications(frcsId);
+		int status = mapper.deleteAlarm(alarmNo);
 		
 		if(status > 0) {
 			result = ServiceResult.OK;
@@ -117,4 +123,29 @@ public class FrcsReviewServiceImpl implements IFrcsReviewService {
 		return result;
 	}
 	
+	//전체 삭제
+	@Override
+	public ServiceResult deleteclearAllAlarm(String memId) {
+		ServiceResult result = null;
+		
+		int status = mapper.deleteclearAllAlarm(memId);
+		
+		if(status > 0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int selectReviewCount(OwnerPaginationInfoVO<FrcsReviewVO> pagingVO) {
+		return mapper.selectReviewCount(pagingVO);
+	}
+
+	@Override
+	public List<FrcsReviewVO> selectReviewList(OwnerPaginationInfoVO<FrcsReviewVO> pagingVO) {
+		return mapper.selectReviewList(pagingVO);
+	}
 }

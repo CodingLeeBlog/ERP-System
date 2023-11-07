@@ -130,6 +130,9 @@
 				                                    </td>
 				                                    <td style="text-align:center" class="orderConfm">${order.frcsOrderConfm }</td>
 				                                    <td style="text-align:center">
+				                                    	<c:if test="${order.frcsOrderConfm eq '승인' }">
+					                                	    <button type="button" class="btn btn-light" disabled>승인 완료</button>
+				                                    	</c:if>
 				                                    	<c:if test="${order.frcsOrderConfm eq '대기' }">
 					                                	    <button type="button" class="btn btn-danger cancelModalBtn">주문 취소</button>
 				                                    	</c:if>

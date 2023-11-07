@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.OpenPlanMapper">
+
+	<sql id="openPlanSearch">
+		<if test="searchType != null and searchType == 'title' ">
+			and (frcs_id like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+
+
+ 	<select id="selectOpenPlanCount" parameterType="pagingVO" resultType="int">
+		select count(frcs_id)
+		from fcmg
+		where 1=1
+		<include refid="openPlanSearch"/>
+	</select>
+
+	<select id="selectOpenPlanList" parameterType="pagingVO" resultType="openPlanVO">
+		select 
+			b.*
+		from (
+			select 
+				a.*, row_number() over (order by frcs_id) rnum
+			from(
+				select c.frcs_id,
+			        f.frcs_name,
+			        f.frcs_cdate,
+			        f.frcs_insdate,
+			        f.frcs_inedate,
+			        f.frcs_opdate,
+			        c.fcmg_hefc,
+			        c.fcmg_iprgst,
+			        c.fcmg_remark
+				from fcmg c
+				left join franchise f on c.frcs_id = f.frcs_id 
+			)a
+		)b	
+		<![CDATA[	
+			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+		]]>
+	</select>
+	
+
+</mapper>

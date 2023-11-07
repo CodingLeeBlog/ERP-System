@@ -24,7 +24,6 @@
 							<div class="col-1">접수일</div>
 							<div class="col-1">예약 일자</div>
 							<div class="col">비고</div>
-							<div class="col-1">리뷰</div>
 							<div class="col-1">결제 상태</div>
 							<div class="col-1">예약 상태</div>
 					</div>
@@ -62,11 +61,6 @@
 										</div>
 										<div class="col">
 											${res.resvNote}
-										</div>
-										<div class="col-1">
-											<div>
-												<input class="" type="button" name="" id="reviewBtn" value="리뷰 작성" />
-											</div>
 										</div>
 										<div class="col-1">
 											<div class="payment">

@@ -5,6 +5,7 @@ import java.util.List;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.owner.FrcsReviewVO;
+import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 
 public interface FrcsReviewMapper {
 
@@ -15,11 +16,18 @@ public interface FrcsReviewMapper {
 	public int reviewAnsUpdate(FrcsReviewVO frcsReviewVO);
 	public int reviewDelete(String reviewNo);
 	public void reviewAnsDelete(String reviewNo);
-	public void insertAlarm(AlarmVO alarmVO);
-	public int selectAlarm(String frcsId);
-	public List<AlarmVO> selectAlarmList(String frcsId);
+	public int selectReviewCount(OwnerPaginationInfoVO<FrcsReviewVO> pagingVO);
+	public List<FrcsReviewVO> selectReviewList(OwnerPaginationInfoVO<FrcsReviewVO> pagingVO);
+	
+	//가맹점 알림
+	public List<AlarmVO> selectAlarmList(String memId);
 	public void updateAlarm(int alarmNo);
-	public String selectMember(String memId);
-	public int clearAllNotifications(String frcsId);
-
+	public int deleteAlarm(int alarmNo);
+	public int deleteclearAllAlarm(String memId);
+	
+	//답변 알림
+	public void insertAlarm(AlarmVO alarmVO);
+	public String getReceiveMemId(String ansNo);
+	public String getMemFrcs(String memIdfrcs);
+	
 }

@@ -129,8 +129,6 @@
 		<include refid="boardlistSearch"/>
 	</select>
 	
-	
-	
 	<select id="myBoardList" parameterType="pagingVO" resultType="boardVO">
 	with b as(
 		select
@@ -155,48 +153,5 @@
 	]]>
 	</select>
 	
-	<select id="selectAlarm" parameterType="String" resultType="int">
- 		select count(*)
- 		from alarm
- 		where mem_id = #{memId} and ALARM_READ = 'N'
- 	</select>
- 	
- 	
- 	<select id="selectAlarmList" parameterType="String" resultType="alarmVO">		
-		select 
-			ALARM_NO, ALARM_CONTENT, MEM_ID, ALARM_READ, ALARM_URL
-		from
-			alarm 
-		where 
-			MEM_ID = #{memId} and ALARM_READ = 'N'
- 	</select>
- 	
- 	<update id="updateAlarm" parameterType="int">
- 		update alarm
- 		set
- 			ALARM_READ = 'Y'
- 		where 
- 			ALARM_NO = #{alarmNo}
- 	</update>
- 	
-
-	<insert id="insertAlarm" parameterType="alarmVO">
-	    INSERT INTO alarm (
-	        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL
-	    ) VALUES (
-	        SEQ_ALARM.nextval, #{memId}, '칭찬 글 등록 완료!', sysdate, '/elly/detail.do?tableNo=' || #{tableNo}
-	    )
-	</insert>
-
-
- 	
- 	<select id="selectMember" parameterType="String" resultType="String">
-	  SELECT DISTINCT board.MEM_ID
-	  FROM board
-	  LEFT OUTER JOIN alarm ON board.MEM_ID = alarm.MEM_ID
-	  WHERE board.MEM_ID = #{memId}
-	</select>
- 
- 	
 
   </mapper>

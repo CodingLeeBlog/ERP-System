@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -21,8 +23,10 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.service.owner.IFrcsIdService;
 import kr.or.ddit.service.owner.IFrcsReviewService;
 import kr.or.ddit.vo.AlarmVO;
+import kr.or.ddit.vo.owner.FrcsInquiryVO;
 import kr.or.ddit.vo.owner.FrcsMenuVO;
 import kr.or.ddit.vo.owner.FrcsReviewVO;
+import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -38,10 +42,37 @@ public class OwnerReviewController {
 	
 	@PreAuthorize("hasRole('ROLE_OWNER')")
 	@RequestMapping(value="/review.do", method = RequestMethod.GET )
-	public String ownerReviewList(String reviewNo, Model model) {
+	public String ownerReviewList(
+			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
+			@RequestParam(required = false, defaultValue = "title") String searchType,
+			@RequestParam(required = false) String searchWord,
+			Model model) {
+		
+		OwnerPaginationInfoVO<FrcsReviewVO> pagingVO = new OwnerPaginationInfoVO<FrcsReviewVO>();
+		
+		// 검색이 이루어지면 아래가 실행됨
+		if(StringUtils.isNotBlank(searchWord)) { //" "이거나 공백문자"" 혹은 null이면 true를 반환
+			pagingVO.setSearchType(searchType);
+			pagingVO.setSearchWord(searchWord);
+			model.addAttribute("searchType", searchType);
+			model.addAttribute("searchWord", searchWord);
+		}
+		
 		String frcsId = idService.getFrcsId();
-		List<FrcsReviewVO> frcsReviewList = service.frcsReviewList(frcsId);
-		model.addAttribute("reviewList", frcsReviewList);
+		
+		pagingVO.setFrcsId(frcsId);
+		pagingVO.setCurrentPage(currentPage); // startRow, endRow, startPage, endPage가 결정
+		int totalRecord = service.selectReviewCount(pagingVO);//총게시글수
+		
+		pagingVO.setTotalRecord(totalRecord); // totalPage 결정
+		List<FrcsReviewVO> reviewList = service.selectReviewList(pagingVO);
+		pagingVO.setDataList(reviewList);
+		
+		model.addAttribute("pagingVO", pagingVO);
+		
+//		List<FrcsReviewVO> frcsReviewList = service.frcsReviewList(frcsId);
+//		model.addAttribute("reviewList", frcsReviewList);
+		
 		return "owner/review/reviewList";
 	}
 	
@@ -104,21 +135,15 @@ public class OwnerReviewController {
 		return new ResponseEntity<List<FrcsReviewVO>>(HttpStatus.OK) ;
 	}
 	
+	//가맹점 알람
 	@ResponseBody
 	@RequestMapping(value = "/selectAlarm.do", method = RequestMethod.POST)
-	public List<AlarmVO> selectAlarm(@RequestBody Map<String, String> map) {
+	public List<AlarmVO> selectAlarmList(@RequestBody Map<String, String> map) {
 
-	    String memId = map.get("memId").toString();
-		String frcsId = idService.getFrcsId();
-
-	    int alarmCnt = service.selectAlarm(memId);
-
-	    List<AlarmVO> alarm = service.selectAlarmList(frcsId);
-	    if (alarm != null && alarm.size() > 0) {
-	        alarm.get(0).setAlarmCnt(alarmCnt);
-	    }
-	    log.info("알람 개수  : >>>>>>>> " + alarmCnt);
-	    return alarm;
+		String memId = map.get("memId").toString();
+		List<AlarmVO> alarm = service.selectAlarmList(memId);
+		return alarm;
+		
 	}
 	
 	@RequestMapping(value = "/updateAlarm.do")
@@ -128,15 +153,28 @@ public class OwnerReviewController {
 		return "redirect:/owner/home.do";
 	}
 	
+	//가맹점 알람 1개 삭제
 	@ResponseBody
-	@RequestMapping(value = "/clearAllNotifications.do", method = RequestMethod.POST)
-		public ResponseEntity<ServiceResult> clearAllNotifications(@RequestBody Map<String, String> map) {
-		
-		String frcsId = idService.getFrcsId();
+	@RequestMapping(value = "/deleteAlarm.do", method = RequestMethod.POST)
+		public ResponseEntity<ServiceResult> deleteAlarm(@RequestBody Map<String, String> map) {
+
+		int alarmNo = Integer.parseInt(map.get("alarmNo").toString());
 			
-		ServiceResult result = service.clearAllNotifications(frcsId);
+		ServiceResult result = service.deleteAlarm(alarmNo);
 		    
-			return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
+		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
+		}
+	
+	//가맹점 알람 전체 삭제
+	@ResponseBody
+	@RequestMapping(value = "/deleteclearAllAlarm.do", method = RequestMethod.POST)
+		public ResponseEntity<ServiceResult> deleteclearAllAlarm(@RequestBody Map<String, String> map) {
+		
+		String memId = map.get("memId").toString();
+		
+		ServiceResult result = service.deleteclearAllAlarm(memId);
+		    
+		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
 		
 	

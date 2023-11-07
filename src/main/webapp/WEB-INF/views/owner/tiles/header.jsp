@@ -177,7 +177,7 @@
 
 
 						<!-- /////////////////// 알림들 시작 /////////////////////////// -->
-                        <div class="px-2" style="max-height: 300px;" data-simplebar id="alims"></div>
+                         <div class="px-2" data-simplebar id="alims"></div>
 
 
                         <!-- 알림창의 모두보기-->
@@ -547,13 +547,67 @@
                             	</script>
                             </li>
                             <li>
-                                <a href="form-advanced.html">매출액 분석</a>
+                                <a href="/owner/salesAnalysis.do" class="sales">매출액 분석</a>
+                          		<script type="text/javascript">
+                            	$(function(){
+                            		var date = new Date();
+                            		var year = date.getFullYear();
+                            		var month = ('0' + (date.getMonth() + 1 )).slice(-2);
+                            		var day = ('0' + date.getDate()).slice(-2);
+                            		
+                            		var dateString = year + "/" + month;
+                            		
+                            		$(".sales").attr("href","/owner/salesAnalysis.do?yearMonth=" + dateString);
+                            	});
+                            	</script>
                             </li>
                             <li>
-                                <a href="form-validation.html">매출 총이익 분석</a>
+                                <a href="/owner/totalProfit.do" class="total">매출 총이익 분석</a>
+	                            <script type="text/javascript">
+	                            	$(function(){
+	                            		var date = new Date();
+	                            		var year = date.getFullYear();
+	                            		var month = ('0' + (date.getMonth() + 1 )).slice(-2);
+	                            		var day = ('0' + date.getDate()).slice(-2);
+	                            		
+	                            		var dateString = year + "/" + month;
+	                            		
+	                            		$(".total").attr("href","/owner/totalProfit.do?yearMonth=" + dateString);
+	                            	});
+                            	</script>
+	                            
                             </li>
                             <li>
-                                <a href="form-wizard.html">영업 이익 분석</a>
+                                <a href="/owner/operationProfit.do" class="profit">영업 이익 분석</a>
+                                <script type="text/javascript">
+	                            	$(function(){
+	                            		var date = new Date();
+	                            		var year = date.getFullYear();
+	                            		var month = ('0' + (date.getMonth() + 1 )).slice(-2);
+	                            		var day = ('0' + date.getDate()).slice(-2);
+	                            		
+	                            		var dateString = year + "/" + month;
+	                            		
+	                            		$(".profit").attr("href","/owner/operationProfit.do?yearMonth=" + dateString);
+	                            	});
+                            	</script>
+                            </li>
+                            <li>
+                                <a href="/owner/purchaseAnalysis.do" class="purchase">매입 분석</a>
+                                <script type="text/javascript">
+	                            	$(function(){
+	                            		var date = new Date();
+	                            		var year = date.getFullYear();
+	                            		var month = ('0' + (date.getMonth() + 1 )).slice(-2);
+	                            		var day = ('0' + date.getDate()).slice(-2);
+	                            		
+	                            		var dateString = year + "/" + month;
+	                            		
+	                            		$(".purchase").attr("href","/owner/purchaseAnalysis.do?yearMonth=" + dateString);
+	                            	});
+                            	</script>
+                                
+                                
                             </li>
                         </ul>
                     </div>
@@ -599,177 +653,214 @@
             <div class="clearfix"></div>
         </div>
     </div>
-    <input type="hidden" name="" id="memId" value="${memId }"/>
+ 	<sec:authentication property="principal.member" var="member"/>
+    <input type="hidden" name="" id="memId" value="${member.memId }"/>
     <!-- ========== Left Sidebar End ========== -->
 
 <!-- END wrapper -->
 <script type="text/javascript">
 $(function(){
-    var logoutForm = $("#logoutForm");
-    var logoutButton = $("#logoutButton");
-    var ws = new WebSocket("ws://localhost/handler");
+	var logoutForm = $("#logoutForm");
+	var logoutButton = $("#logoutButton");
+	var alarmBtn = $("#alarmBtn");
+	var alarmCount = 0;
 
-    logoutButton.on("click", function () {
-        logoutForm.submit();
-    });
+	checkNotificationCount();
+	
+	// 알람 갯수에 따른 배치 깜빡임 시작/멈춤 이벤트
+	setTimeout(() => {
+	    if(alarmCount > 0){
+	    	startBlinking();
+	    }else{
+	    	stopBlinking();
+	    }
+	}, 300);
+	
+	logoutButton.on("click", function() {
+		logoutForm.submit();
+	});
+	
+	setInterval(() => {
+		checkNotificationCountCheck();	
+	}, 500);
+	
+	// 알람 아이콘을 클릭했을때
+	alarmBtn.on("click", function(){
+		updateNotificationBadge();	// 알람 목록 가져오기
+		stopBlinking();
+	});
+	
+	
+	// 배찌 깜빡이기 위한 이벤트 그룹
+	var blinkInterval;
+    var badge = $("#noti-badge");
+	function blinkBadge() {
+	    badge.css("display", badge.css("display") === "none" ? "inline-block" : "none");
+	}
 
-    $(document).ready(function () {
-        // 페이지 로드시 1회 실행
-        updateNotificationBadge();
+	function startBlinking() {
+		blinkInterval = setInterval(blinkBadge, 300); // 0.3초 간격으로 깜빡임
+	}
 
-        // 3초마다 업데이트
-        setInterval(function () {
-            updateNotificationBadge();
-        }, 3000);
-    });
-    
-    //알림조회
-    function updateNotificationBadge() {
-        var data = {
-            memId: $("#memId").val(),
-            frcsId: $("#frcsId").val()
-        };
+	function stopBlinking(str) {
+		clearInterval(blinkInterval);
+		badge.css("display", "none");
+		if(str == "noequals"){
+			startBlinking();
+		}
+	}
+	// 배찌 깜빡이기 위한 이벤트 그룹 end
+	
+	function checkNotificationCount(){
+		var data = {
+				memId : $("#memId").val()
+			};
 
-        $.ajax({
-            type: "post",
-            url: "/owner/selectAlarm.do",
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-            },
-            data: JSON.stringify(data),
-            contentType: "application/json; charset=utf-8",
-            success: function (rst) {
-                if (rst == null || rst.length === 0) {
-                    console.log('null');
-                    toggleBadge(false);
-                } else {
-                    console.log("rst : " + JSON.stringify(rst));
-                    toggleBadge(true);
-                    updateNotificationList(rst);
-                }
-            }
-        });
-    }
-    
-    //배지
-    $(document).ready(function() {
-        $("#noti-badge").css("display", "none");
-    });
-    
-    function toggleBadge(show) {
-        if (show) {
-            $("#noti-badge").css("display", "inline-block");
-        } else {
-            $("#noti-badge").css("display", "none");
-        }
-    }
+			$.ajax({
+				type : "post",
+				url : "/owner/selectAlarm.do",
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader("${_csrf.headerName}",
+							"${_csrf.token}");
+				},
+				data : JSON.stringify(data),
+				contentType : "application/json; charset=utf-8",
+				success : function(rst) {
+					alarmCount = rst.length;
+				}
+			});
+	}
+	
+	function checkNotificationCountCheck(){
+		var data = {
+				memId : $("#memId").val()
+			};
 
-    //append로 최종 보내기
-    function updateNotificationList(rst) {
-        $("#alims").empty();
-        var str = "";
+			$.ajax({
+				type : "post",
+				url : "/owner/selectAlarm.do",
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader("${_csrf.headerName}",
+							"${_csrf.token}");
+				},
+				data : JSON.stringify(data),
+				contentType : "application/json; charset=utf-8",
+				success : function(rst) {
+					var flag = false;
+					if(rst.length != alarmCount){
+						stopBlinking('noequals');
+					}else{
+						console.log("뭐니?");
+					}
+				}
+			});
+	}
+	
+	//알림 조회
+	function updateNotificationBadge() {
+		var data = {
+			memId : $("#memId").val()
+		};
 
-        $.each(rst, function (idx, data) {
-            str += "<a href='" + data.alarmUrl + "' class='dropdown-item p-0 notify-item card unread-noti shadow-none mb-2 mt-2'>";
-            str += "<div class='card-body'>";
-            str += "<span class='float-end noti-close-btn text-muted'></span>";
-            str += "<div class='d-flex align-items-center'><div class='flex-shrink-0'><div class='notify-icon bg-primary'><i class='mdi mdi-comment-account-outline'></i>";
-            str += "</i></div></div>";
-            str += "<div class='flex-grow-1 text-truncate ms-2 clsAlarm' data-alarm-no='" + data.alarmNo + "'><h5 class='noti-item-title fw-semibold font-14'></h5>" + data.alarmContent + "</div>";
-            str += "<div class='col-3 clsHref' data-alarm-no='" + data.alarmNo + "'><i class='mdi mdi-close'></i></div>";
-            str += "</div></a>";
-        });
+		$.ajax({
+			type : "post",
+			url : "/owner/selectAlarm.do",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("${_csrf.headerName}",
+						"${_csrf.token}");
+			},
+			data : JSON.stringify(data),
+			contentType : "application/json; charset=utf-8",
+			success : function(rst) {
+				updateNotificationList(rst);
+				alarmCount = rst.length;
+			}
+		});
+	}
+	
+	//append로 알림 리스트 보내기
+	function updateNotificationList(rst) {
+		$("#alims").empty();
+		var str = "";
+		$.each(rst,	function(idx, data) {
+			str += "<a href='" + data.alarmUrl + "' class='dropdown-item p-0 notify-item card unread-noti shadow-none mb-2 mt-2'>";
+			str += "<div class='card-body'>";
+			str += "<span class='float-end noti-close-btn text-muted'></span>";
+			str += "<div class='d-flex align-items-center'><div class='flex-shrink-0'><div class='notify-icon bg-primary'><i class='mdi mdi-comment-account-outline'></i>";
+			str += "</i></div></div>";
+			str += "<div class='flex-grow-1 text-truncate ms-3 mb-1 clsAlarm' data-alarm-no='" + data.alarmNo + "'><h5 class='noti-item-title fw-semibold font-14'></h5>"
+					+ data.alarmContent + "</div>";
+			str += "<div class='col-3 clsHref' data-alarm-no='" + data.alarmNo + "'><i class='mdi mdi-close ms-3'></i></div>";
+			str += "</div></a>";
+		});
+		$("#alims").append(str);
+	}
+	
 
-        $("#alims").append(str);
-        
-    }
-    
-	//소켓
-    function connection() {
-        ws.onopen = function () {
-            console.log('Info: connection opened.');
-        };
+	//알림 눌렀을때 '읽음 처리'
+	$(document).on("click", ".clsAlarm", function() {
+		console.log("clsAlarm");
+		let alarmNo = $(this).data("alarmNo");
+		console.log("alarmNo: " + alarmNo);
+		location.href = "/owner/updateAlarm.do?alarmNo=" + alarmNo;
+	});
 
-        ws.onmessage = function (event) {
-            console.log("메세지 받는 부분 : ", event.data + '\n');
-            var str = event.data.split("<br>");
-        };
+	//알림 1개 삭제
+	$(document).on("click",".clsHref",function(event) {
+		event.preventDefault(); // 링크의 기본 동작 방지
 
-        ws.onclose = function (event) {
-            console.log('Info: 세션이 연결이 종료되었습니다.');
-        };
+		let alarmNo = $(this).data("alarmNo");
+		console.log("clsHref alarmNo : " + alarmNo);
 
-        ws.onerror = function (error) {
-            console.log('Error: ', error);
-        };
-    }
+		var data = {
+			alarmNo : alarmNo
+		}
+
+		$.ajax({
+			type : "POST",
+			url : "/owner/deleteAlarm.do",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("${_csrf.headerName}",
+						"${_csrf.token}");
+			},
+			data : JSON.stringify(data),
+			contentType : "application/json; charset=utf-8",
+			success : function(response) {
+				if (response === "OK") {
+					console.log("항목 삭제에 성공했습니다.");
+					$("#alims").empty();
+				} else {
+					console.log("항목 삭제에  실패했습니다.");
+				}
+			}
+		});
+	});
+
+	//알림 전체 삭제
+	$(document).on("click",".clearAll",function(event) {
+		event.preventDefault(); // 링크의 기본 동작 방지
+		let memId = $(this).data("memId");
+		var data = {
+			memId : $("#memId").val()
+		};
+		$.ajax({
+			type : "POST",
+			url : "/owner/deleteclearAllAlarm.do",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("${_csrf.headerName}",
+						"${_csrf.token}");
+			},
+			data : JSON.stringify(data),
+			contentType : "application/json; charset=utf-8",
+			success : function(response) {
+				if (response === "OK") {
+					console.log("항목 삭제에 성공했습니다.");
+					$("#alims").empty();
+				} else {
+					console.log("항목 삭제에  실패했습니다.");
+				}
+			}
+		});
+	});
 });
-
-		//알림 눌렀을때 반응
-		$(document).on("click", ".clsAlarm", function () {
-		    console.log("clsAlarm");
-		    let alarmNo = $(this).data("alarmNo");
-		    console.log("alarmNo: " + alarmNo);
-		    location.href = "/owner/updateAlarm.do?alarmNo=" + alarmNo;
-		});
-		
-		//1개삭제
-		$(document).on("click", ".clsHref", function(event) {
-		    event.preventDefault(); // 링크의 기본 동작(페이지 이동)을 방지합니다.
-		
-		    let alarmNo = $(this).data("alarmNo");
-		    console.log("clsHref alarmNo : " + alarmNo);
-		
-		    var data = { 
-		    		alarmNo : alarmNo 
-		    	}
-		    
-		      $.ajax({
-		          type: "POST",
-		          url: "/elly/deleteAlarm.do",
-		          beforeSend: function (xhr) {
-		              xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-		          },
-		          data: JSON.stringify(data),
-		          contentType: "application/json; charset=utf-8",
-		          success: function(response) {
-		              if (response === "OK") {
-		                  console.log("항목 삭제에 성공했습니다.");
-		                  $("#alims").empty();
-		              } else {
-		                  console.log("항목 삭제에  실패했습니다.");
-		              }
-		          }
-		      });
-		  });
-
-		//전체삭제
-		$(document).on("click", ".clearAll", function(event) {
-	    event.preventDefault(); // 링크의 기본 동작(페이지 이동)을 방지합니다.
-	
-	    let frcsId = $(this).data("frcsId");
-	
-	    var data = { 
-	    		frcsId : frcsId 
-	    	}
-	    
-	        $.ajax({
-	            type: "POST",
-	            url: "/owner/clearAllNotifications.do",
-	            beforeSend: function (xhr) {
-	                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-	            },
-	            data: JSON.stringify(data),
-	            contentType: "application/json; charset=utf-8",
-	            success: function(response) {
-	                if (response === "OK") {
-	                    console.log("항목 삭제에 성공했습니다.");
-		                $("#alims").empty();
-	                } else {
-	                    console.log("항목 삭제에  실패했습니다.");
-	                }
-	            }
-	        });
-		});
-
 </script>

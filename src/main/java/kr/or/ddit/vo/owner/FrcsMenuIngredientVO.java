@@ -1,5 +1,6 @@
 package kr.or.ddit.vo.owner;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import lombok.Data;
@@ -15,5 +16,6 @@ public class FrcsMenuIngredientVO {
 	
 	private String frcsId;
 	private Date selngDate;
+	private Timestamp selngDate2;
 	
 }

@@ -153,24 +153,21 @@ public class ResMemberController {
 //	}
 	
 	
-	//리뷰관련 알림
+	//일반 홈페이지 알림 시작
 	@ResponseBody
-	@RequestMapping(value = "/selectAlarmMemberReview.do", method=  RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public List<AlarmVO> selectAlarm(@RequestBody Map<String, String> map) {
-		
+	@RequestMapping(value = "/selectAlarm.do", method=  RequestMethod.POST)
+	public List<AlarmVO> selectAlarmList(@RequestBody Map<String, String> map) {
 		String memId = map.get("memId").toString();
-		
-		List<AlarmVO> alarm = memberreviewService.selectMemberReviewAlarmList(memId);
+		List<AlarmVO> alarm = memberreviewService.selectAlarmList(memId);
 		return alarm;
 		
 	}
 	
 	//리뷰확인시 update 처리로 db에 'Y'로 변경
-	@RequestMapping(value = "/updateAlarmMemberReview.do")
+	@RequestMapping(value = "/updateAlarm.do")
 	public String updateAlarm(int alarmNo) {
-		log.info("updateAlarm에서 넘어오는지 확인 >>>>>>>>>>>>>>>>>> "+alarmNo);
-		memberreviewService.updateMemberReviewAlarm(alarmNo);
-		return "redirect:/owner/home.do";
+		memberreviewService.updateAlarm(alarmNo);
+		return "redirect:/elly/main.do";
 	}
 	
 	
@@ -178,24 +175,18 @@ public class ResMemberController {
 	@ResponseBody
 	@RequestMapping(value = "/deleteAlarm.do", method = RequestMethod.POST)
 		public ResponseEntity<ServiceResult> deleteAlarm(@RequestBody Map<String, String> map) {
-
 		int alarmNo = Integer.parseInt(map.get("alarmNo").toString());
-			
-		ServiceResult result = memberreviewService.deleteMemberReviewAlarm(alarmNo);
-		    
-			return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
+		ServiceResult result = memberreviewService.deleteAlarm(alarmNo);
+		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
 	
-	//전체 삭제 + 추후 건의합니다 조인필요
+	//전체 삭제
 	@ResponseBody
 	@RequestMapping(value = "/deleteclearAllAlarm.do", method = RequestMethod.POST)
 		public ResponseEntity<ServiceResult> deleteclearAllAlarm(@RequestBody Map<String, String> map) {
-		
-		String ansId = map.get("ansId").toString();
-			
-		ServiceResult result = memberreviewService.deleteclearAllAlarm(ansId);
-		    
-			return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
+		String memId = map.get("memId").toString();
+		ServiceResult result = memberreviewService.deleteclearAllAlarm(memId);
+		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
 
 		

@@ -10,6 +10,7 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.mapper.owner.FrcsReservationMapper;
 import kr.or.ddit.service.owner.IFrcsReservationService;
 import kr.or.ddit.vo.owner.FrcsReservationVO;
+import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 
 @Service
 public class FrcsReservationServiceImpl implements IFrcsReservationService {
@@ -32,6 +33,16 @@ public class FrcsReservationServiceImpl implements IFrcsReservationService {
 			result = ServiceResult.FAILED;
 		}
 		return result;
+	}
+
+	@Override
+	public int selectResvCount(OwnerPaginationInfoVO<FrcsReservationVO> pagingVO) {
+		return mapper.selectResvCount(pagingVO);
+	}
+
+	@Override
+	public List<FrcsReservationVO> selectResvList(OwnerPaginationInfoVO<FrcsReservationVO> pagingVO) {
+		return mapper.selectResvList(pagingVO);
 	}
 	
 }

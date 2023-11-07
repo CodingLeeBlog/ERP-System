@@ -1,19 +1,25 @@
 package kr.or.ddit.controller.head;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.service.head.IProposalService;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.ProposalVO;
 import lombok.extern.slf4j.Slf4j;
@@ -66,11 +72,11 @@ public class ProposalController {
 	@RequestMapping(value = "/proposalInsert.do", method = RequestMethod.POST)
 	public String proposalInsert(
 			RedirectAttributes ra,
-			ProposalVO proposalVO, Model model) {
+			ProposalVO proposalVO, Model model, AlarmVO alarmVO) {
 		proposalVO.setAnsId("admin");
 
 		String goPage = "";
-		ServiceResult result = proposalService.proposalInsert(proposalVO);
+		ServiceResult result = proposalService.proposalInsert(proposalVO, alarmVO);
 		if(result.equals(ServiceResult.OK)) {
 			proposalService.ansStateUpdate(proposalVO); 
 			ra.addFlashAttribute("message", "답변 등록 완료!");
@@ -81,5 +87,40 @@ public class ProposalController {
 		}
 		
 		return goPage;
+	}
+	
+	//본사 알림 시작
+	@ResponseBody
+	@RequestMapping(value = "/selectAlarm.do", method=  RequestMethod.POST)
+	public List<AlarmVO> selectAlarm(@RequestBody Map<String, String> map) {
+		String memId = map.get("memId").toString();
+		List<AlarmVO> alarm = proposalService.selectAlarmList(memId);
+	    return alarm;
+	}
+	
+	//알림 읽음처리
+	@RequestMapping(value = "/updateAlarm.do")
+	public String updateAlarm(int alarmNo) {
+		log.info("updateAlar > "+alarmNo);
+		proposalService.updateAlarm(alarmNo);
+		return "redirect:/head/dashboard.do";
+	}
+	
+	//본사 알람 1개 삭제
+	@ResponseBody
+	@RequestMapping(value = "/deleteAlarm.do", method = RequestMethod.POST)
+		public ResponseEntity<ServiceResult> deleteAlarm(@RequestBody Map<String, String> map) {
+		int alarmNo = Integer.parseInt(map.get("alarmNo").toString());
+		ServiceResult result = proposalService.deleteAlarm(alarmNo);
+		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
+	}
+	
+	//본사 알람 전체 삭제
+	@ResponseBody
+	@RequestMapping(value = "/deleteclearAllAlarm.do", method = RequestMethod.POST)
+		public ResponseEntity<ServiceResult> deleteclearAllAlarm(@RequestBody Map<String, String> map) {
+		String memId = map.get("memId").toString();
+		ServiceResult result = proposalService.deleteclearAllAlarm(memId);
+		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
 }

@@ -24,7 +24,6 @@
 							<div class="col-1">접수일</div>
 							<div class="col-1">예약 일자</div>
 							<div class="col">비고</div>
-							<div class="col-1">리뷰</div>
 							<div class="col-1">결제 상태</div>
 							<div class="col-1">예약 상태</div>
 					</div>
@@ -62,11 +61,6 @@
 										</div>
 										<div class="col">
 											${res.resvNote}
-										</div>
-										<div class="col-1">
-											<div>
-												<input class="" type="button" name="" id="reviewBtn" value="리뷰 작성" />
-											</div>
 										</div>
 										<div class="col-1">
 											<div class="payment">
@@ -288,7 +282,7 @@
 							<c:when test="${empty reviewList}">
 								<div style="color: rgb(0, 0, 0);"></div>
 								<p class="d-flex justify-content-center align-items-center n-table-none" style="color:rgb(0, 0, 0); height: 400px">
-									<span class="">보유하신 쿠폰이 없습니다.</span>
+									<span class="">작성하신 리뷰 내용이 없습니다.</span>
 								</p>
 								<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 1px solid;"></div>
 							</c:when>
@@ -302,7 +296,7 @@
 											${review.resvNo }
 										</div>
 										<div class="col">
-											<a href="/elly/myreview/detail.do?memId=${review.memId }">${review.reviewContent }</a>
+											<a href="/owner/reviewAns.do?reviewNo=${review.reviewNo }" class="text-body" data-bs-toggle="modal" data-bs-target="#${review.reviewNo }">${review.reviewContent }</a>
 										</div>
 										<div class="col-2">
 											${review.reviewStar }/5
@@ -321,6 +315,88 @@
 					</div>
 				</div>
 			</div>
+			
+			
+			<c:forEach items="${reviewList }" var="review">
+	                       		<div class="modal fade" id="${review.reviewNo }" tabindex="-1"
+									role="dialog" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h4 class="modal-title text-dark" id="myCenterModalLabel">리뷰 상세보기</h4>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+											</div>
+											<div class="modal-body" id="modal">
+													
+													<div class="m-3 text-dark">
+														<p class="m-0 d-inline-block align-middle font-16">
+															별점 :
+															<c:if test="${review.reviewStar eq '5' }">
+				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star"></span>
+			                                                </c:if>
+			                                                <c:if test="${review.reviewStar eq '4' }">
+				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star"></span>
+			                                                </c:if>
+			                                                <c:if test="${review.reviewStar eq '3' }">
+				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star"></span>
+			                                                </c:if>
+			                                                <c:if test="${review.reviewStar eq '2' }">
+				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star"></span>
+			                                                </c:if>
+			                                                <c:if test="${review.reviewStar eq '1' }">
+				                                                <span class="text-warning mdi mdi-star"></span>
+			                                                </c:if>
+			                                                ${review.reviewStar } 점
+			                                            </p>
+														<p class="m-0 inline-block">작성자  : ${review.memId }</p>
+														<p class="m-0 inline-block">작성일  : <fmt:formatDate value="${review.reviewRegdate }" pattern="yyyy. MM. dd"/></p>
+														<hr>
+														<label class="inline-block form-label text-dark">내용 : </label>
+														<p class="mt-1 inline-block">${review.reviewContent }</p>
+													</div>
+													
+													<c:if test="${review.reviewYn eq 'N' }">
+															<div class="m-3 text-dark">
+															<hr>
+																<label class="form-label text-dark">리뷰 답변 : </label>
+																<p class="text-dark">답변이 아직 없습니다.</p>
+															</div>
+				                  							<sec:csrfInput/>
+		                                         	</c:if>
+		                                         	
+		                                         	<c:if test="${review.reviewYn eq 'Y' }">
+			                                         		<div class="m-3 text-dark">
+			                                         		<hr>
+																<label class="form-label text-dark">리뷰 답변 : </label>
+																<input type="hidden" id="ansNo" name="ansNo" value="${review.ansNo }">
+																<p class="text-dark">${review.ansCn }</p>
+															</div>
+														<sec:csrfInput/>
+		                                         	</c:if>
+		                                         	
+												</div>
+												
+												<div class="modal-footer">
+													<button type="button" class="btn btn-dark"	data-bs-dismiss="modal">닫기</button>
+												</div>
+												
+											</div>
+											<!-- /.modal-content -->
+										</div>
+										<!-- /.modal-dialog -->
+									</div>
+									<!-- /.modal -->
+								</c:forEach>
 			
 			<!-- 결제 완료시 영수증 모달창 -->
 			<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="color: black">
@@ -353,15 +429,18 @@ $(function(){
 		var tableNo = $(this).data("table-no");
 		var type = $(this).data("type");
 		var href = "";
-		
+
 		if (type === "칭찬") {
-		  href = `/elly/detail.do?tableNo=${tableNo}`;
+		  href = '/elly/detail.do?tableNo=' + tableNo;
 		} else if (type === "건의") {
-		  href = `/elly/tendidetail.do?tableNo=${tableNo}`;
+		  href = '/elly/tendidetail.do?tableNo=' + tableNo;
 		}
-		
+
 		$(this).attr("href", href);
+		console.log("tableNo: " + tableNo);
 	});
+	
+	
 	
 	// 결제하기 기능
 	$(".paymentBtn").on("click", function(){
@@ -497,20 +576,5 @@ $(function(){
 		});
     }
 });
-
-// document.addEventListener("DOMContentLoaded", function () {
-// 	$(".board-link").each(function() {
-// 		const tableNo = $(this).data("table-no");
-// 		const type = $(this).data("type");
-// 		let href = "";
-// 		if (type === "칭찬") {
-// 		  href = `/elly/detail.do?tableNo=${tableNo}`;
-// 		} else if (type === "건의") {
-// 		  href = `/elly/tendidetail.do?tableNo=${tableNo}`;
-// 		}
-// 		$(this).attr("href", href);
-// 	});
-// });
-
 	
 </script>

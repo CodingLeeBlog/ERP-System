@@ -42,10 +42,14 @@
 		<typeAlias type="kr.or.ddit.vo.owner.FrcsMenuIngredientVO" alias="ingredVO"/>
 		<typeAlias type="kr.or.ddit.vo.owner.FrcsReservationVO" alias="frcsResvVO"/>
 		<typeAlias type="kr.or.ddit.vo.owner.FrcsEmployeeVO" alias="frcsEmpVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.TradingVO" alias="tradVO"/>
 		
 		<!-- 본사 -->
 		<typeAlias type="kr.or.ddit.vo.head.MenuVO" alias="menuVO"/>
 		<typeAlias type="kr.or.ddit.vo.head.OfficeLetterVO" alias="officeLetterVO"/>
+		<typeAlias type="kr.or.ddit.vo.head.HeadLtDetailVO" alias="headLtDetailVO"/>
+		<typeAlias type="kr.or.ddit.vo.head.EducationVO" alias="educationVO"/>
+		<typeAlias type="kr.or.ddit.vo.head.OpenPlanVO" alias="openPlanVO"/>
 		<typeAlias type="kr.or.ddit.vo.head.InspectionVO" alias="inspectionVO"/>
 		<typeAlias type="kr.or.ddit.vo.head.ProposalVO" alias="proposalVO"/>
 		<typeAlias type="kr.or.ddit.vo.head.TotalInfoVO" alias="totalInfoVO"/>
@@ -57,6 +61,9 @@
 		<typeAlias type="kr.or.ddit.vo.head.InventoryUpdateVO" alias="inventoryUpdateVO" />
 		<typeAlias type="kr.or.ddit.vo.head.CancleModalVO" alias="cancleModalVO" />
 		<typeAlias type="kr.or.ddit.vo.head.CouponVO" alias="couponVO" />
+		<typeAlias type="kr.or.ddit.vo.head.PurchaseVO" alias="purchaseVO" />
+		<typeAlias type="kr.or.ddit.vo.head.FeeVO" alias="feeVO" />
+		<typeAlias type="kr.or.ddit.vo.head.HeadSalesTotalVO" alias="headsalesTotalVO" />
 	</typeAliases>
 	
 </configuration>

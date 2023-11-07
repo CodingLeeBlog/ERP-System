@@ -11,18 +11,19 @@ public interface MemberReviewMapper {
 
 	public List<ReviewVO> myReviewList(String memId);
 
-	public void insertMemberReviewAlarm(AlarmVO alarmVO);
 
-	public int selectMemberReviewAlarm(String memId);
-
-	public List<AlarmVO> selectMemberReviewAlarmList(String memId);
+	//일반 홈페이지 알림
+	public List<AlarmVO> selectAlarmList(String memId);
 	
-	public String selectMember(String memId);
+	public void updateAlarm(int alarmNo);
 
-	public void updateMemberReviewAlarm(int alarmNo);
-
-	public int deleteMemberReviewAlarm(int alarmNo);
+	public int deleteAlarm(int alarmNo);
 
 	public int deleteclearAllAlarm(String ansId);
+
+	//리뷰 등록시 알림 데이터 넣기
+	public void insertMemberReviewAlarm(AlarmVO alarmVO);
+
+	public String getReceiveMemId(int reviewNo);
 
 }

@@ -19,6 +19,9 @@ public interface FrcsMenuMapper {
 	public FrcsMenuVO selectMenuImg(String frcsId);
 	public void frcsMenuDelete(String frcsId);
 	public int frcsMenuInsert(FrcsMenuVO frcsMenuVO);
+	
+	//예약할때 알림 등록
 	public void insertResAlarm(AlarmVO alarmVO);
+	public String getReceiveMemId(String resvNo);
 
 }

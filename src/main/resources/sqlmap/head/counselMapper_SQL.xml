@@ -109,6 +109,10 @@
 	    where o.owner_id = #{ownerId}
 	</select>
 	
+<!-- 	<select id="findLastFrcsId" resultType="String"> -->
+<!-- 	    SELECT MAX(FRCS_ID) FROM franchise -->
+<!-- 	</select> -->
+	
 	<update id="counselUpdate" parameterType="ownerVO">
 		update owner
 		set

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.mapper.head.ProposalMapper;
 import kr.or.ddit.service.head.IProposalService;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.ProposalVO;
 
@@ -34,10 +35,26 @@ public class ProposalServiceImpl implements IProposalService {
 	}
 
 	@Override
-	public ServiceResult proposalInsert(ProposalVO proposalVO) {
+	public ServiceResult proposalInsert(ProposalVO proposalVO, AlarmVO alarmVO) {
 		ServiceResult result = null;
 		int status = proposalMapper.proposalInsert(proposalVO);
 		if(status > 0) {
+			// 게시들 답변 알람데이터 넣기
+			String ansId = proposalVO.getAnsId(); // 답변자 가져오기 
+			int tableNo = proposalVO.getTableNo(); // 답변 테이블 번호
+			alarmVO.setTableNo(tableNo);
+			//1) FROM
+			alarmVO.setMemId(ansId);
+			//2) WHAT
+			alarmVO.setTblName("HDBOARD_ANSWER");
+			alarmVO.setTblNo(tableNo+"");
+			//3) TO
+			String receiveMemId = this.proposalMapper.getReceiveMemId(tableNo);
+			alarmVO.setReceiveMemId(receiveMemId);
+			
+			// 알람데이터 넣기 
+			proposalMapper.insertProposalAlarm(alarmVO);
+			
 			result = ServiceResult.OK;
 		}else {
 			result = ServiceResult.FAILED;
@@ -47,6 +64,47 @@ public class ProposalServiceImpl implements IProposalService {
 	@Override
 	public void ansStateUpdate(ProposalVO proposalVO) {
 		proposalMapper.ansStateUpdate(proposalVO);
+	}
+
+	@Override
+	public List<AlarmVO> selectAlarmList(String memId) {
+		return proposalMapper.selectAlarmList(memId);
+	}
+
+	@Override
+	public void updateAlarm(int alarmNo) {
+		proposalMapper.updateAlarm(alarmNo);
+		
+	}
+
+	@Override
+	public ServiceResult deleteAlarm(int alarmNo) {
+	ServiceResult result = null;
+		
+		int status = proposalMapper.deleteAlarm(alarmNo);
+		
+		if(status > 0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		
+		return result;
+	}
+
+	@Override
+	public ServiceResult deleteclearAllAlarm(String memId) {
+		ServiceResult result = null;
+		
+		int status = proposalMapper.deleteclearAllAlarm(memId);
+		
+		if(status > 0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		
+		return result;
 	}
 	
 //	@Override

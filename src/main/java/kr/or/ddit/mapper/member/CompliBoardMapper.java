@@ -27,18 +27,6 @@ public interface CompliBoardMapper {
 
 	public List<BoardVO> myBoardList(PaginationInfoVO<BoardVO> pagingVO);
 
-	public int countAlarm(String tableNo);
-
-	public int selectAlarm(String memId);
-
-	public List<AlarmVO> selectAlarmList(String memId);
-
-	public void updateAlarm(int alarmNo);
-
-	public String selectMember(String memId);
-
-	public void insertAlarm(AlarmVO alarmVO);
-
 	public int myBoardCount(PaginationInfoVO<BoardVO> pagingVO);
 
 	

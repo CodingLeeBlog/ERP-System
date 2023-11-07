@@ -34,25 +34,25 @@ public class OwnerVO {
 	private String ownerTelyn;
 	private String ownerYn;
 	private Date ownerRgdate;
-//	private String tableName;
+	private String tableName;
 	
-//	private Integer[] delBoardNo;
-//	private MultipartFile[] boFile;
-//	private List<AttachVO> counselFileList;
-//	
-//	public void setBoFile(MultipartFile[] boFile) {
-//		this.boFile = boFile;
-//		if(boFile != null) {
-//			List<AttachVO> counselFileList = new ArrayList<AttachVO>();
-//			for(MultipartFile item : boFile) {
-//				if(StringUtils.isBlank(item.getOriginalFilename())) {
-//					continue;
-//				}
-//				AttachVO attachVO = new AttachVO(item);
-//				counselFileList.add(attachVO);
-//			}
-//			this.counselFileList = counselFileList;
-//		}
-//	}
+	private Integer[] delBoardNo;
+	private MultipartFile[] boFile;
+	private List<AttachVO> counselFileList;
+	
+	public void setBoFile(MultipartFile[] boFile) {
+		this.boFile = boFile;
+		if(boFile != null) {
+			List<AttachVO> counselFileList = new ArrayList<AttachVO>();
+			for(MultipartFile item : boFile) {
+				if(StringUtils.isBlank(item.getOriginalFilename())) {
+					continue;
+				}
+				AttachVO attachVO = new AttachVO(item);
+				counselFileList.add(attachVO);
+			}
+			this.counselFileList = counselFileList;
+		}
+	}
 	
 }

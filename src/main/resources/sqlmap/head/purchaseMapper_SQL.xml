@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.PurchaseMapper">
+	
+	<!-- 매입내역관리 메인 시작 -->
+	<select id="selectTotalPurchaseCount" parameterType="headPagingVO" resultType="int">
+		SELECT COUNT(DISTINCT V.VD_CODE) cnt
+		FROM VENDOR V, HEAD_INVENTORY HI, HEAD_ORDER HO, HEAD_ORDER_DETAIL HOD, HEAD_RECEIVING HR
+		WHERE V.VD_CODE = HI.VD_CODE
+		AND HI.VD_CODE = HO.VD_CODE
+		AND HO.HDORDER_NO = HOD.HDORDER_NO
+		AND HI.VDPROD_CD = HR.VDPROD_CD
+	</select>
+	
+	<select id="selectTotalPurchaseList" parameterType="headPagingVO" resultType="purchaseVO">
+		SELECT DISTINCT V.VD_CODE, V.VD_NAME, V.VD_ADD1, V.VD_ADD2, TO_CHAR(HO.HDORDER_DATE, 'YY/MM/DD') HDORDER_DATE, 
+		HOD.HDORDER_NO, HO.HDORDER_CONFM, HO.HDORDER_RETURN
+		FROM VENDOR V, HEAD_INVENTORY HI, HEAD_ORDER HO, HEAD_ORDER_DETAIL HOD, HEAD_RECEIVING HR
+		WHERE V.VD_CODE = HI.VD_CODE
+		AND HI.VD_CODE = HO.VD_CODE
+		AND HO.HDORDER_NO = HOD.HDORDER_NO
+		AND HI.VDPROD_CD = HR.VDPROD_CD
+	</select>
+	
+	<select id="selectOrderDetail" parameterType="string" resultType="purchaseVO">
+		SELECT DISTINCT V.VD_CODE, V.VD_NAME, V.VD_ADD1, V.VD_ADD2, HO.HDORDER_DATE, HOD.*, HR.HDRCV_IN_DATE
+		FROM VENDOR V, HEAD_INVENTORY HI, HEAD_ORDER HO, HEAD_ORDER_DETAIL HOD, HEAD_RECEIVING HR
+		WHERE V.VD_CODE = HI.VD_CODE
+		AND HI.VD_CODE = HO.VD_CODE
+		AND HO.HDORDER_NO = HOD.HDORDER_NO
+		AND HI.VDPROD_CD = HR.VDPROD_CD
+		AND HOD.HDORDER_NO = #{hdorderNo}
+	</select>
+	<!-- 매입내역관리 메인 끝 -->
+	
+	<!-- 매입내역관리 상세화면 시작 -->
+	
+		<select id="selectDetailCount" parameterType="string" resultType="int">
+			SELECT COUNT(VDPROD_CD) AS CNT
+			FROM(
+			SELECT DISTINCT V.VD_CODE, V.VD_NAME, V.VD_ADD1, V.VD_ADD2, HO.HDORDER_DATE, HOD.*, HR.HDRCV_IN_DATE
+			FROM VENDOR V, HEAD_INVENTORY HI, HEAD_ORDER HO, HEAD_ORDER_DETAIL HOD, HEAD_RECEIVING HR
+			WHERE V.VD_CODE = HI.VD_CODE
+			AND HI.VD_CODE = HO.VD_CODE
+			AND HO.HDORDER_NO = HOD.HDORDER_NO
+			AND HI.VDPROD_CD = HR.VDPROD_CD
+			AND HOD.HDORDER_NO = #{hdorderNo}
+			)
+		</select>
+		
+		<select id="selectDetailList" parameterType="string" resultType="purchaseVO">
+			SELECT DISTINCT V.VD_CODE, V.VD_NAME, V.VD_ADD1, V.VD_ADD2, HO.HDORDER_DATE, HOD.*, HR.HDRCV_IN_DATE
+			FROM VENDOR V, HEAD_INVENTORY HI, HEAD_ORDER HO, HEAD_ORDER_DETAIL HOD, HEAD_RECEIVING HR
+			WHERE V.VD_CODE = HI.VD_CODE
+			AND HI.VD_CODE = HO.VD_CODE
+			AND HO.HDORDER_NO = HOD.HDORDER_NO
+			AND HI.VDPROD_CD = HR.VDPROD_CD
+			AND HOD.HDORDER_NO = #{hdorderNo}
+		</select>
+	<!-- 매입내역관리 상세화면 끝 -->
+	
+	<!-- 발주 시작-->
+		<select id="selectDataList" parameterType="string" resultType="purchaseVO">
+			SELECT DISTINCT VD.VD_NAME, VD.VD_CODE 
+			FROM VENDOR VD LEFT JOIN HEAD_INVENTORY HI ON VD.VD_CODE = HI.VD_CODE 
+			WHERE 1=1 
+			and HI.VD_CODE IS NOT NULL
+			and vd_category = #{vdCategory}
+		</select>
+		
+		<select id="selectOrderList" parameterType="purchaseVO" resultType="purchaseVO">
+			SELECT DISTINCT 
+			HI.VDPROD_CD, HI.VDPROD_NAME, HI.HDMAX_QY, HI.HDREMAIN_QY,
+			HI.HDFORWARD_PRICE, 
+	        TO_CHAR(HI.HDPROD_LIFESTARTDAY, 'yyyy-MM-dd') HDPROD_LIFESTARTDAY, 
+	        TO_CHAR(HI.HDPROD_LIFEENDDAY, 'yyyy-MM-dd') HDPROD_LIFEENDDAY, 
+	        HI.HDRTRCV_PRICE, HI.VD_CODE, HI.HDMAX_QY, VD.* 
+	        FROM HEAD_INVENTORY HI , VENDOR VD 
+	        WHERE HI.VD_CODE = #{vdCode} 
+	        and VD_name = #{vdName}
+		</select>
+		
+		<select id="selectProduct" parameterType="string" resultType="purchaseVO">
+			SELECT VDPROD_CD, VDPROD_NAME, HDMAX_QY, HDREMAIN_QY, HDFORWARD_PRICE, 
+					HDPROD_LIFESTARTDAY, HDPROD_LIFEENDDAY, HDRTRCV_PRICE, VD_CODE
+			FROM HEAD_INVENTORY
+			WHERE VDPROD_CD = #{vdprodCd}
+		</select>
+		
+		<select id="selectVendorProduct" parameterType="string" resultType="purchaseVO">
+			SELECT VDPROD_CD, VDPROD_NAME, VDMAX_QY, VDREMAIN_QY, VDFORWARD_PRICE, 
+					VDPROD_LIFESTARTDAY, VDPROD_LIFEENDDAY, VD_CODE, VDRTRCV_PRICE 
+			FROM VENDOR_INVENTORY
+			WHERE VDPROD_CD = #{vdprodCd}
+		</select>
+		
+		<insert id="insertHeadOrder" parameterType="purchaseVO">
+			<selectKey resultType="string" keyProperty="hdorderNo" order="BEFORE"> 
+				SELECT 'A' || LPAD(HEAD_ORDER_NO.NEXTVAL, 6, '0') FROM dual 
+			</selectKey>
+			INSERT INTO HEAD_ORDER(HDORDER_NO, VD_CODE, HDORDER_DATE, HDORDER_TOTALPRICE, HDORDER_CONFM, HDORDER_CONFMDATE) 
+			VALUES(#{hdorderNo},#{vdCode},SYSDATE,#{hdordertotalPrice},'승인',SYSDATE)
+			</insert>
+			
+ 		<insert id="insertOrder" parameterType="purchaseVO"> 
+ 			<selectKey resultType="string" keyProperty="hdorderNo" order="BEFORE"> 
+ 				SELECT 'A' || LPAD(HEAD_ORDER_NO.CURRVAL, 6, '0') FROM dual
+ 			</selectKey> 
+ 			INSERT INTO HEAD_ORDER_DETAIL(HDORDER_NO, VDPROD_CD, VDPROD_NAME, HDORDER_QY, HDRCV_PRICE) 
+ 			VALUES(#{hdorderNo},#{vdprodCd},#{vdprodName},#{hdorderQy},#{hdrtrcvPrice}) 
+ 		</insert> 
+ 		
+ 		<update id="updateHeadInventory" parameterType="purchaseVO">
+ 			UPDATE HEAD_INVENTORY
+			SET 
+			    HDREMAIN_QY = #{hdremainQy}
+			WHERE 
+			    VDPROD_CD = #{vdprodCd}
+ 		</update>
+ 		
+ 		<update id="updateVendorInventory" parameterType="purchaseVO">
+ 			UPDATE VENDOR_INVENTORY
+			SET 
+			    VDREMAIN_QY = #{vdremainQy}
+			WHERE 
+			    VDPROD_CD = #{vdprodCd}
+ 		</update>
+ 		
+ 		<insert id="insertHeadReceiving" parameterType="purchaseVO">
+ 			INSERT INTO HEAD_RECEIVING(HDRCV_IN_DATE, VDPROD_CD, HDRCVPROD_IN_QY)
+			VALUES(SYSDATE, #{vdprodCd}, #{hdrcvprodinQy})
+ 		</insert>
+	<!-- 발주 끝-->
+	
+	<!-- 발주 취소 시작 -->
+	
+		<update id="updateHeadOrderConfm" parameterType="string">
+			UPDATE HEAD_ORDER
+			SET
+			    HDORDER_CONFM = '취소'
+			WHERE
+			    HDORDER_NO = #{hdorderNo}
+		</update>
+	
+	<!-- 발주 취소 끝 -->
+	
+	<!-- 본사 재고관리 시작 -->
+		<select id="selectHeadInventory" parameterType="headPagingVO" resultType="int">
+			SELECT COUNT(VDPROD_CD) CNT
+			FROM(
+			SELECT VDPROD_CD, VDPROD_NAME, HDMAX_QY, HDREMAIN_QY, HDFORWARD_PRICE, 
+			HDPROD_LIFESTARTDAY, HDPROD_LIFEENDDAY, HDRTRCV_PRICE, VD_CODE
+			FROM HEAD_INVENTORY
+			)
+		</select>
+		
+		<select id="selectHeadInventoryList" parameterType="headPagingVO" resultType="purchaseVO">
+			SELECT 
+				B.*
+				FROM (
+					SELECT 
+						A.*, ROW_NUMBER() OVER (ORDER BY HDREMAIN_QY) RNUM
+		                FROM(
+							SELECT HI.VDPROD_CD, HI.VDPROD_NAME, HI.HDMAX_QY, HI.HDREMAIN_QY, HI.HDFORWARD_PRICE, 
+							TO_CHAR(HI.HDPROD_LIFESTARTDAY, 'YY/MM/DD') HDPROD_LIFESTARTDAY, 
+							TO_CHAR(HI.HDPROD_LIFEENDDAY, 'YY/MM/DD') HDPROD_LIFEENDDAY, 
+							HI.HDRTRCV_PRICE, HI.VD_CODE, V.VD_NAME
+							FROM HEAD_INVENTORY HI, VENDOR V
+							WHERE 1=1
+							AND HI.VD_CODE = V.VD_CODE
+							ORDER BY HI.HDREMAIN_QY) A
+						)B
+					<![CDATA[	
+						WHERE B.RNUM >= #{startRow} AND B.RNUM <= #{endRow}
+					]]>
+		</select>
+	<!-- 본사 재고관리 끝 -->
+</mapper>

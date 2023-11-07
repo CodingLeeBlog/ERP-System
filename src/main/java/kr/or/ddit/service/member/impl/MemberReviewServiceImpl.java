@@ -26,12 +26,19 @@ public class MemberReviewServiceImpl implements IMemberReviewService {
 		int status = memberreviewMapper.create(reviewVO);
 		
 		if(status > 0) {
+			
 			// 알람데이터 넣기 
 			String memId = reviewVO.getMemId(); // 작성자 가져오기 
 			int reviewNo = reviewVO.getReviewNo(); //리뷰 번호 
 			alarmVO.setReviewNo(reviewNo);
+			//1) FROM
 			alarmVO.setMemId(memId);
-			
+			//2) WHAT
+			alarmVO.setTblName("REVIEW");
+			alarmVO.setTblNo(reviewNo+"");
+			//3) TO
+			String receiveMemId = this.memberreviewMapper.getReceiveMemId(reviewNo);
+			alarmVO.setReceiveMemId(receiveMemId);
 			// 알람데이터 넣기 
 			memberreviewMapper.insertMemberReviewAlarm(alarmVO);
 			
@@ -48,28 +55,23 @@ public class MemberReviewServiceImpl implements IMemberReviewService {
 		return memberreviewMapper.myReviewList(memId);
 	}
 
+	//일반 홈페이지 알림시작
 	@Override
-	public int selectMemberReviewAlarm(String memId) {
-		int alarmCnt = memberreviewMapper.selectMemberReviewAlarm(memId);
-		return alarmCnt;
+	public List<AlarmVO> selectAlarmList(String memId) {
+		return memberreviewMapper.selectAlarmList(memId);
 	}
 
 	@Override
-	public List<AlarmVO> selectMemberReviewAlarmList(String memId) {
-		return memberreviewMapper.selectMemberReviewAlarmList(memId);
-	}
-
-	@Override
-	public void updateMemberReviewAlarm(int alarmNo) {
-		memberreviewMapper.updateMemberReviewAlarm(alarmNo);
+	public void updateAlarm(int alarmNo) {
+		memberreviewMapper.updateAlarm(alarmNo);
 		
 	}
 
 	@Override
-	public ServiceResult deleteMemberReviewAlarm(int alarmNo) {
+	public ServiceResult deleteAlarm(int alarmNo) {
 		ServiceResult result = null;
 		
-		int status = memberreviewMapper.deleteMemberReviewAlarm(alarmNo);
+		int status = memberreviewMapper.deleteAlarm(alarmNo);
 		
 		if(status > 0) {
 			result = ServiceResult.OK;
@@ -81,10 +83,10 @@ public class MemberReviewServiceImpl implements IMemberReviewService {
 	}
 
 	@Override
-	public ServiceResult deleteclearAllAlarm(String ansId) {
+	public ServiceResult deleteclearAllAlarm(String memId) {
 		ServiceResult result = null;
 		
-		int status = memberreviewMapper.deleteclearAllAlarm(ansId);
+		int status = memberreviewMapper.deleteclearAllAlarm(memId);
 		
 		if(status > 0) {
 			result = ServiceResult.OK;

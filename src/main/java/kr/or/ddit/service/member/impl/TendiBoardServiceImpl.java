@@ -34,10 +34,27 @@ public class TendiBoardServiceImpl implements ITendiBoardService{
 
 
 	@Override
-	public ServiceResult insertBoard(HttpServletRequest req, BoardVO boardVO) {
+	public ServiceResult insertBoard(HttpServletRequest req, BoardVO boardVO, AlarmVO alarmVO) {
 		ServiceResult result = null;
 		int status = tendiboardMapper.insertBoard(boardVO);
 		if(status > 0) {
+			
+			// 건의글 등록 알림 데이터 넣기
+			String memId = boardVO.getMemId(); // 작성자 가져오기 
+			int tableNo = boardVO.getTableNo(); // 게시글 번호
+			alarmVO.setTableNo(tableNo);
+			//1) FROM
+			alarmVO.setMemId(memId);
+			//2) WHAT
+			alarmVO.setTblName("BOARD");
+			alarmVO.setTblNo(tableNo+"");
+			//3) TO
+			String receiveMemId = this.tendiboardMapper.getReceiveMemId(tableNo);
+			alarmVO.setReceiveMemId(receiveMemId);
+			
+			// 알람데이터 넣기 
+			tendiboardMapper.insertTendiAlarm(alarmVO);
+						
 			result = ServiceResult.OK;
 		}else {
 			result = ServiceResult.FAILED;

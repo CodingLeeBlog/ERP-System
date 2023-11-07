@@ -21,8 +21,8 @@ public class InventoryUpdateVO {
 	private String vdprodName;
 	private String hdmaxQy;
 	private int hdremainQy;
-	private String vdprodlifestartDay;
-	private String vdprodlifeendDay;
+	private String hdprodlifestartDay;
+	private String hdprodlifeendDay;
 	private String hdrtrcvPrice;
 	private String vdCode;
 }

@@ -247,6 +247,8 @@ $(function(){
 		var orderData = $("#frcsorderDataDiv").val();
 		console.log("orderData : " + orderData);
 		
+		console.log("배열에담긴 데이터 최종확인",checkData);
+		
 		if(checkData.length !== 0){
 			
 			if(type === "commit"){
@@ -262,9 +264,6 @@ $(function(){
 		            cancelButtonText: "취소",
 		            // 확인 버튼 시 가맹점 주문 승인처리
 		            preConfirm: function() {
-		            	
-		            	
-		            	
 		            	
 			           	$.ajax({
 			           		type: "POST",

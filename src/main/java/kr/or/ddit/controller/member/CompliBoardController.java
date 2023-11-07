@@ -118,7 +118,7 @@ public class CompliBoardController {
 			
 			boardVO.setMemId(user.getUsername());
 			
-			ServiceResult result = compliboardService.insertBoard(req, boardVO, alarmVO);
+			ServiceResult result = compliboardService.insertBoard(req, boardVO);
 			
 			if(result.equals(ServiceResult.OK)) {
 				goPage = "redirect:/elly/detail.do?tableNo=" + boardVO.getTableNo();
@@ -174,27 +174,6 @@ public class CompliBoardController {
 		return goPage;
 	}
 	
-	@ResponseBody
-	@RequestMapping(value = "/selectAlarm.do", method=  RequestMethod.POST)
-	public List<AlarmVO> selectAlarm(@RequestBody Map<String, String> map) {
-		
-		String memId = map.get("memId").toString();
-		int alarmCnt = compliboardService.selectAlarm(memId);
-		
-		List<AlarmVO> alarm = compliboardService.selectAlarmList(memId);
-		if(alarm != null && alarm.size() > 0) {
-			alarm.get(0).setAlarmCnt(alarmCnt);
-		}
-		log.info("알람 개수  : >>>>>>>> "+alarmCnt);
-		return alarm;
-	}
-	
-	@RequestMapping(value = "/updateAlarm.do")
-	public String updateAlarm(int alarmNo) {
-		log.info("updateAlarm에서 넘어오는지 확인 >>>>>>>>>>>>>>>>>> "+alarmNo);
-		compliboardService.updateAlarm(alarmNo);
-		return "redirect:/elly/list.do";
-	}
 	
 }
 

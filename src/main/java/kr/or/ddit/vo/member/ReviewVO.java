@@ -14,4 +14,9 @@ public class ReviewVO {
 	private Date reviewRegdate;
 	private String reviewYn;
 	private String frcsId;
+	
+	private String ansNo;
+	private String ansCn;
+	private Date ansYmd;
+	private String ansId;
 }

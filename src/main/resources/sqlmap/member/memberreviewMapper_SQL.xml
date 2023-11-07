@@ -16,69 +16,75 @@
 </insert>
 
 <select id="myReviewList" parameterType="string" resultType="reviewVO">
-	select 
-		review_no, mem_id, resv_no, review_content, review_star, review_regdate, review_yn, frcs_id
-	from
-		review
-	where mem_id = #{memId}
+		SELECT
+		    a.review_no
+		  , a.mem_id
+		  , a.resv_no
+		  , a.review_content
+		  , a.review_star
+		  , a.review_regdate
+		  , a.review_yn
+		  , a.frcs_id
+		  , b.ans_no
+		  , b.ans_cn
+		  , b.ans_ymd
+		  , b.ans_id
+		FROM
+		    review a
+		LEFT OUTER JOIN review_answer b ON a.review_no = b.review_no
+		where a.mem_id = #{memId} 
+		order by 
+			review_no desc
 </select>
 
-
-<select id="selectMemberReviewAlarm" parameterType="String" resultType="int">
-	select count(*)
-	from alarm
-	where mem_id = #{memId}
+<!-- 일반홈페이지  알림 시작 -->
+<select id="selectAlarmList" parameterType="String" resultType="alarmVO">		
+	select 
+		ALARM_NO, ALARM_CONTENT, MEM_ID, ALARM_READ, ALARM_URL, RECEIVEMEM_ID
+	from alarm 
+	where RECEIVEMEM_ID = #{memId}
 	and ALARM_READ = 'N'
 </select>
 	
-	
-<select id="selectMemberReviewAlarmList" parameterType="String" resultType="alarmVO">		
-	select 
-		ALARM_NO, ALARM_CONTENT, MEM_ID, ALARM_READ, ALARM_URL, ANS_ID
-	from
-		alarm 
-	where 
-		MEM_ID = #{memId}
-		and ALARM_READ = 'N'
-</select>
-	
-<update id="updateMemberReviewAlarm" parameterType="int">
+<update id="updateAlarm" parameterType="int">
 	update alarm
 	set
 		ALARM_READ = 'Y'
 	where 
 		ALARM_NO = #{alarmNo}
 </update>
-	
 
-<insert id="insertMemberReviewAlarm" parameterType="alarmVO">
-    INSERT INTO alarm (
-        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL, FRCS_ID
-    ) VALUES (
-        SEQ_ALARM.nextval, #{memId}, '리뷰 등록 완료!', sysdate, '/owner/review.do?', #{frcsId}
-    )
-</insert>
-
-
-<select id="selectMember" parameterType="String" resultType="String">
-	SELECT DISTINCT RA.MEM_ID
-	FROM REVIEW_ANSWER RA
-		LEFT OUTER JOIN alarm A ON RA.MEM_ID = A.MEM_ID
-	AND RA.ans_id = A.ans_id
-	WHERE RA.MEM_ID = #{alarmNo}
-</select>
-
-
-<delete id="deleteMemberReviewAlarm" parameterType="int">
+<delete id="deleteAlarm" parameterType="int">
 	delete from alarm
 	where ALARM_NO = #{alarmNo}
 </delete>
 
-
 <delete id="deleteclearAllAlarm" parameterType="String">
 	delete from alarm
-	where ANS_ID = #{ansId}
+	 where RECEIVEMEM_ID = #{memId}
 </delete>
-	
+
+
+<!-- 리뷰 등록 알림 -->
+<insert id="insertMemberReviewAlarm" parameterType="alarmVO">
+    INSERT INTO alarm (
+        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL, RECEIVEMEM_ID, TBL_NAME, TBL_NO
+    ) VALUES (
+        SEQ_ALARM.nextval, #{memId}, '리뷰 등록 완료!', sysdate, '/owner/review.do', #{receiveMemId}, #{tblName}, #{tblNo}
+    )
+</insert>
+
+<!-- 리뷰. 매장의 지점장 아이디 구하기 -->
+<select id="getReceiveMemId" parameterType="int" resultType="String">
+	SELECT A.MEM_ID
+	FROM   FRCS_OWNERSHIP A
+	WHERE  A.FRCS_ID = (
+	            SELECT B.FRCS_ID
+	            FROM   REVIEW B
+	            WHERE  B.REVIEW_NO = #{reviewNo}
+	)
+</select>	
+
+<!-- 일반홈페이지  알림 끝 -->
 
 </mapper>

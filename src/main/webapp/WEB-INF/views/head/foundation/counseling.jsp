@@ -73,6 +73,7 @@
 														</c:when>
 														<c:otherwise>
 														  <c:forEach items="${ownerList }" var="owner">
+																<div><input type="hidden" id="frcsId"></div>
 															<tr class="text-left">
 																<td id="menuName">${owner.ownerName }</td>
 																<td><fmt:formatDate value="${owner.ownerRgdate }" pattern="yyyy-MM-dd"/></td>
@@ -574,25 +575,6 @@ $(function() {
 	
 	// 가맹점 등록 
 	$('#regBtn').on('click', function() {
-// 		var frcsId1 = $("#frcsId1").val();
-// 		var frcsName1 = $("#frcsName1").val();
-// 		var frcsState1 = $("#frcsState1").val();
-// 		var frcsTel1 = $("#frcsTel1").val();
-// 		var frcsStdate1 = $("#frcsStdate1").val();
-// 		var frcsEnddate1 = $("#frcsEnddate1").val();
-// 		var frcsPost1 = $("#frcsPost1").val();
-// 		var frcsAdd3 = $("#frcsAdd3").val();
-// 		var frcsAdd4 = $("#frcsAdd4").val();
-// 		var frcsSttime1 = $("#frcsSttime1").val();
-// 		var frcsEndtime1 = $("#frcsEndtime1").val();
-// 		var frcsCdate1 = $("#frcsCdate1").val();
-// 		var frcsInsdate1 = $("#frcsInsdate1").val();
-// 		var frcsInedate1 = $("#frcsInedate1").val();
-// 		var frcsOpdate1 = $("#frcsOpdate1").val();
-// 		var frcsXmap1 = $("#frcsXmap1").val();
-// 		var frcsYmap1 = $("#frcsYmap1").val();
-// 		var frcsStar1 = $("#frcsStar1").val();
-// 		var frcsPsncpa1 = $("#frcsPsncpa1").val();
 		
 		var data = {
 				frcsId : $("#frcsId1").val(),

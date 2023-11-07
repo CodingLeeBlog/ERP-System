@@ -15,7 +15,9 @@ import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.member.MenuListVO;
 import kr.or.ddit.vo.member.ResVO;
 import kr.or.ddit.vo.owner.FrcsMenuVO;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class FrcsMenuServiceImpl implements IFrcsMenuService {
 
@@ -49,12 +51,15 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 			
 			// 예약 완료시 알람데이터 넣기 
 			String memId = resVO.getMemId(); // 작성자 가져오기 
-			String frcsId = resVO.getFrcsId(); // 작성자 가져오기 
-			alarmVO.setMemId(memId);
-			alarmVO.setFrcsId(frcsId);
+			String resvNo = resVO.getResvNo(); //예약 번호
+			alarmVO.setResvNo(resvNo);
 			
-			// 알람데이터 넣기 
-			frcsmenuMapper.insertResAlarm(alarmVO);
+			//1) FROM
+			alarmVO.setMemId(memId);
+			
+			//2) WHAT
+			alarmVO.setTblName("RESERVATION");
+			alarmVO.setTblNo(resvNo);
 			
 			List<MenuListVO> menuList = resVO.getMenuList();
 			
@@ -62,16 +67,23 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 				MenuListVO menuListVO = menuList.get(i);
 				frcsmenuMapper.menuInsert(menuListVO);
 			}
+			
 			if(resVO.getMemcpnId() == null) {				
 				result = ServiceResult.OK;
 			}else {
 				mycouponMapper.deletemyCoupon(resVO.getMemcpnId());
 				result = ServiceResult.OK;			
 			}
+			
+			//3) TO
+			String receiveMemId = this.frcsmenuMapper.getReceiveMemId(resvNo);
+			alarmVO.setReceiveMemId(receiveMemId);
+			// 알람데이터 넣기 
+			frcsmenuMapper.insertResAlarm(alarmVO);
+			log.info("resRegister->alaramVO :" + alarmVO);
 		}else {
 			result = ServiceResult.FAILED;
 		}
-		
 		return result;
 	}
 

@@ -33,6 +33,9 @@ public class HeadPaginationInfoVO<T> {
 	private String storeOrderDetailSearch; // 가맹점주문 상세 가맹점명 검색
 	private String memId;
 	
+	// 본사 발주번호
+	private String hdorderNo;
+	
 	public HeadPaginationInfoVO() {}
 	// PaginationInfoVO 객체를 만들 때, 한 페이지당 게시글 수와 페이지 블록 수를 원하는 값으로 초기화 할 수 있다.
 	public HeadPaginationInfoVO(int screenSize, int blockSize) {

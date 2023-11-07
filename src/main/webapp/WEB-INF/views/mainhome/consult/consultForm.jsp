@@ -226,6 +226,7 @@ $(function(){
 	
 	var code = "";
 	
+	// 이메일 중복 클릭 이벤트
 	mailCheckBtn.on("click", function(){
 		
 		var email = $('#ownerEmail').val();
@@ -243,6 +244,7 @@ $(function(){
 		
 	});
 	
+	// 인증된 이메일 인증번호 클릭 이벤트
 	mailCheckBtn2.on("click", function(){
 		
 		var ownerEmailAuth = $("#ownerEmailAuth").val();
@@ -262,6 +264,7 @@ $(function(){
 		}
 	});
 	
+	// 창업문의 이벤트
 	signupBtn.on("click", function(){
 		
 		var id = $("#ownerId").val(Math.floor(Math.random() * 89999999) + 10000000);

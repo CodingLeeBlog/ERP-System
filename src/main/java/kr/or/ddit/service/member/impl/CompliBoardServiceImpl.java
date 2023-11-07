@@ -33,21 +33,12 @@ public class CompliBoardServiceImpl implements ICompliBoardService{
 
 
 	@Override
-	public ServiceResult insertBoard(HttpServletRequest req, BoardVO boardVO, AlarmVO alarmVO) {
+	public ServiceResult insertBoard(HttpServletRequest req, BoardVO boardVO) {
 		ServiceResult result = null;
 		
 		
 		int status = compliboardMapper.insertBoard(boardVO);
 		if(status > 0) {			
-			// 알람데이터 넣기 
-			String memId = boardVO.getMemId(); // 작성자 가져오기 
-			int tableNo = boardVO.getTableNo();
-			alarmVO.setTableNo(tableNo);
-			alarmVO.setMemId(memId);
-			
-			// 알람데이터 넣기 
-			compliboardMapper.insertAlarm(alarmVO);
-			
 			result = ServiceResult.OK;
 		}else {
 			result = ServiceResult.FAILED;
@@ -93,29 +84,6 @@ public class CompliBoardServiceImpl implements ICompliBoardService{
 		return compliboardMapper.myBoardList(pagingVO);
 	}
 	
-	@Override
-	public int countAlarm(String tableNo) {
-		
-		return compliboardMapper.countAlarm(tableNo);
-	}
-
-	@Override
-	public int selectAlarm(String memId) {
-		int alarmCnt = compliboardMapper.selectAlarm(memId);
-		return alarmCnt;
-	}
-
-	@Override
-	public List<AlarmVO> selectAlarmList(String memId) {
-		
-		return compliboardMapper.selectAlarmList(memId);
-	}
-
-	@Override
-	public void updateAlarm(int alarmNo) {
-		compliboardMapper.updateAlarm(alarmNo);
-	}
-
 	@Override
 	public int myBoardCount(PaginationInfoVO<BoardVO> pagingVO) {
 		return compliboardMapper.myBoardCount(pagingVO);

@@ -110,7 +110,7 @@ public class CounselServiceImpl implements ICounselService {
 		return result;
 	}
 
-	 private String lastId = "fr0001"; // 초기 마지막 아이디
+	 private String lastId = "fr0002"; // 초기 마지막 아이디
 
     @Override
     public String makeFrcsId() {

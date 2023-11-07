@@ -1,29 +1,82 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
-<script src="${pageContext.request.contextPath }/resources/plugins/jquery/jquery.min.js"></script>
-<script src="${pageContext.request.contextPath }/resources/ckeditor/ckeditor.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
- 
-  <main id="main">
-    <section class="breadcrumbs ">
-      <div class="container">
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="sec"%>
+<script
+	src="${pageContext.request.contextPath }/resources/plugins/jquery/jquery.min.js"></script>
+<script
+	src="${pageContext.request.contextPath }/resources/ckeditor/ckeditor.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        <div class="d-flex justify-content-between align-items-center">
-          <ol>
-            <li><a href="/elly/main.do">Home</a></li>
-            <li>칭찬합니다 상세보기</li>
-          </ol>
-        </div>
 
-      </div>
-    </section>
-<br><br><br>
+<div class="row">
 
-	<!-- 게시판 이름 -->
-    <section class="inner-page mx-auto">
-    <p class="d-flex justify-content-right h1 text-white">칭찬합니다  상세보기</p>
-	</section>
+	<!-- Right Sidebar -->
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body">
+				<div class="page-aside-right">
+
+					<div class="btn-group">
+						<button type="button" class="btn btn-secondary">
+							<i class="mdi mdi-archive font-16"></i>
+						</button>
+						<button type="button" class="btn btn-secondary">
+							<i class="mdi mdi-alert-octagon font-16"></i>
+						</button>
+						<button type="button" class="btn btn-secondary">
+							<i class="mdi mdi-delete-variant font-16"></i>
+						</button>
+					</div>
+					<div class="btn-group">
+						<button type="button"
+							class="btn btn-secondary dropdown-toggle arrow-none"
+							data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="mdi mdi-folder font-16"></i> <i
+								class="mdi mdi-chevron-down"></i>
+						</button>
+						<div class="dropdown-menu">
+							<span class="dropdown-header">Move to:</span> <a
+								class="dropdown-item" href="javascript: void(0);">Social</a> <a
+								class="dropdown-item" href="javascript: void(0);">Promotions</a>
+							<a class="dropdown-item" href="javascript: void(0);">Updates</a>
+							<a class="dropdown-item" href="javascript: void(0);">Forums</a>
+						</div>
+					</div>
+					<div class="btn-group">
+						<button type="button"
+							class="btn btn-secondary dropdown-toggle arrow-none"
+							data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="mdi mdi-label font-16"></i> <i
+								class="mdi mdi-chevron-down"></i>
+						</button>
+						<div class="dropdown-menu">
+							<span class="dropdown-header">Label as:</span> <a
+								class="dropdown-item" href="javascript: void(0);">Updates</a> <a
+								class="dropdown-item" href="javascript: void(0);">Social</a> <a
+								class="dropdown-item" href="javascript: void(0);">Promotions</a>
+							<a class="dropdown-item" href="javascript: void(0);">Forums</a>
+						</div>
+					</div>
+
+					<div class="btn-group">
+						<button type="button"
+							class="btn btn-secondary dropdown-toggle arrow-none"
+							data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="mdi mdi-dots-horizontal font-16"></i> More <i
+								class="mdi mdi-chevron-down"></i>
+						</button>
+						<div class="dropdown-menu">
+							<span class="dropdown-header">More Options :</span> <a
+								class="dropdown-item" href="javascript: void(0);">Mark as
+								Unread</a> <a class="dropdown-item" href="javascript: void(0);">Add
+								to Tasks</a> <a class="dropdown-item" href="javascript: void(0);">Add
+								Star</a> <a class="dropdown-item" href="javascript: void(0);">Mute</a>
+						</div>
+					</div>
+
 	
   <section class="content inner-page w-75 p-3 float-right mx-auto bg-transparent">
 	<div class="row">
@@ -82,8 +135,11 @@
                </div>
 			<sec:csrfInput/>
 </section>
-  </main><!-- End #main -->
-
+		</div>
+					</div>
+				</div>
+			</div>
+		</div>
 <section class="content">
          <form action="/head/delete.do" method="post" id="boardForm">
             <input type="hidden" name="boardNo" value="${headBoardVO.boardNo }"/>
@@ -91,6 +147,7 @@
             <sec:csrfInput/>
          </form>
          <div class="col-md-6"></div>
+      
 </section>
 <script type="text/javascript">
 $(function(){

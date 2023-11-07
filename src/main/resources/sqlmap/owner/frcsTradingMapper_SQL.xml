@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsTradingMapper">
+	
+	<sql id="inventSearch">
+		<if test="searchType !=null and searchType== 'vdprodName'">
+			and (h.vdprod_name like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType !=null and searchType== 'vdprodCd'">
+			and (h.vdprod_cd like '%'||upper(#{searchWord})||'%')		
+		</if>
+	</sql>
+	
+	<!-- 내 가맹점 정보 조회 -->
+	<select id="getLocation" parameterType="string" resultType="franchiseVO">
+		select frcs_xmap, frcs_ymap, frcs_add1, frcs_name, frcs_id
+		from franchise
+		where frcs_id= #{frcsId}
+	</select>
+
+	<!-- 모든 가맹점 정보 조회 -->
+	<select id="getAllFrcsList" resultType="franchiseVO">
+		select frcs_xmap, frcs_ymap, frcs_name, frcs_id
+		from franchise
+	</select>
+	
+	<!-- 다른 가맹점 재고 현황 조회 -->
+	<select id="getInventList" parameterType="map" resultType="inventVO">
+		select invntry_qy, h.vdprod_cd, h.vdprod_name, fc.frcs_id, fc.frcs_name, frcs_add1
+		from frcs_inventory f, head_inventory h, franchise fc
+		where f.vdprod_cd = h.vdprod_cd and f.frcs_id = fc.frcs_id
+		and fc.frcs_id = #{frcsId}
+		<include refid="inventSearch"/>
+	</select>
+	
+	<!-- 제품 코드별 가격 가져오기 -->
+	<select id="getHdforwardPrice" parameterType="string" resultType="int">
+		select hdforward_price
+		from head_inventory
+		where vdprod_cd = #{vdprodCd}
+	</select>
+	
+	<insert id="tradingInsert" parameterType="tradVO">
+	
+	
+	</insert>
+	
+</mapper>

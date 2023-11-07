@@ -19,7 +19,7 @@ public class ComplimentController {
 	private IComplimentService complimentService;
 	
 	@RequestMapping(value = "/complimentList.do")
-	public String proposalList(
+	public String complimentList(
 			@RequestParam(name = "page", required = false, defaultValue = "1")int currentPage,
 			@RequestParam(required = false, defaultValue = "title") String searchType,
 			@RequestParam(required = false) String searchWord,
@@ -49,7 +49,7 @@ public class ComplimentController {
 	}
 	
 	@RequestMapping(value = "/complimentDetail.do")
-	public String proposalDetail(@RequestParam int tableNo, Model model) {
+	public String complimentDetail(@RequestParam int tableNo, Model model) {
 	    ProposalVO proposal = complimentService.selectCompliment(tableNo);
 	    model.addAttribute("proposal", proposal);
 	    return "head/compliment/detail"; 

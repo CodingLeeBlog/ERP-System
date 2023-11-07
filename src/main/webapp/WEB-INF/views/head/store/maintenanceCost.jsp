@@ -64,10 +64,10 @@
 		                            <thead class="table-light">
 		                                <tr>
 		                                    <th style="text-align:center; width:100px;">순번</th>
+		                                    <th style="text-align:center; width:150px;">가맹점코드</th>
 		                                    <th style="text-align:center; width:150px;">가맹점명</th>
 		                                    <th style="text-align:center; width:150px;">가맹점주</th>
 		                                    <th style="text-align:center; width:150px;">연락처</th>
-		                                    <th style="text-align:center; width:150px;">관리비납부일자</th>
 		                                    <th style="text-align:center; width:150px;">미납횟수</th>
 		                                    <th style="text-align:center; width:150px;">미납입금</th>
 		                                    <th style="text-align:center; width:150px;">상세</th>

@@ -1,5 +1,6 @@
 package kr.or.ddit.service.owner;
 
+import java.util.Date;
 import java.util.List;
 
 import kr.or.ddit.ServiceResult;
@@ -30,6 +31,13 @@ public interface IFrcsDailySaleService {
 	
 	// 일일 매출 수정
 	public ServiceResult updateDailySales(List<FrcsDailySalesVO> salesList);
+	
+	// 주간차트를 위한 데이터불러오기
+	public int[] getDate(String frcsId);
+
+//	// 모달창 메뉴 검색
+//	public List<FrcsMenuVO> getMenuSearchList(String frcsId, String inputText);
+//	
 
 
 }

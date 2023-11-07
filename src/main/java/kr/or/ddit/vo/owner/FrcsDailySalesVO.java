@@ -1,5 +1,6 @@
 package kr.or.ddit.vo.owner;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 
@@ -17,4 +18,8 @@ public class FrcsDailySalesVO {
 	private String menuName;
 	private int totalPrice;	// 일자별 총 금액
 	
+	private String selngDateStr;	// 날짜데이터 string으로 받아오기
+	private Timestamp selngDate2;	// Timestamp 데이터
+	
+	private int cnt;	
 }

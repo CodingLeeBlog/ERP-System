@@ -836,6 +836,9 @@
         <script src="${pageContext.request.contextPath }/resources/assets/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js"></script>
         <script src="${pageContext.request.contextPath }/resources/assets/vendor/jquery-datatables-checkboxes/js/dataTables.checkboxes.min.js"></script>
         
+        <!-- Datatable Init js -->
+		<script src="${pageContext.request.contextPath }/resources/assets/js/pages/demo.datatable-init.js"></script>
+        
         <!-- Todo js -->
         <script src="${pageContext.request.contextPath }/resources/assets/js/ui/component.todo.js"></script>
         

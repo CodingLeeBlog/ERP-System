@@ -91,7 +91,7 @@
 										${headBoardVO.rnum2 }
 									</div>
 									<div class="col">
-										<a href="/elly/noticedetail.do?boardNo=${headBoardVO.boardNo }">${headBoardVO.boardTitle }</a>
+										<a href="/head/detail.do?boardNo=${headBoardVO.boardNo }">${headBoardVO.boardTitle }</a>
 									</div>
 									<div class="col-1">
 										관리자

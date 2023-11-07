@@ -3,10 +3,12 @@ package kr.or.ddit.controller.head;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.service.head.IOfficeService;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
-import kr.or.ddit.vo.head.MenuVO;
 import kr.or.ddit.vo.head.OfficeLetterVO;
 import kr.or.ddit.vo.owner.FranchiseVO;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,7 @@ public class OfficeLetterController {
 	@Inject
 	private IOfficeService officeService;
 
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/officeLetter.do", method=RequestMethod.GET)
 	public String officeLetterList(
 			@RequestParam(name="page", required = false, defaultValue = "1")int currentPage,
@@ -66,19 +68,47 @@ public class OfficeLetterController {
 		return "head/store/officeLetter";
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@ResponseBody
 	@RequestMapping(value = "/officeLetterRegister.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public ResponseEntity<OfficeLetterVO> officeLetterRegister(@RequestBody OfficeLetterVO officeLetterVO) {
-	    int hdLtno = officeLetterVO.getHdLtno();
+	public ResponseEntity<String> officeLetterRegister(HttpServletRequest req, OfficeLetterVO officeLetterVO) {
 		   
-	    officeService.officeLetterRegister(officeLetterVO);
+	    officeService.officeLetterRegister(req, officeLetterVO);
 	    
-		return new ResponseEntity<OfficeLetterVO>(officeLetterVO, HttpStatus.OK);
-	  }
+	    ResponseEntity<String> entity = new ResponseEntity<String>("{\"result\": \"OK\"}", HttpStatus.OK);
+	    return entity;
+	}
+	
+//	@ResponseBody
+//	@RequestMapping(value = "/officeLetterUpdate.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+//	public ResponseEntity<String> officeLetterUpdate(@RequestBody OfficeLetterVO officeLetterVO) {
+//	    log.info("officeLetterUpdate" + officeLetterVO);
+//	    officeService.officeLetterUpdate(officeLetterVO); 
+//	    
+//	    ResponseEntity<String> entity = new ResponseEntity<String>("{\"result\": \"OK\"}", HttpStatus.OK);
+//	    return entity;
+//	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/officeLetterUpdate.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public ResponseEntity<String> officeLetterUpdate(@RequestBody List<OfficeLetterVO> requestBody) {
+	    
+	    officeService.officeLetterUpdate(requestBody);
+
+	    ResponseEntity<String> entity = new ResponseEntity<String>("{\"result\": \"OK\"}", HttpStatus.OK);
+	    return entity;
+	}
 	
 	@RequestMapping(value = "/officeLetterRead.do", method=RequestMethod.GET)
-	public String OfficeLetterRead(Model model) {
+	public String officeLetterRead(Model model) {
 		log.info("OfficeLetterRead(): 시작");
 		return "head/store/officeLetterRead";
 	}
+	
+	@RequestMapping(value="/officeLetterDelete.do", method = RequestMethod.POST)
+	public String officeLetterDelete(@RequestParam("hdLtno")int hdLtno) {
+		officeService.officeLetterDelete(hdLtno);
+		
+        return "redirect:/head/officeLetter.do";
+   }
 }

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.SalesAnalysisMapper">
+
+<select id="headyeartotalChart" resultType="headsalesTotalVO">
+select
+    a.yeartotalselng_price
+    , b.yeartotalfrcs_amt
+    , b.yeartotalfrcs_rowal
+    , c.yeartotalpurchase_price
+from
+    (
+    select 
+        sum(a.frcsorder_qy * (c.hdforward_price - c.hdrtrcv_price)) as yeartotalselng_price
+            from frcsorder_detail a
+                left join frcsorder b 
+                    on a.frcsorder_no = b.frcsorder_no
+                left join head_inventory c
+                    on a.vdprod_cd = c.vdprod_cd
+                    where b.frcsorder_confm = '승인'
+    ) a
+left join
+    (
+    select
+        sum(frcs_amt) as yeartotalfrcs_amt
+        , sum(frcs_rowal) as yeartotalfrcs_rowal
+            from frcsbill
+    ) b on 1=1
+left join
+    (
+    select
+        sum(hdorder_totalprice) as yeartotalpurchase_price
+            from head_order
+            where hdorder_confm = '승인'
+    ) c on 1=1
+</select>
+
+<select id="allmonthtotalChart" resultType="headsalesTotalVO">
+select 
+    a.all_month as all_month
+    , coalesce(a.allmonthselng_price, 0) as allmonthselng_price
+    , coalesce(b.yeartotalfrcs_amt, 0) as allmonthfrcs_amt
+    , coalesce(b.yeartotalfrcs_rowal, 0) as allmonthfrcs_rowal
+from
+    (select 
+        to_char(b.frcsorder_date, 'YYYY-MM') as all_month
+        , sum(a.frcsorder_qy * (c.hdforward_price - c.hdrtrcv_price)) as allmonthselng_price
+    from frcsorder_detail a
+        left join frcsorder b 
+            on a.frcsorder_no = b.frcsorder_no
+        left join head_inventory c
+            on a.vdprod_cd = c.vdprod_cd
+                where b.frcsorder_confm = '승인'
+                and b.frcsorder_date between to_date('2023-01-01', 'YYYY-MM-DD')
+                and to_date('2023-12-31', 'YYYY-MM-DD')
+                group by to_char(b.frcsorder_date, 'YYYY-MM')
+    ) a  
+    left join
+    (select
+        to_char(settle_date, 'YYYY-MM') as all_month
+        , sum(frcs_amt) as yeartotalfrcs_amt
+        , sum(frcs_rowal) as yeartotalfrcs_rowal
+    from frcsbill
+    group by to_char(settle_date, 'YYYY-MM')
+    ) b
+    on a.all_month = b.all_month
+    order by all_month
+</select>
+
+</mapper>

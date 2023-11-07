@@ -4,4 +4,73 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.mapper.owner.FrcsEmployeeMapper">
 
+	<select id="frcsEmpList" parameterType="string" resultType="frcsEmpVO">
+		SELECT
+		    frcs_emp_cd
+		  , frcs_id
+		  , frcs_emp_nm
+		  , frcs_emp_brdt
+		  , frcs_emp_telno
+		  , frcs_emp_salary
+		  , frcs_emp_rspofc
+		  , frcs_emp_yn
+		  , table_name
+		  , frcs_emp_profileimg
+		FROM
+		    frcs_employee
+		WHERE
+			frcs_id = #{frcsId}
+	</select>
+	
+	<insert id="frcsEmpInsert" parameterType="frcsEmpVO">
+		<selectKey keyProperty="frcsEmpCd" resultType="string" order="BEFORE">
+			select seq_employee.nextval from dual
+		</selectKey>
+		INSERT INTO frcs_employee (
+		    frcs_emp_cd
+		    , frcs_id
+		    , frcs_emp_nm
+		    , frcs_emp_brdt
+		    , frcs_emp_telno
+		    , frcs_emp_salary
+		    , frcs_emp_rspofc
+		    , frcs_emp_yn
+		    , table_name
+		    , frcs_emp_profileimg
+		) VALUES (
+		    #{frcsEmpCd}
+		  , #{frcsId}
+		  , #{frcsEmpNm}
+		  , #{frcsEmpBrdt}
+		  , #{frcsEmpTelno}
+		  , #{frcsEmpSalary}
+		  , #{frcsEmpRspofc}
+		  , #{frcsEmpYn}
+		  , #{tableName}
+		  , #{frcsEmpProfileimg}
+		)
+	</insert>
+	
+	<delete id="empDelete" parameterType="string">
+		DELETE 
+		FROM frcs_employee
+		WHERE
+		    frcs_emp_cd = #{frcsEmpCd}
+	</delete>
+	
+	<update id="empUpdate" parameterType="frcsEmpVO">
+		UPDATE frcs_employee
+		SET
+		    frcs_emp_nm = #{frcsEmpNm}
+		    , frcs_emp_brdt = #{frcsEmpBrdt}
+		    , frcs_emp_telno = #{frcsEmpTelno}
+		    , frcs_emp_salary = #{frcsEmpSalary}
+		    , frcs_emp_rspofc = #{frcsEmpRspofc}
+		    , frcs_emp_yn = #{frcsEmpYn}
+		    , table_name = #{tableName}
+		    , frcs_emp_profileimg = #{frcsEmpProfileimg}
+		WHERE
+		    frcs_emp_cd = #{frcsEmpCd}
+	</update>
+
 </mapper>

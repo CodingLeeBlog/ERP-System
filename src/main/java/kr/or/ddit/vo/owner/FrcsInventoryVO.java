@@ -18,4 +18,6 @@ public class FrcsInventoryVO {
 	private int dlivyQy;
 	private int atorderQy;	// 자동발주
 	
+	private String frcsName;
+	private String frcsAdd1;
 }
