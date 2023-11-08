@@ -12,21 +12,19 @@
 
 <div class="content-page">
 	<div class="content">
-
 		<!-- Start Content-->
 		<div class="container-fluid">
-
 			<!-- start page title -->
-			<div class="row">
-				<div class="col-12">
-					<div class="page-title-box">
-						<div class="page-title-right">
-							<ol class="breadcrumb m-0">
-								<li class="breadcrumb-item"><a href="javascript: void(0);">개점관리</a></li>
-								<li class="breadcrumb-item active">교육훈련관리</li>
-							</ol>
-						</div>
-						<h4 class="page-title">교육훈련관리</h4>
+			<div class="col-sm-12 card widget-inline mt-3" style="height: 100px;">
+				<div class="row ">
+					<div class="card-body col-4 align-items-center">
+						<div class="col-sm-6 page-title text-primary font-24 ms-3 fw-bold">교육훈련관리</div>
+						<div class="col-sm-12 page-title-sub text-muted font-14 ms-3">가맹점의
+							교육을 관리합니다.</div>
+					</div>
+					<div
+						class="card-body col-6 fw-bold font-15 d-flex justify-content-end align-items-center me-5">
+						개점관리 > &nbsp;<span class="text-decoration-underline">교육훈련관리</span>
 					</div>
 				</div>
 			</div>
@@ -63,7 +61,8 @@
 								<div class="col-sm-7">
 									<div class="text-sm-end">
 										<input type="button" class="btn btn-info" id="registerBtn"
-											value="등록">
+											value="등록" data-bs-toggle="modal"
+																		data-bs-target="#exampleModalFullscreenSm">
 										<!--                                                      <input type="button" class="btn btn-success" id="manageBtn" value="관리"> -->
 										<a href="/head/educationVideo.do" class="btn btn-success">관리</a>
 									</div>
@@ -71,6 +70,65 @@
 								<!-- end col-->
 							</div>
 							<br />
+							<div class="row">
+						<div class="col-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="modal fade" id="exampleModalFullscreenSm"
+										tabindex="-1" aria-labelledby="exampleModalFullscreenSmLabel"
+										aria-hidden="true">
+										<div class="modal-dialog modal-fullscreen-sm-down">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h5 class="modal-title" id="exampleModalFullscreenSmLabel">등록화면</h5>
+													<button type="button" class="btn-close"
+														data-bs-dismiss="modal" aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													<form enctype="multipart/form-data">
+														<!-- 										            		<div class="mb-3 col-md-6"> -->
+														<!-- 										            			<label for="" class="col-form-label">지점명</label> -->
+														<!-- 																<input type="text" class="form-control" id="inspName" name="searchWord"> -->
+														<!-- 										            		</div> -->
+														<div class="mb-3 col-md-6">
+															<label for="ownerFile8" class="col-form-label">가맹점명</label>
+															<input class="form-control" id="frcsName" type="text"
+																name="frcsName">
+														</div>
+														<div class="mb-3 col-md-6">
+															<label for="ownerFile8" class="col-form-label">교육시작일</label>
+															<input class="form-control" id="eduSdate" type="date"
+																name="eduSdate">
+														</div>
+														<div class="mb-3 col-md-6">
+															<label for="ownerFile8" class="col-form-label">교육종료일</label>
+															<input class="form-control" id="eduFdate" type="date"
+																name="eduFdate">
+														</div>
+														<div class="mb-3 col-md-6">
+															<label for="ownerConst1" class="col-form-label">이수여부</label>
+															<select class="form-select form-select-sm mb-3"
+																id="eduFnshyn" name="eduFnshyn">
+																<option selected>선택</option>
+																<option value="Y">Y</option>
+																<option value="N">N</option>
+															</select>
+														</div>
+														<div class="mb-3 col-md-6">
+															<label for="ownerFile8" class="col-form-label">비고</label>
+															<input class="form-control" id="eduRemark" type="text"
+																name="eduRemark">
+														</div>
+													</form>
+												</div>
+												<div class="modal-footer">
+													<a href="javascript:void(0);" class="btn btn-light"
+														data-bs-dismiss="modal">취소</a>
+													<button type="button" class="btn btn-primary" id="insertBtn">저장</button>
+												</div>
+											</div>
+										</div>
+									</div>
 
 							<div class="table-responsive">
 								<table class="table table-centered w-100 dt-responsive nowrap"
@@ -96,7 +154,7 @@
 											<c:otherwise>
 												<c:forEach items="${educationList }" var="education">
 													<tr class="text-left">
-														<td>${education.frcsName }</td>
+														<td data-frcs-id="${education.frcsId}">${education.frcsName }</td>
 														<td><fmt:formatDate value="${education.eduSdate }"
 																pattern="yyyy-MM-dd" /></td>
 														<td><fmt:formatDate value="${education.eduFdate }"
@@ -128,6 +186,10 @@
 	<!-- content -->
 </div>
 <!-- 모달 창 -->
+</div>
+</div>
+</div>
+</div>
 
 
 <div class="modal fade" id="exampleModal" tabindex="-1"
@@ -141,34 +203,35 @@
 			</div>
 			<div class="modal-body">
 				<form>
+					<input type="hidden" name="frcsId" id="frcsId">
 					<div class="mb-3">
-						<label for="recipient-name" class="col-form-label">가맹점명</label> <input
-							type="text" class="form-control" id="recipient-name">
+						<label for="frcsName1" class="col-form-label">가맹점명</label> <input
+							type="text" class="form-control" id="frcsName1">
+					</div>
+<!-- 					<div class="mb-3"> -->
+<!-- 						<label for="recipient-name" class="col-form-label">교육내역</label> <input -->
+<!-- 							type="text" class="form-control" id="recipient-name"> -->
+<!-- 					</div> -->
+					<div class="mb-3">
+						<label for="eduFnshyn1" class="col-form-label">상태</label> <input
+							type="text" class="form-control" id="eduFnshyn1">
 					</div>
 					<div class="mb-3">
-						<label for="recipient-name" class="col-form-label">교육내역</label> <input
-							type="text" class="form-control" id="recipient-name">
+						<label for="eduSdate1" class="col-form-label">교육시작일</label> <input
+							type="text" class="form-control" id="eduSdate1">
 					</div>
 					<div class="mb-3">
-						<label for="recipient-name" class="col-form-label">상태</label> <input
-							type="text" class="form-control" id="recipient-name">
+						<label for="eduFdate1" class="col-form-label">교육종료일</label> <input
+							type="text" class="form-control" id="eduFdate1">
 					</div>
 					<div class="mb-3">
-						<label for="recipient-name" class="col-form-label">교육시작일</label> <input
-							type="text" class="form-control" id="recipient-name">
-					</div>
-					<div class="mb-3">
-						<label for="recipient-name" class="col-form-label">교육종료일</label> <input
-							type="text" class="form-control" id="recipient-name">
-					</div>
-					<div class="mb-3">
-						<label for="recipient-name" class="col-form-label">비고</label> <input
-							type="text" class="form-control" id="recipient-name">
+						<label for="eduRemark1" class="col-form-label">비고</label> <input
+							type="text" class="form-control" id="eduRemark1">
 					</div>
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-primary">수정</button>
+				<button type="button" class="btn btn-primary" id="updateBtn">수정</button>
 				<button type="button" class="btn btn-secondary"
 					data-bs-dismiss="modal">삭제</button>
 				<button type="button" class="btn btn-secondary"
@@ -185,21 +248,98 @@
 	src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    // DOM이 준비되면 실행될 함수
+$(function() {
+    var pagingArea = $("#pagingArea");
+    var insertBtn = $("#insertBtn");
+
+    // 페이징
+    pagingArea.on("click", "a", function(event) {
+        event.preventDefault();
+        var pageNo = $(this).data("page");
+        searchForm.find("#page").val(pageNo);
+        searchForm.submit();
+    });
+    
+    // 등록 버튼 클릭 이벤트 처리
+    insertBtn.on("click", function() {
+        var frcsName = $("#frcsName").val();
+        var eduSdate = $("#eduSdate").val();
+        var eduFdate = $("#eduFdate").val();
+        var eduFnshyn = $("#eduFnshyn").val();
+        var eduRemark = $("#eduRemark").val();
+
+        var data = {
+            frcsName: frcsName,
+            eduSdate: eduSdate,
+            eduFdate: eduFdate,
+            eduFnshyn: eduFnshyn,
+            eduRemark: eduRemark
+        };
+
+        $.ajax({
+            type: "POST", 
+            url: "/head/educationRegister.do",
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(res) {
+                Swal.fire({
+                    title: '알림창',
+                    text: '발송이 완료되었습니다.',
+                    icon: 'success',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.href = "/head/education.do";
+                    }
+                });
+                console.log(res.result);
+            },
+            error: function(err) {
+                alert("데이터 저장 중 오류가 발생했습니다.", err);
+                console.log(data);
+            }
+        });
+    });
     $(document).ready(function() {
-        // 가맹점명(td)를 클릭했을 때 모달 창
-        $('table tbody').on('click', 'td:first-child', function() {
-            var branchName = $(this).text().trim(); // 클릭한 td의 텍스트 가져오기
-            openModal(branchName); // 모달을 열고 가맹점명 전달
+        $('table tbody').on('click', 'td[data-frcs-id]', function() {
+            var data = 
+            	{ frcsId : $(this).data("frcs-id")
+            
+            	};
+
+            // Open the modal
+            openModal(frcsId);
         });
 
-        // 모달 창 열기 함수
-        function openModal(branchName) {
-            // 모달 창의 가맹점명 필드에 클릭한 가맹점명을 설정
-            $('#recipient-name').val(branchName);
-            // 모달 창을 보이게 합니다.
-            $('#exampleModal').modal('show');
+        function openModal(frcsId) {
+        	$.ajax({
+        	    url: "/head/educationDetail.do",
+        	    type: "post",
+        	    data: JSON.stringify(data), // 데이터를 JSON 문자열로 변환
+        	    contentType: "application/json; charset=utf-8",
+        	    beforeSend: function(xhr) {
+        	        xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+        	    },
+        	    success: function(data) {
+        	        console.log(data);  // 데이터 확인
+        	        $("#frcsId").val(data.frcsId);
+        	        $("#frcsName1").val(data.frcsName);
+        	        $("#eduSdate1").val(data.eduSdate);
+        	        $("#eduFdate1").val(data.eduFdate);
+        	        $("#eduFnshyn1").val(data.eduFnshyn);
+        	        $("#eduRemark1").val(data.eduRemark);
+
+        	        $('#exampleModal').modal('show');
+        	    },
+        	    error: function() {
+        	        alert("오류가 발생했습니다.");
+        	    }
+        	});
         }
     });
+});
+
 </script>
 

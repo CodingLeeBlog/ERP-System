@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.FranchiseSalesAnalysisMapper">
+
+	<!-- 가맹점리스트 count -->
+	<select id="selectCountFrcs" parameterType="headPagingVO" resultType="int">
+		SELECT COUNT(FRCS_ID) AS CNT
+		FROM(
+		SELECT A.MEM_ID, A.MEM_NAME, A.MEM_TEL, A.MEM_EMAIL, B.FRCS_ID, A.OWNER_ID,
+		        B.FRCS_NAME, B.FRCS_STATE, B.FRCS_TEL, TO_CHAR(B.FRCS_OPDATE, 'YY/MM/DD') FRCS_OPDATE, B.FRCS_POST, B.FRCS_ADD1, B.FRCS_ADD2
+		FROM(
+		SELECT FO.MEM_ID, M.MEM_NAME, M.MEM_TEL, M.MEM_EMAIL,
+		        FO.FRCS_ID, FO.OWNER_ID
+		FROM MEMBER M, FRCS_OWNERSHIP FO
+		WHERE M.MEM_ID = FO.MEM_ID
+		) A , FRANCHISE B
+		WHERE A.FRCS_ID = B.FRCS_ID
+		)
+	</select>
+	<!-- 가맹점 리스트 select -->
+	<select id="selectFrcsList" parameterType="headPagingVO" resultType="franchiseSalesAnalysisVO">
+		select 
+		b.*
+		from (
+		select 
+		a.*, row_number() over (order by a.frcs_id) rnum
+		from(
+		SELECT A.MEM_ID, A.MEM_NAME, A.MEM_TEL, A.MEM_EMAIL, B.FRCS_ID, A.OWNER_ID,
+		        B.FRCS_NAME, B.FRCS_STATE, B.FRCS_TEL, TO_CHAR(B.FRCS_OPDATE, 'YY/MM/DD') FRCS_OPDATE, B.FRCS_POST, B.FRCS_ADD1, B.FRCS_ADD2
+		FROM(
+		SELECT FO.MEM_ID, M.MEM_NAME, M.MEM_TEL, M.MEM_EMAIL,
+		        FO.FRCS_ID, FO.OWNER_ID
+		FROM MEMBER M, FRCS_OWNERSHIP FO
+		WHERE M.MEM_ID = FO.MEM_ID
+		) A , FRANCHISE B
+		WHERE A.FRCS_ID = B.FRCS_ID
+		)a
+		)b
+		 <![CDATA[
+				where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+			]]>
+	</select>
+	
+	
+</mapper>

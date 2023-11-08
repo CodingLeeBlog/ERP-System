@@ -4,24 +4,21 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <div class="content-page">
 	<div class="content">
-	
-	    <!-- Start Content-->
-	    <div class="container-fluid">
-	
-	        <!-- start page title -->
-	        <div class="row">
-	            <div class="col-12">
-	                <div class="page-title-box">
-	                    <div class="page-title-right">
-	                        <ol class="breadcrumb m-0">
-	                            <li class="breadcrumb-item"><a href="javascript: void(0);">게시판</a></li>
-	                            <li class="breadcrumb-item active">건의합니다</li>
-	                        </ol>
-	                    </div>
-	                    <h4 class="page-title">건의합니다.</h4>
-	                </div>
-	            </div>
-	        </div>
+		<!-- Start Content-->
+		<div class="container-fluid">
+			<!-- start page title -->
+			<div class="col-sm-12 card widget-inline mt-3" style="height: 100px;">
+				<div class="row ">
+					<div class="card-body col-4 align-items-center">
+						<div class="col-sm-6 page-title text-primary font-24 ms-3 fw-bold">건의합니다</div>
+						<div class="col-sm-12 page-title-sub text-muted font-14 ms-3">고객이 올린 건의를 조회할 수 있습니다.</div>
+					</div>
+					<div
+						class="card-body col-6 fw-bold font-15 d-flex justify-content-end align-items-center me-5">
+						게시판 > &nbsp;<span class="text-decoration-underline">건의합니다</span>
+					</div>
+				</div>
+			</div>
 	        <!-- end page title -->
 	
 	        <div class="row">

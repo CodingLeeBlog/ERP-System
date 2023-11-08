@@ -57,24 +57,30 @@
 											<fmt:formatDate value="${res.resvAccDate }" pattern="yyyy. MM. dd"/>
 										</div>
 										<div class="col-1">
-											<fmt:formatDate value="${res.resvDate}" pattern="yyyy. MM. dd"/>
+											<div class="resvDate"><fmt:formatDate value="${res.resvDate}" pattern="yyyy. MM. dd"/></div>
 										</div>
 										<div class="col">
 											${res.resvNote}
 										</div>
 										<div class="col-1">
-											<div class="payment">
+											<div class="payState">
 												<c:if test="${res.resvYn eq 'N' }">
-													<input class="paymentBtn" type="button" name="" id="paymentBtn" value="결제하기" />
+													<input class="paymentBtn" type="button" name="paymentBtn" id="paymentBtn" value="결제하기" />
 												</c:if>
 												<c:if test="${res.resvYn ne 'N'}">
-													<div>${res.resvYn }</div>												
+													<div>결제 완료</div>												
+													<input class="paymentcancelBtn mt-2" type="button" name="paymentcancelBtn" id="paymentcancelBtn" value="결제 취소" />
 												</c:if>
 											</div>
 										</div>
 										<div class="col-1">
-											<div>
-												<input class="" type="button" name="" id="" value="예약 취소" />
+											<div class="resState">
+												<c:if test="${res.resvState eq 'N' }">
+													<div>예약 대기중</div>
+												</c:if>
+												<c:if test="${res.resvState ne 'N'}">
+													<div>예약 완료</div>										
+												</c:if>
 											</div>
 										</div>
 										<input class="name" type="hidden" name="" id="" value="${res.frcsName }" />
@@ -411,6 +417,19 @@
 				</div>
 			</div>
 			
+			<!-- 결제 완료시 영수증 모달창 -->
+			<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="color: black">
+				<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 400px;">
+					<div class="modal-content">
+						<div class="modal-body">
+						</div>
+						<div class="modal-footer">
+							 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
 <script type="text/javascript">
 $(function(){
 	
@@ -440,7 +459,50 @@ $(function(){
 		console.log("tableNo: " + tableNo);
 	});
 	
+	$(".paymentcancelBtn").on("click", function(){
+		
+		var resvNo = $(this).closest(".row").find(".resvNo").text();
+		var resvDate = $(this).closest(".row").find(".resvDate").text();
+		
+		var msg = '<div class="container-fluid">'
+			msg += '<div class="row">'
+			msg += '<div class="col-1"></div>'
+			msg += '<div class="col mt-3">'
+			msg += '<div class="row justify-content-center" style="font-size: 40px;">결제내역</div>'
+			msg += '<div class="mt-4 mb-4" style="color: #5a5a5a; border-bottom: 3px dashed;"></div>'
+			msg += '<div class="row mb-4">'
+			msg += '<div class="col text-start">예 약 번 호</div>'
+			msg += '<div class="col text-end">' + resvNo + '</div>'
+			msg += '</div>'
+			msg += '<div class="row mb-4">'
+			msg += '<div class="col text-start">날 짜</div>'
+			msg += '<div class="col text-end">' + resvDate + '</div>'
+			msg += '</div>'
+			msg += '<div class="row">'
+			msg += '<div class="col text-start">대 표 자 명</div>'
+			msg += '<div class="col text-end">' + '${member.memName}' + '</div>'
+			msg += '</div>'
+			msg += '<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 3px dashed;"></div>'
+			msg += '<div class="row">'
+			msg += '<select class="form-select" name="cancelList" id="cancelList">'
+			msg += '<option>고객변심</option>'
+			msg += '<option>개인사유</option>'
+			msg += '<option>기타</option>'
+			msg += '</select>'
+			msg += '</div>'
+			msg += '<div class="mt-4 mb-4" style="color: #5a5a5a; border-bottom: 3px dashed;"></div>'
+			msg += '<div class="row mb-2">'
+			msg += '<div class="text-center">이용해주셔서 감사합니다.</div>'
+			msg += '</div>'
+			msg += '</div>'
+			msg += '<div class="col-1"></div>'
+			msg += '</div>'
+			msg += '</div>'
+        $(".modal-body").html(msg);
+		$("#cancelModal").modal("show");
+	});
 	
+
 	
 	// 결제하기 기능
 	$(".paymentBtn").on("click", function(){
@@ -492,7 +554,8 @@ $(function(){
 		    			memId : memId,
 		    			payNo : payNo,
 		    			payPrice : amount,
-		    			payYn : 'Y'
+		    			payYn : 'Y',
+		    			resvState : 'Y'
 		    	}
 		    	
 		    	// 결제 성공시 결제정보 DB 저장 기능
@@ -509,9 +572,11 @@ $(function(){
 							
 							console.log(resvNo);
 							
-							var pay = '<div class="resvYn" name="resvYn">Y</div>'
+							var pay = '<div>결제 완료</div><input class="paymentcancelBtn mt-2" type="button" name="paymentcancelBtn" id="paymentcancelBtn" value="결제 취소" />'
+							var res = '<div>예약 완료</div>'
 							
-							$(".resvNo:contains(" + resvNo + ")").closest(".row").find(".payment").html(pay);
+							$(".resvNo:contains(" + resvNo + ")").closest(".row").find(".payState").html(pay);
+							$(".resvNo:contains(" + resvNo + ")").closest(".row").find(".resState").html(res);
 						}
 					}
 		    	});

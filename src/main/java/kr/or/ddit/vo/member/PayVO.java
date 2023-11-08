@@ -13,5 +13,6 @@ public class PayVO {
 	private int payPrice;
 	private Date payDate;
 	private String payYn;
+	private String resvState;
 	private Date payCancle;
 }

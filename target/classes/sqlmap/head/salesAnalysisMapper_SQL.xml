@@ -24,7 +24,7 @@ from
 left join
     (
     select
-        sum(frcs_amt) as yeartotalfrcs_amt
+        sum(frcs_amt*12) as yeartotalfrcs_amt
         , sum(frcs_rowal) as yeartotalfrcs_rowal
             from frcsbill
     ) b on 1=1
@@ -41,8 +41,8 @@ left join
 select 
     a.all_month as all_month
     , coalesce(a.allmonthselng_price, 0) as allmonthselng_price
-    , coalesce(b.yeartotalfrcs_amt, 0) as allmonthfrcs_amt
-    , coalesce(b.yeartotalfrcs_rowal, 0) as allmonthfrcs_rowal
+    , coalesce(b.allmonthfrcs_amt, 0) as allmonthfrcs_amt
+    , coalesce(b.allmonthfrcs_rowal, 0) as allmonthfrcs_rowal
 from
     (select 
         to_char(b.frcsorder_date, 'YYYY-MM') as all_month
@@ -60,13 +60,15 @@ from
     left join
     (select
         to_char(settle_date, 'YYYY-MM') as all_month
-        , sum(frcs_amt) as yeartotalfrcs_amt
-        , sum(frcs_rowal) as yeartotalfrcs_rowal
+        , sum(frcs_amt) as allmonthfrcs_amt
+        , sum(frcs_rowal) as allmonthfrcs_rowal
     from frcsbill
     group by to_char(settle_date, 'YYYY-MM')
     ) b
     on a.all_month = b.all_month
     order by all_month
 </select>
+
+<select id=""></select>
 
 </mapper>

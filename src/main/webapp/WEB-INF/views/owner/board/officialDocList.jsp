@@ -66,8 +66,10 @@
 		                        <div class="row mb-2">
 		                        	<div class="col-xl-8">
 			                        	<div class="btn-group">
-			                                <button type="button" class="btn btn-light"><i class="mdi mdi-archive font-16"></i>수정</button>
-			                                <button type="button" class="btn btn-light"><i class="mdi mdi-alert-octagon font-16"></i>삭제</button>
+			                        		<div class="form-check bg-light" style="width:45px; display:flex; align-items:center;">
+                                                <input type="checkbox" class="form-check-input m-0" id="checkAll" name="checkbox">
+                                            </div>
+			                                <button type="button" class="btn btn-light" id="delBtn"><i class="mdi mdi-delete font-16"></i>삭제</button>
 			                            </div>
 		                        	</div>
 		                            <div class="col-xl-4">
@@ -106,23 +108,20 @@
 						                                        <div class="email-sender-info">
 						                                            <div class="checkbox-wrapper-mail">
 						                                                <div class="form-check">
-						                                                    <input type="checkbox" class="form-check-input" id="check${frcsOfldc.frcsOfldcNo }">
+						                                                    <input type="checkbox" class="form-check-input" id="check${frcsOfldc.frcsOfldcNo }" name="checkbox" value="${frcsOfldc.frcsOfldcNo }">
 						                                                    <label class="form-check-label" for="check${frcsOfldc.frcsOfldcNo }">&nbsp;</label>
 						                                                </div>
 						                                            </div>
 						                                            <a href="javascript: void(0);" class="email-title">본사</a>
 						                                        </div>
 						                                        <div class="email-content">
-						                                            <a href="javascript: void(0);" class="email-subject">
+						                                            <a href="/owner/docDetail.do?frcsOfldcNo=${frcsOfldc.frcsOfldcNo}" class="email-subject">
 						                                                ${frcsOfldc.frcsOfldcTtl }
 						                                            </a>
 						                                            <div class="email-date">${frcsOfldc.frcsOfldcDspymd }</div>
 						                                        </div>
 						                                        <div class="email-action-icons">
 						                                            <ul class="list-inline">
-						                                                <li class="list-inline-item">
-						                                                    <a href="javascript: void(0);"><i class="mdi mdi-archive email-action-icons-item"></i></a>
-						                                                </li>
 						                                                <li class="list-inline-item">
 						                                                    <a href="javascript: void(0);"><i class="mdi mdi-delete email-action-icons-item"></i></a>
 						                                                </li>
@@ -156,19 +155,18 @@
 						                                                    <label class="form-check-label" for="check${frcsOfldc.frcsOfldcNo }">&nbsp;</label>
 						                                                </div>
 						                                            </div>
-						                                            <a href="javascript: void(0);" class="email-title">본사</a>
+						                                            <c:if test="${frcsOfldc.frcsOfldcRcvr eq 'admin' }">
+						                                          		<a href="javascript: void(0);" class="email-title">본사</a>
+						                                            </c:if>
 						                                        </div>
 						                                        <div class="email-content">
-						                                            <a href="javascript: void(0);" class="email-subject">
+						                                            <a href="/owner/docDetail.do?frcsOfldcNo=${frcsOfldc.frcsOfldcNo}" class="email-subject">
 						                                                ${frcsOfldc.frcsOfldcTtl }
 						                                            </a>
 						                                            <div class="email-date">${frcsOfldc.frcsOfldcDspymd }</div>
 						                                        </div>
 						                                        <div class="email-action-icons">
 						                                            <ul class="list-inline">
-						                                                <li class="list-inline-item">
-						                                                    <a href="javascript: void(0);"><i class="mdi mdi-archive email-action-icons-item"></i></a>
-						                                                </li>
 						                                                <li class="list-inline-item">
 						                                                    <a href="javascript: void(0);"><i class="mdi mdi-delete email-action-icons-item"></i></a>
 						                                                </li>
@@ -249,7 +247,10 @@
 <script type="text/javascript">
 $(function(){
 	var regBtn = $("#regBtn");
+	var delBtn = $("#delBtn");
 	var regForm = $("#regForm");
+	var searchForm = $("#searchForm");
+	var pagingArea = $("#pagingArea");
 	
 	regBtn.on("click", function(){
 		var frcsOfldcTtl = $("#frcsOfldcTtl").val();
@@ -261,6 +262,72 @@ $(function(){
 		
 		regForm.submit();
 		
+	});
+	
+	// 문의 선택 삭제하기
+	delBtn.on('click', function() {
+		var selectedItems = [];
+		
+		 $("input:checkbox[name='checkbox']:checked").each(function () {
+             selectedItems.push({ frcsOfldcNo: $(this).val()});
+         });
+		 
+		 if (selectedItems.length > 0) {
+             $.ajax({
+                 type: "POST",
+                 url: "/owner/docDelete.do",
+                 beforeSend: function(xhr){
+     				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+     			 },
+                 data: JSON.stringify(selectedItems),
+                 contentType: "application/json;charset=UTF-8",
+                 success: function (response) {
+                     console.log("삭제 성공:", response);
+                     alert("삭제되었습니다!");
+                     location.reload();
+                 },
+                 error: function (error) {
+                     console.error("삭제 실패:", error);
+                     alert("다시 시도해주세요!");
+                 }
+             });
+         } else {
+             alert("삭제할 문의를 선택하세요.");
+         }
+	});
+	
+	// 전체 선택 체크박스
+	var checkAll = document.getElementById('checkAll');
+	
+	// 다른 모든 체크박스들
+	var checkboxes = document.getElementsByName('checkbox');
+	
+	// 전체 선택 체크박스의 클릭 이벤트 처리
+	checkAll.addEventListener('click', function() {
+	    for (var i = 0; i < checkboxes.length; i++) {
+	        checkboxes[i].checked = checkAll.checked;
+	    }
+	});
+	
+	// 다른 체크박스 중 하나라도 선택이 해제되면 전체 선택 체크박스도 해제
+	for (var i = 0; i < checkboxes.length; i++) {
+	    checkboxes[i].addEventListener('click', function() {
+	        checkAll.checked = true;
+	        for (var j = 0; j < checkboxes.length; j++) {
+	            if (!checkboxes[j].checked) {
+	                checkAll.checked = false;
+	                break;
+	            }
+	        }
+	    });
+	}
+	
+	//검색,페이징
+	pagingArea.on("click", "a", function(event){
+		event.preventDefault();
+		var pageNo = $(this).data("page");
+		searchForm.find("page").val(pageNo);
+		searchForm.submit();
 	});
 	
 });

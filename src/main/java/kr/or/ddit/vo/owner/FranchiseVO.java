@@ -26,6 +26,7 @@ public class FranchiseVO {
 	private int frcsStar;
 	private int frcsPsncpa;
 	
+	private int ownerId;
 	private String memId;
 	private String memPw;
 	private String resvNo;

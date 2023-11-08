@@ -12,5 +12,8 @@ public interface FrcsOfficialDocMapper {
 	public List<FrcsOfficialDocVO> selectOfldcList(OwnerPaginationInfoVO<FrcsOfficialDocVO> pagingVO);
 	public int ofldcInsert(FrcsOfficialDocVO frcsOfldcVO);
 	public void insertOfldcFile(AttachVO attachVO);
+	public FrcsOfficialDocVO selectOfldc(String frcsOfldcNo);
+	public void deleteOfldcFileByfrcsOfldcNo(String frcsOfldcNo);
+	public int frcsOfldcDelete(String frcsOfldcNo);
 
 }

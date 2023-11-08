@@ -120,11 +120,6 @@
                 	</div>
                 </div><!-- end col-->
                 
-<%--                 <c:set value="${allmonthfeeVO }" var="allmonthfeeVO"/> --%>
-<%--                	<c:forEach items="${allmonthfeeVO}" var="allmonth"> --%>
-<%--                		<div>${allmonth.monthTotalselngPrice }</div> --%>
-<!--                		<div></div> -->
-<%-- 				</c:forEach> --%>
                 <div class="col-lg-6">
                 	<div class="row mt-4">
                 		<div class="col">매출분석</div>
@@ -200,7 +195,7 @@ $(function(){
 	        labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
 	        datasets: [{
 	            label: '# 매출액',
-	            data: [0, 0, 0, 0, 0, 0, 0, 0, arr[0].price, arr[1].price, 0, 0],
+	            data: [arr[0].price, arr[1].price, 0, 0, 0, 0, 0, 0, arr[2].price, arr[3].price, 0, 0],
 	            borderWidth: 2
 	        }]
 	    },
@@ -255,7 +250,7 @@ $(function(){
 		
 	});
 	
-	$("#oneMonth").on("click", function(){
+	$("#allMonth").on("click", function(){
 		
 		newMonthChart();
 		
@@ -263,16 +258,14 @@ $(function(){
 		
 		$.ajax({
 			type : "post",
-			url : "/head/month/salesAnalysis.do",
+			url : "/head/allmonth/salesAnalysis.do",
 			beforeSend: function(xhr){
 				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
 			},
 			data : JSON.stringify(type),
 			contentType : "application/json; charset=utf-8",
 			success : function(res){
-				if(res === "OK"){
-
-				}
+				console.log(res);
 			}
 		});
 	});

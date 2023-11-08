@@ -63,6 +63,26 @@
 		]]>
 	</select>
 	
+	<insert id="inspectionRegister" parameterType="inspectionVO" useGeneratedKeys="true">
+	  insert into head_letter (
+	    frcs_id, frcs_name, ip_stts, ip_date, st_edu_fnsh_yn
+	  ) values (
+	    #{frcsId}, #{frcsName}, #{ipStts}, #{ipDate}, 'Y'
+	  )
+	</insert>
+	
+	<insert id="inspectionAttachRegister" parameterType="attachVO" useGeneratedKeys="true">
+	  <selectKey keyProperty="attachNo" resultType="int" order="BEFORE">
+	   	select seq_attach.nextval, 1 FROM dual
+	  </selectKey>
+	  INSERT INTO attach (
+	    ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, ATTACH_SIZE, TABLE_NAME, TABLE_PK
+	  )
+	  VALUES (
+	    #{attachNo}, #{fileNo}, #{attachOrgname}, #{attachSavename}, #{attachMime}, #{attachSize}, 'inspection', #{tablePk}
+	  )
+	</insert>
+	
 	<select id="selectFileInfo" parameterType="int" resultType="attachVO">
 		select
 			 ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, ATTACH_SIZE, TABLE_NAME, TABLE_PK

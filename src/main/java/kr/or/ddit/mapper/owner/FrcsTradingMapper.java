@@ -41,4 +41,7 @@ public interface FrcsTradingMapper {
 	// 상태 업데이트
 	public void updateStatus(String tradNo);
 
+	// 트레이딩 거절
+	public int tradingRefuse(TradingVO tradVO);
+
 }

@@ -235,6 +235,12 @@ public class MypageController {
 		int mycouponCnt = couponList.size();
 		model.addAttribute("couponList", couponList);
 		model.addAttribute("mycouponCnt", mycouponCnt);
+
+		// 나의 리뷰 내역
+		List<ReviewVO> reviewList = myreviewService.myReviewList(memId);
+		int myreviewCnt = reviewList.size();
+		model.addAttribute("reviewList", reviewList);
+		model.addAttribute("myreviewCnt", myreviewCnt);
 		
 		MemberVO memberVO = memberService.selectMember(memId);
 		model.addAttribute("memberVO", memberVO);

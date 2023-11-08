@@ -13,5 +13,7 @@ public interface IFrcsOfficialDocService {
 	public int selectOfldcCount(OwnerPaginationInfoVO<FrcsOfficialDocVO> pagingVO);
 	public List<FrcsOfficialDocVO> selectOfldcList(OwnerPaginationInfoVO<FrcsOfficialDocVO> pagingVO);
 	public ServiceResult ofldcInsert(HttpServletRequest req, FrcsOfficialDocVO frcsOfldcVO);
+	public FrcsOfficialDocVO selectOfldc(String frcsOfldcNo);
+	public ServiceResult frcsOfldcDelete(HttpServletRequest req, String frcsOfldcNo);
 
 }

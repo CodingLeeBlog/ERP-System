@@ -1,181 +1,137 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://www.springframework.org/security/tags"
-	prefix="sec"%>
-<script
-	src="${pageContext.request.contextPath }/resources/plugins/jquery/jquery.min.js"></script>
-<script
-	src="${pageContext.request.contextPath }/resources/ckeditor/ckeditor.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<div class="content-page">
+	<div class="content">
 
+		<!-- Start Content-->
+		<div class="container-fluid">
 
-<div class="row">
-
-	<!-- Right Sidebar -->
-	<div class="col-12">
-		<div class="card">
-			<div class="card-body">
-				<div class="page-aside-right">
-
-					<div class="btn-group">
-						<button type="button" class="btn btn-secondary">
-							<i class="mdi mdi-archive font-16"></i>
-						</button>
-						<button type="button" class="btn btn-secondary">
-							<i class="mdi mdi-alert-octagon font-16"></i>
-						</button>
-						<button type="button" class="btn btn-secondary">
-							<i class="mdi mdi-delete-variant font-16"></i>
-						</button>
-					</div>
-					<div class="btn-group">
-						<button type="button"
-							class="btn btn-secondary dropdown-toggle arrow-none"
-							data-bs-toggle="dropdown" aria-expanded="false">
-							<i class="mdi mdi-folder font-16"></i> <i
-								class="mdi mdi-chevron-down"></i>
-						</button>
-						<div class="dropdown-menu">
-							<span class="dropdown-header">Move to:</span> <a
-								class="dropdown-item" href="javascript: void(0);">Social</a> <a
-								class="dropdown-item" href="javascript: void(0);">Promotions</a>
-							<a class="dropdown-item" href="javascript: void(0);">Updates</a>
-							<a class="dropdown-item" href="javascript: void(0);">Forums</a>
+			<!-- start page title -->
+			<div class="row">
+				<div class="col-12">
+					<div class="page-title-box">
+						<div class="page-title-right">
+							<ol class="breadcrumb m-0">
+								<li class="breadcrumb-item"><a href="javascript: void(0);">게시판</a></li>
+								<li class="breadcrumb-item active">공지사항</li>
+							</ol>
 						</div>
-					</div>
-					<div class="btn-group">
-						<button type="button"
-							class="btn btn-secondary dropdown-toggle arrow-none"
-							data-bs-toggle="dropdown" aria-expanded="false">
-							<i class="mdi mdi-label font-16"></i> <i
-								class="mdi mdi-chevron-down"></i>
-						</button>
-						<div class="dropdown-menu">
-							<span class="dropdown-header">Label as:</span> <a
-								class="dropdown-item" href="javascript: void(0);">Updates</a> <a
-								class="dropdown-item" href="javascript: void(0);">Social</a> <a
-								class="dropdown-item" href="javascript: void(0);">Promotions</a>
-							<a class="dropdown-item" href="javascript: void(0);">Forums</a>
-						</div>
-					</div>
-
-					<div class="btn-group">
-						<button type="button"
-							class="btn btn-secondary dropdown-toggle arrow-none"
-							data-bs-toggle="dropdown" aria-expanded="false">
-							<i class="mdi mdi-dots-horizontal font-16"></i> More <i
-								class="mdi mdi-chevron-down"></i>
-						</button>
-						<div class="dropdown-menu">
-							<span class="dropdown-header">More Options :</span> <a
-								class="dropdown-item" href="javascript: void(0);">Mark as
-								Unread</a> <a class="dropdown-item" href="javascript: void(0);">Add
-								to Tasks</a> <a class="dropdown-item" href="javascript: void(0);">Add
-								Star</a> <a class="dropdown-item" href="javascript: void(0);">Mute</a>
-						</div>
-					</div>
-
-	
-  <section class="content inner-page w-75 p-3 float-right mx-auto bg-transparent">
-	<div class="row">
-		<div class="col-md-12">
-			<div class="card card-primary bg-transparent">
-					<input type="hidden" name="boardNo" id="boardNo" value="${headBoardVO.boardNo }"/>
-					    <input type="hidden" name="attachNo" id="attachNo" value="${attachVO.attachNo }"/>
-				<div class="mb-3">
-						<label for="simpleinput" class="form-label text-white" >제목 : </label>
-						<a class="form-control" type="text" id="boardTitle">${headBoardVO.boardTitle }</a>
-					</div>
-					<div class="mb-3">
-						<label for="simpleinput" class="form-label text-white">내용 : </label>
-						<a id="boardContent" class="form-control">${headBoardVO.boardContent }</a>
-				 	</div>
-				 <form id="quickForm" novalidate="novalidate">
-                  <div class="card-footer bg-white">
-                     <ul class="mailbox-attachments d-flex align-items-stretch clearfix">
-                        <c:if test="${not empty headBoardVO.noticeFileList[0].attachNo}">
-                           <c:forEach items="${headBoardVO.noticeFileList }" var="noticeFile" varStatus="vs">
-                              <li>
-                                 <span class="mailbox-attachment-icon"> 
-                                    <i class="far fa-file-pdf"></i>
-                                 </span>
-                                 <div class="mailbox-attachment-info">
-                                    <a href="#" class="mailbox-attachment-name"> 
-                                       <i class="fas fa-paperclip"></i> ${noticeFile.attachOrgname }
-                                    </a> 
-                                       	<div class="card-body text-center bg-white border-radius-lg p-3 pt-0">
-											<h6 class="mt-3 mb-1 d-md-block d-none">
-												${noticeFile.attachSize }(${noticeFile.attachNo })
-											</h6>
-											<p class="mb-0 text-xs font-weight-bolder text-info text-uppercase">
-												<button type="button" class="btn btn-primary btn-sm fileDownload"
-													data-attach-no="${noticeFile.attachNo }">
-													download
-												</button>
-											</p>
-										</div>
-                                 </div>
-                              </li>
-                           </c:forEach>
-                        </c:if>
-                     </ul>
-                  </div>
-				<div class="row">
-						<div class="col-12">
-                     <button type="button" id="btnList" class="btn btn-light btn float-right">목록</button>
-                     <button type="button" id="btnModify" class="btn btn-light btn float-right">수정</button>
-                     <button type="button" id="btnDelete" class="btn btn-light btn float-right">삭제</button>
-						</div>
-					</div>
-                     </form>
-                    </div>
-                  </div>
-               </div>
-			<sec:csrfInput/>
-</section>
-		</div>
+						<h4 class="page-title">공지사항</h4>
 					</div>
 				</div>
 			</div>
+			<!-- end page title -->
+
+			<div class="row">
+				<div class="col-12">
+					<div class="card">
+						<div class="card-body">
+
+							<div class="mt-3">
+
+								<div>
+									<h5 class="font-18 d-inline">${headBoardVO.boardTitle }</h5>
+									<div class="float-end ">
+										<fmt:formatDate value="${headBoardVO.boardRegdate }" pattern="yyyy-MM-dd"/>
+									</div>
+								</div>
+								
+								<hr />
+
+								<div class="my-3 overflow-auto" style="height: 300px" >
+									${headBoardVO.boardContent }
+								</div>
+								
+								<hr />
+								
+								
+
+<!-- 								첨부파일이 있으면 보이도록하기 -->
+								<c:set value="${headBoardVO.noticeFileList }" var="noticeFileList"/>
+								<c:if test="${not empty headBoardVO.noticeFileList[0].attachNo}">
+									<h5 class="mt-3 mb-3">첨부파일</h5>
+									<div class="row">
+										<div class="col-xl-4">
+											<div class="card mb-1 shadow-none border">
+												<c:forEach items="${noticeFileList}" var="noticeFile">
+													<div class="p-2">
+														<div class="row align-items-center">
+															<div class="col-auto">
+																<div class="avatar-sm">
+																	<img src="${pageContext.request.contextPath}/resources/upload/file/${noticeFile.attachOrgname }" alt="img" class="avatar-sm rounded">
+																</div>
+															</div>
+															<div class="col ps-0">
+																<a href="javascript:void(0);" class="text-muted fw-bold">${noticeFile.attachOrgname }</a>
+																<p class="mb-0">${noticeFile.attachSize } MB</p>
+															</div>
+															<div class="col-auto">
+																<!-- Button -->
+																<a href="javascript:void(0);" class="btn btn-link btn-lg text-muted" data-file-no="${noticeFile.fileNo }"> 
+																	<i class="ri-download-2-line" ></i>
+																</a>
+															</div>
+														</div>
+													</div>
+												</c:forEach>
+												
+											</div>
+										</div>
+										<!-- end col -->
+									</div>
+									<!-- end row-->
+								</c:if>
+
+								<form action="/owner/inqDelete.do" method="post" id="procForm">
+									<input type="hidden" name="boardNo" value="${headBoardVO.boardNo }"/>
+									<sec:csrfInput/>
+								</form>
+
+								<div class="mt-4 text-xl-end">
+									<button type="button" class="btn btn-light me-2" id="listBtn">목록</button>
+<!-- 									답글달리기 전까지 수정,삭제 가능하게?? -->
+									<button type="button" class="btn btn-light me-2" id="delBtn">삭제</button>
+									<button type="button" class="btn btn-secondary" id="udtBtn">수정</button> 
+								</div>
+								
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+
 		</div>
-<section class="content">
-         <form action="/head/delete.do" method="post" id="boardForm">
-            <input type="hidden" name="boardNo" value="${headBoardVO.boardNo }"/>
-            <input type="hidden" name="attachNo" id="attachNo" value="${attachVO.attachNo }"/>
-            <sec:csrfInput/>
-         </form>
-         <div class="col-md-6"></div>
-      
-</section>
+
+	</div>
+</div>
+
 <script type="text/javascript">
+
 $(function(){
-   var btnList = $("#btnList");
-   var btnModify = $("#btnModify");
-   var btnDelete = $("#btnDelete");
-   var boardForm = $("#boardForm");
+	var listBtn = $("#listBtn");
+	var udtBtn = $("#udtBtn");
+	var delBtn = $("#delBtn");
+	var procForm = $("#procForm");
 	
-   btnList.on("click", function(){
-      location.href = "/head/list.do";
-   });
-   
-   btnModify.on("click", function(){
-	   boardForm.attr("method", "get");
-      boardForm.attr("action", "/head/update.do");
-      boardForm.submit();
-   });
-   
-   btnDelete.on("click", function(){
-      if(confirm("정말 삭제하시겠습니까?")){
-    	  boardForm.submit();
-      }
-  	});
-      
-      $(".fileDownload").on("click", function(){
-  		var attachNo = $(this).data("attach-no");		
-  		location.href = "/head/download.do?attachNo=" + attachNo;
-  		
-  	});
+	listBtn.on("click", function(){
+		location.href = '/head/list.do';
+	});
+	
+	udtBtn.on("click", function(){
+		procForm.attr("method", "get");
+		procForm.attr("action", "/head/update.do");
+		procForm.submit();
+	});
+	
+	delBtn.on("click", function(){
+		if(confirm("정말로 삭제하시겠습니까?")){
+			procForm.submit();
+		}
+	});
+	
 });
+
 </script>

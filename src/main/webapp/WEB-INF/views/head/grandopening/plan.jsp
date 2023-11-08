@@ -12,21 +12,19 @@
 
 <div class="content-page">
 	<div class="content">
-
 		<!-- Start Content-->
 		<div class="container-fluid">
-
 			<!-- start page title -->
-			<div class="row">
-				<div class="col-12">
-					<div class="page-title-box">
-						<div class="page-title-right">
-							<ol class="breadcrumb m-0">
-								<li class="breadcrumb-item"><a href="javascript: void(0);">개점관리</a></li>
-								<li class="breadcrumb-item active">개점일정계획</li>
-							</ol>
-						</div>
-						<h4 class="page-title">개점일정계획</h4>
+			<div class="col-sm-12 card widget-inline mt-3" style="height: 100px;">
+				<div class="row ">
+					<div class="card-body col-4 align-items-center">
+						<div class="col-sm-6 page-title text-primary font-24 ms-3 fw-bold">개점일정계획</div>
+						<div class="col-sm-12 page-title-sub text-muted font-14 ms-3">가맹점의
+							개점 일정을 관리합니다.</div>
+					</div>
+					<div
+						class="card-body col-6 fw-bold font-15 d-flex justify-content-end align-items-center me-5">
+						개점관리 > &nbsp;<span class="text-decoration-underline">개점일정계획</span>
 					</div>
 				</div>
 			</div>

@@ -25,6 +25,11 @@ public interface IFrcsBillService {
 	public List<FrcsPublicDuesVO> getData(String frcsId);
 	
 	// 본사 청구리스트
-	public List<FrcsBillVO> headBillList(String frcsId, Date thisMonth);
+	public FrcsBillVO headBillList(String frcsId, Date thisMonth);
+	
+	// 내 가맹점 평균 통계
+	public FrcsPublicDuesVO average(String memId);
+	// 전체 가맹점 평균 통계
+	public FrcsPublicDuesVO totalAverage();
 
 }

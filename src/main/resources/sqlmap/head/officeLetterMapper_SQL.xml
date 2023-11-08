@@ -91,9 +91,9 @@
 			select seq_headletter.nextval from dual
 		</selectKey>
 	  insert into head_letter (
-	    hd_ltno, hd_lttitle, hd_ltcontent, hd_ltsender, hd_ltsdate, hd_ltstate, table_name
+	    hd_ltno, hd_lttitle, hd_ltcontent, hd_ltsender, hd_ltstate, table_name
 	  ) values (
-	    #{hdLtno}, #{hdLttitle}, #{hdLtcontent}, '관리자', sysdate, '저장', 'officeLetter'
+	    #{hdLtno}, #{hdLttitle}, #{hdLtcontent}, '관리자', '저장', 'officeLetter'
 	  )
 	</insert>
 	
@@ -107,6 +107,12 @@
 	    #{hdLtno}, #{hdLtreciever}, sysdate, '완료'
 	  )
 	</insert>
+	
+	<update id="updateOfficeLetterState" parameterType="officeLetterVO">
+	    update head_letter
+	    set hd_ltstate = '발송완료', hd_ltsdate = sysdate
+	    where hd_ltno = #{hdLtno}
+	</update>
 	
 	<select id="getFrcsName" resultType="franchiseVO">
 		select frcs_name

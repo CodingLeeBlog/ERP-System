@@ -18,7 +18,8 @@
 <update id="myResUpdate" parameterType="payVO">
 	update reservation
 	set
-		resv_yn = #{payYn}
+		resv_yn = #{payYn},
+		resv_state = #{resvState}
 	where mem_id = #{memId}
 	and resv_no = #{resvNo}
 </update>

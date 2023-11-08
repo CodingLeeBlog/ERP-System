@@ -42,13 +42,13 @@
 											${coupon.rownum }
 										</div>
 										<div class="col">
-											<a href="/elly/mycoupon/detail.do?memcpnId=${coupon.memcpnId }">${coupon.cpnName }</a>
+											${coupon.cpnName }
 										</div>
 										<div class="col-1">
 											${coupon.cpnContent }
 										</div>
 										<div class="col-2">
-											
+											전 품목
 										</div>
 										<div class="col-2">
 											<fmt:formatDate value="${coupon.cpnStdate }" pattern="yyyy. MM. dd"/> -

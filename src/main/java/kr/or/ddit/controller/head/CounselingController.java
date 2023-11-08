@@ -120,32 +120,32 @@ public class CounselingController {
 		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/counselMail.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/counselMail.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String mailCheck(@RequestParam("email") String email) throws Exception{
-	    int serti = (int)((Math.random()* (99999 - 10000 + 1)) + 10000);
+	public String mailCheck(@RequestBody Map<String, String> map) throws Exception {
 	    
-	    String from = "qweiop1541@naver.com"; //보내는 이 메일주소
+	    String frcsId = map.get("frcsId").toString();
+	    String email = map.get("email").toString();
+	    
+	    String from = "qweiop1541@naver.com"; // 보내는 이메일 주소
 	    String to = email;
 	    String title = "가맹점 회원가입시 필요한 가맹점 코드입니다.";
-	    String content = "[가맹점 코드] "+ serti +" 입니다. <br/> 인증번호 확인란에 기입해주십시오.";
-	    String num = "";
+	    String content = "[가맹점 코드] "+ frcsId +" 입니다. <br/> 인증번호 확인란에 기입해주십시오.";
+	    
 	    try {
-	    	MimeMessage mail = emailSender.createMimeMessage();
+	        MimeMessage mail = emailSender.createMimeMessage();
 	        MimeMessageHelper mailHelper = new MimeMessageHelper(mail, true, "UTF-8");
 	        
 	        mailHelper.setFrom(from);
 	        mailHelper.setTo(to);
 	        mailHelper.setSubject(title);
-	        mailHelper.setText(content, true);       
+	        mailHelper.setText(content, true);
 	        
 	        emailSender.send(mail);
-	        num = Integer.toString(serti);
-	        
 	    } catch(Exception e) {
-	        num = "error";
+	        return "error";
 	    }
-	    return num;
+	    
+	    return frcsId;
 	}
-	
 }

@@ -50,49 +50,49 @@
                                                    <tbody>
                                                    	   <tr>
                                                    	   	   <td style="text-align:left">1. 가맹비</td>
-                                                           <td style="text-align:center"><fmt:formatNumber value="300000" type="currency"/></td>
+                                                           <td style="text-align:center"><fmt:formatNumber value="${billVO.frcsAmt }" type="currency"/></td>
                                                       	   <td>
                                                                <a href="javascript:void(0);" class="action-icon"><i class="mdi mdi-eye"></i></a>
                                                            </td>
                                                    	   </tr>
                                                    	   <tr>
                                                    	   	   <td style="text-align:left">2. 로열티</td>
-                                                           <td style="text-align:center"></td>
+                                                           <td style="text-align:center">${billVO.frcsRowal } </td>
                                                       	   <td>
                                                                <a href="javascript:void(0);" class="action-icon"><i class="mdi mdi-eye"></i></a>
                                                            </td>
                                                    	   </tr>
                                                    	   <tr>
                                                    	   	   <td style="text-align:left">3. 제품 구입비</td>
-                                                           <td style="text-align:center"></td>
+                                                           <td style="text-align:center">${billVO.orderAmt }</td>
                                                       	   <td>
                                                                <a href="javascript:void(0);" class="action-icon"><i class="mdi mdi-eye"></i></a>
                                                            </td>
                                                    	   </tr>
                                                    	   <tr>
                                                    	   	   <td style="text-align:left">4. 트레이딩 추가결제비</td>
-                                                           <td style="text-align:center"></td>
+                                                           <td style="text-align:center">${billVO.tradAdd }</td>
                                                       	   <td>
                                                                <a href="javascript:void(0);" class="action-icon"><i class="mdi mdi-eye"></i></a>
                                                            </td>
                                                    	   </tr>
                                                    	   <tr>
                                                    	   	   <td style="text-align:left">5. 트레이딩 삭감비</td>
-                                                           <td style="text-align:center"></td>
+                                                           <td style="text-align:center">${billVO.tradRedct }</td>
                                                       	   <td>
                                                                <a href="javascript:void(0);" class="action-icon"><i class="mdi mdi-eye"></i></a>
                                                            </td>
                                                    	   </tr>
                                                    	   <tr>
                                                    	   	   <td style="text-align:left">6. 미납금</td>
-                                                           <td style="text-align:center"></td>
+                                                           <td style="text-align:center">${billVO.frcsNonPayment }</td>
                                                       	   <td>
                                                                <a href="javascript:void(0);" class="action-icon"><i class="mdi mdi-eye"></i></a>
                                                            </td>
                                                    	   </tr>
                                                    	   <tr>
                                                    	   	   <td style="text-align:left">7. 연체이자</td>
-                                                           <td style="text-align:center"></td>
+                                                           <td style="text-align:center">${billVO.frcsbillOverdue }</td>
                                                       	   <td>
                                                                <a href="javascript:void(0);" class="action-icon"><i class="mdi mdi-eye"></i></a>
                                                            </td>
@@ -102,15 +102,15 @@
                                        </div> 
                                        <div class="row mt-4">
                                            <div class="col-sm-6">
+<%--                                                	<h4>총계 : <fmt:formatNumber value="${allPrice }" type="currency"/></h4> --%> 
                                            </div>
                                            <div class="col-sm-6">
                                                <div class="text-sm-end">
-<%--                                                   	<h4>총계 : <fmt:formatNumber value="${allPrice }" type="currency"/></h4> --%>
+                                               	<button class="btn btn-warning" id="payBtn"><i class="mdi mdi-cart-plus me-1"></i>납부</button>
                                                </div>
                                            </div>
                                        </div>
                                        </div>
-	
                                        <div class="col-lg-6">
                                       	  <div class="border p-3 mt-4 mt-lg-0 rounded" style="height:100%">
                                             <h4 class="header-title mb-3">일별 매출 그래프</h4>
@@ -133,6 +133,7 @@ $(function(){
 	var leftMonth = $("#leftMonth");	// 이전달 클릭
 	var rightMonth = $("#rightMonth");	// 다음달 클릭
 	var monthInfo = $("#monthInfo").val();	// 현재 페이지 달 정보
+	var payBtn = $("#payBtn"); 	// 납부 버튼
 	
 	// 왼쪽 버튼을 누르면 현재 페이지의 ${yearMonth }를 가져와서
 	// 월 -1 을 해줘야한다.
@@ -208,9 +209,12 @@ $(function(){
 		location.href = "/owner/bill.do?yearMonth="+str;
 	});
 	
-	oneMonth.on("click",function(){
-		alert("add");
-	});
+// 	payBtn.on("click",function(){
+		
+// 	// 날짜 체크를해서 다음 달 11월 1일이 되어야지만 납부버튼을 누를 수 있게
+		
+		
+// 	});
 	
 });
 </script>

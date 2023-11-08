@@ -468,7 +468,7 @@ $(function(){
 			data: JSON.stringify(data),
 			contentType : "application/json; charset=utf-8",
 			success : function(res){
-				
+				alert("회원 가입이 완료되었습니다 !");
 			}
 		});
 		

@@ -33,7 +33,6 @@
 										<div class="col-auto">
 											<div class="d-flex align-items-center">
 												<select class="form-select" name="searchType" id="searchType">
-													<option selected>선택</option>
 													<option value="menuName"<c:if test="${searchType eq 'menuName' }">selected</c:if>>메뉴명</option>
 												</select>
 											</div>
@@ -41,7 +40,7 @@
 										<div class="col-auto">
 											<label for="inputPassword2" class="visually-hidden">검색</label>
 											<input type="text" class="form-control" id="searchWord" name="searchWord"
-												placeholder="Search..." value="${searchWord }">
+												placeholder="메뉴명을 입력하세요." value="${searchWord }">
 										</div>
 									</form>
 								</div>

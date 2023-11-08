@@ -8,6 +8,7 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.head.HeadBoardVO;
 import kr.or.ddit.vo.member.PaginationInfoVO;
+import kr.or.ddit.vo.owner.FrcsInquiryVO;
 
 public interface INoticeBoardService {
 	
@@ -24,5 +25,6 @@ public interface INoticeBoardService {
 	public ServiceResult updateBoard(HttpServletRequest req, HeadBoardVO headBoardVO);
 
 	public AttachVO selectFileInfo(int attachNo);
+
 
 	}

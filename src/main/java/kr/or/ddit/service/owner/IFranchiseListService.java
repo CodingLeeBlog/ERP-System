@@ -8,4 +8,6 @@ public interface IFranchiseListService {
 
 	public List<FranchiseVO> findStore(FranchiseVO franchise);
 
+	public FranchiseVO selectone(String email);
+
 }

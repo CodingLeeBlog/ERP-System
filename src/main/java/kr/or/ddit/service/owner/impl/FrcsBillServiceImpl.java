@@ -16,7 +16,9 @@ import kr.or.ddit.vo.head.FeeVO;
 import kr.or.ddit.vo.owner.FrcsBillVO;
 import kr.or.ddit.vo.owner.FrcsPublicDuesVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class FrcsBillServiceImpl implements IFrcsBillService {
 
@@ -55,6 +57,19 @@ public class FrcsBillServiceImpl implements IFrcsBillService {
 	public String frcsIdInfo(String memId) {
 		return mapper.frcsIdInfo(memId);
 	}
+	
+	// 내 가맹점 평균 공과금액 가져오기
+	@Override
+	public FrcsPublicDuesVO average(String memId) {
+		return mapper.average(memId);
+	}
+
+	// 전체 가맹점 평균 공과금액 가져오기
+	@Override
+	public FrcsPublicDuesVO totalAverage() {
+		return mapper.totalAverage();
+	}
+
 
 	// 공과금 납부내역 삭제
 	@Override
@@ -85,7 +100,8 @@ public class FrcsBillServiceImpl implements IFrcsBillService {
 	public void duesUpdate(FrcsPublicDuesVO duesVO) {
 		// 기존 납부내역을 삭제하고 다시 등록..
 		
-		System.out.println(duesVO);
+		log.info("[duesUpdate] duesVO : " + duesVO);
+
 		String duesPayde = duesVO.getDuesPayde();
 		String frcsId = duesVO.getFrcsId();
 		
@@ -101,25 +117,32 @@ public class FrcsBillServiceImpl implements IFrcsBillService {
 
 	// 본사 청구 리스트
 	@Override
-	public List<FrcsBillVO> headBillList(String frcsId, Date thisMonth) {
+	public FrcsBillVO headBillList(String frcsId, Date thisMonth) {
 		
-		List<FrcsBillVO> billList = new ArrayList<FrcsBillVO>();
+//		List<FrcsBillVO> billList = new ArrayList<FrcsBillVO>();
 		FeeVO feeVO = new FeeVO(); // 본사 가맹비 총괄
 		FrcsBillVO billVO = new FrcsBillVO(); // 가맹비 상세
 		
 		int frcsRowal = mapper.getfrcsRowal(frcsId,thisMonth);	// 로얄티
 		int orderAmt = mapper.getorderAmt(frcsId,thisMonth);	// 제품구입비
 		int tradAdd = mapper.gettradAdd(frcsId,thisMonth);		// 트레이딩 추가결제비
-//		int tradRedct = mapper.gettradRedct(frcsId,thisMonth);	// 트레이딩 삭감비
+		int tradRedct = mapper.gettradRedct(frcsId,thisMonth);	// 트레이딩 삭감비
 		
-		// 미납금과 연체는 일단.. 나중에...
+		billVO.setFrcsId(frcsId);
+		billVO.setFrcsAmt(500000);
+		billVO.setFrcsRowal(frcsRowal);
+		billVO.setOrderAmt(orderAmt);
+		billVO.setTradAdd(tradAdd);
+		billVO.setTradRedct(tradRedct);
+		billVO.setThisMonth(thisMonth);
+		// 미납금과 연체는 일단 나중에...
 		
 		// 총 청구금액
-		int feeTotalpay = (frcsRowal + orderAmt+ tradAdd);	
+		int feeTotalpay = (frcsRowal + orderAmt+ tradAdd) - tradRedct;	
 		
 		// feeVO에 total금액, 납부기준일, 청구일자 세팅
 		// 납부기준일은 다음달 15일, 청구일자는 다음달 1일
-//		System.out.println(thisMonth);	// 2023/10/01
+		log.info("thisMonth : " + thisMonth);
 		
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime(thisMonth);
@@ -134,13 +157,14 @@ public class FrcsBillServiceImpl implements IFrcsBillService {
 		Date feeDday = cal1.getTime();	// 청구일자
 		Date feeChargedate = cal2.getTime(); // 납부기준일
 		
-//		System.out.println("feeDday"+ feeDday);
-//		System.out.println("feeChargedate" + feeChargedate);
+		log.info("feeDday : " + feeDday);
+		log.info("feeChargedate : " + feeChargedate);
 		
 		feeVO.setFeeTotalpay(feeTotalpay);
 		feeVO.setFeeDday(feeDday);
 		feeVO.setFeeChargedate(feeChargedate);
 		feeVO.setFrcsId(frcsId);
+		feeVO.setThisMonth(thisMonth);
 		
 		// 만약에 가맹비 총괄 테이블이 존재하지 않는다면 
 		// 가맹비 총괄 테이블에 데이터를 넣고
@@ -148,19 +172,35 @@ public class FrcsBillServiceImpl implements IFrcsBillService {
 		// 가맹비 총괄 테이블 데이터를 수정한다. (총금액만)
 		
 		
+//		FrcsBillVO billVO2 = new FrcsBillVO();
+		
 		// 가맹비 총괄 테이블이 존재하는지 안하는지 먼저 체크하는 방법
 		// frcsId와 청구일자로 존재하는지 체크
 		int duplicationCheck = mapper.dupliCheck(feeVO);
+		int status = 0;
 		
-		// 이미 데이터가 존재한다면
+		// 이미 데이터가 존재한다면 총 금액만 업데이트해주고 디테일 테이블에도 업데이트 해주기
 		if(duplicationCheck > 0) {
-			
+			String feeCode = mapper.getFeecode(feeVO);
+			feeVO.setFeeCode(feeCode);
+			billVO.setFeeCode(feeCode);
+			status = mapper.updateFee(feeVO);
+			if(status > 0) {
+				mapper.updateDetail(billVO);
+//				billVO2= billVO;
+			}
 			
 		}else {	// 데이터가 존재하지 않는다면
-			// 본사 가맹비총괄 테이블에 데이터 넣기...
-			int status = mapper.insertFee(feeVO);
+			// 본사 가맹비총괄 테이블에 데이터 넣고 디테일 테이블에도 데이터 넣기
+			status = mapper.insertFee(feeVO);
+			if(status > 0) {
+				mapper.insertDetail(billVO);
+//				billVO2= billVO;
+			}
 		}
-		
-		return billList;
+		return billVO;
 	}
+
+	
+
 }

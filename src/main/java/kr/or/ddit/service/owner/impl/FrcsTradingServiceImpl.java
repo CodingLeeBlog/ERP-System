@@ -111,5 +111,21 @@ public class FrcsTradingServiceImpl implements IFrcsTradingService {
 		return result;
 	}
 
+	// 트레이딩 거절
+	@Override
+	public ServiceResult tradingRefuse(TradingVO tradVO) {
+		ServiceResult result = null;
+		
+		int status = mapper.tradingRefuse(tradVO);
+		
+		if(status>0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		
+		return result;
+	}
+
 	
 }

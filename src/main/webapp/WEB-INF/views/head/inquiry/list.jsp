@@ -101,7 +101,6 @@
 	
 	                        <div class="col-xl-12 mt-2">
 	                            <div class="text-xl-end mt-xl-0 mt-2">
-	                                <button type="button" class="btn btn-danger mb-2 me-2" id="subBtn">문의하기</button>
 	                                <button type="button" class="btn btn-light mb-2" id="delBtn">삭제</button>
 	                            </div>
 	                        </div>

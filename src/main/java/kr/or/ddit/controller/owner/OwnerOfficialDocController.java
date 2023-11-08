@@ -8,12 +8,16 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.or.ddit.ServiceResult;
@@ -22,6 +26,7 @@ import kr.or.ddit.service.owner.IFrcsIdService;
 import kr.or.ddit.service.owner.IFrcsOfficialDocService;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.OfficeLetterVO;
+import kr.or.ddit.vo.owner.FrcsInquiryVO;
 import kr.or.ddit.vo.owner.FrcsOfficialDocVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 
@@ -70,7 +75,7 @@ public class OwnerOfficialDocController {
 	
 	
 	@RequestMapping(value = "/docInsert.do", method = RequestMethod.POST)
-	public String ownerIOfficialDocInsert(
+	public String ownerOfficialDocInsert(
 			HttpServletRequest req,
 			RedirectAttributes ra,
 			FrcsOfficialDocVO frcsOfldcVO, Model model) {
@@ -101,6 +106,35 @@ public class OwnerOfficialDocController {
 			}
 		}
 		return goPage;
+	}
+	
+	@RequestMapping(value = "/docDetail.do", method = RequestMethod.GET)
+	public String ownerOfficialDocDetail(String frcsOfldcNo, Model model) {
+		FrcsOfficialDocVO frcsOfldcVO = service.selectOfldc(frcsOfldcNo);
+		model.addAttribute("frcsOfldcVO", frcsOfldcVO);
+		return "owner/board/officialDocDetail";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/docDelete.do", method = RequestMethod.POST)
+	public ResponseEntity<List<FrcsOfficialDocVO>> ownerOfficialDocDelete(
+			HttpServletRequest req,
+			RedirectAttributes ra,
+			@RequestBody List<FrcsOfficialDocVO> ofldcDelList, Model model){
+		
+		String goPage;
+		for(FrcsOfficialDocVO frcsOfldcVO : ofldcDelList) {
+			String frcsOfldcNo = frcsOfldcVO.getFrcsOfldcNo();
+			ServiceResult result = service.frcsOfldcDelete(req, frcsOfldcNo);
+			if(result.equals(ServiceResult.OK)) {
+				ra.addFlashAttribute("message", "삭제가 완료되었습니다!");
+				goPage = "redirect:/owner/doc.do";
+			}else {
+				ra.addFlashAttribute("message", "서버오류, 다시 시도해주세요!");
+				goPage = "redirect:/owner/docDetail.do?frcsOfldcNo=" + frcsOfldcNo;
+			}
+		}
+		return new ResponseEntity<List<FrcsOfficialDocVO>>(HttpStatus.OK);
 	}
 	
 }

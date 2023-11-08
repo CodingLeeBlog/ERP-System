@@ -6,7 +6,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,11 +18,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.service.head.IOfficeService;
+import kr.or.ddit.service.owner.IFrcsIdService;
+import kr.or.ddit.service.owner.IFrcsOfficialDocService;
 import kr.or.ddit.vo.head.HeadLtDetailVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.OfficeLetterVO;
 import kr.or.ddit.vo.owner.FranchiseVO;
-import kr.or.ddit.vo.owner.OwnerVO;
+import kr.or.ddit.vo.owner.FrcsOfficialDocVO;
+import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,6 +35,12 @@ public class OfficeLetterController {
 	
 	@Inject
 	private IOfficeService officeService;
+	
+	@Inject
+	private IFrcsOfficialDocService service;
+	
+	@Inject
+	private IFrcsIdService idService;
 
 	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/officeLetter.do", method=RequestMethod.GET)
@@ -100,10 +108,45 @@ public class OfficeLetterController {
 	}
 	
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/officeLetterRead.do", method=RequestMethod.GET)
-	public String officeLetterRead(Model model) {
-		log.info("OfficeLetterRead(): 시작");
+	public String officeLetterRead(
+			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
+			@RequestParam(required = false, defaultValue = "title") String searchType,
+			@RequestParam(required = false) String searchWord,
+			Model model) {
+		
+		OwnerPaginationInfoVO<FrcsOfficialDocVO> pagingVO = new OwnerPaginationInfoVO<FrcsOfficialDocVO>();
+		
+		// 검색
+		if(StringUtils.isNotBlank(searchWord)) {
+			pagingVO.setSearchType(searchType);
+			pagingVO.setSearchWord(searchWord);
+			model.addAttribute("searchType", searchType);
+			model.addAttribute("searchWord", searchWord);
+		}
+		
+		String frcsId = idService.getFrcsId();
+		
+		pagingVO.setFrcsId(frcsId);
+		pagingVO.setCurrentPage(currentPage); // startRow, endRow, startPage, endPage가 결정
+		int totalRecord = service.selectOfldcCount(pagingVO);//총게시글수
+		
+		pagingVO.setTotalRecord(totalRecord); // totalPage 결정
+		List<FrcsOfficialDocVO> ofldcList = service.selectOfldcList(pagingVO);
+		pagingVO.setDataList(ofldcList);
+		
+		model.addAttribute("pagingVO", pagingVO);
+		
 		return "head/store/officeLetterRead";
+	}
+	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
+	@RequestMapping(value = "/readDetail.do", method = RequestMethod.GET)
+	public String readDetail(String frcsOfldcNo, Model model) {
+		FrcsOfficialDocVO frcsOfldcVO = service.selectOfldc(frcsOfldcNo);
+		model.addAttribute("frcsOfldcVO", frcsOfldcVO);
+		return "head/store/officeLetterReadDetail";
 	}
 	
 	@ResponseBody

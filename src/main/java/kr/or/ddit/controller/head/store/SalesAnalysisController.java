@@ -40,13 +40,13 @@ public class SalesAnalysisController {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/month/salesAnalysis.do")
-	public ResponseEntity<ServiceResult> monthSalesDetails(@RequestBody String type){
+	@RequestMapping(value = "/allmonth/salesAnalysis.do")
+	public ResponseEntity<List<FeeVO>> monthSalesDetails(@RequestBody String type){
 		
-		ServiceResult result = null;
+		List<FeeVO> result = null;
 		
-		result = service.headmonthChart();
+		result = service.allmonthheadChart();
 		
-		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
+		return new ResponseEntity<List<FeeVO>>(result, HttpStatus.OK);
 	}
 }

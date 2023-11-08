@@ -214,21 +214,66 @@ $(function(){
 		text += "요청 수량 : " + tradQy;
 		
 		Swal.fire({
-            title: "트레이딩 내역",
-            html: text,
-            confirmButtonText: "수락",
-            showCancelButton: true,
-            cancelButtonText : "거절",
-            icon: "info",
-			// 수락버튼 눌렀을 때
-            preConfirm: function(){
-            	var data = {
-            		tradNo : tradNo, 
-            		frcsId : frcsId,
-            		frcsId2 : frcsId2,
-            		vdprodCd : vdprodCd,
-            		tradQy : tradQy
-            	}
+		    title: "트레이딩 내역",
+		    html: text,
+		    showCancelButton: true,
+		    showConfirmButton: true,
+		    confirmButtonText: "수락",
+		    cancelButtonText: "거절",
+		    icon: "info",
+		}).then((result) => {
+		    if (result.dismiss === Swal.DismissReason.cancel) {
+			    // 거절을 누르면
+		        Swal.fire({
+		            title: "거절 사유 입력",
+		            input: 'text',
+		            inputPlaceholder: "거절 사유를 입력하세요",
+		            confirmButtonText: "확인",
+				    cancelButtonText: "취소",
+				    preConfirm: function (reason) {
+				    	if(reason === ""){
+				    		Swal.showValidationMessage("거절 사유를 입력해주세요.");
+				    	}else{
+				    		var tradRm = reason;
+				    		
+				    		var data = {
+				    			tradRm : tradRm,
+				    			tradNo : tradNo
+				    		};
+				    		
+				    		// 거절 시 
+				    		$.ajax({
+				    			type : "post",
+			            		url : "/owner/tradingRefuse.do",
+			            		beforeSend : function(xhr){	// csrf토큰 보내기 위함
+			    					xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");	//key value로 보낸다.
+			    				},
+			    				data : JSON.stringify(data),
+			                	contentType : "application/json; charset=utf-8",
+			    				success : function(res){
+			    					Swal.fire({
+		    				            title: "트레이딩 거절",
+		    				            text: "정상적으로 처리 되었습니다",
+		    				            confirmButtonText: "확인",
+		    				            icon: "success",
+		    				            preConfirm: function () {
+		    				                location.href = "/owner/tradingList.do";
+		    				            }
+		    				        });
+			    				}
+				    		});
+				    	}
+				    }
+		        });
+			    
+		    } else if (result.isConfirmed) {
+		        var data = {
+		            tradNo: tradNo,
+		            frcsId: frcsId,
+		            frcsId2: frcsId2,
+		            vdprodCd: vdprodCd,
+		            tradQy: tradQy,
+		        };
             	
             	// 요청가맹점은 재고 +처리, 응답가맹점은 재고-처리
             	$.ajax({
@@ -253,19 +298,6 @@ $(function(){
     					}
     				}
             	});
-            },
-            // 거절 버튼 눌렀을 때
-            preDeny: function() {
-            	console.log("preDeny 함수가 호출되었습니다.");
-            	Swal.fire({
-		            title: "트레이딩 거절",
-		            text: "거절 메세지...",
-		            confirmButtonText: "확인",
-		            icon: "success",
-		            preConfirm: function () {
-		                location.href = "/owner/tradingList.do";
-		            }
-		        });        	
             }	
    		});
 	});

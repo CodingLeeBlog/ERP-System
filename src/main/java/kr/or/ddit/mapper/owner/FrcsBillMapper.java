@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import kr.or.ddit.vo.head.FeeVO;
+import kr.or.ddit.vo.owner.FrcsBillVO;
 import kr.or.ddit.vo.owner.FrcsPublicDuesVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 
@@ -22,6 +23,12 @@ public interface FrcsBillMapper {
 
 	// memId로 프랜차이즈 아이디 얻어오기
 	public String frcsIdInfo(String memId);
+	
+	// 내 가맹점 공과금 평균 
+	public FrcsPublicDuesVO average(String memId);
+
+	// 전체 가맹점 평균 공과금액 가져오기
+	public FrcsPublicDuesVO totalAverage();
 
 	// 공과금 삭제
 	public void duesRemove(@Param("duesPayde")String duesPayde, @Param("frcsId")String frcsId);
@@ -55,10 +62,24 @@ public interface FrcsBillMapper {
 	
 	// 가맹비 총괄 테이블에 이미 데이터가 들어가있는지 중복 체크
 	public int dupliCheck(FeeVO feeVO);
+	
+	// 가맹비 총괄 테이블에 이미 있다면 총 금액만 update
+	public int updateFee(FeeVO feeVO);
 
-	// 가맹비 총괄 테이블에 데이터 insert
+	// 가맹비 총괄 테이블에 없다면 데이터 insert
 	public int insertFee(FeeVO feeVO);
 
+	// 총괄 테이블 pk 가져오기
+	public String getFeecode(FeeVO feeVO);
+
+	// 가맹비 디테일 테이블에 데이터 insert
+	public void insertDetail(FrcsBillVO billVO);
+
+	// 가맹비 디테일 테이블에 데이터 update
+	public void updateDetail(FrcsBillVO billVO);
+
+
+	
 
 	
 }

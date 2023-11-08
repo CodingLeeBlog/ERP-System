@@ -60,7 +60,11 @@ public class OwnerPublicDuesController {
          model.addAttribute("searchMonth", searchMonth);
       }
       
+      // memId값으로 프랜차이즈 아이디 얻어오기
+      String frcsId = service.frcsIdInfo(memId);
+      
       pagingVO.setMemId(memId);
+      pagingVO.setFrcsId(frcsId);
       pagingVO.setCurrentPage(currentPage);   // startRow, endRow, startPage, endPage가 결정
       int totalRecord = service.selectDuesCount(pagingVO);    // 총 게시글 수
       
@@ -68,13 +72,16 @@ public class OwnerPublicDuesController {
       List<FrcsPublicDuesVO> dataList = service.selectDuesList(pagingVO);   // 한 페이지에 해당하는 10개의 데이터
       pagingVO.setDataList(dataList);
       
-      
       List<FrcsPublicDuesVO> duesList = service.duesList(memId);
+     
+      // 내 가맹점 평균 통계 가져오기
+      FrcsPublicDuesVO average = service.average(frcsId);
       
-      // memId값으로 프랜차이즈 아이디 얻어오기
-      String frcsId = service.frcsIdInfo(memId);
-//      duesVO.setFrcsId(frcsId);
+      // 전체 가맹점 평균 통계 가져오기
+      FrcsPublicDuesVO totalAverage = service.totalAverage();
       
+      model.addAttribute("totalAverage",totalAverage);
+      model.addAttribute("average",average);
       model.addAttribute("duesList",duesList);
       model.addAttribute("frcsId",frcsId);
       model.addAttribute("pagingVO", pagingVO);

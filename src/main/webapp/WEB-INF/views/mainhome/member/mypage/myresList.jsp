@@ -63,17 +63,25 @@
 											${res.resvNote}
 										</div>
 										<div class="col-1">
-											<div class="payment">
+											<div class="payState">
 												<c:if test="${res.resvYn eq 'N' }">
-													<input class="paymentBtn" type="button" name="" id="paymentBtn" value="결제하기" />
+													<input class="paymentBtn" type="button" name="paymentBtn" id="paymentBtn" value="결제하기" />
 												</c:if>
 												<c:if test="${res.resvYn ne 'N'}">
-													<div>${res.resvYn }</div>												
+													<div>결제 완료</div>												
+													<input class="paymentcancelBtn mt-2" type="button" name="paymentcancelBtn" id="paymentcancelBtn" value="결제 취소" />
 												</c:if>
 											</div>
 										</div>
 										<div class="col-1">
-											<input class="amout" type="button" name="" id="" value="예약 취소" />
+											<div class="resState">
+												<c:if test="${res.resvState eq 'N' }">
+													<div>예약 대기중</div>
+												</c:if>
+												<c:if test="${res.resvState ne 'N'}">
+													<div>예약 완료</div>										
+												</c:if>
+											</div>
 										</div>
 										<input class="name" type="hidden" name="" id="" value="${res.frcsName }" />
 										<input class="amount" type="hidden" name="" id="" value="${res.resvPrice }" />
@@ -153,7 +161,8 @@ $(function(){
 		    			memId : memId,
 		    			payNo : payNo,
 		    			payPrice : amount,
-		    			payYn : 'Y'
+		    			payYn : 'Y',
+		    			resvState : 'Y'
 		    	}
 		    	
 		    	// 결제 성공시 결제정보 DB 저장 기능
@@ -170,9 +179,11 @@ $(function(){
 							
 							console.log(resvNo);
 							
-							var pay = '<div class="resvYn" name="resvYn">Y</div>'
+							var pay = '<div>결제 완료</div><input class="paymentcancelBtn mt-2" type="button" name="paymentcancelBtn" id="paymentcancelBtn" value="결제 취소" />'
+							var res = '<div>예약 완료</div>'
 							
-							$(".resvNo:contains(" + resvNo + ")").closest(".row").find(".payment").html(pay);
+							$(".resvNo:contains(" + resvNo + ")").closest(".row").find(".payState").html(pay);
+							$(".resvNo:contains(" + resvNo + ")").closest(".row").find(".resState").html(res);
 						}
 					}
 		    	});

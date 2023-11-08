@@ -72,5 +72,31 @@
 		from attach
 		where ATTACH_NO = #{attachNo}
 	</select>
+	
+	<select id="selectFrcsName" parameterType="int" resultType="string">
+	    SELECT frcs_name FROM franchise WHERE frcs_id = #{frcsId}
+	</select>
+	
+	<insert id="educationRegister" parameterType="educationVO">
+	    <selectKey resultType="int" order="BEFORE" keyProperty="frcsName">
+	        SELECT frcs_name FROM franchise WHERE frcs_id = #{frcsId}
+	    </selectKey>
+	    INSERT INTO goedumg (frcs_name, edu_sdate, edu_fdate, edu_fnsh_yn, edu_remark)
+	    VALUES (#{frcsName}, #{eduSdate}, #{eduFdate}, #{eduFnshyn}, #{eduRemark})
+	</insert>
+	
+	<select id="educationDetail" parameterType="string" resultMap="educationMap">
+	   select g.frcs_id,
+	        f.frcs_name,
+	        g.edu_sdate,
+	        g.edu_fdate,
+	        g.edu_fnsh_yn,
+	        g.edu_remark,
+	        a.attach_no
+		from goedumg g
+		left join franchise f on g.frcs_id = f.frcs_id 
+	    where g.frcs_id = #{frcsId}
+	</select>
 
+	
 </mapper>

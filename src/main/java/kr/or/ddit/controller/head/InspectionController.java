@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +29,7 @@ import kr.or.ddit.service.head.IInspectionService;
 import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.InspectionVO;
+import kr.or.ddit.vo.head.OfficeLetterVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -41,6 +44,7 @@ public class InspectionController {
 	@Inject
 	private IInspectionService inspectionService;
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/inspection.do", method=RequestMethod.GET)
 	public String inspectionList(@RequestParam(name="page", required = false, defaultValue = "1")int currentPage,
 	        @RequestParam(required = false, defaultValue = "title") String searchType,
@@ -110,5 +114,16 @@ public class InspectionController {
 		   }
 		   return entity;
 	   }
+	   
+	   @PreAuthorize("hasRole('ROLE_HEAD')")
+		@ResponseBody
+		@RequestMapping(value = "/inspectionRegister.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+		public ResponseEntity<String> inspectionRegister(HttpServletRequest req, InspectionVO inspectionVO) {
+			   
+		   inspectionService.inspectionRegister(req, inspectionVO);
+		    
+		    ResponseEntity<String> entity = new ResponseEntity<String>("{\"result\": \"OK\"}", HttpStatus.OK);
+		    return entity;
+		}
 	
 }

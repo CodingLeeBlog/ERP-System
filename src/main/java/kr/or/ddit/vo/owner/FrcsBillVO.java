@@ -20,4 +20,6 @@ public class FrcsBillVO {
 	private Date settleDate;	// 정산일자
 	private String settleAt;	// 정산여부
 	
+	private Date thisMonth;	// 오늘 기준 년월
+	
 }

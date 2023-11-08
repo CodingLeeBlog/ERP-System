@@ -652,7 +652,7 @@
                     <div class="collapse" id="sidebarMaps">
                         <ul class="side-nav-second-level">
                             <li>
-                                <a href="/owner/officialDoc.do">공문 조회</a>
+                                <a href="/owner/doc.do">공문 조회</a>
                             </li>
                             <li>
                                 <a href="/owner/inquiry.do">1대1 문의</a>

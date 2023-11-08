@@ -22,5 +22,6 @@ public interface OfficeLetterMapper {
 	public OfficeLetterVO officeLetterDetail(OfficeLetterVO officeLetterVO);
 	public void deleteChildRecords(int hdLtno);
 	public void officeLetterUpdate(OfficeLetterVO officeLetterVO);
+	public void updateOfficeLetterState(int hdLtno);
 
 }

@@ -27,6 +27,7 @@ public class HeadPaginationInfoVO<T> {
 	private String searchFrcsName;	// 가맹점 주문내역 셀렉트 옵션 값
 	private String searchBeforeDate;	// 가맹점 주문내역 검색 시작날짜
 	private String searchAfterDate;	// 가맹점 주문내역 검색 종료날짜
+	private String searchFranchise; // 가맹점매출분석에서 사용
 	private int totalPrice;			// 총계(총금액)
 	private String frcsId;			// 가맹점 코드
 	private String frcsorderDate;	// 주문날짜

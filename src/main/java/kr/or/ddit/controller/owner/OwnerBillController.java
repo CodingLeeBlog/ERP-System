@@ -47,8 +47,9 @@ public class OwnerBillController {
 		}	
 		
 		
-		List<FrcsBillVO> billList = service.headBillList(frcsId,thisMonth);
+		FrcsBillVO billVO = service.headBillList(frcsId,thisMonth);
 		
+		model.addAttribute("billVO", billVO);
 		model.addAttribute("yearMonth", yearMonth);
 		return "owner/payment/frcsBillList";
 	}

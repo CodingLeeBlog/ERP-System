@@ -412,14 +412,19 @@ $(function(){
    
    $("input[type=checkbox]").on("change", function(){
       var html = "";
-      var value = $(this).val();
+      var value = $(this).val();	// frcsorderNo값
       var priceText = "";
       var price = 0;
       // 단일 체크박스를 클릭했을때
       var row = $(this).closest('tr');
 //       var priceText = row.find('td:eq(5)').text().trim().replace(/[^0-9.-]+/g, '');
 //       var price = parseInt(priceText, 10);
-      var data = $(this).val();   // 선택된 체크박스의 행 안에 들어있는 frcsorderNo값
+      var data = $(this).val();  // 선택된 체크박스의 행 안에 들어있는 frcsorderNo값
+      var sv = selectAll.val();
+      console.log("확인하려는 data -> ", data);
+      console.log("확인하려는 value -> ", value);
+      console.log("확인하려는 sv -> ", sv);
+      
       if(value == "all"){
          if($(this).is(":checked")){
             totalPrice = 0;

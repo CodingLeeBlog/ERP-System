@@ -30,4 +30,7 @@ public interface IFrcsTradingService {
 
 	// 트레이딩 성공 시 각 가맹점 재고 수량 반영
 	public ServiceResult tradingSuccess(FrcsInventoryVO inventVO);
+
+	// 트레이딩 거절
+	public ServiceResult tradingRefuse(TradingVO tradVO);
 }

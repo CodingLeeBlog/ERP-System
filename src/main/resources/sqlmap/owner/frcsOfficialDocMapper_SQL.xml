@@ -4,6 +4,31 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.mapper.owner.FrcsOfficialDocMapper">
 
+	<resultMap type="frcsOfldcVO" id="frcsOfldcMap">
+		<result property="frcsOfldcNo" column="frcs_ofldc_no"/>
+		<result property="frcsOfldcSndpty" column="frcs_ofldc_sndpty"/>
+		<result property="frcsOfldcRcvr" column="frcs_ofldc_rcvr"/>
+		<result property="frcsOfldcTtl" column="frcs_ofldc_ttl"/>
+		<result property="frcsOfldcCn" column="frcs_ofldc_cn"/>
+		<result property="frcsOfldcDspymd" column="frcs_ofldc_dspymd"/>
+		<result property="frcsOfldcRecymd" column="frcs_ofldc_recymd"/>
+		<result property="tableName" column="table_name"/>
+		<collection property="ofldcFileList" resultMap="attachMap"></collection>
+	</resultMap>
+	
+	<resultMap type="attachVO" id="attachMap">
+		<id property="attachNo" column="ATTACH_NO"/>
+		<result property="attachNo" column="ATTACH_NO"/>
+		<result property="fileNo" column="FILE_NO"/>
+		<result property="attachOrgname" column="ATTACH_ORGNAME"/>
+		<result property="attachSavename" column="ATTACH_SAVENAME"/>
+		<result property="tableName" column="TABLE_NAME"/>
+		<result property="tablePk" column="TABLE_PK"/>
+		<result property="attachMime" column="ATTACH_MIME"/>
+		<result property="attachSize" column="ATTACH_SIZE"/>
+		<result property="thumbImg" column="THUMB_IMG"/>
+	</resultMap>
+
 	<sql id="ofldcSearch">
 		<if test="searchType != null and searchType == 'title'">
 			and (frcs_ofldc_ttl like '%'||#{searchWord}||'%')
@@ -67,7 +92,7 @@
 		    , frcs_ofldc_recymd
 		    , table_name
 		) VALUES (
-		    #{frcsOfldcNo}
+		    ('ofldc'||#{frcsOfldcNo})
 		  , #{frcsOfldcSndpty}
 		  , 'admin'
 		  , #{frcsOfldcTtl}
@@ -100,4 +125,42 @@
 		    , #{tablePk}
 		  )
 	</insert>
+	
+	<select id="selectOfldc" parameterType="string" resultMap="frcsOfldcMap">
+		SELECT
+		    o.frcs_ofldc_no
+		  , o.frcs_ofldc_sndpty
+		  , o.frcs_ofldc_rcvr
+		  , o.frcs_ofldc_ttl
+		  , o.frcs_ofldc_cn
+		  , o.frcs_ofldc_dspymd
+		  , o.frcs_ofldc_recymd
+		  , o.table_name
+		  , a.attach_no
+		  , a.file_no
+		  , a.attach_orgname
+		  , a.attach_savename
+		  , a.attach_mime
+		  , a.attach_size
+		  , a.table_name
+		  , a.table_pk
+		  , a.thumb_img
+		FROM
+		    frcs_officialdocument o LEFT OUTER JOIN ATTACH a ON(o.frcs_ofldc_no = a.table_pk)
+		WHERE 
+			o.frcs_ofldc_no = #{frcsOfldcNo}
+		AND
+			o.table_name = 'frcsOfldc'
+	</select>
+	
+	<delete id="frcsOfldcDelete" parameterType="string">
+		DELETE FROM frcs_officialdocument
+		WHERE
+			frcs_ofldc_no = #{frcsOfldcNo}
+	</delete>
+	
+	<delete id="deleteOfldcFileByfrcsOfldcNo" parameterType="string">
+		delete from attach
+		where ATTACH_NO = #{attachNo}
+	</delete>
 </mapper>

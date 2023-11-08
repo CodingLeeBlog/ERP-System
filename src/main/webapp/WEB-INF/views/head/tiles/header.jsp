@@ -388,10 +388,10 @@
                                       <a href="/head/storeInquiry.do">가맹점조회</a>
                                   </li>
                                   <li>
-                                      <a href="/head/salesAnalysis.do">매출분석</a>
+                                      <a href="/head/salesAnalysis.do">본사매출분석</a>
                                   </li>
                                   <li>
-                                      <a href="/head/slumpStore.do">부진매장관리</a>
+                                      <a href="/head/franchiseSalesAnalysis.do">가맹점매출분석</a>
                                   </li>
                                   <li>
                                       <a href="/head/officeLetter.do">공문관리</a>

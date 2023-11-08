@@ -4,18 +4,24 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.service.head.IEducationService;
 import kr.or.ddit.vo.head.EducationVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
+import kr.or.ddit.vo.head.OfficeLetterVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -67,9 +73,29 @@ public class EducationController {
 		return "head/grandopening/education";
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
+	@ResponseBody
+	@RequestMapping(value = "/educationRegister.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public ResponseEntity<String> educationRegister(EducationVO educationVO) {
+		   
+		educationService.educationRegister(educationVO);
+	    
+	    ResponseEntity<String> entity = new ResponseEntity<String>("{\"result\": \"OK\"}", HttpStatus.OK);
+	    return entity;
+	}
+	
 	@RequestMapping(value = "/educationVideo.do", method=RequestMethod.GET)
 	public String educationVideo(Model model) {
 		log.info("educationVideo(): 시작");
 		return "head/grandopening/educationVideo";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/educationDetail.do", produces = "application/json;charset=utf-8")
+	public ResponseEntity<EducationVO> educationDetail(@RequestBody EducationVO educationVO) {
+
+	EducationVO education = educationService.educationDetail(educationVO);
+			
+	return new ResponseEntity<EducationVO>(education, HttpStatus.OK);
 	}
 }

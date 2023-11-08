@@ -77,7 +77,7 @@
 									<!-- /.modal -->
 								</div>
 								<div class="email-menu-list mt-3">
-									<a href="javascript: void(0);"><i class="ri-star-line me-2"></i>수신함</a>
+									<a href="/head/officeLetterRead.do"><i class="ri-star-line me-2"></i>수신함</a>
 									<a href="/head/officeLetter.do" class="text-danger fw-bold"><i
 										class="ri-inbox-line me-2"></i>발신함<span
 										class="badge badge-danger-lighten float-end ms-2">${totalRecord }</span></a>

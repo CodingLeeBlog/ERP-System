@@ -2047,25 +2047,25 @@ rotate
 	background: #FFE0C9;
 }
 
-.star-rating {
-	width: 150px;
-	height: 25px;
-	text-align: center;
-	border-radius: 5px;
-	margin-left: 30px;
-	margin-top: 20px;
-}
+/* .star-rating { */
+/* 	width: 150px; */
+/* 	height: 25px; */
+/* 	text-align: center; */
+/* 	border-radius: 5px; */
+/* 	margin-left: 30px; */
+/* 	margin-top: 20px; */
+/* } */
 
-.star-rating div {
-	float: left;
-}
+/* .star-rating div { */
+/* 	float: left; */
+/* } */
 
 .stars {
 	width: 40%;
 }
 
 .stars .fa {
-	font-size: 18px;
+	font-size: 15px;
 	cursor: pointer;
 	color: #555;
 }

@@ -119,4 +119,14 @@ public class OwnerTradingController {
 		
 		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
+	
+	// 트레이딩 거절
+	@ResponseBody
+	@RequestMapping(value="/tradingRefuse.do", method =RequestMethod.POST)
+	public ResponseEntity<ServiceResult> tradingRefuse(@RequestBody TradingVO tradVO){
+		
+		ServiceResult result = service.tradingRefuse(tradVO);
+		
+		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
+	}
 }

@@ -90,16 +90,22 @@ public class OfficeServiceImpl implements IOfficeService {
 	
 	@Override
 	public void officeLtDetailRegister(List<HeadLtDetailVO> requestBody) {
-		for(int i = 0; i<requestBody.size(); i++) {
-			String hdLtreciever = requestBody.get(i).getHdLtreciever();
-			int hdLtno = requestBody.get(i).getHdLtno();
-			
-			HeadLtDetailVO headLtDetailVO = new HeadLtDetailVO();
-			headLtDetailVO.setHdLtno(hdLtno);
-			headLtDetailVO.setHdLtreciever(hdLtreciever);
-			officeLetterMapper.officeLtDetailRegister(headLtDetailVO);
-		}
+	    for (int i = 0; i < requestBody.size(); i++) {
+	        String hdLtreciever = requestBody.get(i).getHdLtreciever();
+	        int hdLtno = requestBody.get(i).getHdLtno();
+
+	        HeadLtDetailVO headLtDetailVO = new HeadLtDetailVO();
+	        headLtDetailVO.setHdLtno(hdLtno);
+	        headLtDetailVO.setHdLtreciever(hdLtreciever);
+
+	        // 1. head_lt_detail 테이블에 데이터 삽입
+	        officeLetterMapper.officeLtDetailRegister(headLtDetailVO);
+
+	        // 2. head_letter 테이블의 hd_ltstate를 '완료'로 업데이트
+	        officeLetterMapper.updateOfficeLetterState(hdLtno);
+	    }
 	}
+
 
 	@Override
 	public OfficeLetterVO officeLetterDetail(OfficeLetterVO officeLetterVO) {

@@ -102,4 +102,12 @@
 		where trad_no = #{tradNo}
 	</update>
 	
+	<!-- 트레이딩 거절 -->
+	<update id="tradingRefuse" parameterType="tradVO">
+		update trading
+			set trad_stts = '거절',
+				trad_rm = #{tradRm}
+		where trad_no = #{tradNo}
+	</update>
+	
 </mapper>
