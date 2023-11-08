@@ -42,9 +42,64 @@
 		where vdprod_cd = #{vdprodCd}
 	</select>
 	
-	<insert id="tradingInsert" parameterType="tradVO">
-	
-	
+	<!-- 트레이딩 신청 -->
+	<insert id="tradingInsert" parameterType="tradVO" useGeneratedKeys="true">
+		<selectKey keyProperty="tradNo" resultType="string" order="BEFORE">
+			select 'tr_'|| to_char(seq_trad.nextval, 'FM000000') from dual
+		</selectKey>
+		insert into trading (trad_no, frcs_id, vdprod_cd, frcs_id2, trad_qy, trad_amt, trad_date, trad_stts)
+		values(
+			#{tradNo}, #{frcsId}, #{vdprodCd}, #{frcsId2}, #{tradQy}, #{tradAmt}, sysdate, '요청'
+		)
 	</insert>
+	
+	<select id="selectTradeCount" parameterType="ownerPagingVO" resultType="int">
+		select count(trad_no)
+		from trading
+		where frcs_id = #{frcsId} or frcs_id2 = #{frcsId}
+	</select>
+	
+	<!-- 트레이딩 신청 내역 페이징 2 -->
+	<select id="selectTradingHistoryList" parameterType="ownerPagingVO" resultType="tradVO" >
+		select 
+			b.*
+		from (
+				select
+					a.*, row_number() over(order by a.trad_date desc) rnum
+				from(
+					select trad_no, t.frcs_id, h.vdprod_cd, frcs_id2, trad_qy, trad_amt, trad_date, trad_stts, trad_rm, h.vdprod_name, frcs_name, 
+					(select f.frcs_name from franchise f where t.frcs_id2 = f.frcs_id) as frcs_name2
+					from trading t
+					inner join head_inventory h on t.vdprod_cd = h.vdprod_cd
+					inner join franchise f on t.frcs_id = f.frcs_id
+					where t.frcs_id = #{frcsId} or frcs_id2 = #{frcsId}
+					order by trad_date desc
+				)a		
+			)b
+		<![CDATA[	
+		where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+		]]>
+	</select>
+	
+	<!-- 트레이딩 재고 -처리 -->
+	<update id="tradingMinus" parameterType="inventVO">
+		update frcs_inventory
+			set invntry_qy = invntry_qy - #{tradQy}
+		where frcs_id = #{frcsId2} and vdprod_cd = #{vdprodCd}
+	</update>
+	
+	<!-- 트레이딩 재고 + 처리 -->
+	<update id="tradingPlus" parameterType="inventVO">
+		update frcs_inventory
+			set invntry_qy = invntry_qy + #{tradQy}
+		where frcs_id = #{frcsId} and vdprod_cd = #{vdprodCd}
+	</update>
+	
+	<!-- 상태 업데이트 -->
+	<update id="updateStatus" parameterType="string">
+		update trading
+			set trad_stts = '수락'
+		where trad_no = #{tradNo}
+	</update>
 	
 </mapper>

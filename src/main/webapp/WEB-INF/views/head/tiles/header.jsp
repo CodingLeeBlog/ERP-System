@@ -482,7 +482,7 @@
                                       <a href="/head/list.do">공지사항</a>
                                   </li>
                                   <li>
-                                      <a href="/head/inquiry.do">1:1문의</a>
+                                      <a href="/head/inquiryList.do">1:1문의</a>
                                   </li>
                                   <li>
                                       <a href="/head/faqlist.do">FAQ</a>

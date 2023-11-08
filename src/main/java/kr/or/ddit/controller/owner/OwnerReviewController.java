@@ -44,7 +44,7 @@ public class OwnerReviewController {
 	@RequestMapping(value="/review.do", method = RequestMethod.GET )
 	public String ownerReviewList(
 			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
-			@RequestParam(required = false, defaultValue = "title") String searchType,
+			@RequestParam(required = false, defaultValue = "content") String searchType,
 			@RequestParam(required = false) String searchWord,
 			Model model) {
 		

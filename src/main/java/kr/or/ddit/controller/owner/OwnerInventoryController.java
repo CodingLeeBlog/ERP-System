@@ -69,6 +69,7 @@ public class OwnerInventoryController {
 //		List<FrcsInventoryVO> inventList = service.getInventList(memId);
 //		model.addAttribute("inventList", inventList);
 		model.addAttribute("pagingVO",pagingVO);
+		model.addAttribute("frcsId",frcsId);
 		
 		return "owner/inventory/list";
 	}
@@ -82,5 +83,15 @@ public class OwnerInventoryController {
 		ServiceResult result = service.inventUpdate(frcsVO);
 		
 		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
+	}
+	
+	// 재고초기설정
+	@ResponseBody
+	@RequestMapping(value="/inventory/beginSetting.do", method = RequestMethod.POST)
+	public ResponseEntity<ServiceResult> beginSetting(String frcsId){
+		
+		ServiceResult result = service.beginSetting(frcsId);
+		
+		return new ResponseEntity<ServiceResult>(result,HttpStatus.OK);
 	}
 }

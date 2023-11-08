@@ -16,7 +16,9 @@ public class FrcsDailySalesVO {
 	private String menuCd;
 	private String frcsId;
 	private String menuName;
-	private int totalPrice;	// 일자별 총 금액
+	
+	private int totalPrice;	// 조건별 총 금액
+	private int totalorderPrice; // 조건별 발주 총 금액
 	
 	private String selngDateStr;	// 날짜데이터 string으로 받아오기
 	private Timestamp selngDate2;	// Timestamp 데이터

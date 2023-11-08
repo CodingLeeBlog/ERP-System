@@ -174,15 +174,15 @@
 		                                </tr>
 		                            </thead>
 		                            <tbody id="addTbody">
-		                            <c:choose>
-		                            	<c:when test="${empty autoList }">
-			                            	<tr>
-			                            		<td colspan="8" style="text-align:center">
-			                            			발주 내역이 존재하지 않습니다.
-		                            			</td>
-			                            	</tr>
-		                            	</c:when>
-										<c:otherwise>
+<%-- 		                            <c:choose> --%>
+<%-- 		                            	<c:when test="${empty autoList }"> --%>
+<!-- 			                            	<tr> -->
+<!-- 			                            		<td colspan="8" style="text-align:center"> -->
+<!-- 			                            			발주 내역이 존재하지 않습니다. -->
+<!-- 		                            			</td> -->
+<!-- 			                            	</tr> -->
+<%-- 		                            	</c:when> --%>
+<%-- 										<c:otherwise> --%>
 											<c:forEach items="${autoList }" var="auto">
 												<tr class="addTr">
 													<td style="text-align:center" class="addTrProdCd">${auto.vdprodCd }</td>
@@ -197,8 +197,8 @@
 													</td>
 												</tr>
 											</c:forEach>
-										</c:otherwise>		                            
-		                            </c:choose>
+<%-- 										</c:otherwise>		                             --%>
+<%-- 		                            </c:choose> --%>
 		                            
 		                            </tbody>
 		                        </table>
@@ -286,6 +286,39 @@ $(function(){
 				}
 			}
 		});
+	});
+	
+	// 0일때 마우스를 대면 빈값으로 클리어
+	tBody.on("focus", ".orderQyInput", function() {
+	    var orderQyInput = $(this);
+	    if (orderQyInput.val() === '0') {
+	        orderQyInput.val('');
+	    }
+	});
+	
+	// 여전히 빈값 상태로 포커스를 옮기면 다시 0으로
+	tBody.on("blur", ".orderQyInput", function() {
+	    var orderQyInput = $(this);
+	    if (orderQyInput.val() === '') {
+	        orderQyInput.val('0'); 
+	    }
+	});
+	
+	// 주문수량 키보드로 입력
+	tBody.on("input", ".orderQyInput", function() {
+    var orderQyInput = $(this);
+    var orderTotalSpan = orderQyInput.closest('tr').find(".orderTotal");
+    var hdforwardPriceTd = orderQyInput.closest('tr').find(".hdforwardPriceTd").text();
+    var hdforwardPrice = parseInt(hdforwardPriceTd);
+    var orderQyVal = parseInt(orderQyInput.val());
+
+    if (isNaN(orderQyVal)) {
+        orderQyVal = 0;
+     	orderQyInput.val(0);
+    }
+   	
+    var total = hdforwardPrice * orderQyVal;
+    orderTotalSpan.text(total);
 	});
 	
 	// 주문수량 -

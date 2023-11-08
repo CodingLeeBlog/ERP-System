@@ -101,4 +101,21 @@ public class OwnerReservationController {
 		}
 		return new ResponseEntity<List<FrcsReservationVO>>(HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/resvUpdate.do", method = RequestMethod.POST)
+	public String ownerResvUpdate(
+			RedirectAttributes ra,
+			FrcsReservationVO frcsResvVO, Model model) {
+		
+		String goPage = "";
+		ServiceResult result = service.resvUpdate(frcsResvVO);
+		if(result.equals(ServiceResult.OK)) {
+			ra.addFlashAttribute("message", "수정이 완료되었습니다!");
+			goPage = "redirect:/owner/resv.do";
+		}else {
+			ra.addFlashAttribute("message", "서버오류, 다시 시도해주세요!");
+			goPage = "owner/reservation/resvList";
+		}
+		return goPage;
+	}
 }

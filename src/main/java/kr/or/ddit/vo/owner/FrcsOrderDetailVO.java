@@ -13,4 +13,6 @@ public class FrcsOrderDetailVO {
 	
 	private String vdprodName; // 제품명
 	
+	private int totalPrice;	// 통계를 위한 전체 금액
+	
 }

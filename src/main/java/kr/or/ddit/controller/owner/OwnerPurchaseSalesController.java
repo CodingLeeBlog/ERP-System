@@ -25,6 +25,7 @@ import kr.or.ddit.service.owner.IFrcsDailySaleService;
 import kr.or.ddit.service.owner.IFrcsIdService;
 import kr.or.ddit.vo.owner.FrcsDailySalesVO;
 import kr.or.ddit.vo.owner.FrcsMenuVO;
+import kr.or.ddit.vo.owner.FrcsOrderDetailVO;
 import kr.or.ddit.vo.owner.FrcsOrderVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 import lombok.extern.slf4j.Slf4j;
@@ -172,5 +173,86 @@ public class OwnerPurchaseSalesController {
 //		
 //		return new ResponseEntity<List<FrcsMenuVO>>(menuList, HttpStatus.OK);
 //	}
+	
+
+	// 매출액 분석
+	@PreAuthorize("hasRole('ROLE_OWNER')")
+	@RequestMapping(value="/salesAnalysis.do", method = RequestMethod.GET)
+	public String salesList(@RequestParam(name="yearMonth", required=false) String yearMonth,
+							Model model) {
+		
+		String frcsId = commService.getFrcsId();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM");
+		Date thisMonth = null;
+		
+		try {
+			thisMonth = sdf.parse(yearMonth);	// 이번달
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}	
+		
+		// 한달 자료 가져오기
+		List<FrcsDailySalesVO> oneMonthList = service.getOneMonthData(frcsId,thisMonth);
+		
+		System.out.println("yearMonth" + yearMonth);	// 파라미터로 받은 얘를 이용해서
+		model.addAttribute("yearMonth", yearMonth);
+		model.addAttribute("oneMonthList", oneMonthList);
+		
+		return "owner/purchaseSales/salesAnalysis";
+	}
+	
+	// 매출 총이익 분석
+	@PreAuthorize("hasRole('ROLE_OWNER')")
+	@RequestMapping(value="/totalProfit.do", method = RequestMethod.GET)
+	public String totalProfitList(@RequestParam(name="yearMonth", required=false) String yearMonth,
+									Model model) {
+		
+		String frcsId = commService.getFrcsId();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM");
+		Date thisMonth = null;
+		
+		try {
+			thisMonth = sdf.parse(yearMonth);	// 이번달
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}	
+		
+		// 한달 매출 총이익
+		FrcsDailySalesVO oneTotalProfit = service.getTotalOneMonthList(frcsId,thisMonth);
+		model.addAttribute("yearMonth", yearMonth);
+		model.addAttribute("oneTotalProfit", oneTotalProfit);
+		
+		return "owner/purchaseSales/totalProfit";
+		
+	}
+	
+	
+	// 매입 분석
+	@PreAuthorize("hasRole('ROLE_OWNER')")
+	@RequestMapping(value="/purchaseAnalysis.do", method = RequestMethod.GET)
+	public String purchaseAnalysisList(@RequestParam(name="yearMonth", required=false) String yearMonth,
+										Model model) {
+		
+		String frcsId = commService.getFrcsId();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM");
+		Date thisMonth = null;
+		
+		try {
+			thisMonth = sdf.parse(yearMonth);	// 이번달
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}	
+		
+		// 한달 매입 분석
+		List<FrcsOrderDetailVO> onePurchase = service.getOnePurchase(frcsId,thisMonth);
+		model.addAttribute("yearMonth", yearMonth);
+		model.addAttribute("onePurchase", onePurchase);
+		
+		return "owner/purchaseSales/purchaseAnalysis";
+		
+	}
 	
 }

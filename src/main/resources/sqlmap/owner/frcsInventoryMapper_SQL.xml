@@ -62,7 +62,13 @@
 				select h.vdprod_cd, h.vdprod_name, f.invntry_qy, f.proprt_qy, h.hdforward_price, f.frcs_id,
 			       (select nvl(sum(d.dlivy_qy),0)
 			        from delivery d
-			        WHERE d.dlivy_date like to_char(sysdate, 'YY/mm') || '%' and d.vdprod_cd = h.vdprod_cd) as dlivy_qy
+			        WHERE d.dlivy_date like to_char(sysdate, 'YY/mm') || '%' and d.vdprod_cd = h.vdprod_cd and frcs_id= #{frcsId}) as dlivy_qy,
+			        (select nvl(sum(frcsorder_qy),0) from frcsorder_detail fd, frcsorder f
+				        where fd.frcsorder_no = f.frcsorder_no
+				        and fd.vdprod_cd = h.vdprod_cd
+				        and to_char(frcsorder_date, 'yy/MM') = to_char(sysdate, 'yy/MM')
+				        and frcsorder_confm ='승인' and frcs_id= #{frcsId}
+				        )as frcsorder_qy
 					from  frcs_inventory f
 					join head_inventory h on f.vdprod_cd = h.vdprod_cd
 					where frcs_id = #{frcsId}
@@ -100,6 +106,18 @@
 		) values (
 			sysdate, #{frcsId}, #{vdprodCd}, #{dlivyQy}, #{dlivyPrice}
 		)
+	</insert>
+	
+	<!-- 본사 재고 코드 다 가져오기 -->
+	<select id="getVdprodCd" resultType="headInventoryVO">
+		select vdprod_cd
+		from head_inventory
+	</select>
+	
+	<!-- 재고 초기세팅 -->
+	<insert id="beginSetting" parameterType="map">
+		insert into frcs_inventory(frcs_id,vdprod_cd,invntry_qy,proprt_qy)
+		values(#{frcsId}, #{vdprodCd}, 0, 0)
 	</insert>
 	
 </mapper>

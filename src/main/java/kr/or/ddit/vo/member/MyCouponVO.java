@@ -17,4 +17,7 @@ public class MyCouponVO {
 	private String cpnContent;
 	private Date cpnStdate;
 	private Date cpnEnddate;
+	
+	// 회원별 쿠폰 번호 출력용
+	private int rownum;
 }

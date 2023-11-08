@@ -12,5 +12,6 @@ public interface IFrcsReservationService {
 	public ServiceResult resvStateUpdate(String resvNo);
 	public int selectResvCount(OwnerPaginationInfoVO<FrcsReservationVO> pagingVO);
 	public List<FrcsReservationVO> selectResvList(OwnerPaginationInfoVO<FrcsReservationVO> pagingVO);
+	public ServiceResult resvUpdate(FrcsReservationVO frcsResvVO);
 
 }

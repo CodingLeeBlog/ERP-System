@@ -16,6 +16,9 @@ public interface IFrcsInventoryService {
 
 	public ServiceResult inventUpdate(FrcsInventoryVO inventVO);
 
+	// 재고 초기 세팅
+	public ServiceResult beginSetting(String frcsId);
+
 //	public void deliveryMinInsert(FrcsInventoryVO frcsVO);
 
 }

@@ -205,9 +205,9 @@
 		                                    <td style="text-align:center"><fmt:formatNumber value="${salesList.totalPrice }" type="currency"/></td>
 		                                    <td style="text-align:center" class="selngDateOwn"><fmt:formatDate value="${salesList.selngDate }" pattern="yyyy/MM/dd"/></td>
 		                                    <td style="text-align:center">
-			                                    <button type="button" class="btn btn-primary updateBtn" data-bs-toggle="modal" data-bs-target="#updateModal${stat.index }" data-selngdate="${salesList.selngDate}">수정</button>
+			                                    <button type="button" class="btn btn-danger updateBtn" data-bs-toggle="modal" data-bs-target="#updateModal${stat.index }" data-selngdate="${salesList.selngDate}">수정</button>
 			                                    <!-- 수정 모달 -->
-			                                    <div id="updateModal${stat.index }" class="modal fade modalArea" tabindex="-1" role="dialog" aria-labelledby="multiple-twoModalLabel" aria-hidden="true" data-bs-show="false">
+			                                    <div id="updateModal${stat.index }" class="modal fade modalArea" tabindex="-1" role="dialog" aria-hidden="true" data-bs-show="false">
 												    <div class="modal-dialog modal-lg modal-dialog-centered">
 													        <div class="modal-content">
 													        	<div class="modal-header">
@@ -217,8 +217,6 @@
 														           <div class="modal-body">
 														           <div class="mb-3">
 														           <div class="input-group d-flex justify-content-end">
-<!-- 												                            <input type="text" class="form-control modalSearchText" placeholder="메뉴명을 입력해주세요."> -->
-<!-- 												                            <button class="btn btn-info modalSearchBtn" type="button">검색</button> -->
 																	<h5>합계
 																	<input type="text" class="salesTotal" readonly>
 																	</h5>
@@ -254,8 +252,6 @@
 														                                   </div>
 													 	                               </td>
 														                           </tr>
-														                           
-														                           
 														                       </c:forEach>
 														                    </tbody>
 														                </table>
@@ -267,30 +263,57 @@
 													    </div>
 													</div>
 												</div>
+												
+												<!-- 상세내역 모달 -->
+												<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal${stat.index }">상세내역</button>
+												<div id="detailModal${stat.index }" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
+												    <div class="modal-dialog modal-dialog-centered">
+												        <div class="modal-content">
+												            <div class="modal-header">
+												                <h4 class="modal-title" id="standard-modalLabel">상세내역</h4>
+												                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+												            </div>
+												            <div class="modal-body">
+												                <table class="table table-hover">
+												                   <thead>
+												                       <tr>
+													                       <th style="width: 20px;"></th>
+												                           <th style="text-align:center; width: 150px;">메뉴명</th>
+												                           <th style="text-align:center; width: 150px;">가격</th>
+												                           <th style="text-align:center; width: 150px;">판매수량</th>
+												                       </tr>
+												                   </thead>
+												                   <tbody class="detailModalBody">
+<%-- 												                       <c:forEach items="${frcsMenuList }" var="list"> --%>
+<!-- 												                           <tr> -->
+<!-- 													                           <td class="" style="vertical-align:middle;"> -->
+<!-- 																			       <div class="form-check"> -->
+<!-- 																			            <input type="checkbox" class="form-check-input checkBox"> -->
+<!-- 																			       </div> -->
+<!-- 																		       </td> -->
+<%-- 												                               <td class="menuCd" style="text-align:center; vertical-align:middle;">${list.menuCd }</td> --%>
+<%-- 												                               <td class="menuName" style="text-align:center; vertical-align:middle;">${list.menuName }</td> --%>
+<%-- 												                               <td class="menuPrice" style="text-align:center; vertical-align:middle;">${list.menuPrice }</td> --%>
+<!-- 												                               <td class="saleCount" style="text-align:center; width: 180px;" > -->
+<!-- 													                               <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected"> -->
+<!-- 													                               		<span class="input-group-btn input-group-prepend"><button class="btn btn-primary bootstrap-touchspin-down saleCountDown" type="button">-</button></span> -->
+<!-- 													                                    <input data-toggle="touchspin" type="text" value="0" class="form-control text-end saleCountInput"> -->
+<!-- 													                                    <span class="input-group-btn input-group-append"><button class="btn btn-primary bootstrap-touchspin-up saleCountUp" type="button">+</button></span> -->
+<!-- 												                                   </div> -->
+<!-- 											 	                               </td> -->
+<!-- 												                           </tr> -->
+<%-- 												                       </c:forEach> --%>
+												                    </tbody>
+												                </table>
+												            </div>
+												            <div class="modal-footer">
+												                <button type="button" class="btn btn-light" data-bs-dismiss="modal">확인</button>
+												            </div>
+												        </div>
+												    </div>
+												</div>
 			                                </td>
 		                                </tr>
-		                                <!-- 상세내역  -->
-			                            	 <tr class="fold" style="display:none;">
-									            <td colspan="5">
-									              <div class="fold-content" style="display:flex; justify-content: center;">
-									                <table class="table table-hover" style="width:50%;"><!--내부테이블-->
-									                  <thead>
-									                    <tr>
-					                                    <th style="text-align:center; width:200px;">메뉴명</th>
-					                                    <th style="text-align:center; width:150px;">판매수량</th>
-									                    </tr>
-									                  </thead>
-									                  <tbody>
-									                    <tr>
-									                      <td style="text-align:center; width:200px;"></td>
-									                      <td style="text-align:center; width:150px;"></td>
-									                    </tr>
-									                  </tbody>
-									                </table><!--내부테이블-->          
-									              </div>
-									            </td>
-									          </tr>
-		                                
                            			</c:forEach>
                             	</c:otherwise>
                             </c:choose>
@@ -726,18 +749,6 @@ $(function(){
 		    }
 		});
 	}
-	});
-	
-	// 상세 내역 열고 닫기
-	var rows = $(".view");
-
-	rows.on("click", function () {
-       var content = $(this).next();
-       if (content.is(":visible")) {
-           content.hide();
-       } else {
-           content.show(); 
-       }
 	});
 	
 	

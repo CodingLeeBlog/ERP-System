@@ -19,6 +19,7 @@ import kr.or.ddit.service.owner.IFrcsDailySaleService;
 import kr.or.ddit.vo.owner.FrcsDailySalesVO;
 import kr.or.ddit.vo.owner.FrcsMenuIngredientVO;
 import kr.or.ddit.vo.owner.FrcsMenuVO;
+import kr.or.ddit.vo.owner.FrcsOrderDetailVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 
 @Service
@@ -295,7 +296,7 @@ public class FrcsDailySaleServiceImpl implements IFrcsDailySaleService {
 							for(int y=0; y<ingredList.size(); y++) {	// 재료 리스트만큼 for문
 								FrcsMenuIngredientVO ingredVO = ingredList.get(y);	
 								ingredVO.setFrcsId(frcsId);	
-								ingredVO.setMenuQy(cnt);	// 메뉴 판매개수
+								ingredVO.setMenuQy(-cnt);	// 메뉴 판매개수
 								ingredVO.setSelngDate(selngDate);
 								
 								 // 날짜, 가맹점Id, 메뉴코드가 일치하는 데이터들 중 가장 최신의 데이터 1개를 가져온다.
@@ -381,6 +382,39 @@ public class FrcsDailySaleServiceImpl implements IFrcsDailySaleService {
 			index++;
 		}
 		return chartArr;
+	}
+
+	// 매출액 분석 (한달)
+	@Override
+	public List<FrcsDailySalesVO> getOneMonthData(String frcsId, Date thisMonth) {
+		return mapper.getOneMonthData(frcsId,thisMonth);
+	}
+
+	// 매출 총이익 분석 (한달)
+	@Override
+	public FrcsDailySalesVO getTotalOneMonthList(String frcsId, Date thisMonth) {
+		
+		FrcsDailySalesVO oneTotalProfit = new FrcsDailySalesVO();
+		
+		// 총 매출액
+		int totalPrice = mapper.getTotalSales(frcsId,thisMonth);		
+		
+		// 총 매입금액
+		int totalorderPrice = mapper.getPurchase(frcsId,thisMonth);
+		
+		oneTotalProfit.setTotalPrice(totalPrice);
+		oneTotalProfit.setTotalorderPrice(totalorderPrice);
+		
+		return oneTotalProfit;
+	}
+
+	// 매입 분석 (한달)
+	@Override
+	public List<FrcsOrderDetailVO> getOnePurchase(String frcsId, Date thisMonth) {
+		
+		List<FrcsOrderDetailVO> onePurchase = mapper.getOnePurchase(frcsId,thisMonth);
+		
+		return onePurchase;
 	}
 }
 

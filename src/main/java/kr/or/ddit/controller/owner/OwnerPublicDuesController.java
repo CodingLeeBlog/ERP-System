@@ -32,6 +32,7 @@ public class OwnerPublicDuesController {
    @Inject
    private IFrcsBillService service;
    
+   // 공과금 납부 리스트
    @PreAuthorize("hasRole('ROLE_OWNER')")
    @RequestMapping(value="/dues.do", method = RequestMethod.GET)
    public String publicDuesList(

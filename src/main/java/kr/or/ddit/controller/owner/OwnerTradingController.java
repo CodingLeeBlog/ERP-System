@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.ServiceResult;
@@ -20,6 +21,7 @@ import kr.or.ddit.service.owner.IFrcsIdService;
 import kr.or.ddit.service.owner.IFrcsTradingService;
 import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.FrcsInventoryVO;
+import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 import kr.or.ddit.vo.owner.TradingVO;
 
 @Controller
@@ -78,13 +80,43 @@ public class OwnerTradingController {
 	public ResponseEntity<ServiceResult> tradingInsert(@RequestBody TradingVO tradVO){
 		
 		ServiceResult result = service.tradingInsert(tradVO);
-		
 		return new ResponseEntity<ServiceResult>(result,HttpStatus.OK);
 	}
 	
 	
+	// 트레이딩 내역
 	@RequestMapping(value="/tradingList.do", method = RequestMethod.GET)
-	public String tradingHistoryList() {
+	public String tradingHistoryList(
+			@RequestParam(name="page", required=false, defaultValue = "1") int currentPage,
+			Model model) {
+		
+		String frcsId= commService.getFrcsId();
+		System.out.println(frcsId);
+	
+		// 페이징 처리
+		OwnerPaginationInfoVO<TradingVO> pagingVO = new OwnerPaginationInfoVO<TradingVO>();
+		
+		pagingVO.setFrcsId(frcsId);
+		pagingVO.setCurrentPage(currentPage);	// startRow, endRow, startPage, endPage가 결정
+		int totalRecord = service.selectTradeCount(pagingVO);	// 총 게시글 수
+		
+		pagingVO.setTotalRecord(totalRecord);	// totalPage 결정
+		List<TradingVO> dataList = service.selectTradingHistoryList(pagingVO);	// 한 페이지에 해당하는 10개의 데이터
+		pagingVO.setDataList(dataList);
+		
+		model.addAttribute("frcsId", frcsId);	//내가맹점
+		model.addAttribute("pagingVO", pagingVO);
+		
 		return "owner/trading/tradingHistory";
+	}
+	
+	// 트레이딩 성공 시 재고 반영
+	@ResponseBody
+	@RequestMapping(value="/tradingSuccess.do", method =RequestMethod.POST)
+	public ResponseEntity<ServiceResult> tradingSuccess(@RequestBody FrcsInventoryVO inventVO){
+		
+		ServiceResult result = service.tradingSuccess(inventVO);
+		
+		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
 }

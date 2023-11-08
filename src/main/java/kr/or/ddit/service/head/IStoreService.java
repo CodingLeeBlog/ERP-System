@@ -21,7 +21,7 @@ public interface IStoreService {
 	public List<StoreOrderHistoryVO> selectCheckOne(String frcsorderNo);
 	
 	// 승인처리시 발주번호 처리
-	public ServiceResult updateOrderDetails(String frcsorderNo);
+	public ServiceResult updateOrderDetails(StoreOrderHistoryVO soh);
 	
 	// 반려버튼 클릭 후 모달창에 데이터 불러오기
 	public StoreOrderHistoryVO frcsOrderDetails(String frcsorderNumber);

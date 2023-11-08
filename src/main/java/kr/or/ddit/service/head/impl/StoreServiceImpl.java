@@ -52,12 +52,14 @@ public class StoreServiceImpl implements IStoreService{
 	
 	// 승인처리시 진행하는 로직
 	@Override
-	public ServiceResult updateOrderDetails(String frcsorderNo) {
+	public ServiceResult updateOrderDetails(StoreOrderHistoryVO soh) {
 		
 		ServiceResult result = null;
 		
+		String frcsId = soh.getFrcsId().toString();
+		
 		// 가맹점재고 수량 업데이트
-		List<InventoryUpdateVO> frcs = mapper.selectFrcsQy(frcsorderNo);
+		List<InventoryUpdateVO> frcs = mapper.selectFrcsQy(soh);
 		for (InventoryUpdateVO  qy : frcs) {
 			String vdprodCd = qy.getVdprodCd();
 			int invntryQy = qy.getInvntryQy();
@@ -67,15 +69,15 @@ public class StoreServiceImpl implements IStoreService{
 			
 			System.out.println("가맹점 재고수량 -> " + invntryQy);
 			
+			qy.setFrcsId(frcsId);
 			qy.setVdprodCd(vdprodCd);
 			qy.setInvntryQy(invntryQy);
 			
 			mapper.updateFrcsInventory(qy);
-			
 		}
 		// 본사 재고 수량 업데이트
 		
-		List<InventoryUpdateVO> head = mapper.selectHeadQy(frcsorderNo);
+		List<InventoryUpdateVO> head = mapper.selectHeadQy(soh);
 		for (InventoryUpdateVO qy : head) {
 			String vdprodCd = qy.getVdprodCd();
 			int hdremainQy = qy.getHdremainQy();
@@ -92,7 +94,7 @@ public class StoreServiceImpl implements IStoreService{
 		}
 		
 		// 가맹점 발주테이블 승인여부 '승인'으로 업데이트
-		int status = mapper.updateOrderDetails(frcsorderNo);
+		int status = mapper.updateOrderDetails(soh);
 		
 		if(status > 0) {
 			result = ServiceResult.OK;

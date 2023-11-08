@@ -2,6 +2,7 @@ package kr.or.ddit.controller.member;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -396,6 +397,22 @@ public class MypageController {
 	public ResponseEntity<ServiceResult> registerPay (@RequestBody	PayVO payVO){
 		
 		ServiceResult result = memberpayService.create(payVO);
+		
+		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
+		
+	}
+	
+	/**
+	 * 회원이 쿠폰 등록시 쿠폰 등록 및 중복 등록 방지 기능
+	 * 
+	 * @param mycouponVO
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/mypage/mycpninsert.do")
+	public ResponseEntity<ServiceResult> registerCpn (@RequestBody MyCouponVO mycouponVO){
+		
+		ServiceResult result = mycouponService.create(mycouponVO);
 		
 		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 		

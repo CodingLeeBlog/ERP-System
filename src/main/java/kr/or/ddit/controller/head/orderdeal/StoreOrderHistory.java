@@ -171,7 +171,12 @@ public class StoreOrderHistory {
 		
 		for (StoreOrderHistoryVO soh : storeOrderHistoryVO) {
 			String frcsorderNo = soh.getFrcsorderNo().toString();
-			result = service.updateOrderDetails(frcsorderNo);
+			String frcsId = soh.getFrcsId().toString();
+			
+			log.debug("가맹점 주문 승인버튼 눌렀을 시 넘어오는 frcsorderNo -> {}", frcsorderNo);
+			log.debug("가맹점 주문 승인버튼 눌렀을 시 넘어오는 frcsId -> {}", frcsId);
+			
+			result = service.updateOrderDetails(soh);
 			
 			if(result == ServiceResult.FAILED) {
 				log.info("주문상세 승인처리중 오류 발생!!");

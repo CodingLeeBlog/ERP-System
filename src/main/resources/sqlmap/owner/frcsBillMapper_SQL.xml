@@ -85,4 +85,61 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from publicdues
 		where frcs_id = #{frcsId} and dues_payde like to_char(sysdate,'yyyy')||'%'
 	</select>
+	
+	<!-- 로얄티  3% -->
+	<select id="getfrcsRowal" parameterType="map" resultType="int">
+		select (sum(selng_qy* selng_price)*0.03) as frcs_rowal
+		from dailyselling d, head_menu h
+		where frcs_id = #{frcsId} and trunc(selng_date, 'MM') = trunc(#{thisMonth}, 'MM')
+		and d.menu_cd = h.menu_cd
+		group by trunc(selng_date, 'MM')
+	</select>
+	
+	<!-- 제품 구입비 -->
+	<select id="getorderAmt" parameterType="map" resultType="int">
+		select sum(frcsorder_amt) as order_amt
+		from frcsorder
+		where frcs_id = #{frcsId} and trunc(frcsorder_date, 'MM') = trunc(#{thisMonth}, 'MM')
+		and frcsorder_confm = '승인'
+		group by trunc(frcsorder_date,'MM')
+	</select>
+	
+	<!-- 트레이딩 추가비 -->
+	<select id="gettradAdd" parameterType="map" resultType="int">
+		select sum(trad_amt) as trad_add
+		from trading
+		where frcs_id = #{frcsId} and trunc(trad_date, 'MM') = trunc(#{thisMonth}, 'MM')
+		and trad_stts = '수락'
+		group by trunc(trad_date,'MM')
+	</select>
+	
+ 	<!-- 트레이딩 삭감비 --> 
+<!-- 	<select id="gettradRedct" parameterType="map" resultType="int"> -->
+<!-- 		select nvl(sum(trad_amt),0) as trad_redct -->
+<!-- 		from trading -->
+<!-- 		where frcs_id2 = #{frcsId} and trunc(trad_date, 'MM') = trunc(#{thisMonth}, 'MM') -->
+<!-- 		and trad_stts = '수락' -->
+<!-- 		group by trunc(trad_date,'MM') -->
+<!-- 	</select> -->
+
+	<!-- 가맹비 총괄 테이블에 존재하는지 존재하지 않는지 체크 -->
+	<select id="dupliCheck" parameterType="headfeeVO" resultType="int">
+		select count(fee_code) 
+		from fee
+		where frcs_id = #{frcsId} and fee_chargedate = #{feeChargedate}
+	</select>
+	
+	<!-- 가맹비 총괄 테이블에 존재하지 않으면 가맹비 총괄 테이블에 insert -->
+	<insert id="insertFee" parameterType="headfeeVO" useGeneratedKeys="true">
+		<selectKey keyProperty="feeCode" resultType="string" order="BEFORE">
+			select 'F'||to_char(#{thisMonth}, 'yyyyMM')||'_'|| to_char(seq_fee.nextval, 'FM00000') from dual
+		</selectKey>	
+		insert into fee(
+			fee_code, frcs_id, fee_dday, fee_totalpay, fee_status, fee_chargedate
+			)values (
+			#{feeCode}, #{frcsId}, #{feeDday}, #{feeTotalpay}, 'X', #{feeChargedate}
+			)
+	</insert>
+	
+	
 </mapper>

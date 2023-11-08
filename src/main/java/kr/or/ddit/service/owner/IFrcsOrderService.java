@@ -43,4 +43,7 @@ public interface IFrcsOrderService {
 	
 	// 자동발주 중복 체크
 	public ServiceResult autoOrderCheck(FrcsAutoOrderVO autoVO);
+	
+	// 자동발주 수정
+	public ServiceResult autoOrderUpdate(FrcsAutoOrderVO autoVO);
 }

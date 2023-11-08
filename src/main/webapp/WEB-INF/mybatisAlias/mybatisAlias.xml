@@ -25,31 +25,33 @@
 		<typeAlias type="kr.or.ddit.vo.member.PayVO" alias="payVO"/>
 		
 		<!-- 가맹점 -->
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsPublicDuesVO" alias="duesVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.OwnerPaginationInfoVO" alias="ownerPagingVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsSeatVO" alias="seatVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FranchiseVO" alias="franchiseVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsInventoryVO" alias="inventVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.DeliveryVO" alias="delVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsMenuVO" alias="frcsMenuVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsOrderVO" alias="orderVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsOrderDetailVO" alias="orderDetailVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsInquiryVO" alias="frcsInqVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsOwnershipVO" alias="ownershipVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsAutoOrderVO" alias="autoOrderVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsDailySalesVO" alias="salesVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsReviewVO" alias="FrcsReviewVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsMenuIngredientVO" alias="ingredVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsReservationVO" alias="frcsResvVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.FrcsEmployeeVO" alias="frcsEmpVO"/>
-		<typeAlias type="kr.or.ddit.vo.owner.TradingVO" alias="tradVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsPublicDuesVO" alias="duesVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.OwnerPaginationInfoVO" alias="ownerPagingVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsSeatVO" alias="seatVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FranchiseVO" alias="franchiseVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsInventoryVO" alias="inventVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.DeliveryVO" alias="delVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsMenuVO" alias="frcsMenuVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsOrderVO" alias="orderVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsOrderDetailVO" alias="orderDetailVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsInquiryVO" alias="frcsInqVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsOwnershipVO" alias="ownershipVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsAutoOrderVO" alias="autoOrderVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsDailySalesVO" alias="salesVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsReviewVO" alias="FrcsReviewVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsMenuIngredientVO" alias="ingredVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsReservationVO" alias="frcsResvVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsEmployeeVO" alias="frcsEmpVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.TradingVO" alias="tradVO"/>
+      <typeAlias type="kr.or.ddit.vo.owner.FrcsOfficialDocVO" alias="frcsOfldcVO"/>
 		
 		<!-- 본사 -->
 		<typeAlias type="kr.or.ddit.vo.head.MenuVO" alias="menuVO"/>
 		<typeAlias type="kr.or.ddit.vo.head.OfficeLetterVO" alias="officeLetterVO"/>
 		<typeAlias type="kr.or.ddit.vo.head.HeadLtDetailVO" alias="headLtDetailVO"/>
-		<typeAlias type="kr.or.ddit.vo.head.EducationVO" alias="educationVO"/>
-		<typeAlias type="kr.or.ddit.vo.head.OpenPlanVO" alias="openPlanVO"/>
+		<typeAlias type="kr.or.ddit.vo.head.HeadInquiryVO" alias="headInquiryVO"/>
+      	<typeAlias type="kr.or.ddit.vo.head.EducationVO" alias="educationVO"/>
+      	<typeAlias type="kr.or.ddit.vo.head.OpenPlanVO" alias="openPlanVO"/>
 		<typeAlias type="kr.or.ddit.vo.head.InspectionVO" alias="inspectionVO"/>
 		<typeAlias type="kr.or.ddit.vo.head.ProposalVO" alias="proposalVO"/>
 		<typeAlias type="kr.or.ddit.vo.head.TotalInfoVO" alias="totalInfoVO"/>
@@ -62,7 +64,7 @@
 		<typeAlias type="kr.or.ddit.vo.head.CancleModalVO" alias="cancleModalVO" />
 		<typeAlias type="kr.or.ddit.vo.head.CouponVO" alias="couponVO" />
 		<typeAlias type="kr.or.ddit.vo.head.PurchaseVO" alias="purchaseVO" />
-		<typeAlias type="kr.or.ddit.vo.head.FeeVO" alias="feeVO" />
+		<typeAlias type="kr.or.ddit.vo.head.FeeVO" alias="headfeeVO" />
 		<typeAlias type="kr.or.ddit.vo.head.HeadSalesTotalVO" alias="headsalesTotalVO" />
 	</typeAliases>
 	

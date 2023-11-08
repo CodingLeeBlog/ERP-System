@@ -62,6 +62,7 @@ public class OwnerAutoOrderController {
 		pagingVO.setDataList(dataList);
 
 		model.addAttribute("pagingVO", pagingVO);
+		model.addAttribute("frcsId", frcsId);
 		
 		// 모달창 안 제품 리스트
 		List<FrcsInventoryVO> inventList = service.getInventList(frcsId);
@@ -105,6 +106,17 @@ public class OwnerAutoOrderController {
 	public ResponseEntity<ServiceResult> autoOrderCheck(@RequestBody FrcsAutoOrderVO autoVO){
 		
 		ServiceResult result = service.autoOrderCheck(autoVO);
+		
+		return new ResponseEntity<ServiceResult>(result,HttpStatus.OK);
+	}
+	
+	
+	// 자동발주 수정
+	@ResponseBody
+	@RequestMapping(value="/autoOrder/update.do", method = RequestMethod.POST)
+	public ResponseEntity<ServiceResult> autoOrderUpdate(@RequestBody FrcsAutoOrderVO autoVO){
+		
+		ServiceResult result = service.autoOrderUpdate(autoVO);
 		
 		return new ResponseEntity<ServiceResult>(result,HttpStatus.OK);
 	}

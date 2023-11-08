@@ -12,6 +12,7 @@ import kr.or.ddit.mapper.owner.FrcsTradingMapper;
 import kr.or.ddit.service.owner.IFrcsTradingService;
 import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.FrcsInventoryVO;
+import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 import kr.or.ddit.vo.owner.TradingVO;
 
 @Service
@@ -68,6 +69,45 @@ public class FrcsTradingServiceImpl implements IFrcsTradingService {
 			result = ServiceResult.FAILED;
 		}
 		
+		return result;
+	}
+
+
+	// 트레이딩 신청내역 페이징1
+	@Override
+	public int selectTradeCount(OwnerPaginationInfoVO<TradingVO> pagingVO) {
+		return mapper.selectTradeCount(pagingVO);
+	}
+
+	// 트레이딩 신청내역 페이징2
+	@Override
+	public List<TradingVO> selectTradingHistoryList(OwnerPaginationInfoVO<TradingVO> pagingVO) {
+		return mapper.selectTradingHistoryList(pagingVO);
+	}
+
+	// 트레이딩 성공 시 각 가맹점 재고 수량 반영
+	@Override
+	public ServiceResult tradingSuccess(FrcsInventoryVO inventVO) {
+		ServiceResult result = null;
+		int status = 0;
+		String tradNo = inventVO.getTradNo();
+		
+		// 재고 - 처리 
+		int plus = mapper.tradingMinus(inventVO);
+		
+		if(plus>0) {
+			// 재고 + 처리
+			status = mapper.tradingPlus(inventVO);
+		}
+		
+		if(status > 0) {
+			// 상태  update
+			mapper.updateStatus(tradNo);
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+
 		return result;
 	}
 

@@ -32,7 +32,7 @@
 
 							<div class="mt-3">
 
-								<div class="overflow-hidden">
+								<div>
 									<h5 class="font-18 d-inline">${inqVO.inqryTtl }</h5>
 									<div class="float-end ">
 										<fmt:formatDate value="${inqVO.inqryYmd }" pattern="yyyy-MM-dd"/>
@@ -51,36 +51,41 @@
 								<c:if test="${frcsInq.inqryYn eq 'Y'}">
 									<h5 class="mb-3">문의답변</h5>
 									<hr />
+									<div class="my-3 overflow-auto">
+										<!-- 답변내용, 작성일 -->
+									</div>
 								</c:if>
+								
 
 <!-- 								첨부파일이 있으면 보이도록하기 -->
-								<c:if test="${not empty frcsInq.tableName}">
+								<c:set value="${inqVO.inqFileList }" var="inqFileList"/>
+								<c:if test="${not empty inqFileList}">
 									<h5 class="mt-3 mb-3">첨부파일</h5>
 									<div class="row">
 										<div class="col-xl-4">
 											<div class="card mb-1 shadow-none border">
-												<div class="p-2">
-													<div class="row align-items-center">
-														<div class="col-auto">
-															<div class="avatar-sm">
-																<span
-																	class="avatar-title bg-primary-lighten text-primary rounded">
-																	.ZIP </span>
+												<c:forEach items="${inqFileList}" var="inqFile">
+													<div class="p-2">
+														<div class="row align-items-center">
+															<div class="col-auto">
+																<div class="avatar-sm">
+																	<img src="${pageContext.request.contextPath}/resources/upload/file/${inqFile.attachOrgname }" alt="img" class="avatar-sm rounded">
+																</div>
+															</div>
+															<div class="col ps-0">
+																<a href="javascript:void(0);" class="text-muted fw-bold">${inqFile.attachOrgname }</a>
+																<p class="mb-0">${inqFile.attachSize } MB</p>
+															</div>
+															<div class="col-auto">
+																<!-- Button -->
+																<a href="javascript:void(0);" class="btn btn-link btn-lg text-muted" data-file-no="${inqFile.fileNo }"> 
+																	<i class="ri-download-2-line" ></i>
+																</a>
 															</div>
 														</div>
-														<div class="col ps-0">
-															<a href="javascript:void(0);" class="text-muted fw-bold">Hyper-admin-design.zip</a>
-															<p class="mb-0">2.3 MB</p>
-														</div>
-														<div class="col-auto">
-															<!-- Button -->
-															<a href="javascript:void(0);"
-																class="btn btn-link btn-lg text-muted"> <i
-																class="ri-download-2-line"></i>
-															</a>
-														</div>
 													</div>
-												</div>
+												</c:forEach>
+												
 											</div>
 										</div>
 										<!-- end col -->

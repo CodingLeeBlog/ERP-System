@@ -1,9 +1,11 @@
 package kr.or.ddit.service.owner;
 
+import java.util.Date;
 import java.util.List;
 
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.vo.member.PaginationInfoVO;
+import kr.or.ddit.vo.owner.FrcsBillVO;
 import kr.or.ddit.vo.owner.FrcsPublicDuesVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 
@@ -21,5 +23,8 @@ public interface IFrcsBillService {
 	
 	// 차트를 위한 데이터 가져오기 ajax
 	public List<FrcsPublicDuesVO> getData(String frcsId);
+	
+	// 본사 청구리스트
+	public List<FrcsBillVO> headBillList(String frcsId, Date thisMonth);
 
 }

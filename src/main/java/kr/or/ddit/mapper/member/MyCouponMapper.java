@@ -9,6 +9,10 @@ public interface MyCouponMapper {
 
 	public List<MyCouponVO> myCouponList(String memId);
 
-	public void deletemyCoupon(String memcpnId);
+	public void updatemyCoupon(String memcpnId);
+
+	public int mycouponcreate(MyCouponVO mycouponVO);
+
+	public MyCouponVO mycoupon(MyCouponVO mycouponVO);
 
 }

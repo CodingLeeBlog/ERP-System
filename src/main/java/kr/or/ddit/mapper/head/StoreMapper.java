@@ -30,12 +30,12 @@ public interface StoreMapper {
 
 	
 	// 가맹점 승인처리시
-	public int updateOrderDetails(String frcsorderNo);
+	public int updateOrderDetails(StoreOrderHistoryVO soh);
 	// 가맹점 FRCS_INVENTORY 업데이트
-	public List<InventoryUpdateVO> selectFrcsQy(String frcsorderNo);
+	public List<InventoryUpdateVO> selectFrcsQy(StoreOrderHistoryVO soh);
 	public void updateFrcsInventory(InventoryUpdateVO qy);
 	// 본사 HEAD_INVENTORY 업데이트
-	public List<InventoryUpdateVO> selectHeadQy(String frcsorderNo);
+	public List<InventoryUpdateVO> selectHeadQy(StoreOrderHistoryVO soh);
 	public void updateHeadInventory(InventoryUpdateVO qy);
 	// 반려 버튼클릭시 모달창에 데이터불러오기
 	public StoreOrderHistoryVO frcsOrderDetails(String frcsorderNumber);

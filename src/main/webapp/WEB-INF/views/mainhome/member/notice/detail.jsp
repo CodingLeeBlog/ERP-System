@@ -6,7 +6,7 @@
 <script src="${pageContext.request.contextPath }/resources/ckeditor/ckeditor.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
  
- 
+<sec:authentication property="principal.member" var="member"/> 
  
  <!-- ======= menubar Section ======= -->
 <div id="menubar" class="d-flex align-items-center h-75 d-inline-block align-middle">
@@ -99,11 +99,46 @@
 
 <script type="text/javascript">
 $(function(){
-   var btnList = $("#btnList");
-   
-   btnList.on("click", function(){
-      location.href = "/elly/noticelist.do";
-   });
-   
+	var btnList = $("#btnList");
+	
+	btnList.on("click", function(){
+		location.href = "/elly/noticelist.do";
+	});
+	
+	var cpn = $("#cpn").find("img");
+	
+	cpn.on("click", function(){
+		
+		var cpnCd = $("#cpnCd").val();
+		var memId = '${member.memId}'
+		
+		if(memId == null){
+			alert("로그인 후 이용해주세요!");			
+		}else{
+			
+			var data = {
+					cpnCd : cpnCd,
+					memId : memId
+			}
+			
+			$.ajax({
+				type: 'post',
+				url: '/elly/mypage/mycpninsert.do',
+				data: JSON.stringify(data),
+				beforeSend: function(xhr){
+					xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+				},
+				contentType : "application/json; charset=utf-8",
+				success : function(res){
+					if(res === "OK"){
+						alert("쿠폰 등록이 완료되었습니다 !")
+						location.href = "/elly/mypage/coupon.do?memId=${member.memId }"
+					}else {
+						alert("중복으로 등록 불가능한 쿠폰입니다 !")
+					}
+				}
+			});
+		};
+	});
 });
 </script>

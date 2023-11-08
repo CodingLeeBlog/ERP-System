@@ -1,4 +1,35 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
+<!-- jquery 데이터테이블 -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.min.js"></script>
+
+<style>
+	.blinking{
+  -webkit-animation: blink 0.5s ease-in-out infinite alternate;
+  -moz-animation: blink 0.5s ease-in-out infinite alternate;
+  animation: blink 0.5s ease-in-out infinite alternate;
+}
+
+@-webkit-keyframes blink{
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+@-moz-keyframes blink{
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+@keyframes blink{
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+</style>
 
 <!-- Start Content-->
 <div class="content-page">
@@ -24,46 +55,47 @@
 		        <div class="col-12">
 		            <div class="card">
 		                <div class="card-body">
-		                    <div class="row mb-2">
-		                        <div class="col-xl-10">
-		                            <form class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
-		                                <!-- Predefined Date Ranges -->
-                                        <div class="col-2">
-                                                <input class="form-control" id="example-date" type="date" name="date">
+		                    <div class="col-xl-12">
+                                <form id="searchForm" method="post" class="row gy-2 gx-2 align-items-center justify-content-xl-end justify-content-between">
+                                <input type="hidden" name="page" id="page"/>
+                                    <!-- Predefined Date Ranges -->
+                                    <div class="col-2">
+                                            <input class="form-control" id="example-date" type="date" name="date">
+                                    </div>
+                                    <div class="col-auto">
+                                        <span>~</span>
+                                    </div>
+                                    <div class="col-2">
+                                            <input class="form-control" id="example-date" type="date" name="date">
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="d-flex align-items-center">
+                                            <label for="status-select" class="col-3">분류</label>
+                                            <select class="form-select" id="status-select">
+                                                <option selected>선택해주세요</option>
+                                                <option value="1">잡화</option>
+                                                <option value="2">수산</option>
+                                            </select>
                                         </div>
-                                        <div class="col-auto">
-                                            <span>~</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <label for="inputPassword2" class="visually-hidden">Search</label>
+                                            <input type="search" class="form-control" id="inputPassword2" placeholder="Search">
+                                            <button type="button" class="btn btn-secondary">검색</button>
                                         </div>
-                                        <div class="col-2">
-                                                <input class="form-control" id="example-date" type="date" name="date">
-                                        </div>
-		                                <div class="col-2">
-		                                    <div class="d-flex align-items-center">
-		                                        <label for="status-select" class="col-3">거래처</label>
-		                                        <select class="form-select" id="status-select">
-		                                            <option selected>선택해주세요</option>
-		                                            <option value="1">대전대흥점</option>
-		                                            <option value="2">대전선화점</option>
-		                                        </select>
-		                                    </div>
-		                                </div>
-                                        <div class="col-4">
-                                            <div class="input-group">
-                                                <label for="inputPassword2" class="visually-hidden">Search</label>
-		                                        <input type="search" class="form-control" id="inputPassword2" placeholder="Search">
-                                                <button type="button" class="btn btn-secondary">검색</button>
-                                            </div>
-		                                </div>
-		                            </form>                            
-		                        </div>
-		                    </div>
+                                    </div>
+                                    <sec:csrfInput/>
+                                </form>                            
+                            </div>
 		
-		                    <div class="table-responsive">
+		                    <div class="table-responsive mt-3">
 		                    
+		                    <c:set value="${pagingVO.dataList }" var="dataList" />
 		                        <table class="table table-centered table-nowrap mb-0">
 		                            <thead class="table-light">
 		                                <tr>
-		                                    <th style="text-align:center; width:100px;">순번</th>
+		                                    <th style="text-align:center; width:70px;">순번</th>
 		                                    <th style="text-align:center; width:150px;">가맹점코드</th>
 		                                    <th style="text-align:center; width:150px;">가맹점명</th>
 		                                    <th style="text-align:center; width:150px;">가맹점주</th>
@@ -74,82 +106,44 @@
 		                                </tr>
 		                            </thead>
 		                            <tbody>
+		                            <c:forEach items="${dataList }" var="list" varStatus="status">
 		                                <tr>
 		                                    <td style="text-align:center">
-		                                    	1
+		                                    	${status.count }
 		                                    </td>
 		                                    <td style="text-align:center">
-		                                    	대전 대흥점
+		                                    	${list.frcsId }
 		                                    </td>
 			                                <td style="text-align:center">
-                                                이정민
+                                                ${list.frcsName }
 			                                </td>
                                             <td style="text-align:center">
-                                                010-5123-6566
+                                                ${list.memName }
                                             </td>
 		                                    <td style="text-align:center">
-		                                        2023/08/15
+		                                        ${list.memTel }
 		                                    </td>
 		                                    <td style="text-align:center">
-		                                    	1
+		                                    <span style="color:red; font-weight: bold;">
+<!-- 		                                    <span class="blinking" style="color:red; font-weight: bold;"> -->
+		                                    	${list.nonpaymentCount }
+		                                    	</span>
 		                                    </td>
 		                                    <td style="text-align:center">
-		                                    	15,000,000 (원)
+		                                    	<fmt:formatNumber value="${list.feeTotalpay }" type="number" ></fmt:formatNumber>(원)
 		                                    </td>
 		                                    <td style="text-align:center">
-		                                    	<a href="/head/maintenanceCostDetail.do"><button type="button" class="btn btn-danger fw-bold">상세보기</button></a>
-		                                    </td>
-		                                </tr>
-		                                <tr>
-		                                    <td style="text-align:center">
-		                                    	2
-		                                    </td>
-		                                    <td style="text-align:center">
-		                                    	대전 선화점
-		                                    </td>
-			                                <td style="text-align:center">
-                                               차수연
-			                                </td>
-		                                    <td style="text-align:center">
-                                                010-4523-7753
-                                            </td>
-		                                    <td style="text-align:center">
-		                                        2023/08/15
-		                                    </td>
-		                                    <td style="text-align:center">
-		                                    	2
-		                                    </td>
-		                                    <td style="text-align:center">
-		                                    	30,000,000 (원)
-		                                    </td>
-		                                    <td style="text-align:center">
-		                                    	<a href="/head/maintenanceCostDetail.do"><button type="button" class="btn btn-danger fw-bold">상세보기</button></a>
+		                                    	<a href="/head/maintenanceCostDetail.do?frcsId=${list.frcsId }"><button type="button" class="btn btn-primary fw-bold">상세보기</button></a>
 		                                    </td>
 		                                </tr>
+		                               </c:forEach>
 		                            </tbody>
 		                        </table>
 		                    </div>
 		                    <br>
-								<nav aria-label="Page navigation example">
-   									 <ul class="pagination pagination-rounded mb-0 justify-content-center">
-								        <li class="page-item">
-								            <a class="page-link" href="javascript: void(0);" aria-label="Previous">
-								                <span aria-hidden="true">&laquo;</span>
-								            </a>
-								        </li>
-								        <li class="page-item"><a class="page-link" href="javascript: void(0);">1</a></li>
-								        <li class="page-item"><a class="page-link" href="javascript: void(0);">2</a></li>
-								        <li class="page-item active"><a class="page-link" href="javascript: void(0);">3</a></li>
-								        <li class="page-item"><a class="page-link" href="javascript: void(0);">4</a></li>
-								        <li class="page-item"><a class="page-link" href="javascript: void(0);">5</a></li>
-								        <li class="page-item">
-								            <a class="page-link" href="javascript: void(0);" aria-label="Next">
-								                <span aria-hidden="true">&raquo;</span>
-								            </a>
-								        </li>
-								    </ul>
-								</nav>
-		               
+								<nav aria-label="Page navigation example" id="pagingArea">
+		                           ${pagingVO.pagingHTML }
+		                        </nav>		               
 		                </div> <!-- end card-body-->
 		                
 		            </div> <!-- end card-->

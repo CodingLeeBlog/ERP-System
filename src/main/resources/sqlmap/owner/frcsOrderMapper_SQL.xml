@@ -169,13 +169,13 @@
 			b.*
 		from (
 			select 
-				a.*, row_number() over (order by a.autoorder_no asc) rnum
+				a.*, row_number() over (order by a.vdprod_cd asc) rnum
 			from(
 				select autoorder_no, atorder_stdrqy, atorder_qy, atorder_at, frcs_id, h.vdprod_cd, vdprod_name, hdforward_price
 				from autoorder a, head_inventory h 
 				where frcs_id = #{frcsId} and h.vdprod_cd = a.vdprod_cd
 				<include refid="inventSearch"/>
-				order by autoorder_no asc
+				order by h.vdprod_cd asc
 			)a
 		)b	
 		<![CDATA[	
@@ -217,5 +217,14 @@
 		from autoorder
 		where vdprod_cd = #{vdprodCd} and frcs_id = #{frcsId}
 	</select>
+	
+	<!-- 자동발주 수정 -->
+	<update id="autoOrderUpdate" parameterType="autoOrderVO">
+		update autoorder
+		set
+			atorder_stdrqy = #{atorderStdrqy},
+			atorder_qy = #{atorderQy}
+		where frcs_id = #{frcsId} and autoorder_no = #{autoorderNo}
+	</update>
 	
 </mapper>

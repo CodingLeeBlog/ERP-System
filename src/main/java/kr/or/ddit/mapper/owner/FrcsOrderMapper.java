@@ -54,5 +54,8 @@ public interface FrcsOrderMapper {
 
 	// 자동발주 중복체크
 	public int autoOrderCheck(FrcsAutoOrderVO autoVO);
+
+	// 자동발주 수정
+	public int autoOrderUpdate(FrcsAutoOrderVO autoVO);
 	
 }

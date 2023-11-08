@@ -11,5 +11,6 @@ public interface FrcsReservationMapper {
 	public int resvStateUpdate(String resvNo);
 	public int selectResvCount(OwnerPaginationInfoVO<FrcsReservationVO> pagingVO);
 	public List<FrcsReservationVO> selectResvList(OwnerPaginationInfoVO<FrcsReservationVO> pagingVO);
+	public int resvUpdate(FrcsReservationVO frcsResvVO);
 
 }

@@ -71,7 +71,7 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 			if(resVO.getMemcpnId() == null) {				
 				result = ServiceResult.OK;
 			}else {
-				mycouponMapper.deletemyCoupon(resVO.getMemcpnId());
+				mycouponMapper.updatemyCoupon(resVO.getMemcpnId());
 				result = ServiceResult.OK;			
 			}
 			

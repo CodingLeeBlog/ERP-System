@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <div class="content-page">
 	<div class="content">
 	
@@ -29,20 +30,29 @@
 	                <div class="card">
 	                    <div class="card-body">
 	                    
+	                    	<!-- 검색 -->
 	                        <div class="row mb-2">
-	                            <div class="col-xl-12">
-	                                <form class="row gy-2 gx-2 align-items-center justify-content-xl-end justify-content-between">
-	                                    <div class="col-auto">
-	                                        <label for="inputPassword2" class="visually-hidden">Search</label>
-	                                        <input type="search" class="form-control" id="inputPassword2" placeholder="Search...">
-	                                        <!-- 버튼추가하기 -->
+	                        	<div class="col-xl-8"></div>
+	                            <div class="col-xl-4">
+	                                <form class="row gy-2 gx-2 align-items-center justify-content-xl-end justify-content-between" id="searchForm">
+	                                    <div class="col-auto input-group input-group-outline">
+	                                        <select class="form-select" id="searchType" name="searchType" aria-label="Example select with button addon">
+												<option value="title" <c:if test="${searchType eq 'title' }">selected</c:if>>제목</option>
+												<option value="content" <c:if test="${searchType eq 'content' }">selected</c:if>>내용</option>
+											</select>
+		                                    <label for="inputPassword2" class="visually-hidden">Search</label>
+		                                    <input type="search" class="form-control" id="searchWord" name="searchWord" value="${searchWord }" placeholder="Search...">
+			                                <button type="submit" class="btn btn-outline-secondary">검색</button>
 	                                    </div>
+	                                <sec:csrfInput/>
 	                                </form>                            
 	                            </div>
 	                        </div>
 	
+							<!-- 테이블 -->
 	                        <div class="table-responsive">
-	                            <table class="table table-centered w-100">
+<!-- 	                            <table id="basic-datatable" class="table dt-responsive nowrap table-centered w-100"> -->
+	                            <table class="table nowrap table-centered w-100">
 	                                <thead class="table-light">
 	                                    <tr>
 	                                        <th class="all" style="width: 20px;">
@@ -59,11 +69,11 @@
 	                                    </tr>
 	                                </thead>
 	                                <tbody>
-	                                	<c:set value="${inqList }" var="frcsInqList" />
+	                                	<c:set value="${pagingVO.dataList }" var="frcsInqList" />
 	                                	<c:choose>
 	                                		<c:when test="${empty frcsInqList }">
 	                                			<tr class="text-center">
-													<td colspan="5" class="text-dark font-weight-bolder">문의글이 존재하지 않습니다.</td>
+													<td colspan="6" class="text-dark font-weight-bolder">문의글이 존재하지 않습니다.</td>
 												</tr>
 	                                		</c:when>
 	                                		<c:otherwise>
@@ -103,11 +113,14 @@
 	                            </table>
 	                        </div>
 	                        
-	                        <!-- 페이징추가하기 -->
+	                        <!-- 페이징 -->
+	                        <nav aria-label="Page navigation example" id="pagingArea">
+								${pagingVO.pagingHTML }
+							</nav>
 	
 	                        <div class="col-xl-12 mt-2">
 	                            <div class="text-xl-end mt-xl-0 mt-2">
-	                                <button type="button" class="btn btn-danger mb-2 me-2" id="subBtn">문의하기</button>
+	                                <button type="button" class="btn btn-primary mb-2 me-2" id="subBtn">문의하기</button>
 	                                <button type="button" class="btn btn-light mb-2" id="delBtn">삭제</button>
 	                            </div>
 	                        </div>
@@ -126,6 +139,8 @@
 $(function(){
 	var subBtn = $("#subBtn");
 	var delBtn = $("#delBtn");
+	var searchForm = $("#searchForm");
+	var pagingArea = $("#pagingArea");
 	
 	// 문의 등록하기
 	subBtn.on("click", function(){
@@ -191,6 +206,14 @@ $(function(){
 	        }
 	    });
 	}
+	
+	//검색,페이징
+	pagingArea.on("click", "a", function(event){
+		event.preventDefault();
+		var pageNo = $(this).data("page");
+		searchForm.find("page").val(pageNo);
+		searchForm.submit();
+	});
 	
 });
 </script>

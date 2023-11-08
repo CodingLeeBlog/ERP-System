@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 
+<input type="hidden" id="frcsId" value="${frcsId }">
 <div class="content-page">
 	<div class="content">
 		<div class="container-fluid">
@@ -87,7 +88,10 @@
 		                            		<c:when test="${empty inventList }">
 		                            			<tr>
 	                            					<td colspan="9" style="text-align:center">
-	                            						조회할 제품 재고가 존재하지 않습니다.
+	                            					<br>
+	                            						조회할 제품 재고가 존재하지 않습니다. <br>
+	                            					<br>
+	                            					<button id="beginBtn" class="btn btn-warning">초기 재고 설정</button>
 	                            					</td>
 		                            			</tr>
 		                            		</c:when>
@@ -115,6 +119,7 @@
 					                                    	<fmt:formatNumber value="${invent.hdforwardPrice }" type="currency"/>
 					                                    </td>
 					                                    <td style="text-align:center">
+					                              			${invent.frcsorderQy }
 					                                    </td>
 					                                    <td style="text-align:center">
 															${invent.dlivyQy}
@@ -315,6 +320,36 @@ $(function(){
  	        var proprtQyVal = currentValue - 1;
  	        inputEle.val(proprtQyVal);
  	    }
+	});
+	
+	$("#beginBtn").on("click",function(){
+		var frcsId = $("#frcsId").val();
+		
+		$.ajax({
+			type : "post",
+			url : "/owner/inventory/beginSetting.do",
+			beforeSend : function(xhr){	// csrf토큰 보내기 위함
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");	//key value로 보낸다.
+			},
+			data : {frcsId : frcsId},
+			success : function(res){
+				console.log(res);
+				if(res == "OK"){
+					 Swal.fire({
+			            title: "초기 설정 성공",
+			            text: "정상적으로 설정되었습니다",
+			            confirmButtonText: "확인",
+			            icon: "success",
+			            preConfirm: function () {
+			                location.href = "/owner/inventory.do";
+			            }
+			        });
+				}
+			}
+			
+			
+		});
+		
 	});
 });
 </script>

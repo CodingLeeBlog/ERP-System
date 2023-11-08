@@ -194,9 +194,9 @@
 														<tr class="text-left">
 															<td><input type="checkbox" class="form-check-input" id="mail1"></td>
 															<td id="hdLtno">${officeLetter.hdLtno }</td>
-															<td>${officeLetter.hdLttitle }</td>
+															<td><a href="#" class="viewDetails" data-toggle="modal" data-target="#exampleModal" data-hdLtno="${officeLetter.hdLtno}">${officeLetter.hdLttitle }</a></td>
 															<td><fmt:formatDate
-																	value="${officeLetter.hdLtrdate }" pattern="yyyy-MM-dd" /></td>
+																	value="${officeLetter.hdLtsdate }" pattern="yyyy-MM-dd" /></td>
 															<td><span class="badge bg-success">${officeLetter.hdLtstate }</span></td>
 															<td>
 																<button type="button"
@@ -216,6 +216,52 @@
 									</table>
 								</div>
 								<!-- end .mt-4 -->
+								<div class="modal fade" id="exampleModal" tabindex="-1"
+									aria-labelledby="exampleModalLabel" aria-hidden="true">
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalLabel">상세보기</h5>
+												<button type="button" class="btn-close" data-bs-dismiss="modal"
+													aria-label="Close"></button>
+											</div>
+											<div class="modal-body">
+												<form>
+													<div class="mb-3">
+														<label for="recipient-name" class="col-form-label">문서번호</label> <input
+															type="text" class="form-control" name="hdLtno" id="ltNo" readonly>
+													</div>
+													<div class="mb-3">
+														<label for="recipient-name" class="col-form-label">제목</label> <input
+															type="text" class="form-control" name="hdLttitle" id="ltTitle" readonly>
+													</div>
+													<div class="mb-3">
+														<label for="recipient-name" class="col-form-label">내용</label> 
+														<textarea rows="5" class="form-control" name="hdLtcontent" id="ltContent" readonly></textarea>
+													</div>
+													<div class="mb-3">
+														<label for="recipient-name" class="col-form-label">상태</label> <input
+															type="text" class="form-control" name="hdLtstate" id="ltState" readonly>
+													</div>
+													<div class="mb-3">
+														<label for="recipient-name" class="col-form-label">저장일시</label> <input
+															type="text" class="form-control" name="hdLtsdate" id="sDate" readonly>
+													</div>
+													<div class="card-body p-3"></div>
+							                        	<c:set value="${officeLetter.officeLetterFileList}" var="officeLetterFileList"/>
+							                        <div class="row g-2" id="divRow">
+							                        </div>
+												</form>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-primary" id="updateBtn">수정</button>
+												<button type="button" class="btn btn-secondary"
+													data-bs-dismiss="modal">목록</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								
 								<div id="dark-header-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dark-header-modalLabel" aria-hidden="true">
 								    <div class="modal-dialog">
 								        <div class="modal-content">
@@ -340,6 +386,113 @@ $(function() {
 		searchForm.find("#page").val(pageNo);
 		searchForm.submit();
 	});
+});
+
+$(document).ready(function() {
+    var titleInput = $("#ltTitle");
+    var contentTextarea = $("#ltContent");
+    var updateBtn = $("#updateBtn");
+
+    updateBtn.click(function() {
+        if (updateBtn.text() === "수정") {
+            // "수정" 버튼을 클릭하면 수정 가능하도록 설정
+            titleInput.removeAttr("readonly");
+            contentTextarea.removeAttr("readonly");
+
+            // 버튼 텍스트를 "저장"으로 변경
+            updateBtn.text("저장");
+        } else if (updateBtn.text() === "저장") {
+            // "저장" 버튼을 클릭하면 데이터를 서버로 보냅니다.
+            var newTitle = titleInput.val();
+            var newContent = contentTextarea.val();
+
+            var data = {
+                hdLttitle: newTitle,
+                hdLtcontent: newContent,
+                hdLtno: $("#ltNo").val()
+            }
+
+            $.ajax({
+                url: "/head/officeLetterUpdate.do",
+                type: "POST",
+                data: JSON.stringify(data), // 데이터를 JSON 문자열로 직렬화
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+                },
+                success: function(data) {
+                    Swal.fire({
+                        title: '알림창',
+                        text: '수정이 완료되었습니다.',
+                        icon: 'success',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.href = "/head/officeLetter.do"; 
+                        }
+                    });
+                    // 수정 가능한 필드를 다시 읽기 전용으로 설정
+                    titleInput.attr("readonly", "readonly");
+                    contentTextarea.attr("readonly", "readonly");
+
+                    // 버튼 텍스트를 "수정"으로 다시 변경
+                    updateBtn.text("수정");
+                },
+                error: function(err) {
+                    alert("수정 저장 중 오류가 발생했습니다.");
+                }
+            });
+        }
+    });
+});
+
+	
+$(document).ready(function() {
+    // 클릭 이벤트 리스너를 추가
+    $('.viewDetails').click(function() {
+        var hdLtno = $(this).data('hdltno');
+        var detailModal = $('#exampleModal');
+
+        var data = {
+            hdLtno: hdLtno,
+        };
+
+        $.ajax({
+            url: "/head/officeLetterDetail.do",
+            type: "post",
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}"); // csrf 토큰 보내기 위함
+            },
+            success: function(res) {
+                console.log("res : " + JSON.stringify(res));
+                var sDate = new Date(res.hdLtsdate);
+                var formattedSdate = sDate.getFullYear() + "년 " + (sDate.getMonth() + 1) + "월 " + sDate.getDate() + "일";
+
+                // 모달 내용 초기화
+                detailModal.find("#ltNo").val(res.hdLtno);
+                detailModal.find("#ltTitle").val(res.hdLttitle);
+                detailModal.find("#ltContent").val(res.hdLtcontent);
+                detailModal.find("#ltState").val(res.hdLtstate);
+                detailModal.find("#sDate").val(formattedSdate);
+
+                let tmp = "";
+                $.each(res.counselFileList, function(idx, attachVO) {
+                    console.log(attachVO.attachOrgname);
+
+                    tmp += "<div class='col-md-2'><div><div class='card-header mt-n4 mx-3 p-0'><a href='" + attachVO.attachSavename + "' target='_blank'><img src='/resources/assets/icons/PDF-icon.png' style='width:70px;' /></a></div>";
+                    tmp += "<div class='card-body text-center bg-white border-radius-lg p-3 pt-0'><h6 class='mt-3 mb-1 d-md-block d-none'>" + attachVO.attachOrgname + "<br/>" + "(" + attachVO.attachSize + "bytes)</h6>";
+                    tmp += "<p class='mb-0 text-xs font-weight-bolder text-info text-uppercase'></p>";
+                    tmp += "</div></div></div>";
+                });
+
+                detailModal.find("#divRow").empty().append(tmp);
+
+                detailModal.modal("show");
+            }
+        });
+    });
 });
 
     // 삭제 버튼 클릭 이벤트
@@ -469,17 +622,17 @@ $(function() {
 	    var insertBtn = document.querySelector('#insertBtn');
 
 	    insertBtn.addEventListener('click', function() {
-	        var data = selectedItems.map(function(item) {
-	            return {
-	                hdLtreciever: item.hdLtreciever,
-	                hdLtno: hdLtno2
-	            };
-	        });
+// 	        var data = selectedItems.map(function(item) {
+// 	            return {
+// 	                hdLtreciever: item.hdLtreciever,
+// 	                hdLtno: hdLtno2
+// 	            };
+// 	        });
 
         $.ajax({
             type: 'POST',
-            url: '/head/officeLetterUpdate.do',
-            data: JSON.stringify(data),
+            url: '/head/officeLtDetailRegister.do',
+            data: JSON.stringify(selectedItems),
             contentType: "application/json; charset=utf-8",
             beforeSend: function(xhr) {
                 xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");

@@ -10,5 +10,6 @@ public class HeadLtDetailVO {
 	private int hdLtno;
 	private String hdLtreciever;
 	private Date hdLtsddate;
+	private String hdLtstate;
 
 }

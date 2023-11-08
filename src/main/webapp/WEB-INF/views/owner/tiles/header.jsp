@@ -401,7 +401,19 @@
                                 <a href="/owner/dues.do">공과금 및 월세 내역</a>
                             </li>
                             <li>
-                                <a href="/owner/bill.do">본사 청구액 납부</a>
+                                <a href="/owner/bill.do" class="bill">본사 청구액 납부</a>
+                                <script type="text/javascript">
+                            	$(function(){
+                            		var date = new Date();
+                            		var year = date.getFullYear();
+                            		var month = ('0' + (date.getMonth() + 1 )).slice(-2);
+                            		var day = ('0' + date.getDate()).slice(-2);
+                            		
+                            		var dateString = year + "/" + month;
+                            		
+                            		$(".bill").attr("href","/owner/bill.do?yearMonth=" + dateString);
+                            	});
+                            	</script>
                             </li>
                         </ul>
                     </div>
@@ -578,7 +590,7 @@
 	                            
                             </li>
                             <li>
-                                <a href="/owner/operationProfit.do" class="profit">영업 이익 분석</a>
+                                <a href="/owner/operationProfit.do" class="profit">순이익 분석</a>
                                 <script type="text/javascript">
 	                            	$(function(){
 	                            		var date = new Date();
@@ -668,21 +680,21 @@ $(function(){
 	checkNotificationCount();
 	
 	// 알람 갯수에 따른 배치 깜빡임 시작/멈춤 이벤트
-	setTimeout(() => {
-	    if(alarmCount > 0){
-	    	startBlinking();
-	    }else{
-	    	stopBlinking();
-	    }
-	}, 300);
+// 	setTimeout(() => {
+// 	    if(alarmCount > 0){
+// 	    	startBlinking();
+// 	    }else{
+// 	    	stopBlinking();
+// 	    }
+// 	}, 300);
 	
 	logoutButton.on("click", function() {
 		logoutForm.submit();
 	});
 	
-	setInterval(() => {
-		checkNotificationCountCheck();	
-	}, 500);
+// 	setInterval(() => {
+// 		checkNotificationCountCheck();	
+// 	}, 500);
 	
 	// 알람 아이콘을 클릭했을때
 	alarmBtn.on("click", function(){
@@ -698,9 +710,9 @@ $(function(){
 	    badge.css("display", badge.css("display") === "none" ? "inline-block" : "none");
 	}
 
-	function startBlinking() {
-		blinkInterval = setInterval(blinkBadge, 300); // 0.3초 간격으로 깜빡임
-	}
+// 	function startBlinking() {
+// 		blinkInterval = setInterval(blinkBadge, 300); // 0.3초 간격으로 깜빡임
+// 	}
 
 	function stopBlinking(str) {
 		clearInterval(blinkInterval);

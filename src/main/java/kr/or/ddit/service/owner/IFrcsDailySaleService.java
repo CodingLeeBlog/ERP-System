@@ -6,6 +6,7 @@ import java.util.List;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.vo.owner.FrcsDailySalesVO;
 import kr.or.ddit.vo.owner.FrcsMenuVO;
+import kr.or.ddit.vo.owner.FrcsOrderDetailVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 
 public interface IFrcsDailySaleService {
@@ -34,6 +35,15 @@ public interface IFrcsDailySaleService {
 	
 	// 주간차트를 위한 데이터불러오기
 	public int[] getDate(String frcsId);
+	
+	// 매출액 분석 (한달)
+	public List<FrcsDailySalesVO> getOneMonthData(String frcsId, Date thisMonth);
+	
+	// 매출 총이익 분석 (한달)
+	public FrcsDailySalesVO getTotalOneMonthList(String frcsId, Date thisMonth);
+	
+	// 매입 분석 (한달)
+	public List<FrcsOrderDetailVO> getOnePurchase(String frcsId, Date thisMonth);
 
 //	// 모달창 메뉴 검색
 //	public List<FrcsMenuVO> getMenuSearchList(String frcsId, String inputText);

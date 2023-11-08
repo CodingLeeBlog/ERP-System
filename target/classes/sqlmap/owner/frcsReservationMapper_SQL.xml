@@ -95,5 +95,17 @@
 		WHERE
 		    resv_no = #{resvNo}
 	</update>
+	
+	<update id="resvUpdate" parameterType="frcsResvVO">
+		UPDATE reservation
+		SET
+		    resv_mcnt = #{resvMcnt}
+		    , resv_time = #{resvTime}
+		    , resv_date = #{resvDate}
+		    , resv_note = #{resvNote}
+		    , seat_cd = #{seatCd}
+		WHERE
+		    resv_no = #{resvNo}
+	</update>
 
 </mapper>

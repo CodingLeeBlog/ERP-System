@@ -166,4 +166,20 @@ public class FrcsOrderServiceImpl implements IFrcsOrderService{
 		
 		return result;
 	}
+
+	
+	// 자동발주 수정
+	@Override
+	public ServiceResult autoOrderUpdate(FrcsAutoOrderVO autoVO) {
+		ServiceResult result = null;
+		
+		int status = mapper.autoOrderUpdate(autoVO);
+		if(status > 0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		
+		return result;
+	}
 }

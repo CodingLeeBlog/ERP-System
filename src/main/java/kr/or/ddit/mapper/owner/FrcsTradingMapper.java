@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.FrcsInventoryVO;
+import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 import kr.or.ddit.vo.owner.TradingVO;
 
 public interface FrcsTradingMapper {
@@ -24,5 +25,20 @@ public interface FrcsTradingMapper {
 
 	// 제품 코드별 가격 가져오기
 	public int getHdforwardPrice(String vdprodCd);
+	
+	// 트레이딩 신청내역 페이징1
+	public int selectTradeCount(OwnerPaginationInfoVO<TradingVO> pagingVO);
+
+	// 트레이딩 신청내역 페이징2
+	public List<TradingVO> selectTradingHistoryList(OwnerPaginationInfoVO<TradingVO> pagingVO);
+
+	// 트레이딩 재고 - 처리
+	public int tradingMinus(FrcsInventoryVO inventVO);
+
+	// 트레이딩 재고 + 처리
+	public int tradingPlus(FrcsInventoryVO inventVO);
+
+	// 상태 업데이트
+	public void updateStatus(String tradNo);
 
 }

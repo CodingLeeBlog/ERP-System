@@ -121,7 +121,7 @@ $(function(){
 		var pageNo = $(this).data("page");
 		searchForm.find("#page").val(pageNo);
 		searchForm.submit();
-	});
+	})
+});
 	
-
 </script>

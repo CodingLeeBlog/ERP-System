@@ -111,29 +111,57 @@
 	<!-- 가맹점 주문상세 시작 -->
 	
 	<select id="selectOrderListDetailsCount" parameterType="headPagingVO" resultType="int">
-		SELECT COUNT(*) AS CNT
+		
+		SELECT COUNT(TOTAL_PRICE) AS CNT
+		FROM(
+		SELECT FRCSORDER_DATE, FRCSORDER_CONFM, FRCSORDER_NO, FRCS_ID, FRCS_NAME, SUM(FRCSORDER_QY * HDFORWARD_PRICE) TOTAL_PRICE
 		FROM
-		(SELECT 
-		    F.FRCSORDER_NO, F.FRCSORDER_DATE, F.FRCSORDER_AMT, F.FRCSORDER_CONFM, F.FRCSORDER_CONFMDATE, F.FRCSORDER_RETURN, F.FRCS_ID, F.FRCSORDER_NAME, FD.FRCSORDER_NO,FD.VDPROD_CD, FD.FRCSORDER_QY, HDFORWARD_PRICE
-		FROM FRCSORDER F
-		LEFT OUTER JOIN FRCSORDER_DETAIL FD
-		ON F.FRCSORDER_NO = FD.FRCSORDER_NO
-		WHERE TRUNC(F.FRCSORDER_DATE) = TO_DATE(#{frcsorderDate}, 'YY-MM-DD')
+		(
+		SELECT 
+		TO_CHAR(F.FRCSORDER_DATE, 'YY-MM-DD HH:MM:SS') FRCSORDER_DATE,  F.FRCSORDER_CONFM,
+		FD.FRCSORDER_NO, FD.FRCSORDER_QY, FD.HDFORWARD_PRICE,
+		FRCS.FRCS_ID, FRCS.FRCS_NAME
+		FROM FRCSORDER F, FRCSORDER_DETAIL FD, HEAD_INVENTORY HI, FRANCHISE FRCS
+		WHERE F.FRCSORDER_NO = FD.FRCSORDER_NO
+		AND FD.VDPROD_CD = HI.VDPROD_CD
+		AND FRCS.FRCS_ID = F.FRCS_ID
+		AND TRUNC(F.FRCSORDER_DATE) = TO_DATE(#{frcsorderDate}, 'YY-MM-DD')
 		)
+		WHERE 1=1
+		GROUP BY FRCSORDER_DATE, FRCSORDER_CONFM, FRCSORDER_NO, FRCS_ID, FRCS_NAME
+		)
+		
 	</select>
 	
 	<select id="selectOrderListDetails" parameterType="headPagingVO" resultType="storeOrderHistoryVO">
+		
 		SELECT 
-		 TO_CHAR(F.FRCSORDER_DATE, 'YY-MM-DD HH:MM:SS') FRCSORDER_DATE,  SUM(F.FRCSORDER_AMT) TOTAL_PRICE , F.FRCSORDER_CONFM,
-		 FD.FRCSORDER_NO, 
-		 FRCS.FRCS_ID, FRCS.FRCS_NAME
+		B.*
+		FROM (
+		SELECT 
+		A.*, ROW_NUMBER() OVER (ORDER BY FRCSORDER_NO) RNUM
+		FROM(
+		SELECT FRCSORDER_DATE, FRCSORDER_CONFM, FRCSORDER_NO, FRCS_ID, FRCS_NAME, SUM(FRCSORDER_QY * HDFORWARD_PRICE) TOTAL_PRICE
+		FROM
+		(
+		SELECT 
+		TO_CHAR(F.FRCSORDER_DATE, 'YY-MM-DD HH:MM:SS') FRCSORDER_DATE,  F.FRCSORDER_CONFM,
+		FD.FRCSORDER_NO, FD.FRCSORDER_QY, FD.HDFORWARD_PRICE,
+		FRCS.FRCS_ID, FRCS.FRCS_NAME
 		FROM FRCSORDER F, FRCSORDER_DETAIL FD, HEAD_INVENTORY HI, FRANCHISE FRCS
 		WHERE F.FRCSORDER_NO = FD.FRCSORDER_NO
 		AND FD.VDPROD_CD = HI.VDPROD_CD
 		AND FRCS.FRCS_ID = F.FRCS_ID
 		AND TRUNC(F.FRCSORDER_DATE) = TO_DATE(#{frcsorderDate}, 'YY-MM-DD')
 		<include refid="storeDetailSearch" />
-		GROUP BY FRCSORDER_DATE, F.FRCSORDER_CONFM, FD.FRCSORDER_NO, FRCS.FRCS_ID, FRCS.FRCS_NAME
+		)
+		WHERE 1=1
+		GROUP BY FRCSORDER_DATE, FRCSORDER_CONFM, FRCSORDER_NO, FRCS_ID, FRCS_NAME
+		)A
+		)B
+		<![CDATA[
+			WHERE B.RNUM >= #{startRow} AND B.RNUM <= #{endRow}
+		]]>
 	</select>
 
 	<select id="selectCheckOne" parameterType="string" resultType="storeOrderHistoryVO"> 
@@ -151,7 +179,7 @@
 	<!-- 가맹점 주문상세 끝 -->
 	
 	<!-- 가맹점재고 수량 업데이트 시작-->
-		<select id="selectFrcsQy" parameterType="string" resultType="inventoryUpdateVO">
+		<select id="selectFrcsQy" parameterType="storeOrderHistoryVO" resultType="inventoryUpdateVO">
 			SELECT B.VDPROD_CD, A.VDPROD_NAME, A.FRCSORDER_QY,B.INVNTRY_QY, B.PROPRT_QY, B.LASTWRHOUSNG_DATE
 			FROM
 			(
@@ -166,14 +194,16 @@
 		<update id="updateFrcsInventory" parameterType="inventoryUpdateVO">
 			UPDATE FRCS_INVENTORY
 			SET
-			     INVNTRY_QY = #{invntryQy}
+			     INVNTRY_QY = #{invntryQy},
+			     LASTWRHOUSNG_DATE = SYSDATE
 			WHERE
 			    VDPROD_CD = #{vdprodCd}
+			    AND FRCS_ID = #{frcsId}
 		</update>
 	<!-- 가맹점재고 수량 업데이트 끝-->
 	
 	<!-- 본사재고 수량 업데이트 시작-->
-		<select id="selectHeadQy" parameterType="string" resultType="inventoryUpdateVO">
+		<select id="selectHeadQy" parameterType="storeOrderHistoryVO" resultType="inventoryUpdateVO">
 			SELECT FI.VDPROD_CD, HI.VDPROD_NAME, FI.FRCSORDER_NO, FI.FRCSORDER_QY, FI.HDFORWARD_PRICE, HI.HDMAX_QY,HI.HDREMAIN_QY
 			FROM FRCSORDER_DETAIL FI, HEAD_INVENTORY HI
 			WHERE FI.VDPROD_CD = HI.VDPROD_CD
@@ -190,7 +220,7 @@
 	<!-- 본사재고 수량 업데이트 끝-->
 	
 	<!-- 가맹점 주문상세 승인 시작 -->
-		<update id="updateOrderDetails" parameterType="string">
+		<update id="updateOrderDetails" parameterType="storeOrderHistoryVO">
 			UPDATE FRCSORDER
 			SET
 			     FRCSORDER_CONFM = '승인',

@@ -15,13 +15,22 @@
 		<result property="hdLtno" column="hd_ltno"/>
 		<result property="hdLttitle" column="hd_lttitle"/>
 		<result property="hdLtsender" column="hd_ltsender"/>
-		<result property="hdLtreciever" column="hd_ltreciever"/>
 		<result property="hdLtcontent" column="hd_ltcontent"/>
 		<result property="hdLtsdate" column="hd_ltsdate"/>
 		<result property="hdLtrdate" column="hd_ltrdate"/>
 		<result property="hdLtstate" column="hd_ltstate"/>
 		<result property="tableName" column="table_name"/>
 		<collection property="officeLetterFileList" resultMap="attachMap"/>
+<!-- 		<collection property="headLtDetailList" resultMap="headLtDetailMap"/> -->
+	</resultMap>
+	
+	<resultMap type="headLtDetailVO" id="headLtDetailMap">
+	    <id property="hdLtreciever" column="hd_ltreciever"/>
+	    <id property="hdLtno" column="hd_ltno"/>
+	    <result property="hdLtreciever" column="hd_ltreciever"/>
+	    <result property="hdLtno" column="hd_ltno"/>
+	    <result property="hdLtsddate" column="hd_ltsddate"/>
+	    <result property="hdLtstate" column="hd_ltstate"/> 
 	</resultMap>
 	
 	<resultMap type="attachVO" id="attachMap">
@@ -51,7 +60,7 @@
 			select 
 				a.*, row_number() over (order by hd_ltno) rnum
 			from(
-				select hd_ltno, hd_lttitle, hd_ltsender, hd_ltreciever, hd_ltcontent, hd_ltsdate, hd_ltrdate, hd_ltstate, table_name
+				select hd_ltno, hd_lttitle, hd_ltsender, hd_ltcontent, hd_ltsdate, hd_ltstate, table_name
 				from head_letter
 			)a
 		)b	
@@ -60,14 +69,42 @@
 		]]>
 	</select>
 	
+	<select id="officeLetterDetail" parameterType="int" resultMap="officeLetterMap">
+	    select
+	    	h.hd_ltno,
+	    	h.hd_lttitle,
+	    	h.hd_ltcontent,
+	    	h.hd_ltsdate,
+	    	h.hd_ltstate,
+	        a.attach_orgname,
+	        a.attach_savename,
+	        a.attach_mime,
+	        a.attach_size,
+	        a.thumb_img
+	    from head_letter h
+	    left join attach a on h.hd_ltno = a.table_pk and a.table_name = 'officeLetter'
+	    where h.hd_ltno = #{hdLtno}
+	</select>
+	
 	<insert id="officeLetterRegister" parameterType="officeLetterVO" useGeneratedKeys="true">
 		<selectKey keyProperty="hdLtno" resultType="int" order="BEFORE">
 			select seq_headletter.nextval from dual
 		</selectKey>
 	  insert into head_letter (
-	    hd_ltno, hd_lttitle, hd_ltcontent, hd_ltsdate, hd_ltstate, table_name
+	    hd_ltno, hd_lttitle, hd_ltcontent, hd_ltsender, hd_ltsdate, hd_ltstate, table_name
 	  ) values (
-	    #{hdLtno}, #{hdLttitle}, #{hdLtcontent}, sysdate, '저장', 'officeLetter'
+	    #{hdLtno}, #{hdLttitle}, #{hdLtcontent}, '관리자', sysdate, '저장', 'officeLetter'
+	  )
+	</insert>
+	
+	<insert id="officeLtDetailRegister" parameterType="headLtDetailVO" useGeneratedKeys="true">
+		<selectKey keyProperty="hdLtno" resultType="int" order="AFTER">
+			select seq_headletter.nextval from dual
+		</selectKey>
+	  insert into head_lt_detail (
+	    hd_ltno, hd_ltreciever, hd_ltsddate, hd_ltstate
+	  ) values (
+	    #{hdLtno}, #{hdLtreciever}, sysdate, '완료'
 	  )
 	</insert>
 	
@@ -88,23 +125,26 @@
 	  )
 	</insert>
 	
-	<delete id="officeLetterDelete" parameterType="map">
-		delete from head_letter
-		where hd_ltno = #{hdLtno}
+	<!-- 부모 레코드 삭제 -->
+	<delete id="officeLetterDelete" parameterType="int">
+	    delete from head_letter
+	    where hd_ltno = #{hdLtno}
+	</delete>
+	
+	<!-- 자식 레코드 삭제 -->
+	<delete id="deleteChildRecords" parameterType="int">
+	    delete from head_lt_detail
+	    where hd_ltno = #{hdLtno}
 	</delete>
 	
 	<update id="officeLetterUpdate" parameterType="officeLetterVO">
-		UPDATE head_letter AS hl
-		SET
-		    hl.hd_ltsender = '관리자',
-		    hl.hd_ltrdate = sysdate
-		WHERE
-		    hl.hd_ltno = #{hdLtno}
-		    AND EXISTS (
-		        SELECT 1
-		        FROM franchise AS f
-		        WHERE f.frcsName = hl.hd_ltreciever
-		    );
+	    UPDATE head_letter
+	    SET
+	        hd_lttitle = #{hdLttitle},
+	        hd_ltcontent = #{hdLtcontent},
+	        hd_ltsdate = sysdate
+	    WHERE
+	        hd_ltno = #{hdLtno}
 	</update>
 
 </mapper>

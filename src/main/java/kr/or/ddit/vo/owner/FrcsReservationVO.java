@@ -2,6 +2,8 @@ package kr.or.ddit.vo.owner;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Data;
 
 @Data
@@ -11,6 +13,7 @@ public class FrcsReservationVO {
 	private String memId;
 	private String resvMcnt;
 	private String resvTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date resvDate;
 	private String resvYn;
 	private String resvState;

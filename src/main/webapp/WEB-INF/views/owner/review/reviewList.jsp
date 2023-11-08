@@ -30,20 +30,27 @@
 	                <div class="card">
 	                    <div class="card-body">
 	
-	                        <div class="row mb-2">
-	                            <div class="col-xl-12">
-	                                <form class="row gy-2 gx-2 align-items-center justify-content-xl-end justify-content-between">
-	                                    <div class="col-auto">
-	                                        <label for="inputPassword2" class="visually-hidden">Search</label>
-	                                        <input type="search" class="form-control" id="inputPassword2" placeholder="Search...">
-	                                        <!-- 버튼추가하기? -->
+							<div class="row mb-2">
+	                        	<div class="col-xl-8"></div>
+	                            <div class="col-xl-4">
+	                                <form class="row gy-2 gx-2 align-items-center justify-content-xl-end justify-content-between" id="searchForm">
+	                                    <div class="col-auto input-group input-group-outline">
+	                                        <select class="form-select" id="searchType" name="searchType" aria-label="Example select with button addon">
+												<option value="content" <c:if test="${searchType eq 'content' }">selected</c:if>>내용</option>
+												<option value="writer" <c:if test="${searchType eq 'writer' }">selected</c:if>>작성자</option>
+											</select>
+		                                    <label for="inputPassword2" class="visually-hidden">Search</label>
+		                                    <input type="search" class="form-control" id="searchWord" name="searchWord" value="${searchWord }" placeholder="Search...">
+			                                <button type="submit" class="btn btn-outline-secondary">검색</button>
 	                                    </div>
+	                                <sec:csrfInput/>
 	                                </form>                            
 	                            </div>
 	                        </div>
 	
 	                        <div class="table-responsive">
-	                            <table class="table table-centered w-100 ">
+	                            <table class="table dt-responsive nowrap table-centered w-100 ">
+<!-- 	                            <table id="basic-datatable" class="table dt-responsive nowrap table-centered w-100 "> -->
 	                                <thead class="table-light">
 	                                    <tr>
 	                                        <th class="all" style="width: 20px;">
@@ -61,7 +68,7 @@
 	                                    </tr>
 	                                </thead>
 	                                <tbody>
-	                                	<c:set value="${reviewList}" var="reviewList" />
+	                                	<c:set value="${pagingVO.dataList}" var="reviewList" />
 	                                	<c:choose>
 	                                		<c:when test="${empty reviewList }">
 	                                			<tr class="text-center">
@@ -93,31 +100,48 @@
 					                                                <span class="text-warning mdi mdi-star"></span>
 					                                                <span class="text-warning mdi mdi-star"></span>
 					                                                <span class="text-warning mdi mdi-star"></span>
+					                                                <span class="text-warning mdi mdi-star-outline"></span>
 				                                                </c:if>
 				                                                <c:if test="${review.reviewStar eq '3' }">
 					                                                <span class="text-warning mdi mdi-star"></span>
 					                                                <span class="text-warning mdi mdi-star"></span>
 					                                                <span class="text-warning mdi mdi-star"></span>
+					                                                <span class="text-warning mdi mdi-star-outline"></span>
+					                                                <span class="text-warning mdi mdi-star-outline"></span>
 				                                                </c:if>
 				                                                <c:if test="${review.reviewStar eq '2' }">
 					                                                <span class="text-warning mdi mdi-star"></span>
 					                                                <span class="text-warning mdi mdi-star"></span>
+					                                                <span class="text-warning mdi mdi-star-outline"></span>
+					                                                <span class="text-warning mdi mdi-star-outline"></span>
+					                                                <span class="text-warning mdi mdi-star-outline"></span>
 				                                                </c:if>
 				                                                <c:if test="${review.reviewStar eq '1' }">
 					                                                <span class="text-warning mdi mdi-star"></span>
+					                                                <span class="text-warning mdi mdi-star-outline"></span>
+					                                                <span class="text-warning mdi mdi-star-outline"></span>
+					                                                <span class="text-warning mdi mdi-star-outline"></span>
+					                                                <span class="text-warning mdi mdi-star-outline"></span>
 				                                                </c:if>
-				                                                ${review.reviewStar }
+<%-- 				                                                ${review.reviewStar } --%>
 				                                            </p>
 				                                        </td>
 				                                        <td>
-				                                            <a href="/owner/reviewAns.do?reviewNo=${review.reviewNo }" class="text-body" data-bs-toggle="modal" data-bs-target="#${review.reviewNo }">${review.reviewContent }</a>
+				                                            <a href="" class="text-body fw-bold" data-bs-toggle="modal" data-bs-target="#${review.reviewNo }">${review.reviewContent }</a>
 				                                        </td>
 				                                        <td>${review.memId }</td>
 				                                        <td><fmt:formatDate value="${review.reviewRegdate }" pattern="yyyy-MM-dd"/></td>
 				                                        <td>
-				                                            <span class="badge bg-danger">${review.reviewYn }</span>
-			<!-- 	                                            <span class="badge bg-danger">미답변,답변대기?</span> -->
-			<!-- 	                                            <span class="badge bg-success">답변완료</span> -->
+															<c:if test="${review.reviewYn eq 'N'}">
+					                                            <h5><span class="badge bg-info">
+					                                            	답변대기중
+					                                            </span></h5>
+				                                            </c:if>
+				                                            <c:if test="${review.reviewYn eq 'Y'}">
+					                                            <h5><span class="badge bg-success">
+					                                            	답변완료
+					                                            </span></h5>
+				                                            </c:if>
 				                                        </td>
 				                                    </tr>
 	                                			</c:forEach>
@@ -127,7 +151,8 @@
 	                            </table>
 	                        </div>
 	                        
-					                        
+					                    
+					        <!-- 리뷰 상세보기 모달 -------------------------------------------------------------- -->    
 							<c:forEach items="${reviewList }" var="review">
 	                       		<div class="modal fade" id="${review.reviewNo }" tabindex="-1"
 									role="dialog" aria-hidden="true">
@@ -140,7 +165,7 @@
 											<div class="modal-body" id="modal">
 													
 													<div class="m-3">
-														<p>No. ${review.reviewNo }</p>
+														<p class="m-0">No. ${review.reviewNo }</p>
 														<p class="m-0 d-inline-block align-middle font-16">
 															<c:if test="${review.reviewStar eq '5' }">
 				                                                <span class="text-warning mdi mdi-star"></span>
@@ -154,25 +179,36 @@
 				                                                <span class="text-warning mdi mdi-star"></span>
 				                                                <span class="text-warning mdi mdi-star"></span>
 				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star-outline"></span>
 			                                                </c:if>
 			                                                <c:if test="${review.reviewStar eq '3' }">
 				                                                <span class="text-warning mdi mdi-star"></span>
 				                                                <span class="text-warning mdi mdi-star"></span>
 				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star-outline"></span>
+				                                                <span class="text-warning mdi mdi-star-outline"></span>
 			                                                </c:if>
 			                                                <c:if test="${review.reviewStar eq '2' }">
 				                                                <span class="text-warning mdi mdi-star"></span>
 				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star-outline"></span>
+				                                                <span class="text-warning mdi mdi-star-outline"></span>
+				                                                <span class="text-warning mdi mdi-star-outline"></span>
 			                                                </c:if>
 			                                                <c:if test="${review.reviewStar eq '1' }">
 				                                                <span class="text-warning mdi mdi-star"></span>
+				                                                <span class="text-warning mdi mdi-star-outline"></span>
+				                                                <span class="text-warning mdi mdi-star-outline"></span>
+				                                                <span class="text-warning mdi mdi-star-outline"></span>
+				                                                <span class="text-warning mdi mdi-star-outline"></span>
 			                                                </c:if>
-			                                                ${review.reviewStar }
+															| <fmt:formatDate value="${review.reviewRegdate }" pattern="yyyy-MM-dd"/> | 
+															${review.memId }
 			                                            </p>
-														<p>작성자 ${review.memId }</p>
-														<p>작성일 ${review.reviewRegdate }</p>
-														<p>내용 ${review.reviewContent }</p>
+														<p class="mt-2">${review.reviewContent }</p>
 													</div>
+													
+													<hr class="m-3"/>
 													
 													<c:if test="${review.reviewYn eq 'N' }">
 			                                          	<form class="ps-3 pe-3" action="/owner/reviewAnsInsert.do" method="post" id="reviewAnsForm">
@@ -193,7 +229,8 @@
 			                                         		<div class="m-3">
 																<label class="form-label">리뷰 답변</label>
 																<p>${review.ansCn }</p>
-																<label class="form-label">리뷰 수정</label>
+																<hr/>
+																<label class="form-label mb-2">리뷰 수정</label>
 																<textarea class="form-control" cols="10" rows="3" id="ansCn2" name="ansCn">${review.ansCn }</textarea>
 																<input type="hidden" id="ansNo" name="ansNo" value="${review.ansNo }">
 															</div>
@@ -209,7 +246,7 @@
 														<button type="button" class="btn btn-primary" id="subBtn">등록</button>
 													</c:if>
 													<c:if test="${review.reviewYn eq 'Y' }">
-														<button type="button" class="btn btn-light"	id="udtBtn">수정</button>
+														<button type="button" class="btn btn-primary" id="udtBtn">수정</button>
 													</c:if>
 												</div>
 												
@@ -222,6 +259,9 @@
 								</c:forEach>
 						                        
 	                        <!-- 페이징추가하기 -->
+	                        <nav aria-label="Page navigation example" id="pagingArea">
+								${pagingVO.pagingHTML }
+							</nav>
 	
 	                        <div class="row mt-2">
 	                            <div class="col-sm-12">
@@ -330,7 +370,14 @@ $(function(){
          } else {
              alert("삭제할 리뷰를 선택하세요.");
          }
-		 
+	});
+	
+	//검색,페이징
+	pagingArea.on("click", "a", function(event){
+		event.preventDefault();
+		var pageNo = $(this).data("page");
+		searchForm.find("page").val(pageNo);
+		searchForm.submit();
 	});
 	
 });

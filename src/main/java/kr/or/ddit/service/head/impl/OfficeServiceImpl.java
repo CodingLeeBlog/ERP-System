@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import kr.or.ddit.mapper.head.OfficeLetterMapper;
 import kr.or.ddit.service.head.IOfficeService;
 import kr.or.ddit.vo.AttachVO;
+import kr.or.ddit.vo.head.HeadLtDetailVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.OfficeLetterVO;
 import kr.or.ddit.vo.owner.FranchiseVO;
@@ -79,20 +80,37 @@ public class OfficeServiceImpl implements IOfficeService {
 
 	@Override
 	public void officeLetterDelete(int hdLtno) {
-		officeLetterMapper.officeLetterDelete(hdLtno);
-		
+	    // 먼저 자식 레코드를 삭제
+	    officeLetterMapper.deleteChildRecords(hdLtno);
+
+	    // 그 후 부모 레코드를 삭제
+	    officeLetterMapper.officeLetterDelete(hdLtno);
 	}
 
+	
 	@Override
-	public void officeLetterUpdate(List<OfficeLetterVO> requestBody) {
+	public void officeLtDetailRegister(List<HeadLtDetailVO> requestBody) {
 		for(int i = 0; i<requestBody.size(); i++) {
 			String hdLtreciever = requestBody.get(i).getHdLtreciever();
 			int hdLtno = requestBody.get(i).getHdLtno();
 			
-			OfficeLetterVO officeLetterVO = new OfficeLetterVO();
-			officeLetterVO.setHdLtno(hdLtno);
-			officeLetterVO.setHdLtreciever(hdLtreciever);
-			officeLetterMapper.officeLetterUpdate(officeLetterVO);
+			HeadLtDetailVO headLtDetailVO = new HeadLtDetailVO();
+			headLtDetailVO.setHdLtno(hdLtno);
+			headLtDetailVO.setHdLtreciever(hdLtreciever);
+			officeLetterMapper.officeLtDetailRegister(headLtDetailVO);
 		}
 	}
+
+	@Override
+	public OfficeLetterVO officeLetterDetail(OfficeLetterVO officeLetterVO) {
+		return officeLetterMapper.officeLetterDetail(officeLetterVO);
+	}
+
+	@Override
+	public void officeLetterUpdate(OfficeLetterVO officeLetterVO) {
+		officeLetterMapper.officeLetterUpdate(officeLetterVO);
+		
+	}
+
+
 }	

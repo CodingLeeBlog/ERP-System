@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.service.head.IOfficeService;
+import kr.or.ddit.vo.head.HeadLtDetailVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.OfficeLetterVO;
 import kr.or.ddit.vo.owner.FranchiseVO;
+import kr.or.ddit.vo.owner.OwnerVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -79,30 +82,37 @@ public class OfficeLetterController {
 	    return entity;
 	}
 	
-//	@ResponseBody
-//	@RequestMapping(value = "/officeLetterUpdate.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-//	public ResponseEntity<String> officeLetterUpdate(@RequestBody OfficeLetterVO officeLetterVO) {
-//	    log.info("officeLetterUpdate" + officeLetterVO);
-//	    officeService.officeLetterUpdate(officeLetterVO); 
-//	    
-//	    ResponseEntity<String> entity = new ResponseEntity<String>("{\"result\": \"OK\"}", HttpStatus.OK);
-//	    return entity;
-//	}
-	
 	@ResponseBody
 	@RequestMapping(value = "/officeLetterUpdate.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public ResponseEntity<String> officeLetterUpdate(@RequestBody List<OfficeLetterVO> requestBody) {
+	public String officeLetterUpdate(@RequestBody OfficeLetterVO officeLetterVO) {
+	    officeService.officeLetterUpdate(officeLetterVO);
+	    return "{\"result\": \"OK\"}";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/officeLtDetailRegister.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public ResponseEntity<String> officeLtDetailRegister(@RequestBody List<HeadLtDetailVO> requestBody) {
 	    
-	    officeService.officeLetterUpdate(requestBody);
+	    officeService.officeLtDetailRegister(requestBody);
 
 	    ResponseEntity<String> entity = new ResponseEntity<String>("{\"result\": \"OK\"}", HttpStatus.OK);
 	    return entity;
 	}
 	
+	
 	@RequestMapping(value = "/officeLetterRead.do", method=RequestMethod.GET)
 	public String officeLetterRead(Model model) {
 		log.info("OfficeLetterRead(): 시작");
 		return "head/store/officeLetterRead";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/officeLetterDetail.do", produces = "application/json;charset=utf-8")
+	public ResponseEntity<OfficeLetterVO> officeLetterDetail(@RequestBody OfficeLetterVO officeLetterVO) {
+
+	OfficeLetterVO officeLetter = officeService.officeLetterDetail(officeLetterVO);
+			
+	return new ResponseEntity<OfficeLetterVO>(officeLetter, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/officeLetterDelete.do", method = RequestMethod.POST)

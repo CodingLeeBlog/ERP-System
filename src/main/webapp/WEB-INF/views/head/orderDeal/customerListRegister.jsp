@@ -279,7 +279,7 @@ $(function(){
 		
 		$.ajax({
 			type : "post",
-			url : "/head/selectPurchaseVendorName.do",
+			url : "/head/vendorList.do",
 			beforeSend : function(xhr){
 				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 			},

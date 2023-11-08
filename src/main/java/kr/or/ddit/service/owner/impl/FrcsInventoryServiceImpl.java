@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.mapper.owner.FrcsInventoryMapper;
 import kr.or.ddit.service.owner.IFrcsInventoryService;
+import kr.or.ddit.vo.head.HeadInventoryVO;
 import kr.or.ddit.vo.owner.DeliveryVO;
 import kr.or.ddit.vo.owner.FrcsInventoryVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
@@ -68,6 +69,31 @@ public class FrcsInventoryServiceImpl implements IFrcsInventoryService{
 		}else {
 			result = ServiceResult.FAILED;
 		}
+		return result;
+	}
+
+	// 재고 초기 셋팅
+	@Override
+	public ServiceResult beginSetting(String frcsId) {
+		ServiceResult result = null;
+		int status = 0;
+		
+		// 본사 재고 테이블을 for문을 돌려서 본사 재고 품목 갯수만큼 setting을 해준다.
+		List<HeadInventoryVO> headVO = mapper.getVdprodCd();
+		
+		for(int i=0; i<headVO.size(); i++) {
+			String vdprodCd = headVO.get(i).getVdprodCd();
+			status = mapper.beginSetting(frcsId,vdprodCd);
+
+			if(status > 0) {
+				result = ServiceResult.OK;
+			}else {
+				result = ServiceResult.FAILED;
+			}
+			
+		}
+		
+		
 		return result;
 	}
 

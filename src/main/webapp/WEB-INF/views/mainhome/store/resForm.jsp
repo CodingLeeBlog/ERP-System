@@ -512,7 +512,16 @@ $(function(){
 		
 		var memId = $("#memId").val();
 		var frcsId = $("#frcsId").val();
-		var restotalPrice = $("#restotalPrice").text();
+		var distotalPrice = $("#distotalPrice").text();
+		var restotalPrice = '';
+		
+		if(distotalPrice != null){
+			restotalPrice = distotalPrice;
+		}else {
+			restotalPrice = $("#restotalPrice").text();
+		}
+		
+// 		var restotalPrice = $("#restotalPrice").text();
 		
 		var selectedOption = mycouponList.find('option:selected');
 		var memcpnId = selectedOption.data('memcpnid');

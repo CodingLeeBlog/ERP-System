@@ -1,4 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<!-- jquery 데이터테이블 -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.min.js"></script>
 
 <!-- Start Content-->
 <div class="content-page">
@@ -25,37 +35,39 @@
 		            <div class="card">
 		                <div class="card-body">
 		                    <div class="row mb-2">
-		                        <div class="col-xl-10">
-		                            <form class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">
-		                                <!-- Predefined Date Ranges -->
-                                        <div class="col-2">
-                                                <input class="form-control" id="example-date" type="date" name="date">
+		                        <div class="col-xl-12">
+                                <form id="searchForm" method="post" class="row gy-2 gx-2 align-items-center justify-content-xl-end justify-content-between">
+                                <input type="hidden" name="page" id="page"/>
+                                    <!-- Predefined Date Ranges -->
+                                    <div class="col-2">
+                                            <input class="form-control" id="example-date" type="date" name="date">
+                                    </div>
+                                    <div class="col-auto">
+                                        <span>~</span>
+                                    </div>
+                                    <div class="col-2">
+                                            <input class="form-control" id="example-date" type="date" name="date">
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="d-flex align-items-center">
+                                            <label for="status-select" class="col-3">분류</label>
+                                            <select class="form-select" id="status-select">
+                                                <option selected>선택해주세요</option>
+                                                <option value="1">잡화</option>
+                                                <option value="2">수산</option>
+                                            </select>
                                         </div>
-                                        <div class="col-auto">
-                                            <span>~</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="input-group">
+                                            <label for="inputPassword2" class="visually-hidden">Search</label>
+                                            <input type="search" class="form-control" id="inputPassword2" placeholder="Search">
+                                            <button type="button" class="btn btn-secondary">검색</button>
                                         </div>
-                                        <div class="col-2">
-                                                <input class="form-control" id="example-date" type="date" name="date">
-                                        </div>
-		                                <div class="col-2">
-		                                    <div class="d-flex align-items-center">
-		                                        <label for="status-select" class="col-3">거래처</label>
-		                                        <select class="form-select" id="status-select">
-		                                            <option selected>선택해주세요</option>
-		                                            <option value="1">대전대흥점</option>
-		                                            <option value="2">대전선화점</option>
-		                                        </select>
-		                                    </div>
-		                                </div>
-                                        <div class="col-4">
-                                            <div class="input-group">
-                                                <label for="inputPassword2" class="visually-hidden">Search</label>
-		                                        <input type="search" class="form-control" id="inputPassword2" placeholder="Search">
-                                                <button type="button" class="btn btn-secondary">검색</button>
-                                            </div>
-		                                </div>
-		                            </form>                            
-		                        </div>
+                                    </div>
+                                    <sec:csrfInput/>
+                                </form>                            
+                            </div>
 		                    </div>
 		
 		                    <div class="table-responsive">
@@ -136,57 +148,10 @@
 								        </li>
 								    </ul>
 								</nav>
-		               
 		                </div> <!-- end card-body-->
-		                
 		            </div> <!-- end card-->
 		        </div> <!-- end col -->
 		    </div>
-
-            <div class="row justify-content-around">
-                <div class="col-5">
-                    <div class="card widget-inline" style="height:90px;">
-                        <div class="card-body">
-                            <div class="row justify-content-center">
-                                <div class="col-4 ms-1 ">
-                                    <h3><span>기간 </span>&nbsp;&nbsp;:</h3>
-                                </div>
-                                <div class="col-6">
-                                    <!-- Year View -->
-                                    <div class="mb-3">
-                                        <input class="form-control" id="example-month" type="month" name="month">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-5">
-                    <div class="card widget-inline" style="height:90px;">
-                        <div class="card-body">
-                            <div class="row justify-content-around">
-                                <div class="col-4">
-                                    <select class="form-select" id="example-select">
-                                        <option>전체</option>
-                                        <option>운영중</option>
-                                        <option>휴업중</option>
-                                        <option>개점예정</option>
-                                        <option>계약만료</option>
-                                    </select>
-                                </div>
-                                <div class="col-8">
-                                    <div class="input-group">
-                                        <input type="search" class="form-control"
-                                            placeholder="검색하기..." id="store-search">
-                                        <button class="btn btn-primary" type="submit"
-                                            style="background-color: #abb2b8;">검색</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="row">
                 <div class="col-lg-6">
@@ -207,11 +172,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>Ⅰ.매출액</td>
-                                                    <td></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>제품판매액</td>
+                                                    <td>Ⅰ.총매출액</td>
                                                     <td></td>
                                                 </tr>
                                                 <tr>
@@ -229,6 +190,10 @@
                                                 <tr>
                                                     <td>인건비</td>
                                                     <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>공과금</td>
+                                                    <td>(수도세/전기세/가스비) + (월세)</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Ⅲ. 매출원가</td>
@@ -256,28 +221,29 @@
 
                     <div class="col-lg-6">
                         <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h1 class="header-title font-24">00점 영업매출</h1>
-                                <div>
-                                    <button type="button" class="btn btn-soft-secondary btn-sm">
-                                        ALL
-                                    </button>
-                                    <button type="button" class="btn btn-soft-primary btn-sm">
-                                        1개월
-                                    </button>
-                                    <button type="button" class="btn btn-soft-secondary btn-sm">
-                                        6개월
-                                    </button>
-                                    <button type="button" class="btn btn-soft-secondary btn-sm">
-                                        1년
-                                    </button>
-                                </div>
+                            <div style="height:30px;"class="card-header d-flex justify-content-between align-items-center">
+                                <h1 class="header-title font-24 mt-2">00점 영업매출</h1>
                             </div>
                             <div class="card-body">
-                                <h4 class="header-title mb-4">Spline Area</h4>
-                                <div dir="ltr">
-                                    <div id="spline-area" class="apex-charts" style="height: 515px;" data-colors="#727cf5,#6c757d"></div>
-                                </div>
+<!--                                 <h4 class="header-title mb-4">Spline Area</h4> -->
+                                <div class="row" style="height:50px;">
+			                		<div class="col-4" id="test"></div>
+				               			<div class="col mt-4 mb-4 d-flex justify-content-center align-items-center">
+				                			<i class="me-3 ri-arrow-left-s-line" id="leftYear" style="font-size: 30px"></i>
+				                				<span>2023</span>
+				                 				<div id="calYear" class="" style="font-size: 30px; font-family: 'GmarketSansMedium';"></div>
+				                			<i class="ms-3 ri-arrow-right-s-line" id="rightYear" style="font-size: 30px"></i>
+				               			</div>
+				                 	<div class="col-4"></div>
+			                	</div>
+									<div class="card-body">
+                                        <div class="chart-body" dir="ltr">
+                                            <div>
+                                                <canvas id="mixed-chart" width="800" height="450"></canvas>
+                                            </div>
+                                        </div>
+
+                                    </div> <!-- end card body-->
                             </div>
                             <!-- end card body-->
                         </div> <!-- end card -->
@@ -312,3 +278,35 @@
 	<!-- content -->
 </div>
 <!-- content-page -->
+
+<script type="text/javascript">
+
+new Chart(document.getElementById("mixed-chart"), {
+    type: 'bar',
+    data: {
+      labels: ["1900", "1950", "1999", "2050"],
+      datasets: [ {
+          label: "Africa",
+          type: "line",
+          borderColor: "#FFA8A5",
+          data: [450,75,480,299],
+          fill: false
+        }, {
+          label: "Africa",
+          type: "bar",
+          backgroundColor: "rgba(0,143,226,0.2)",
+          backgroundColorHover: "#96FFFF",
+          data: [650,150,500,300]
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Population growth (millions): Europe & Africa'
+      },
+      legend: { display: false }
+    }
+});
+
+</script>

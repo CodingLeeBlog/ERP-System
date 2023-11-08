@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsOfficialDocMapper">
+
+	<sql id="ofldcSearch">
+		<if test="searchType != null and searchType == 'title'">
+			and (frcs_ofldc_ttl like '%'||#{searchWord}||'%')
+		</if>
+		<if test="searchType != null and searchType == 'content'">
+			and (frcs_ofldc_cn like '%'||#{searchWord}||'%')
+		</if>
+	</sql>
+
+	<select id="selectOfldcCount" parameterType="pagingVO" resultType="int">
+		SELECT
+		    count(frcs_ofldc_no)
+		FROM
+		    frcs_officialdocument
+		WHERE 
+			1 = 1
+		<include refid="ofldcSearch"/>
+	</select>
+	
+	<select id="selectOfldcList" parameterType="pagingVO" resultType="frcsOfldcVO">
+		select 
+			b.*
+		from(
+			select 
+				a.*, row_number() over (order by a.frcs_ofldc_no desc) rnum
+			from (
+				SELECT
+				    frcs_ofldc_no
+				  , frcs_ofldc_sndpty
+				  , frcs_ofldc_rcvr
+				  , frcs_ofldc_ttl
+				  , frcs_ofldc_cn
+				  , frcs_ofldc_dspymd
+				  , frcs_ofldc_recymd
+				  , table_name
+				FROM
+				    frcs_officialdocument
+				WHERE 
+					1 = 1
+				<include refid="ofldcSearch"/>
+				order by 
+					frcs_ofldc_no desc
+			) a
+		) b
+		<![CDATA[
+			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+		]]>
+	</select>
+
+	<insert id="ofldcInsert" parameterType="frcsOfldcVO" useGeneratedKeys="true">
+		<selectKey keyProperty="frcsOfldcNo" resultType="string" order="BEFORE">
+			select seq_frcsofldc.nextval from dual
+		</selectKey>
+		INSERT INTO frcs_officialdocument (
+		    frcs_ofldc_no
+		    , frcs_ofldc_sndpty
+		    , frcs_ofldc_rcvr
+		    , frcs_ofldc_ttl
+		    , frcs_ofldc_cn
+		    , frcs_ofldc_dspymd
+		    , frcs_ofldc_recymd
+		    , table_name
+		) VALUES (
+		    #{frcsOfldcNo}
+		  , #{frcsOfldcSndpty}
+		  , 'admin'
+		  , #{frcsOfldcTtl}
+		  , #{frcsOfldcCn}
+		  , sysdate
+		  , sysdate
+		  ,'frcsOfldc'
+		)
+	</insert>
+	
+	<insert id="insertOfldcFile" parameterType="attachVO">
+		INSERT INTO attach (
+		    ATTACH_NO
+		    , FILE_NO
+		    , ATTACH_ORGNAME
+		    , ATTACH_SAVENAME
+		    , ATTACH_MIME
+		    , ATTACH_SIZE
+		    , TABLE_NAME
+		    , TABLE_PK
+		  )
+		  VALUES (
+		    seq_attach.nextval
+		    , #{fileNo}
+		    , #{attachOrgname}
+		    , #{attachSavename}
+		    , #{attachMime}
+		    , #{attachSize}
+		    , 'frcsOfldc'
+		    , #{tablePk}
+		  )
+	</insert>
+</mapper>

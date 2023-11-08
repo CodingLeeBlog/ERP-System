@@ -1,5 +1,6 @@
 package kr.or.ddit.mapper.owner;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -7,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import kr.or.ddit.vo.owner.FrcsDailySalesVO;
 import kr.or.ddit.vo.owner.FrcsMenuIngredientVO;
 import kr.or.ddit.vo.owner.FrcsMenuVO;
+import kr.or.ddit.vo.owner.FrcsOrderDetailVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 
 public interface FrcsDailyMapper {
@@ -53,8 +55,17 @@ public interface FrcsDailyMapper {
 	
 	// 날짜, 가맹점ID, 메뉴코드가 일치하는 데이터들 중, 가장 최신의 데이터 1개를 가져온다.
 	public String selectRecentDelivery(FrcsMenuIngredientVO ingredVO);
+	
+	// 매출액 분석 (한달)
+	public List<FrcsDailySalesVO> getOneMonthData(@Param("frcsId")String frcsId, @Param("thisMonth")Date thisMonth);
+	
+	// 매출 총이익 분석 (한달)- 매출액 조회
+	public int getTotalSales(@Param("frcsId")String frcsId, @Param("thisMonth")Date thisMonth);
 
-
-
+	// 매출 총이익 분석 (한달)- 매입액 조회
+	public int getPurchase(@Param("frcsId")String frcsId, @Param("thisMonth")Date thisMonth);
+	
+	// 매입 분석 (한달)
+	public List<FrcsOrderDetailVO> getOnePurchase(@Param("frcsId")String frcsId, @Param("thisMonth")Date thisMonth);
 
 }

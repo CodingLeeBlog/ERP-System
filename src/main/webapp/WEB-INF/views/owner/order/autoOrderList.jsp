@@ -1,12 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri= "http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
+<input type="hidden" id="frcsId" value="${frcsId }">
 <div class="content-page">
 	<div class="content">
 		<!-- Start Content-->
 		<div class="container-fluid">
 		
-		    <!-- start page title -->
 		    <div class="row">
 		        <div class="col-12">
 		            <div class="page-title-box">
@@ -21,7 +21,6 @@
 		            </div>
 		        </div>
 		    </div>
-		    <!-- end page title -->
 		
 		    <div class="row">
 		        <div class="col-12">
@@ -65,9 +64,9 @@
 		                            <thead class="table-light">
 		                                <tr>
 		                                    <th style="width: 20px;">
-		                                        <div>
-		                                        	<input type="hidden" id="frcsId" value="${pagingVO.dataList[0].frcsId }" >
-		                                        </div>
+<!-- 		                                        <div> -->
+<%-- 		                                        	<input type="hidden" id="frcsId" value="${pagingVO.dataList[0].frcsId }" > --%>
+<!-- 		                                        </div> -->
 		                                    </th>
 		                                    <th style="text-align:center; width:100px;">제품 코드</th>
 		                                    <th style="text-align:center; width:200px;">제품명</th>
@@ -83,7 +82,7 @@
 		                                <c:choose>
 		                                	<c:when test="${empty autoOrderList }">
 		                                		<tr>
-		                                			<td colspan="7" style="text-align:center">
+		                                			<td colspan="8" style="text-align:center">
 		                                				등록된 자동발주가 없습니다.
 		                                			</td>
 		                                		</tr>
@@ -357,57 +356,95 @@ $(function(){
 		});
 	});
 	
+		
 	
-	 // 자동발주 기준수량 + 버튼 눌렀을 때 숫자 증가
-	 	tBodyArea.on("click",".orderStdrqyUp", function () {
-	 		var ele = $(this)[0];	// 누른 버튼
-	 		var injectEle = $(ele).parents(".bootstrap-touchspin-injected");	
-	 		var inputEle = $(injectEle).find(".orderStdrqyInput").val();
-	 		orderStdrqyVal = parseInt(inputEle) + 1;
-	 		$(injectEle).find(".orderStdrqyInput").val(orderStdrqyVal);
-	 	});
-	 
-	 
-	 // 자동발주 기준수량 - 버튼 눌렀을 때 숫자 감소
-	 	tBodyArea.on("click", ".orderStdrqyDown", function () {
-	 	    var ele = $(this)[0]; // 누른 버튼
-	 	    var injectEle = $(ele).parents(".bootstrap-touchspin-injected");
-	 	    var inputEle = $(injectEle).find(".orderStdrqyInput");
-	 	    var currentValue = parseInt(inputEle.val());	//  - 누르기 전 현재 값
+ // 자동발주 기준수량 + 버튼 눌렀을 때 숫자 증가
+ 	tBodyArea.on("click",".orderStdrqyUp", function () {
+ 		var ele = $(this)[0];	// 누른 버튼
+ 		var injectEle = $(ele).parents(".bootstrap-touchspin-injected");	
+ 		var inputEle = $(injectEle).find(".orderStdrqyInput").val();
+ 		orderStdrqyVal = parseInt(inputEle) + 1;
+ 		$(injectEle).find(".orderStdrqyInput").val(orderStdrqyVal);
+ 	});
+ 
+ 
+ // 자동발주 기준수량 - 버튼 눌렀을 때 숫자 감소
+ 	tBodyArea.on("click", ".orderStdrqyDown", function () {
+ 	    var ele = $(this)[0]; // 누른 버튼
+ 	    var injectEle = $(ele).parents(".bootstrap-touchspin-injected");
+ 	    var inputEle = $(injectEle).find(".orderStdrqyInput");
+ 	    var currentValue = parseInt(inputEle.val());	//  - 누르기 전 현재 값
 
-	 	    if (currentValue > 0) {
-	 	        var orderStdrqyVal = currentValue - 1;
-	 	        inputEle.val(orderStdrqyVal);
-	 	    }
-	 	});
+ 	    if (currentValue > 0) {
+ 	        var orderStdrqyVal = currentValue - 1;
+ 	        inputEle.val(orderStdrqyVal);
+ 	    }
+ 	});
+ 
+ 
+ 
+	// 0일때 마우스를 대면 빈값으로 클리어
+	tBodyArea.on("focus", ".atorderQyInput", function() {
+	    var atorderQyInput = $(this);
+	    if (atorderQyInput.val() === '0') {
+	    	atorderQyInput.val('');
+	    }
+	});
+	
+	// 여전히 빈값 상태로 포커스를 옮기면 다시 0으로
+	tBodyArea.on("blur", ".atorderQyInput", function() {
+	    var atorderQyInput = $(this);
+	    if (atorderQyInput.val() === '') {
+	    	atorderQyInput.val('0'); 
+	    }
+	});
+	
+	// 주문수량 키보드로 입력
+	tBodyArea.on("input", ".atorderQyInput", function() {
+    var atorderQyInput = $(this);
+    var amount = atorderQyInput.closest('tr').find(".amount");
+    var hdforwardPriceTd = atorderQyInput.closest('tr').find(".hdforwardPrice").text();
+    var hdforwardPrice = parseInt(hdforwardPriceTd);
+    var atorderQyVal = parseInt(atorderQyInput.val());
+
+    if (isNaN(atorderQyVal)) {
+    	atorderQyVal = 0;
+        atorderQyInput.val(0);
+    }
+   	
+    var total = hdforwardPrice * atorderQyVal;
+    amount.text(total);
+	});
+ 
 	 
-	 	 // 자동발주 수량 + 버튼 눌렀을 때 숫자 증가
-	 	tBodyArea.on("click",".atorderQyUp", function () {
-	 		var ele = $(this)[0];	// 누른 버튼
-	 		var injectEle = $(ele).parents(".bootstrap-touchspin-injected");	// 모든 부모 요소 중 .bootstrap-touchspin-injected를 가지고 있는 녀석
-	 		var hdforwardPrice =  $(ele).parents("tr").find(".hdforwardPrice").text();	// 구매가
-	 		var amount =  $(ele).parents("tr").find(".amount")	// 주문 예상금액
-	 		var inputEle = $(injectEle).find(".atorderQyInput").val();
-	 		atorderQyVal = parseInt(inputEle) + 1;
+	 
+ 	 // 자동발주 수량 + 버튼 눌렀을 때 숫자 증가
+ 	tBodyArea.on("click",".atorderQyUp", function () {
+ 		var ele = $(this)[0];	// 누른 버튼
+ 		var injectEle = $(ele).parents(".bootstrap-touchspin-injected");	// 모든 부모 요소 중 .bootstrap-touchspin-injected를 가지고 있는 녀석
+ 		var hdforwardPrice =  $(ele).parents("tr").find(".hdforwardPrice").text();	// 구매가
+ 		var amount =  $(ele).parents("tr").find(".amount")	// 주문 예상금액
+ 		var inputEle = $(injectEle).find(".atorderQyInput").val();
+ 		atorderQyVal = parseInt(inputEle) + 1;
+ 		$(injectEle).find(".atorderQyInput").val(atorderQyVal);
+ 		amount.text(parseInt(hdforwardPrice)*atorderQyVal);
+ 	});
+
+ 	 // 자동발주 기준수량 - 버튼 눌렀을 때 숫자 감소
+ 	tBodyArea.on("click",".atorderQyDown",function(){
+ 		var ele = $(this)[0];	// 누른 버튼
+ 		var injectEle = $(ele).parents(".bootstrap-touchspin-injected");
+ 		var hdforwardPrice =  $(ele).parents("tr").find(".hdforwardPrice").text();	// 구매가
+ 		var amount =  $(ele).parents("tr").find(".amount")	// 주문 예상금액
+ 		var inputEle = $(injectEle).find(".atorderQyInput");
+ 		var currentValue = parseInt(inputEle.val());	//  - 누르기 전 현재 값
+ 		
+ 		if(currentValue > 0){
+ 			var atorderQyVal = currentValue - 1;
 	 		$(injectEle).find(".atorderQyInput").val(atorderQyVal);
 	 		amount.text(parseInt(hdforwardPrice)*atorderQyVal);
-	 	});
-
-	 	 // 자동발주 기준수량 - 버튼 눌렀을 때 숫자 감소
-	 	tBodyArea.on("click",".atorderQyDown",function(){
-	 		var ele = $(this)[0];	// 누른 버튼
-	 		var injectEle = $(ele).parents(".bootstrap-touchspin-injected");
-	 		var hdforwardPrice =  $(ele).parents("tr").find(".hdforwardPrice").text();	// 구매가
-	 		var amount =  $(ele).parents("tr").find(".amount")	// 주문 예상금액
-	 		var inputEle = $(injectEle).find(".atorderQyInput");
-	 		var currentValue = parseInt(inputEle.val());	//  - 누르기 전 현재 값
-	 		
-	 		if(currentValue > 0){
-	 			var atorderQyVal = currentValue - 1;
-		 		$(injectEle).find(".atorderQyInput").val(atorderQyVal);
-		 		amount.text(parseInt(hdforwardPrice)*atorderQyVal);
-	 		}
-	 	});
+ 		}
+ 	});
 	 
 	// 추가한 행 삭제
 	tBodyArea.on("click",".addDelBtn",function(){
@@ -519,8 +556,52 @@ $(function(){
 		
 		thisTr.find('.atorderStdrqy').html(atorderStdrqyStr);
 		thisTr.find('.atorderQy').html(atorderQyStr);
+	
+		$(this).attr('class','btn btn-info updateSaveBtn');
+		// 제품 코드나 자동발주 번호..., 자동발주 기준 수량, 자동발주 수량, 프랜차이즈 아이디 보내면 된다.
 		
 	});
+	
+	
+	tBodyArea.on("click",".updateSaveBtn",function(){
+		var frcsId = $("#frcsId").val();
+		var atorderStdrqy = $(this).closest('tr').find('.orderStdrqyInput').val();
+		var atorderQy = $(this).closest('tr').find('.atorderQyInput').val();
+		var autoorderNo = $(this).data("autono");
+		
+		data = {
+				frcsId : frcsId,
+				atorderStdrqy : atorderStdrqy,
+				atorderQy : atorderQy,
+				autoorderNo : autoorderNo
+			}
+			
+			
+			$.ajax({
+				type : "post",
+				url : "/owner/autoOrder/update.do",
+				beforeSend : function(xhr){	// csrf토큰 보내기 위함
+					xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");	//key value로 보낸다.
+				},
+				data : JSON.stringify(data),
+				contentType : "application/json; charset=utf-8",
+				success : function(res){
+					if (res === "OK") {
+				        Swal.fire({
+				            title: "수정 성공",
+				            text: "정상적으로 수정되었습니다.",
+				            confirmButtonText: "확인",
+				            icon: "success",
+				            preConfirm: function () {
+				                location.href = "/owner/autoOrder.do";
+				            }
+				        });
+					}
+				}
+			});
+		
+	});
+	
 	
 	// 체크박스 하나만 선택할 수 있게
 	$("#modal1").on("click", ".checkBox", function () {

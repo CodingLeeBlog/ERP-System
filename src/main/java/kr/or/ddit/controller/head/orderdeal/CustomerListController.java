@@ -70,13 +70,7 @@ public class CustomerListController {
 		
 		log.info("vendorList 시작 -> selectNotTransactionList");
 		
-//		List<VendorVO> selectList = service.selectCategoryList(vendorVO);
-//		
-//		if(selectList.size() == 1) {
-//			for (VendorVO vendorVO2 : selectList) {
-//				vendorVO2.setRnum(1);
-//			}
-//		}
+		log.debug("거래처등록 분류선택 후 거래처리스트 뽑아오기 vendorVO -> {}", vendorVO.toString());
 		
 		List<VendorVO> selectNotTransactionList = service.selectCategoryList(vendorVO);
 		

@@ -58,8 +58,8 @@
 		resultType="vendorVO">
 		SELECT DISTINCT VD.VD_NAME, VD.VD_CODE FROM VENDOR VD LEFT JOIN
 		HEAD_INVENTORY HI ON VD.VD_CODE = HI.VD_CODE WHERE 1=1 and HI.VD_CODE
-		IS NULL
-		<include refid="vendorSearch" />
+		IS NULL and vd.vd_category = #{vdCategory}
+<!-- 		<include refid="vendorSearch" /> -->
 	</select>
 	<select id="selectVendorName" parameterType="vendorVO"
 		resultMap="vendorMap">

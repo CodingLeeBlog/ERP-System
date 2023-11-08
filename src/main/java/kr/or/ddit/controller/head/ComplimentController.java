@@ -5,6 +5,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,12 +14,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import kr.or.ddit.service.head.IComplimentService;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.ProposalVO;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Controller
+@RequestMapping("/head")
 public class ComplimentController {
 	
 	@Inject
 	private IComplimentService complimentService;
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/complimentList.do")
 	public String complimentList(
 			@RequestParam(name = "page", required = false, defaultValue = "1")int currentPage,

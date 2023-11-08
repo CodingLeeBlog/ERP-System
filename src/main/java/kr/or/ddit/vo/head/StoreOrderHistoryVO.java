@@ -37,4 +37,6 @@ public class StoreOrderHistoryVO {
 	private int totalPrice;	// 총액
 	
 	private String storeOrderDetailSearch; // 가맹점주문 상세 가맹점명 검색
+	
+	private String frcsNonpaydate;					// 미납월
 }

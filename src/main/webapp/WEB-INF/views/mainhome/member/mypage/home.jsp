@@ -222,7 +222,7 @@
 								<c:forEach items="${couponList }" var="coupon">
 									<div class="row text-center d-flex justify-content-center align-items-center">
 										<div class="col-1">
-											${coupon.memcpnId }
+											${coupon.rownum }
 										</div>
 										<div class="col">
 											<a href="/elly/mycoupon/detail.do?memcpnId=${coupon.memcpnId }">${coupon.cpnName }</a>

@@ -184,4 +184,44 @@
 	FROM dual
 	</select>
 	
+	<!-- 매출액 분석 (한달) -->
+	<select id="getOneMonthData" parameterType="map" resultType="salesVO">
+		select sum(selng_qy) as selng_qy, sum(selng_qy * selng_price) as total_price, selng_price, h.menu_cd, h.menu_name
+		from dailyselling d, head_menu h
+		where frcs_id = #{frcsId} and trunc(selng_date, 'MM') = trunc(#{thisMonth}, 'MM')
+		and d.menu_cd = h.menu_cd
+		group by h.menu_cd, h.menu_name, selng_price
+	</select>
+	
+	<!-- 매출 총이익 분석 (한달)- 매출액 조회 -->
+	<select id="getTotalSales" parameterType="map" resultType="int">
+		select sum(sum(selng_qy * selng_price)) as total_price
+		from dailyselling
+		where frcs_id = #{frcsId} and trunc(selng_date, 'MM') = trunc(#{thisMonth}, 'MM')
+<!-- 		group by menu_cd -->
+		group by trunc(selng_date,'MM')
+	</select>
+	
+	<!-- 매출 총이익 분석 (한달)- 매입액 조회 -->
+	<select id="getPurchase" parameterType="map" resultType="int">
+		select sum(frcsorder_amt) as totalorder_price
+		from frcsorder
+		where frcs_id = #{frcsId} and trunc(frcsorder_date, 'MM') = trunc(#{thisMonth}, 'MM')
+		and frcsorder_confm = '승인'
+		group by trunc(frcsorder_date,'MM')		
+	</select>
+	
+	<!-- 매입 분석 (한달) -->
+	<select id="getOnePurchase" parameterType="map" resultType="orderDetailVO">
+		select h.vdprod_cd, sum(frcsorder_qy) as frcsorder_qy, h.vdprod_name, fd.hdforward_price, sum(frcsorder_qy*fd.hdforward_price) as total_price
+		from frcsorder_detail fd, frcsorder f, head_inventory h
+		where h.hdforward_price = fd.hdforward_price
+		and h.vdprod_cd = fd.vdprod_cd
+		and f.frcsorder_no = fd.frcsorder_no
+		and frcs_id = #{frcsId} and trunc(frcsorder_date, 'MM') = trunc(#{thisMonth}, 'MM')
+		and frcsorder_confm = '승인'
+		group by trunc(frcsorder_date,'MM'), h.vdprod_cd, h.vdprod_name, fd.hdforward_price
+	</select>
+	
+	
 </mapper>

@@ -33,7 +33,7 @@
 	                <div class="card">
 	                    <div class="card-body">
 	                    
-	                    	<form id="inqForm" action="/owner/inqInsert.do" method="post" >
+	                    	<form id="inqForm" action="/owner/inqInsert.do" method="post" enctype="multipart/form-data">
 		                    	<c:if test="${status eq 'u' }">
 									<input type="hidden" name="inqryNo" value="${inqVO.inqryNo}"/>
 								</c:if>
@@ -46,53 +46,73 @@
 <!-- 		                        <div id="snow-editor" style="height: 300px;"></div> -->
 <!-- 		                        <input type="hidden" id="inqryCn" name="inqryCn"> -->
 								<textarea class="form-control" cols="50" rows="20" id="inqryCn" name="inqryCn">${inqVO.inqryCn}</textarea>
+		                        
+		                        <!-- 파일  인풋 영역 -->
+		                        <div class="col-md-12 mt-2">
+									<div class="input-group input-group-outline mb-4">
+										<input type="file" class="form-control" id="boFile" name="boFile" multiple="multiple" />
+									</div>
+								</div>
 		                  		<sec:csrfInput/>
 	                    	</form>
+	                    	
 	                        
-	                        <c:if test="${status eq 'u' }">
-								<!-- 파일업로드 -->
-	                            <!-- File Upload -->
-								<form id="inqFileForm" action="/" method="post" class="dropzone mt-2" data-plugin="dropzone" data-previews-container="#file-previews"
-								    data-upload-preview-template="#uploadPreviewTemplate" enctype="multipart/form-data">
-								    <div class="fallback">
-								        <input name="file" type="file" multiple />
-								    </div>
+							<!-- 수정 파일 영역 -->
+							<c:if test="${status eq 'u' }">
 								
-								    <div class="dz-message needsclick">
-								        <i class="h2 text-muted ri-upload-cloud-2-line"></i>
-								        <h4>Drop files here or click to upload.</h4>
-								    </div>
-								</form>
+							<div class="card-footer bg-white">
+								<ul class="mailbox-attachments d-flex align-items-stretch clearfix">
+									<c:if test="${not empty inqVO.inqFileList[0].attachNo }">
+										<c:forEach items="${inqVO.inqFileList}" var="inqFile">
+											<li>
+												<span class="mailbox-attachment-icon">
+													<i class="far fa-file-pdf"></i>
+												</span>
+												<div class="mailbox-attachment-info">
+													<a href="#" class="mailbox-attachment-name"><i class="fas fa-paperclip"></i> ${inqFile.attachOrgname }</a> 
+													<span class="mailbox-attachment-size clearfix mt-1"> 
+														<span>${inqFile.attachSize }</span> 
+														<span class="btn btn-default btn-sm float-right attachmentFileDel" id="span_${inqFile.attachNo }">
+															<i class="fas fa-times"></i>
+														</span>
+													</span>
+												</div>
+											</li>
+										</c:forEach>
+									</c:if>
+								</ul>
+							</div>	
+
+
+<%-- 								<c:if test="${not empty inqVO.inqFileList[0].attachNo }"> --%>
+<!-- 									<div class="col-md-12"> -->
+<!-- 										<div class="row"> -->
+<%-- 											<c:forEach items="${inqVO.inqFileList }" var="inqFile"> --%>
+<!-- 												<div class="col-md-2"> -->
+<!-- 													<div class="card shadow-lg"> -->
+<!-- 														<div class="card-header mt-n4 mx-3 p-0 bg-transparent position-relative z-index-2"> -->
+<!-- 															<a class="d-block blur-shadow-image text-center">  -->
+<!-- 																<img src="" alt="img-blur-shadow" class="img-fluid shadow border-radius-lg"> -->
+<!-- 															</a> -->
+<!-- 															<div class="colored-shadow" style="background-image: url(&quot;https://images.unsplash.com/photo-1536321115970-5dfa13356211?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;ixlib=rb-1.2.1&amp;auto=format&amp;fit=crop&amp;w=934&amp;q=80&quot;);"></div> -->
+<!-- 														</div> -->
+<!-- 														<div class="card-body text-center bg-white border-radius-lg p-3 pt-0"> -->
+<!-- 															<h6 class="mt-3 mb-1 d-md-block d-none"> -->
+<%-- 																${inqFile.attachOrgname } (${inqFile.attachSize }) --%>
+<!-- 															</h6> -->
+<!-- 															<p class="mb-0 text-xs font-weight-bolder text-info text-uppercase"> -->
+<%-- 																<button type="button" class="btn btn-primary fileDelete" id="btn_${inqFile.attachNo }">delete</button> --%>
+<!-- 															</p> -->
+<!-- 														</div> -->
+<!-- 													</div> -->
+<!-- 												</div> -->
+<%-- 											</c:forEach> --%>
+<!-- 										</div> -->
+<!-- 									</div> -->
+<%-- 								</c:if> --%>
+								
 							</c:if>
-							
-							<!-- Preview -->
-							<div class="dropzone-previews mt-3" id="file-previews"></div>
-							
-							<!-- file preview template -->
-							<div class="d-none" id="uploadPreviewTemplate">
-							    <div class="card mt-1 mb-0 shadow-none border">
-							        <div class="p-2">
-							            <div class="row align-items-center">
-							                <div class="col-auto">
-							                    <img data-dz-thumbnail src="#" class="avatar-sm rounded bg-light" alt="">
-							                </div>
-							                <div class="col ps-0">
-							                    <a href="javascript:void(0);" class="text-muted fw-bold" data-dz-name></a>
-							                    <p class="mb-0" data-dz-size></p>
-							                </div>
-							                <div class="col-auto">
-							                    <!-- Button -->
-							                    <a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>
-							                        <i class="ri-close-line"></i>
-							                    </a>
-							                </div>
-							            </div>
-							        </div>
-							    </div>
-							</div>
-							<!-- 파일업로드 끝 -->
                           
-	
 	                        <div class="col-xl-12 mt-2">
 	                            <div class="text-xl-end mt-xl-0 mt-2">
 	                            	<c:if test="${status eq 'u' }">
@@ -101,7 +121,7 @@
 	                              	<c:if test="${status ne 'u' }">
 	                              	  <button type="button" class="btn btn-light mb-2 me-2" id="listBtn" onclick="javascript:location.href='/owner/inquiry.do'">목록</button>
 	                              	</c:if>
-	                                <button type="button" class="btn btn-danger mb-2" id="subBtn">${name }</button>
+	                                <button type="button" class="btn btn-primary mb-2" id="subBtn">${name }</button>
 	                            </div>
 	                        </div>
 	                    </div> <!-- end card-body-->
@@ -155,6 +175,14 @@ $(function(){
 		inqForm.submit();		
 	});
 	
+	$(".attachmentFileDel").on("click", function(){
+		var id = $(this).prop("id");
+		var idx = id.indexOf("_");
+		var inqFileNo = id.substring(idx + 1);
+		var ptrn = "<input type='text' name='delInqNo' value='%V' hidden='hidden'/>";
+		$("#inqForm").append(ptrn.replace("%V", inqFileNo));
+		$(this).parents("li:first").hide();	// x를 누른녀석이 사라져야되니까 hide해주자
+	});
 	
 });
 </script>

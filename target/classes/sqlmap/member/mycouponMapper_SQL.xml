@@ -5,16 +5,46 @@
 <mapper namespace="kr.or.ddit.mapper.member.MyCouponMapper">
 
 <select id="myCouponList" parameterType="string" resultType="myCouponVO">
-	select
+select rownum, a.*
+    from 
+	(select
 		memcpn_id, memcpn_getdate, memcpn_enddate, memcpn_yn, m.mem_id, m.cpn_cd, cpn_name, cpn_content, cpn_stdate, cpn_enddate
 	from membercpn m left outer join cpn c on
-	m.cpn_cd = c.cpn_cd where m.mem_id = #{memId}
+	m.cpn_cd = c.cpn_cd where m.mem_id = #{memId} and m.memcpn_yn = 'N') a
 </select>
 
-<delete id="deletemyCoupon" parameterType="string">
-	delete 
+<update id="updatemyCoupon" parameterType="string">
+	update membercpn 
+	set
+		memcpn_yn = 'Y'
+	where
+		memcpn_id = #{memcpnId}
+</update>
+
+<!-- <delete id="deletemyCoupon" parameterType="string"> -->
+<!-- 	delete  -->
+<!-- 	from membercpn -->
+<!-- 	where memcpn_id = #{memcpnId} -->
+<!-- </delete> -->
+
+<insert id="mycouponcreate" parameterType="myCouponVO" useGeneratedKeys="true">
+	<selectKey keyProperty="memcpnId" resultType="int" order="BEFORE">
+		select seq_membercpn.nextval from dual
+	</selectKey>
+	insert into membercpn (
+		memcpn_id, memcpn_getdate, memcpn_yn, mem_id, cpn_cd
+	) values (
+		#{memcpnId}, sysdate, 'N', #{memId}, #{cpnCd}
+	)
+</insert>
+
+<select id="mycoupon" parameterType="myCouponVO" resultType="myCouponVO">
+	select
+		memcpn_id, memcpn_getdate, memcpn_enddate, memcpn_yn, mem_id, cpn_cd
 	from membercpn
-	where memcpn_id = #{memcpnId}
-</delete>
+	where 
+		mem_id = #{memId}
+		and cpn_cd = #{cpnCd}
+</select>
 
 </mapper>

@@ -16,5 +16,9 @@ public class TradingVO {
 	private Date tradDate; // 거래일자
 	private String tradStts;	// 거래상태
 	private String tradRm;	// 비고
+	private String vdprodName;	// 제품이름
+	
+	private String frcsName; // 내 가맹점명?
+	private String frcsName2;	// 상대방 가맹점명?
 
 }

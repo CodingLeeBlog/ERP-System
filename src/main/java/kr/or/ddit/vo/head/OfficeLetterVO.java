@@ -16,7 +16,6 @@ public class OfficeLetterVO {
 	private int hdLtno;
 	private String hdLttitle;
 	private String hdLtsender;
-	private String hdLtreciever;
 	private String hdLtcontent;
 	private Date hdLtsdate;
 	private Date hdLtrdate;
@@ -41,5 +40,5 @@ public class OfficeLetterVO {
 			this.officeLetterFileList = officeLetterFileList;
 		}
 	}
-	
+
 }

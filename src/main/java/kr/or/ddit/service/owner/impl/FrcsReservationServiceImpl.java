@@ -44,5 +44,17 @@ public class FrcsReservationServiceImpl implements IFrcsReservationService {
 	public List<FrcsReservationVO> selectResvList(OwnerPaginationInfoVO<FrcsReservationVO> pagingVO) {
 		return mapper.selectResvList(pagingVO);
 	}
+
+	@Override
+	public ServiceResult resvUpdate(FrcsReservationVO frcsResvVO) {
+		ServiceResult result = null;
+		int status = mapper.resvUpdate(frcsResvVO);
+		if(status > 0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
 	
 }

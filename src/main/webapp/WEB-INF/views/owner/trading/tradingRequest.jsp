@@ -85,7 +85,7 @@
 		                                    <th style="text-align:center; width:100px;">가맹점명</th>
 		                                    <th style="text-align:center; width:200px;">위치</th>
 		                                    <th style="text-align:center; width:150px;">제품명</th>
-		                                    <th style="text-align:center; width:150px;">보유수량</th>
+		                                    <th style="text-align:center; width:150px;">예상 보유수량</th>
 		                                    <th style="text-align:center; width:150px;"></th>
 		                                </tr>
 		                            </thead>
@@ -262,11 +262,15 @@ $(function(){
 					var vdprodCd = res[i].vdprodCd;
 					str += '<tr><td><div><input type="hidden" value="'+frcsId+'" class="frcsId2">';
 					str += '<input type="hidden" value="'+vdprodCd+'" class="vdprodCd"></div></td>';
-					str += '<td style="text-align:center">'+frcsName+'</td>';
+					str += '<td style="text-align:center" class="frcsName">'+frcsName+'</td>';
 					str += '<td style="text-align:center">'+frcsAdd+'</td>';
-					str += '<td style="text-align:center">'+vdprodName+'</td>';
+					str += '<td style="text-align:center" class="vdprodName">'+vdprodName+'</td>';
 					str += '<td style="text-align:center">'+invntryQy+'</td>';
+					if(invntryQy>0){
 					str += '<td style="text-align:center"><button type="button" class="btn btn-info tradeBtn">트레이딩 신청</button></td></tr>';
+					}else{
+					str += '<td style="text-align:center"><button type="button" class="btn btn-info tradeBtn" disabled>트레이딩 신청</button></td></tr>'
+					}
 				}
 								
 				$("#addArea").html(str);
@@ -281,15 +285,18 @@ $(function(){
 		// 선택한 가맹점 코드
 		var frcsId2 = $(this).closest('tr').find('.frcsId2').val();
 		var vdprodCd = $(this).closest('tr').find('.vdprodCd').val();
+		var frcsName = $(this).closest('tr').find('.frcsName').text();
+		var vdprodName = $(this).closest('tr').find('.vdprodName').text();
 		
 		console.log(frcsId2);
 		console.log(vdprodCd);
-		
+		var text = "요청 매장 : " + frcsName + "<br>";
+		text += "요청 재료 : " + vdprodName ;
 		// 모달에 요청 개수를 몇개할건지가 뜨고
 		// 최종확인버튼을 누르면 트레이딩 테이블에 insert되도록
 		Swal.fire({
             title: "트레이딩 수량 입력",
-            text: "트레이딩을 원하는 수량을 입력해주세요.",
+            html: text,
             input : "number",
             inputAttributes: {
                 min: 1, // 최소값 1로 설정
@@ -322,7 +329,18 @@ $(function(){
                     	data : JSON.stringify(data),
                     	contentType : "application/json; charset=utf-8",
         				success : function(res){
-							console.log(res);        					
+        					
+        					if(res === "OK"){
+        						Swal.fire({
+        				            title: "트레이딩 신청 완료",
+        				            text: "정상적으로 신청 되었습니다",
+        				            confirmButtonText: "확인",
+        				            icon: "success",
+        				            preConfirm: function () {
+        				                location.href = "/owner/tradingList.do";
+        				            }
+        				        });
+        					}
         				}
                      });
                  }
