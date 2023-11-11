@@ -19,8 +19,8 @@ public class FrcsReservationServiceImpl implements IFrcsReservationService {
 	private FrcsReservationMapper mapper;
 
 	@Override
-	public List<FrcsReservationVO> frcsResvList(String frcsId) {
-		return mapper.frcsResvList(frcsId);
+	public List<FrcsReservationVO> frcsResvList(String resvNo) {
+		return mapper.frcsResvList(resvNo);
 	}
 
 	@Override
@@ -73,5 +73,6 @@ public class FrcsReservationServiceImpl implements IFrcsReservationService {
 		}
 		return result;
 	}
-	
+
+
 }

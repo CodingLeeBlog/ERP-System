@@ -17,23 +17,11 @@ public class MyCouponServiceImpl implements IMyCouponService {
 	@Inject
 	private MyCouponMapper mycouponMapper;
 	
-	/**
-	 * 나의 쿠폰함 내역 조회 서비스 로직
-	 * 
-	 * @param memId 회원아이디
-	 * @return List<MyCouponVO> 타입의 객체 리턴
-	 */
 	@Override
 	public List<MyCouponVO> myCouponList(String memId) {
 		return mycouponMapper.myCouponList(memId);
 	}
 
-	/**
-	 * 회원 쿠폰 생성 서비스 로직
-	 * 
-	 * @param mycouponVO 객체
-	 * @return result
-	 */
 	@Override
 	public ServiceResult create(MyCouponVO mycouponVO) {
 		

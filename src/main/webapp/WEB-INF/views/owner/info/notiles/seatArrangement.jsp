@@ -179,12 +179,7 @@
             $(".box").each(function() {
                 seatData.push({
                 	seatCd: $(this).data('id'), // 박스의 ID 또는 다른 속성 데이터
-//                     text: $(this).text()    
-//                     left: $(this).css('left'),
-//                     top: $(this).css('top'),
-//                     rotate: $(this).css('rotate')
-//                     rotate: $(this).css('transform')
-					seatAngle: $(this).attr("style")
+					seatStyle: $(this).attr("style")
                 });
             });
             

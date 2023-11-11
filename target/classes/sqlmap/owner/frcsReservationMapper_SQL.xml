@@ -4,6 +4,31 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.mapper.owner.FrcsReservationMapper">
 
+	<resultMap type="frcsResvVO" id="frcsResvMap">
+		<result property="resvNo" column="resv_no"/>
+		<result property="memId" column="mem_id"/>
+		<result property="resvMcnt" column="resv_mcnt"/>
+		<result property="resvTime" column="resv_time"/>
+		<result property="resvDate" column="resv_date"/>
+		<result property="resvYn" column="resv_yn"/>
+		<result property="resvState" column="resv_state"/>
+		<result property="resvAccDate" column="resv_acc_date"/>
+		<result property="resvNote" column="resv_note"/>
+		<result property="seatCd" column="seat_cd"/>
+		<result property="resvPrice" column="resv_price"/>
+		<result property="reviewYn" column="review_yn"/>
+		<collection property="resvMenuList" resultMap="MenuListMap"></collection>
+	</resultMap>
+	
+	<resultMap type="MenuListVO" id="MenuListMap">
+		<result property="menuCd" column="menu_cd"/>
+		<result property="frcsId" column="frcs_id"/>
+		<result property="menuCnt" column="menu_cnt"/>
+		<result property="memId" column="mem_id"/>
+		<result property="resvNo" column="resv_no"/>
+		<result property="menuName" column="MENU_NAME"/>
+	</resultMap>
+	
 	<sql id="resvSearch">
 		<if test="searchType != null and searchType == 'content'">
 			and (resv_note like '%'||#{searchWord}||'%')
@@ -16,76 +41,51 @@
 	<!-- 예약 메뉴 상세보기 -->
 	<select id="frcsResvList" parameterType="string" resultType="frcsResvVO">
 	
-	SELECT
-      b.MENU_CD
-      , b.FRCS_ID
-      , b.MENU_CNT
-      , c.MENU_NAME
-      , c.MENU_PRICE
-	FROM
-	    mem_menu b
-	left join HEAD_MENU c on b.MENU_CD = c.MENU_CD
-	where
-	     b.RESV_NO = #{resvNo}
+		SELECT
+	      b.MENU_CD
+	      , b.RESV_NO
+	      , b.FRCS_ID
+	      , b.MENU_CNT
+	      , c.MENU_NAME
+	      , c.MENU_PRICE
+		FROM
+		    mem_menu b
+		left join HEAD_MENU c on b.MENU_CD = c.MENU_CD
+		where
+		     b.RESV_NO = #{resvNo}
 	
-<!-- 		SELECT -->
-<!-- 		      a.resv_no -->
-<!-- 			  , a.mem_id -->
-<!-- 			  , a.resv_mcnt -->
-<!-- 			  , a.resv_time -->
-<!-- 			  , a.resv_date -->
-<!-- 			  , a.resv_yn -->
-<!-- 			  , a.resv_state -->
-<!-- 			  , a.resv_acc_date -->
-<!-- 			  , a.resv_note -->
-<!-- 			  , a.seat_cd -->
-<!-- 			  , a.resv_price -->
-<!-- 			  , a.review_yn -->
-<!-- 			  , b.MENU_CD -->
-<!-- 			  , b.FRCS_ID -->
-<!-- 			  , b.MENU_CNT -->
-<!-- 			  , c.MENU_NAME -->
-<!-- 			  , c.MENU_PRICE -->
-<!-- 		FROM -->
-<!-- 		    reservation a -->
-<!-- 		left join mem_menu b on a.mem_id = b.mem_id -->
-<!-- 		left join HEAD_MENU c on b.MENU_CD = c.MENU_CD -->
-<!-- 		where -->
-<!-- 	    	 b.frcs_id = #{frcsId} -->
 	</select>
 	
 	<!-- 예약 리스트 -->
-	<select id="selectResvList" parameterType="pagingVO" resultType="frcsResvVO">
+	<select id="selectResvList" parameterType="pagingVO" resultMap="frcsResvMap">
 		select 
 			b.*
 		from(
 			select 
 				a.*, row_number() over (order by a.resv_no desc) rnum
 			from (
-				SELECT
-		    a.resv_no
-		  , a.resv_mcnt
-		  , a.resv_time
-		  , a.resv_date
-		  , a.resv_yn
-		  , a.resv_state
-		  , a.resv_acc_date
-		  , a.resv_note
-		  , a.seat_cd
-		  , a.resv_price
-		  , a.review_yn
-		  , b.frcs_id
-		  , b.mem_id
-		FROM
-		    reservation a
-		left join (select distinct frcs_id, mem_id from mem_menu ) b 
-    		on a.mem_id = b.mem_id
-				where
-					1 = 1
-					and b.FRCS_ID = #{frcsId}
-				<include refid="resvSearch"/>
-				order by 
-					a.resv_no desc
+				SELECT  a.resv_no
+				      , a.resv_mcnt
+				      , a.resv_time
+				      , a.resv_date
+				      , a.resv_yn
+				      , a.resv_state
+				      , a.resv_acc_date
+				      , a.resv_note
+				      , a.seat_cd
+				      , a.resv_price
+				      , a.review_yn
+				      , b.menu_cd
+				      , (SELECT C.MENU_NAME FROM HEAD_MENU C WHERE C.MENU_CD = B.MENU_CD) MENU_NAME
+				      , b.frcs_id
+				      , b.menu_cnt
+				      , b.mem_id
+				FROM  reservation a left outer join mem_menu b on(a.resv_no = b.resv_no)
+				where 1 = 1
+				AND   b.FRCS_ID =  #{frcsId}
+			<include refid="resvSearch"/>
+		order by 
+			a.resv_no desc
 			) a
 		) b
 		<![CDATA[

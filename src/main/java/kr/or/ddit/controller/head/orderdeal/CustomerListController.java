@@ -3,7 +3,6 @@ package kr.or.ddit.controller.head.orderdeal;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;

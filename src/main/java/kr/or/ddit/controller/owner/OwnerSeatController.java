@@ -66,16 +66,16 @@ public class OwnerSeatController {
 			
 			log.info("seatCd : " + seatVO.getSeatCd());
 			log.info("seatId : " + idService.getFrcsId());
-			log.info("seatAngle : " + seatVO.getSeatAngle());
+			log.info("seatStyle : " + seatVO.getSeatStyle());
 			
 			String seatCd = seatVO.getSeatCd();
 			String frcsId = idService.getFrcsId();
-			String seatAngle = seatVO.getSeatAngle();
+			String seatStyle = seatVO.getSeatStyle();
 			
 			FrcsSeatVO seat = new FrcsSeatVO();
 			seat.setSeatCd(seatCd);
 			seat.setFrcsId(frcsId);
-			seat.setSeatAngle(seatAngle);
+			seat.setSeatStyle(seatStyle);
 			
 			service.seatRegister(seat);
 		}

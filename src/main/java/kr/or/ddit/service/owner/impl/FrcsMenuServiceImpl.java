@@ -39,12 +39,6 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 		return frcsmenuMapper.resfrcsMenuList(frcsId);
 	}
 	
-	/**
-	 * 마른안주 목록 조회 서비스 로직
-	 * 
-	 * @param frcsId 가맹점코드
-	 * @return List<FrcsMenuVO> 타입의 객체 리턴
-	 */
 	@Override
 	public List<FrcsMenuVO> dryfrcsMenuList(String frcsId) {
 		
@@ -61,12 +55,6 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 		return dryMenu;
 	}
 	
-	/**
-	 * 튀김안주 목록 조회 서비스 로직
-	 * 
-	 * @param frcsId 가맹점코드
-	 * @return List<FrcsMenuVO> 타입의 객체 리턴
-	 */
 	@Override
 	public List<FrcsMenuVO> friedfrcsMenuList(String frcsId) {
 		
@@ -83,12 +71,6 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 		return friedMenu;
 	}
 	
-	/**
-	 * 식사 목록 조회 서비스 로직
-	 * 
-	 * @param frcsId 가맹점코드
-	 * @return List<FrcsMenuVO> 타입의 객체 리턴
-	 */
 	@Override
 	public List<FrcsMenuVO> mainfrcsMenuList(String frcsId) {
 		
@@ -105,12 +87,6 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 		return mainMenu;
 	}
 	
-	/**
-	 * 주류 목록 조회 서비스 로직
-	 * 
-	 * @param frcsId 가맹점코드
-	 * @return List<FrcsMenuVO> 타입의 객체 리턴
-	 */
 	@Override
 	public List<FrcsMenuVO> drinkfrcsMenuList(String frcsId) {
 		
@@ -130,8 +106,6 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 	/**
 	 * 매장 페이지 회원 예약 등록  및 쿠폰 사용 서비스 로직
 	 *
-	 * @param resVO 타입의 객체
-	 * @return result
 	 */
 	@Override
 	public ServiceResult resRegister(ResVO resVO, AlarmVO alarmVO) {

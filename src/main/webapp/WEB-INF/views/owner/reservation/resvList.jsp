@@ -86,7 +86,6 @@
 				                                            </div>
 				                                        </td>
 				                                        <td>
-<%-- 				                                            <a href="/" class="text-body fw-bold">${resv.resv }</a> --%>
 															<fmt:formatDate value="${resv.resvDate }" pattern="yyyy-MM-dd"/>
 				                                        </td>
 				                                        <td>${resv.resvTime }</td>
@@ -104,7 +103,9 @@
 				                                            </span></h5>
 				                                        </td>
 				                                        <td>${resv.resvNote }</td>
-				                                        <td><h5><a href="/" class="text-body" data-bs-toggle="modal" data-bs-target="#${resv.resvNo }"><span class="badge badge-primary-lighten">예약상세/수정</span></a></h5></td>
+				                                        <td>
+				                                        	<h5><a href="/" class="text-body" id="resvModalBtn" data-bs-toggle="modal" data-bs-target="#${resv.resvNo }"><span class="badge badge-primary-lighten">예약상세/수정</span></a></h5>
+				                                        </td>
 				                                    </tr>
 		                                		</c:forEach>
 	                                		</c:otherwise>
@@ -182,10 +183,11 @@
 														<div class="row mb-2">
 															<label class="col-3 col-form-label">메뉴</label>
 															<div class="col-9">
-																<c:set value="${resvMenuList }" var="resvmenuList" />
-																<c:forEach items="${resvmenuList }" var="resvmenu">
-																	<p class="form-control-plaintext">${resvmenu.menuName } ${resvmenu.menuCnt }개</p>
-																</c:forEach>
+															<!-- resvmenuList : List<MenuListVO> -->
+															<c:set value="${resv.resvMenuList }" var="resvmenuList" />
+															<c:forEach var="menuListVO" items="${resvmenuList}" varStatus="stat">
+																<p class="form-control-plaintext">${menuListVO.menuName} ${menuListVO.menuCnt}개</p>
+															</c:forEach>																
 															</div>
 														</div>
 														

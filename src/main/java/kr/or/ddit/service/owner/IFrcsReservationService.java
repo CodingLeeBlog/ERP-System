@@ -8,7 +8,7 @@ import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 
 public interface IFrcsReservationService {
 
-	public List<FrcsReservationVO> frcsResvList(String frcsId);
+	public List<FrcsReservationVO> frcsResvList(String resvNo);
 	public ServiceResult resvStateUpdate(String resvNo);
 	public int selectResvCount(OwnerPaginationInfoVO<FrcsReservationVO> pagingVO);
 	public List<FrcsReservationVO> selectResvList(OwnerPaginationInfoVO<FrcsReservationVO> pagingVO);

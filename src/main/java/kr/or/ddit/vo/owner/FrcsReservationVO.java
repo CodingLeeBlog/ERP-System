@@ -1,9 +1,11 @@
 package kr.or.ddit.vo.owner;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import kr.or.ddit.vo.member.MenuListVO;
 import lombok.Data;
 
 @Data
@@ -23,9 +25,12 @@ public class FrcsReservationVO {
 	private int resvPrice;
 	private String reviewYn;
 	
+	private List<MenuListVO> resvMenuList;
+	
 	private String menuCd;
 	private String frcsId;
 	private String menuCnt;
-	
 	private String menuName;
+	
+	
 }

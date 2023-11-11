@@ -21,8 +21,7 @@ public class SalesAnalysisServiceImpl implements ISalesAnalysisService {
 	 * for문을 통해 리스트를 조회하고
 	 * case문을 통해 해당하는 월별 데이터 대입
 	 * 향상된 for문을 통해 최종 선택할 월의 데이터 리턴
-	 * 
-	 * @return List<HeadMonthVO> 타입으로 리턴 
+	 * return List<HeadMonthVO> 타입으로 리턴 
 	 */
 	@Override
 	public List<HeadMonthVO> headmonthChart() {
@@ -390,9 +389,7 @@ public class SalesAnalysisServiceImpl implements ISalesAnalysisService {
 	 * 해당년도 선택할 월별 총계
 	 * for문을 통해 리스트를 조회하고
 	 * 향상된 for문을 통해 최종 선택할 월의 데이터 리턴
-	 * 
-	 * @param month (선택한 월)
-	 * @return HeadMonthVO 타입으로 리턴
+	 * return HeadMonthVO 타입으로 리턴
 	 */
 	@Override
 	public HeadMonthVO selectheadmonthChart(HeadMonthVO month) {
@@ -449,8 +446,7 @@ public class SalesAnalysisServiceImpl implements ISalesAnalysisService {
 	 * 해당년도 all 선택시 ajax 서비스 로직
 	 * for문을 통해 리스트를 조회하고
 	 * 향상된 for문을 통해 최종 선택할 월의 데이터 리턴
-	 * 
-	 * @return HeadMonthVO 타입으로 리턴
+	 * return HeadMonthVO 타입으로 리턴
 	 */
 	@Override
 	public List<HeadMonthVO> allheadmonthChart() {
@@ -498,8 +494,7 @@ public class SalesAnalysisServiceImpl implements ISalesAnalysisService {
 	 * 해당년도 분기 선택시 ajax 서비스 로직
 	 * for문을 통해 리스트를 조회하고
 	 * 향상된 for문을 통해 최종 선택할 월의 데이터 리턴
-	 * 
-	 * @return HeadMonthVO 타입으로 리턴
+	 * return HeadMonthVO 타입으로 리턴
 	 */
 	@Override
 	public List<HeadMonthVO> quarterheadmonthChart() {
@@ -542,16 +537,7 @@ public class SalesAnalysisServiceImpl implements ISalesAnalysisService {
 		}
 		return headmonthList;
 	}
-	
-	
-	/**
-	 * 해당년도 분기 선택시  매출 상세 ajax 서비스 로직
-	 * for문을 통해 리스트를 조회하고
-	 * 향상된 for문을 통해 최종 선택할 월의 데이터 리턴
-	 * 
-	 * @param quater(선택한 분기)
-	 * @return HeadMonthVO 타입으로 리턴
-	 */
+
 	@Override
 	public List<HeadMonthVO> quarterheadmonthChartDetails(HeadMonthVO quater) {
 		List<HeadMonthVO> headmonthVO = mapper.quarterheadmonthChartDetails(quater);

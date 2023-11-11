@@ -156,10 +156,9 @@
 							</div>
 						</div>
 						<div class="card-body" id="seatBody">
-<!-- 							<div id="infospace"></div> -->
 							<div id="seatspace2">
 								<c:forEach items="${list }" var="seat">
-									<div class="box" data-id="${seat.seatCd}" style="${seat.seatAngle}">${seat.seatCd}</div>
+									<div class="box" data-id="${seat.seatCd}" style="${seat.seatStyle}">${seat.seatCd}</div>
 								</c:forEach>
 							</div>
 						</div>

@@ -82,23 +82,11 @@ public class MemberServiceImpl implements IMemberService {
 		return result;
 	}
 
-	/**
-	 * 회원의 정보를 조회하는 서비스 로직
-	 * 
-	 * @param memId 회원아이디
-	 * @return MemberVO 타입의 객체 리턴
-	 */
 	@Override
 	public MemberVO selectMember(String memId) {
 		return loginMapper.selectMember(memId);
 	}
 
-	/**
-	 * 회원 정보 수정하는 서비스 로직
-	 * 
-	 * @param memberVO 타입의 객체
-	 * @return result
-	 */
 	@Override
 	public ServiceResult memberUpdate(MemberVO memberVO) {
 		ServiceResult result = null;
@@ -111,24 +99,12 @@ public class MemberServiceImpl implements IMemberService {
 		return result;
 	}
 
-	/**
-	 * 창업문의 일련번호 인증 서비스 로직
-	 * 
-	 * @param ownerId 창업일련번호
-	 * @return OwnerVO 타입의 객체 리턴
-	 */
 	@Override
 	public OwnerVO ownerIdCheck(String ownerId) {
 		OwnerVO result = loginMapper.ownerIdCheck(ownerId);
 		return result;
 	}
 	
-	/**
-	 * 가맹점코드 인증 서비스 로직
-	 * 
-	 * @param frcsId 가맹점코드
-	 * @return FranchiseVO 타입긔 객체 리턴
-	 */
 	@Override
 	public FranchiseVO frcsIdCheck(String frcsId) {
 		FranchiseVO result = loginMapper.frcsIdCheck(frcsId);

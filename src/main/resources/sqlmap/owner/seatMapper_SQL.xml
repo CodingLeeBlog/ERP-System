@@ -7,7 +7,7 @@
 	<select id="frcsSeatList" parameterType="string" resultType="seatVO">
 		SELECT
 		    seat_cd
-		  , seat_angle
+		  , seat_style
 		FROM
 		    frcs_seat
 		where frcs_id = #{frcsId}
@@ -15,9 +15,9 @@
 	
 	<insert id="seatRegister" parameterType="seatVO" >
 		insert into FRCS_SEAT(
-			SEAT_CD, FRCS_ID, SEAT_XMAP, SEAT_YMAP, SEAT_ANGLE
+			SEAT_CD, FRCS_ID, SEAT_STYLE
 		) values (
-			#{seatCd}, #{frcsId}, 0, 0, #{seatAngle}
+			#{seatCd}, #{frcsId}, #{seatStyle}
 		)
 		
 	</insert>

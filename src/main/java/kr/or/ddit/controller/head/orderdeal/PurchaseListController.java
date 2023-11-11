@@ -20,7 +20,6 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.service.head.IPurchaseService;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.PurchaseVO;
-import kr.or.ddit.vo.head.VendorVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

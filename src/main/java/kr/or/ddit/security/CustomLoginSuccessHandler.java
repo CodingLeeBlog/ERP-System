@@ -22,10 +22,6 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
 	private RequestCache requestCache = new HttpSessionRequestCache();
 	
-	/**
-	 * 로그인한 정보에 따라 다른 url 이동
-	 *
-	 */
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {

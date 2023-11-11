@@ -10,4 +10,5 @@ public class MenuListVO {
 	private String menuCd;
 	private String frcsId;
 	private String menuCnt;
+	private String menuName;
 }

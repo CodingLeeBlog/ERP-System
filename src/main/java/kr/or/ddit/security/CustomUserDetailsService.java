@@ -17,10 +17,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Inject
 	private LoginMapper loginMapper;
 	
-	/**
-	 * 로그인 아이디, 패스워드를 통해 접근 권한 조회
-	 * 
-	 */
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		log.info("loadUserByUsername() 실행...!");

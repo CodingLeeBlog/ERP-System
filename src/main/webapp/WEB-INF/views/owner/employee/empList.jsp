@@ -675,7 +675,7 @@
 			$("#frcsEmpRspofcR").val("매니저");
 			$("#frcsEmpTelnoR").val("010-1234-5678");
 			$("#frcsEmpBrdtR").val("1996-11-17");
-			$("#frcsEmpSalaryR").val(2500000);
+			$("#frcsEmpSalaryR").val(300000);
 			$("#frcsEmpYnR").val("Y");
 		});
 

@@ -23,12 +23,6 @@ public class MemberReviewServiceImpl implements IMemberReviewService {
 	@Inject
 	private MyResMapper myresMapper;
 	
-	/**
-	 * 리뷰 쓰기 서비스 로직
-	 * 
-	 * @param reviewVO, resVO, alarmVO
-	 * @return result
-	 */
 	@Override
 	public ServiceResult create(ReviewVO reviewVO, ResVO resVO, AlarmVO alarmVO) {
 		
@@ -64,12 +58,6 @@ public class MemberReviewServiceImpl implements IMemberReviewService {
 		return result;
 	}
 
-	/**
-	 * 나의 리뷰 내역 조회 서비스 로직
-	 * 
-	 * @param memId 회원 아이디
-	 * @return List<ReviewVO> 타입의 객체 리턴
-	 */
 	@Override
 	public List<ReviewVO> myReviewList(String memId) {
 		return memberreviewMapper.myReviewList(memId);
