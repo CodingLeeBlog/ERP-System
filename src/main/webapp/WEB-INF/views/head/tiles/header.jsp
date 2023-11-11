@@ -1,5 +1,143 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<sec:authentication property="principal.member" var="member"/>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<!-- weather css -->
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/assets/css/weather/weather-icons.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/assets/css/weather/weather-icons.min.css">
+<%-- <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/assets/css/weather/weather-icons.wind.css"> --%>
+<%-- <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/assets/css/weather/weather-icons.wind.min.css"> --%>
+<!-- weather js -->
+<script src="${pageContext.request.contextPath }/resources/assets/js/weather/index.js"></script>
+<!-- weather font -->
+<script src="${pageContext.request.contextPath }/resources/assets/js/hyper-config.js"></script>
+<script type="text/javascript">
+
+let today = new Date();
+
+let hours = today.getHours();		// 시
+let minutes = today.getMinutes();	// 분
+let minute = parseInt(minutes);
+let hour = parseInt(hours);
+console.log("parsing한 hour -> " + hour);
+hour = hour - 1;
+console.log("hour-1 한 값 -> " + hour);
+
+if(minute < 10){
+	minutes = "0" + minute;
+}
+
+if(hour < 10){
+	hour = "0" + hour;
+}
+
+let basehour = (hour+""+minutes);
+
+console.log("base_time에 들어갈 시/분 -> " + basehour);
+
+
+// $.getJSON("https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=mNJbZGrK%2BS6KbfQwh0IBJq0E1WaImT1BBASD4Vw1Q9%2BI1%2BiWktR4Go1ypzLt8TAWfKp9Yh25Y2bTrpYJtfZauw%3D%3D&pageNo=1&numOfRows=1000&dataType=JSON&base_date=20231106&base_time=0600&nx=" + ${member.nx} + "&ny=" + ${member.ny},
+var url = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=mNJbZGrK%2BS6KbfQwh0IBJq0E1WaImT1BBASD4Vw1Q9%2BI1%2BiWktR4Go1ypzLt8TAWfKp9Yh25Y2bTrpYJtfZauw%3D%3D&pageNo=1&numOfRows=1000&dataType=JSON&base_date=" + ${member.baseDate} + "&base_time="+basehour+"&nx=67&ny=100";
+// var url = "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=mNJbZGrK%2BS6KbfQwh0IBJq0E1WaImT1BBASD4Vw1Q9%2BI1%2BiWktR4Go1ypzLt8TAWfKp9Yh25Y2bTrpYJtfZauw%3D%3D&pageNo=1&numOfRows=1000&dataType=JSON&base_date=" + ${member.baseDate} + "&base_time=1400&nx=67&ny=100";
+console.log(url);
+$.getJSON(url,
+function(data){
+    console.log(data);
+    console.log(data.response.body.items.item[3].obsrValue);
+    var item = data.response.body.items.item[3];
+    let content = item.baseDate + "," + item.baseTime + "," + item.obsrValue + "입니다.";
+    
+    var pty = data.response.body.items.item[0].obsrValue;		// 강수형태
+    var reh = data.response.body.items.item[1].obsrValue;		// 습도
+    var rn1 = data.response.body.items.item[2].obsrValue;		// 1시간 강수량
+    var temp = data.response.body.items.item[3].obsrValue;		// 기온
+    var uuu = data.response.body.items.item[4].obsrValue;		// 동서바람성분
+    var vec = data.response.body.items.item[5].obsrValue;		// 풍향
+    var vvv = data.response.body.items.item[6].obsrValue;		// 남북바람성분
+    var wsd = data.response.body.items.item[7].obsrValue;		// 풍속
+    
+    console.log(content);
+    console.log("강수형태 -> " + pty);
+    console.log("습도 -> " + reh);
+    console.log("1시간 강수량 -> " + rn1);
+    console.log("기온 -> " + temp);
+    console.log("동서바람성분 -> " + uuu);
+    console.log("풍향 -> " + vec);
+    console.log("남북바람성분 -> " + vvv);
+    console.log("풍속 -> " + wsd);
+    
+    var str = "";
+    var path = "${pageContext.request.contextPath }/resources/assets/svg/animation-ready/";
+    
+    // 온도(temp) 처리
+    tp = parseInt(temp);
+    var tempImg = "thermometer-celsius.svg";
+    if(tp <= 0){
+    	tempImg = "thermometer-colder.svg";
+    }
+    $('.first-line .temp').html("<img src='"+path+tempImg+"' style='width: 35px; height: 35px;'>"+temp);
+    
+    // 습도(reh)
+    $('.second-line .humidity').html("<img src='"+path+"humidity.svg' style='width: 35px; height: 35px;'>"+reh);
+    
+    // 풍속(wsd)
+    console.log("wsd : " + parseInt(wsd));
+    var wsdInt = parseInt(wsd);
+   	$('.third-line .wind').html("<img src='"+path+"wind-beaufort-"+wsdInt+".svg' style='width: 35px; height: 35px;'>");
+    
+    // 1시간 강수량
+    // 0.0 ~ 0.49 : 쩅
+    // 0.5 ~ 3 : 조금 내림
+    // 3 ~ : 강하게 내림
+    var rn1Float = parseFloat(rn1);
+   	var rn1Img = "clear-day.svg";
+    if(rn1Float >= 0.5 && rn1Float < 3){
+    	rn1Img = "drizzle.svg";
+    }else if(rn1Float >= 3){
+    	rn1Img = "rain.svg";
+    }
+    $('.fourth-line .precipitation').html("<img src='"+path+rn1Img+"' style='width: 35px; height: 35px;'>"+rn1);
+    
+//     $('.weather').text(content);
+
+});
+    
+    
+setInterval(myTimer, 1000); // 1초마다 호출되게 한다.
+
+function myTimer() {
+    let today = new Date(); //데이트객체생성
+    let y = today.getFullYear();
+    let m = today.getMonth() + 1; //0부터 시작하므로 +1을 더해야 현재 월 이 된다.
+    let d = today.getDate(); //일 값을 받아낸다.
+    let day = today.getDay(); // 요일의 값을 받아낸다.
+    let weekday = new Array(7); // 어레이의 각 요일을 할당하고
+    weekday[0] = "Sunday";
+    weekday[1] = "Monday";
+    weekday[2] = "Tuesday";
+    weekday[3] = "Wednesday";
+    weekday[4] = "Thursday";
+    weekday[5] = "Friday";
+    weekday[6] = "Saturday";
+
+    let t_time = today.toLocaleTimeString();
+
+    $(".today-time .year").text(y);
+    $(".today-time .month").text(m);
+    $(".today-time .date").text(d);
+    $(".day").text(weekday[today.getDay()]); //어레이의 요일의 값을 할당해 요일 출력
+    $(".today-time .todayTimes").text(t_time);
+}  
+$(function(){
+	let area = '대전광역시 오류동';
+	$(".areas").text(area);
+});
+
+</script>
+
         <!-- 해더 시작 -->
             <!-- ========== 상단 툴바 시작 ========== -->
             <div class="navbar-custom">
@@ -40,71 +178,35 @@
                           </div>
                       </button>
 
-                      <!-- 상단 툴바 검색하기 -->
-                      <div class="app-search dropdown d-none d-lg-block">
-                          <form>
-                              <div class="input-group" >
-                                  <input type="search" class="form-control dropdown-toggle" placeholder="검색하기..." id="top-search">
-                                  <span class="mdi mdi-magnify search-icon"></span>
-                                  <button class="input-group-text btn btn-primary" type="submit" style="background-color:#abb2b8;">검색</button>
-                              </div>
-                          </form>
-
-               <!-- 상단 툴바 검색하기 누르면 나오는 내용 -->
-                          <div class="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
-                              <!-- item-->
-                              <div class="dropdown-header noti-title">
-                                  <h5 class="text-overflow mb-2">Found <span class="text-danger">17</span> results</h5>
-                              </div>
-
-                              <!-- item-->
-                              <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                  <i class="uil-notes font-16 me-1"></i>
-                                  <span>Analytics Report</span>
-                              </a>
-
-                              <!-- item-->
-                              <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                  <i class="uil-life-ring font-16 me-1"></i>
-                                  <span>How can I help you?</span>
-                              </a>
-
-                              <!-- item-->
-                              <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                  <i class="uil-cog font-16 me-1"></i>
-                                  <span>User profile settings</span>
-                              </a>
-
-                              <!-- item-->
-                              <div class="dropdown-header noti-title">
-                                  <h6 class="text-overflow mb-2 text-uppercase">Users</h6>
-                              </div>
-
-                              <div class="notification-list">
-                                  <!-- item-->
-                                  <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                      <div class="d-flex">
-                                          <img class="d-flex me-2 rounded-circle" src="${pageContext.request.contextPath }/resources/assets/images/users/avatar-2.jpg" alt="Generic placeholder image" height="32">
-                                          <div class="w-100">
-                                              <h5 class="m-0 font-14">Erwin Brown</h5>
-                                              <span class="font-12 mb-0">UI Designer</span>
-                                          </div>
-                                      </div>
-                                  </a>
-
-                                  <!-- item-->
-                                  <a href="javascript:void(0);" class="dropdown-item notify-item">
-                                      <div class="d-flex">
-                                          <img class="d-flex me-2 rounded-circle" src="${pageContext.request.contextPath }/resources/assets/images/users/avatar-5.jpg" alt="Generic placeholder image" height="32">
-                                          <div class="w-100">
-                                              <h5 class="m-0 font-14">Jacob Deo</h5>
-                                              <span class="font-12 mb-0">Developer</span>
-                                          </div>
-                                      </div>
-                                  </a>
-                              </div>
-                          </div>
-                      </div>
+					<!-- 날씨 및 위치 -->				
+					  <div id="today">
+		           	    	<div class="col-12">
+		               			<div class="row">
+						        <div class="today-weather col-5 ms-2">
+						            <h6 class="fs-5 text" style="color: white; font-weight: bold;">오늘의 날씨<span style="color: white; font-weight: bold;"> (</span><span style="color: white; font-weight: bold;" class="day">000</span><span style="color: white; font-weight: bold;">)</span></h6>
+						           <span style="color: white; font-weight: bold;" class="fs-6 text">위치 : <span style="color: white; font-weight: bold;" class="areas"></span></span>
+						        </div>
+						            <div class="weather-text col-4">
+						            	<div class="col-12">
+						           			 <div class="row">
+						            				<div class="col-3">
+								                		<div class="first-line "><span style="color: white; font-weight: bold;" class="first-span"><span style="color: white; font-weight: bold;" class="temp"></span>&#8451</span></div>
+								                  	</div>
+								                  	<div class="col-3">
+								                		<div class="second-line"> <span style="color: white; font-weight: bold;" class="second-span"><span style="color: white; font-weight: bold;" class="humidity"></span>%</span></div>
+								                	</div>
+								                  	<div class="col-3">
+								                		<div class="third-line"><span style="color: white; font-weight: bold;" class="wind"></span><span style="color: white; font-weight: bold;">km/h</span></div>
+								                	</div>
+								                  	<div class="col-3">
+										                <div class="fourth-line"><span style="color: white; font-weight: bold;" class=precipitation></span><span style="color: white; font-weight: bold;">mm</span></div>
+								                	</div>
+						         			  </div>
+						          		 </div>
+						            </div>
+						        </div>
+						    </div>
+		               </div>                      
                   </div>
 
             <!-- 상단 툴바 화면 작아졌을때 돋보기 누르면 나오는 부분 -->
@@ -120,11 +222,23 @@
                           </div>
                       </li>
 
+					<!-- 현재 시간 -->
+						<div class="weather">
+			               <div class="today-time">
+			               <h5><i class="fs-4 text uil-clock-eight" style="color: white; font-weight: bold;"></i> &nbsp;
+								<span class="year" style="color: white; font-weight: bold;">0000</span><span style="color: white; font-weight: bold;">.</span>
+			             	    <span class="month" style="color: white; font-weight: bold;">00</span><span style="color: white; font-weight: bold;">.</span>
+								<span class="date" style="color: white; font-weight: bold;">00</span><span style="color: white; font-weight: bold;">.</span>
+								<span class="todayTimes" style="color: white; font-weight: bold;">00000</span>
+							</h5>
+							</div>
+						</div>
+
                       <!-- 국가별 언어 -->
                       <li class="dropdown">
                         <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                            <img src="${pageContext.request.contextPath }/resources/assets/images/flags/us.jpg" alt="user-image" class="me-0 me-sm-1" height="12">
-                            <span class="align-middle d-none d-lg-inline-block text-white">English</span> <i class="mdi mdi-chevron-down d-none d-sm-inline-block align-middle text-white"></i>
+                            <img src="${pageContext.request.contextPath }/resources/assets/images/flags/korea.jpg" style="width: 26px; height: 17px;"  alt="user-image" class="me-0 me-sm-1" height="12">
+                            <span class="align-middle d-none d-lg-inline-block text-white">Korea</span> <i class="mdi mdi-chevron-down d-none d-sm-inline-block align-middle text-white"></i>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated">
 
@@ -388,20 +502,20 @@
                                       <a href="/head/storeInquiry.do">가맹점조회</a>
                                   </li>
                                   <li>
+                                      <a href="/head/officeLetter.do">공문관리</a>
+                                  </li>
+                                  <li>
+                                      <a href="/head/inspection.do">점검(위생)관리</a>
+                                  </li>
+                                  <li>
                                       <a href="/head/salesAnalysis.do">본사매출분석</a>
                                   </li>
                                   <li>
                                       <a href="/head/franchiseSalesAnalysis.do">가맹점매출분석</a>
                                   </li>
-                                  <li>
-                                      <a href="/head/officeLetter.do">공문관리</a>
-                                  </li>
-                                  <li>
-                                      <a href="/head/maintenanceCost.do">관리비관리</a>
-                                  </li>
-                                  <li>
-                                      <a href="/head/inspection.do">점검(위생)관리</a>
-                                  </li>
+<!--                                   <li> -->
+<!--                                       <a href="/head/maintenanceCost.do">관리비관리</a> -->
+<!--                                   </li> -->
                               </ul>
                           </div>
                       </li>
@@ -415,60 +529,28 @@
                           <div class="collapse" id="sidebarOrder">
                               <ul class="side-nav-second-level">
                                   <li>
-                                      <a href="/head/storeOrderHistory.do">가맹점주문내역</a>
+                                      <a href="/head/customerList.do">거래처관리</a>
                                   </li>
                                   <li>
-                                      <a href="/head/purchaseList.do">매입내역관리</a>
+                                      <a href="/head/purchaseList.do">본사발주내역관리</a>
                                   </li>
                                   <li>
                                       <a href="/head/headInventoryList.do">본사재고관리</a>
                                   </li>
                                   <li>
-                                      <a href="/head/customerList.do">거래처관리</a>
-                                  </li>
-                              </ul>
-                          </div>
-                      </li>
-
-
-                      <li class="side-nav-item">
-                          <a data-bs-toggle="collapse" href="#sidebarEmployee" aria-expanded="false" aria-controls="sidebarEmployee" class="side-nav-link">
-                              <i class="uil-envelope"></i>
-                              <span> 직원관리 </span>
-                              <span class="menu-arrow"></span>
-                          </a>
-                          <div class="collapse" id="sidebarEmployee">
-                              <ul class="side-nav-second-level">
-                                  <li>
-                                      <a href="/head/">조직관리</a>
-                                  </li>
-                                  <li>
-                                      <a href="/head/">직원교육관리</a>
-                                  </li>
-                                  <li>
-                                      <a href="/head/">근태급여관리</a>
-                                  </li>
-                                  <li>
-                                      <a href="/head/">파견일정</a>
+                                      <a href="/head/storeOrderHistory.do">가맹점주문내역</a>
                                   </li>
                               </ul>
                           </div>
                       </li>
 
                       <li class="side-nav-item">
-                          <a data-bs-toggle="collapse" href="#sidebarMenu" aria-expanded="false" aria-controls="sidebarMenu" class="side-nav-link">
-                              <i class="uil-briefcase"></i>
-                              <span> 정보관리 </span>
-                              <span class="menu-arrow"></span>
-                          </a>
-                          <div class="collapse" id="sidebarMenu">
-                              <ul class="side-nav-second-level">
-                                  <li>
-                                      <a href="/head/menu.do">메뉴관리</a>
-                                  </li>
-                              </ul>
-                          </div>
-                      </li>
+					    <a href="/head/menu.do" class="side-nav-link">
+					        <i class="uil-briefcase"></i>
+					        <span>메뉴관리</span>
+					    </a>
+				     </li>
+
 
                       <li class="side-nav-item">
                           <a data-bs-toggle="collapse" href="#sidebarDashboards" aria-expanded="false" aria-controls="sidebarDashboards" class="side-nav-link">
@@ -509,6 +591,7 @@
         <!-- ========== Left Sidebar End ========== -->
 <script type="text/javascript">
 $(function(){
+	
 	var logoutForm = $("#logoutForm");
 	var logoutButton = $("#logoutButton");
 	var alarmBtn = $("#alarmBtn");
@@ -517,21 +600,21 @@ $(function(){
 	checkNotificationCount();
 	
 	// 알람 갯수에 따른 배치 깜빡임 시작/멈춤 이벤트
-// 	setTimeout(() => {
-// 	    if(alarmCount > 0){
-// 	    	startBlinking();
-// 	    }else{
-// 	    	stopBlinking();
-// 	    }
-// 	}, 300);
+	setTimeout(() => {
+	    if(alarmCount > 0){
+	    	startBlinking();
+	    }else{
+	    	stopBlinking();
+	    }
+	}, 300);
 	
 	logoutButton.on("click", function() {
 		logoutForm.submit();
 	});
 	
-// 	setInterval(() => {
-// 		checkNotificationCountCheck();	
-// 	}, 500);
+	setInterval(() => {
+		checkNotificationCountCheck();	
+	}, 500);
 	
 	// 알람 아이콘을 클릭했을때
 	alarmBtn.on("click", function(){
@@ -547,9 +630,9 @@ $(function(){
 	    badge.css("display", badge.css("display") === "none" ? "inline-block" : "none");
 	}
 
-// 	function startBlinking() {
-// 		blinkInterval = setInterval(blinkBadge, 300); // 0.3초 간격으로 깜빡임
-// 	}
+	function startBlinking() {
+		blinkInterval = setInterval(blinkBadge, 300); // 0.3초 간격으로 깜빡임
+	}
 
 	function stopBlinking(str) {
 		clearInterval(blinkInterval);

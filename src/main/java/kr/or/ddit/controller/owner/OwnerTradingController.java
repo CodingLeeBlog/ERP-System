@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.service.owner.IFrcsIdService;
+import kr.or.ddit.service.owner.IFrcsMyPageService;
 import kr.or.ddit.service.owner.IFrcsTradingService;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.FrcsInventoryVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
@@ -34,12 +36,18 @@ public class OwnerTradingController {
 	@Inject
 	private IFrcsIdService commService;
 	
+	@Inject
+	private IFrcsMyPageService myPageService;
 	
 	@PreAuthorize("hasRole('ROLE_OWNER')")
 	@RequestMapping(value="/trading.do", method = RequestMethod.GET)
 	public String tradingRequest(Model model) {
 		
 		String frcsId= commService.getFrcsId();
+		
+		//헤더 오른쪽 관리자 영역
+		FranchiseVO frcsHead = myPageService.headerDetail(frcsId);
+		model.addAttribute("frcsHead", frcsHead);
 		
 		// 내 가맹점 위치 조회
 		FranchiseVO frcsVO = service.getLocation(frcsId);
@@ -77,22 +85,28 @@ public class OwnerTradingController {
 	// 트레이딩 신청
 	@ResponseBody
 	@RequestMapping(value="/tradingInsert.do", method = RequestMethod.POST)
-	public ResponseEntity<ServiceResult> tradingInsert(@RequestBody TradingVO tradVO){
+	public ResponseEntity<ServiceResult> tradingInsert(@RequestBody TradingVO tradVO, AlarmVO alarmVO){
 		
-		ServiceResult result = service.tradingInsert(tradVO);
+		ServiceResult result = service.tradingInsert(tradVO, alarmVO);
 		return new ResponseEntity<ServiceResult>(result,HttpStatus.OK);
 	}
 	
 	
 	// 트레이딩 내역
+	@PreAuthorize("hasRole('ROLE_OWNER')")
 	@RequestMapping(value="/tradingList.do", method = RequestMethod.GET)
 	public String tradingHistoryList(
 			@RequestParam(name="page", required=false, defaultValue = "1") int currentPage,
 			Model model) {
 		
+
 		String frcsId= commService.getFrcsId();
 		System.out.println(frcsId);
 	
+		//헤더 오른쪽 관리자 영역
+		FranchiseVO frcsHead = myPageService.headerDetail(frcsId);
+		model.addAttribute("frcsHead", frcsHead);
+		
 		// 페이징 처리
 		OwnerPaginationInfoVO<TradingVO> pagingVO = new OwnerPaginationInfoVO<TradingVO>();
 		
@@ -129,4 +143,26 @@ public class OwnerTradingController {
 		
 		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
+	
+	// 트레이딩 상세
+	@ResponseBody
+	@RequestMapping(value="/tradingDetail.do", method = RequestMethod.POST)
+	public ResponseEntity<FrcsInventoryVO> tradingDetail(@RequestBody FrcsInventoryVO frcsInventVO){
+		
+		FrcsInventoryVO inventVO = service.getDetail(frcsInventVO);
+		
+		return new ResponseEntity<FrcsInventoryVO>(inventVO, HttpStatus.OK);
+	}
+	
+	// 응답 트레이딩 상세
+	@ResponseBody
+	@RequestMapping(value="/tradingReqDetail.do", method = RequestMethod.POST)
+	public ResponseEntity<FrcsInventoryVO> tradingReqDetail(@RequestBody FrcsInventoryVO frcsInventVO){
+		
+		FrcsInventoryVO inventVO = service.getReqDetail(frcsInventVO);
+		
+		return new ResponseEntity<FrcsInventoryVO>(inventVO, HttpStatus.OK);
+	}
+	
+	
 }

@@ -110,4 +110,57 @@
 		where trad_no = #{tradNo}
 	</update>
 	
+	
+	<!-- 알림 -->
+	<select id="getMemFrcs" parameterType="String" resultType="String">
+	SELECT DISTINCT
+    c.MEM_ID
+	FROM
+	    TRADING a
+	LEFT OUTER JOIN TRADING b ON a.TRAD_NO = b.TRAD_NO
+	LEFT OUTER JOIN FRCS_OWNERSHIP c ON a.frcs_id = c.FRCS_ID
+	WHERE
+	    a.frcs_id = #{frcsId}
+	</select>   
+	
+	<select id="getReceiveMemId" parameterType="String" resultType="String">
+	SELECT DISTINCT
+	    c.MEM_ID
+	FROM
+	    TRADING a
+	LEFT OUTER JOIN TRADING b ON a.TRAD_NO = b.TRAD_NO
+	LEFT OUTER JOIN FRCS_OWNERSHIP c ON a.frcs_id2 = c.FRCS_ID
+	WHERE
+	    a.frcs_id2 = #{frcsId2}
+	</select>
+	
+	<insert id="insertAlarm" parameterType="alarmVO">
+	    INSERT INTO ALARM (
+	        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL, RECEIVEMEM_ID, TBL_NAME, TBL_NO
+	    ) VALUES (
+	        SEQ_ALARM.NEXTVAL, #{memId}, '트레이딩 확인하기!', SYSDATE, '/owner/tradingList.do', #{receiveMemId}, #{tblName}, #{tblNo}
+	    )
+	</insert>
+	
+	<!-- 금일 요청된 트레이딩 개수 -->
+	<select id="selectCount" parameterType="string" resultType="int">
+		select count(trad_no)
+		from trading
+		where frcs_id2 = #{frcsId} and trunc(trad_date,'MM') = trunc(sysdate,'MM')
+	</select>
+	
+	<!-- 요청 트레이딩 상세내역 -->
+	<select id="getDetail" parameterType="inventVO" resultType="inventVO">
+		select invntry_qy
+		from frcs_inventory
+		where vdprod_cd = #{vdprodCd} and frcs_id = #{frcsId}
+	</select>
+	
+	<!-- 요청 트레이딩 상세내역 -->
+	<select id="getReqDetail" parameterType="inventVO" resultType="inventVO">
+		select invntry_qy
+		from frcs_inventory
+		where vdprod_cd = #{vdprodCd} and frcs_id = #{frcsId}
+	</select>
+	
 </mapper>

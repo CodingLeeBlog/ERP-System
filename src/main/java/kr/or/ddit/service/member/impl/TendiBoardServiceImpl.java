@@ -37,6 +37,7 @@ public class TendiBoardServiceImpl implements ITendiBoardService{
 	public ServiceResult insertBoard(HttpServletRequest req, BoardVO boardVO, AlarmVO alarmVO) {
 		ServiceResult result = null;
 		int status = tendiboardMapper.insertBoard(boardVO);
+		
 		if(status > 0) {
 			
 			// 건의글 등록 알림 데이터 넣기

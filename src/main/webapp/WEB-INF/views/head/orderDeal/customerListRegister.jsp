@@ -81,6 +81,7 @@ function selectAll(selectAll){
                                                                                 <option value="소스">소스</option>
                                                                                 <option value="수산">수산</option>
                                                                                 <option value="냉동제품">냉동제품</option>
+                                                                                <option value="주류">주류</option>
                                                                             </select>
                                                                         </div>
                                                                     </div>
@@ -107,13 +108,13 @@ function selectAll(selectAll){
                                                                                             <label class="form-check-label" for="vendorCheck1">&nbsp;</label>
                                                                                         </div>
 																					</th>
-																					<th>제품코드</th>
-																					<th>제품명</th>
-																					<th>거래처코드</th>
-																					<th>재고잔량</th>
-																					<th>출고단가/최종입고단가</th>
-																					<th>유통기한시작일</th>
-																					<th>유통기한종료일</th>
+																					<th style="text-align: center;">제품코드</th>
+																					<th style="text-align: center;">제품명</th>
+																					<th style="text-align: center;">거래처코드</th>
+																					<th style="text-align: center;">재고잔량</th>
+																					<th style="text-align: center;">출고단가/최종입고단가</th>
+																					<th style="text-align: center;">유통기한시작일</th>
+																					<th style="text-align: center;">유통기한종료일</th>
 																				</tr>
 																			</thead>
 																			<tbody id="tbody">
@@ -267,6 +268,48 @@ $(function(){
 	var vdCategory = "";
 	var vendorName = $("#vendorName");
 	
+	function formatWon(number) {
+	    // 숫자를 한국 표준 통화 형식으로 포맷팅
+	    var formattedNumber = new Intl.NumberFormat('ko-KR', {
+	      style: 'currency',
+	      currency: 'KRW'
+	    }).format(number);
+	    
+	    // "₩" 통화 기호 제거
+	    formattedNumber = formattedNumber.replace("₩", "");
+	    
+	    // "(원)" 추가
+	    return formattedNumber + "(원)";
+	}
+	
+	function typeNumber(number) {
+	    // 숫자를 한국 표준 통화 형식으로 포맷팅
+	    var formattedNumber = new Intl.NumberFormat('ko-KR', {
+	      style: 'currency',
+	      currency: 'KRW'
+	    }).format(number);
+	    
+	    // "₩" 통화 기호 제거
+	    formattedNumber = formattedNumber.replace("₩", "");
+	    
+	    // "(원)" 추가
+	    return formattedNumber;
+	}
+	
+	function typeDate(dateString) {
+		  // 입력된 날짜 문자열을 Date 객체로 파싱
+		  var date = new Date(dateString);
+
+		  // 년, 월, 일을 가져와서 원하는 형식으로 조합
+		  var year = date.getFullYear();
+		  var month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 1을 더하고 2자리로 패딩
+		  var day = date.getDate().toString().padStart(2, '0'); // 일자를 2자리로 패딩
+
+		  // 원하는 형식으로 조합해서 반환
+		  var formattedDate = year + '/' + month + '/' + day;
+		  return formattedDate;
+		}
+	
 	vendorStatus.on("change", function(){
 		
 		vdCategory = vendorStatus.val();
@@ -331,18 +374,18 @@ $(function(){
 					html += "<tr class='checkBtn'>";
 					html += "	<td class='chk'>";
 					html += "		<div class='form-check'>";
-					html += "			<input type='checkbox' class='form-check-input' id='vendorCheck" + checkboxId +"' value='" + headInventoryVO.vdprodCd + "," + headInventoryVO.vdprodName + "," + headInventoryVO.vdCode +"," + headInventoryVO.vdremainQy +"," + headInventoryVO.vdforwardPrice +"," + headInventoryVO.hdprodLifestartday + "," + headInventoryVO.hdprodLifeendday + "," + headInventoryVO.vdrtrcvPrice + "," + headInventoryVO.vdmaxQy + "'>";
+					html += "			<input type='checkbox' class='form-check-input' id='vendorCheck" + checkboxId +"' value='" + headInventoryVO.vdprodCd + "," + headInventoryVO.vdprodName + "," + headInventoryVO.vdCode +"," + headInventoryVO.vdremainQy +"," + headInventoryVO.vdforwardPrice +"," + headInventoryVO.vdprodLifestartday + "," + headInventoryVO.vdprodLifeendday + "," + headInventoryVO.vdrtrcvPrice + "," + headInventoryVO.vdmaxQy + "'>";
 					html += "			<label class='form-check-label' for='vendorCheck" + checkboxId + "'>&nbsp;</label>";
 					html += "	</td>";
 					checkboxId++;
-					html += "	<td>"+headInventoryVO.vdprodCd+"</td>";
-					html += "	<td>"+headInventoryVO.vdprodName+"</td>";
-					html += "	<td>"+headInventoryVO.vdCode+"</td>";
-					html += "	<td>"+headInventoryVO.vdremainQy+"</td>";
+					html += "	<td style='text-align: center;'>"+headInventoryVO.vdprodCd+"</td>";
+					html += "	<td style='text-align: center;'>"+headInventoryVO.vdprodName+"</td>";
+					html += "	<td style='text-align: center;'>"+headInventoryVO.vdCode+"</td>";
+					html += "	<td style='text-align: center;'>"+typeNumber(headInventoryVO.vdremainQy)+"</td>";
 // 					html += "	<td>"+headInventoryVO.hdforwardPrice+"/"+headInventoryVO.hdrtrcvPrice+"</td>";
-					html += "	<td>"+headInventoryVO.vdforwardPrice+"</td>";
-					html += "	<td>"+headInventoryVO.vdprodLifestartday+"</td>";
-					html += "	<td>"+headInventoryVO.vdprodLifeendday+"</td>";
+					html += "	<td style='text-align: center;'>"+formatWon(headInventoryVO.vdforwardPrice)+"</td>";
+					html += "	<td style='text-align: center;'>"+typeDate(headInventoryVO.vdprodLifestartday)+"</td>";
+					html += "	<td style='text-align: center;'>"+typeDate(headInventoryVO.vdprodLifeendday)+"</td>";
 					html += "</tr>";
 					
 				});
@@ -359,9 +402,12 @@ $(function(){
         var checkedValues = [];
         
      // 체크된 체크박스의 값을 배열에 추가
-        checkedCheckboxes.each(function() {
+        checkedCheckboxes.each(function(i, item) {
+
+        	console.log("item ",i, item );
         	
         	if($(this).val() !== "selectAll"){
+        		
         	var values = $(this).val().split(","); // 값을 쉼표로 분리
 	            checkedValues.push({
 	                vdprodCd: values[0], // 첫 번째 값
@@ -379,25 +425,49 @@ $(function(){
      
         var dataObject = JSON.stringify(checkedValues);
         
-        console.log(dataObject);
+        console.log("dataObject : ", dataObject);
         
-        $.ajax({
-            type: "POST", 
-            url: "/head/vendorRegister.do",
-            beforeSend : function(xhr){
-				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-			},
-			contentType: "application/json; charset=UTF-8",
-            data: dataObject, // 전송할 데이터
-            success: function(res) {
-            		alert("등록성공!!");	
-            		location.href = "/head/customerList.do";
+        Swal.fire({
+            title: "거래처를 등록 하시겠습니까?",
+            text: "다시 되돌릴 수 없습니다. 신중하세요.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: "확인",
+            cancelButtonText: "취소",
+            // 확인 버튼 시 등록처리
+            preConfirm: function() {
+               
+            	$.ajax({
+                    type: "POST", 
+                    url: "/head/vendorRegister.do",
+                    beforeSend : function(xhr){
+        				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+        			},
+        			contentType: "application/json; charset=UTF-8",
+                    data: dataObject, // 전송할 데이터
+                    success: function(res) {
+                            Swal.fire({
+                                title: "알림",
+                                text: "승인이 완료되었습니다",
+                                confirmButtonText: "확인",
+                                icon: "success",
+                                preConfirm: function () {
+                                    location.href = "/head/customerList.do";
+                                }
+                            });
+                    },
+                    error: function(xhr, status, error) {
+                        // 오류 발생 시 처리하는 로직
+                        console.error(error);
+                    }
+                });
             },
-            error: function(xhr, status, error) {
-                // 오류 발생 시 처리하는 로직
-                console.error(error);
-            }
         });
+       // SweetAlarm 끝
+        
+        
 	});
 	
 });

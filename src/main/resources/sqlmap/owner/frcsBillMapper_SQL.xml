@@ -137,6 +137,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where frcs_id = #{frcsId} and fee_chargedate = #{feeChargedate}
 	</select>
 	
+	<!-- 납부일자 받아오기 -->
+	<select id="getSettleDate" parameterType="headfeeVO" resultType="date">
+		select fee_paydate
+		from fee
+		where frcs_id = #{frcsId} and fee_chargedate = #{feeChargedate}
+	
+	</select>
+	
 	<select id="getFeecode" parameterType="headfeeVO" resultType="string">
 		select fee_code
 		from fee
@@ -165,9 +173,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			select 'F'||to_char(#{thisMonth}, 'yyyyMM')||'_'|| to_char(seq_fee.nextval, 'FM00000') from dual
 		</selectKey>	
 		insert into fee(
-			fee_code, frcs_id, fee_dday, fee_totalpay, fee_status, fee_chargedate
+			fee_code, frcs_id, fee_dday, fee_totalpay, fee_status, fee_chargedate, fee_paydate
 			)values (
-			#{feeCode}, #{frcsId}, #{feeDday}, #{feeTotalpay}, 'X', #{feeChargedate}
+			#{feeCode}, #{frcsId}, #{feeDday}, #{feeTotalpay}, 'O', #{feeChargedate}, sysdate
 			)
 	</insert>
 	
@@ -177,12 +185,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			select 'F'||to_char(#{thisMonth}, 'yyyyMM')||'_'|| to_char(seq_fee.currval, 'FM00000') from dual
 		</selectKey>	
 		insert into frcsbill(
-			fee_code, frcs_id, frcs_amt, frcs_rowal, order_amt, trad_add, trad_redct, frcs_nonpayment, frcs_nonpaydate, frcsbill_overdue, settle_at
+			fee_code, frcs_id, frcs_amt, frcs_rowal, order_amt, trad_add, trad_redct, frcs_nonpayment, frcsbill_overdue, settle_at, settle_date
 			)values(
-			#{feeCode}, #{frcsId}, #{frcsAmt}, #{frcsRowal}, #{orderAmt}, #{tradAdd}, #{tradRedct}, 0, '없음', 0, 'N'
+			#{feeCode}, #{frcsId}, #{frcsAmt}, #{frcsRowal}, #{orderAmt}, #{tradAdd}, #{tradRedct}, 0, #{frcsbillOverdue}, 'Y', sysdate
 			)
 	</insert>
 	
+	<!-- 트레이딩 상세 내역(내가 요청한거) -->
+	<select id="getTradDetail" parameterType="map" resultType="tradVO">
+		 select vdprod_name, trad_qy, trad_amt
+        from trading t, head_inventory h
+        where t.vdprod_cd = h.vdprod_cd
+        and trunc(trad_date,'MM') = trunc(#{thisMonth},'MM')
+        and frcs_id = #{frcsId}
+	</select>
 	
+	<!-- 트레이딩 상세 내역(내가 보내준거) -->
+	<select id="getTradMinDetail" parameterType="map" resultType="tradVO">
+		 select vdprod_name, trad_qy, trad_amt
+        from trading t, head_inventory h
+        where t.vdprod_cd = h.vdprod_cd
+        and trunc(trad_date,'MM') = trunc(#{thisMonth},'MM')
+        and frcs_id2 = #{frcsId}
+	</select>
 	
 </mapper>

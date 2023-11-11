@@ -187,11 +187,22 @@ $(function(){
 	        type: "GET",
 	        url: "/elly/mailCheck.do?email=" + email,
 	        success:function(data){
-	            alert("해당 이메일로 인증번호호 발송이 완료되었습니다. \n 확인부탁드립니다.")
+				Swal.fire({
+					title: '알림창',
+					text: '해당 이메일로 인증번호호 발송이 완료되었습니다.',
+					icon: 'success',
+				})
 	            mailCheckInput.attr('disabled', false);
 	            console.log("data : "+data);
 	            code = data;
-        	}
+        	},
+			error : function(xhr, status, error) {
+				Swal.fire({
+					title: '경고',
+					text: '잘못된 이메일 인증번호입니다 !',
+					icon: 'warning',
+				})
+			}
 	    });
 	});
 	
@@ -256,27 +267,7 @@ $(function(){
 		updateForm.submit();
 
 	});
-	
-	imgFile.on("change", function(event){
-		var file = event.target.files[0];
-		
-		if(isImageFile(file)){
-			var reader = new FileReader();
-			reader.onload = function(e){
-				$("#profileImg").attr("src", e.target.result);
-			}
-			reader.readAsDataURL(file);
-		}else {
-			alert("이미지 파일을 선택해주세요!");
-		}
-	});
 });
-
-function isImageFile(file){
-	var ext = file.name.split(".").pop().toLowerCase(); // 파일명에서 확장자를 꺼낸다.
-	return ($.inArray(ext, ["jpg", "jpeg", "gif", "png"]) === -1 ? false : true);
-}
-
 
 function DaumPostcode(){
 	new daum.Postcode({

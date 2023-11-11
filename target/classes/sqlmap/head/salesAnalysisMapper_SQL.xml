@@ -4,71 +4,237 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.mapper.head.SalesAnalysisMapper">
 
-<select id="headyeartotalChart" resultType="headsalesTotalVO">
-select
-    a.yeartotalselng_price
-    , b.yeartotalfrcs_amt
-    , b.yeartotalfrcs_rowal
-    , c.yeartotalpurchase_price
-from
-    (
-    select 
-        sum(a.frcsorder_qy * (c.hdforward_price - c.hdrtrcv_price)) as yeartotalselng_price
-            from frcsorder_detail a
-                left join frcsorder b 
-                    on a.frcsorder_no = b.frcsorder_no
-                left join head_inventory c
-                    on a.vdprod_cd = c.vdprod_cd
-                    where b.frcsorder_confm = '승인'
-    ) a
-left join
-    (
-    select
-        sum(frcs_amt*12) as yeartotalfrcs_amt
-        , sum(frcs_rowal) as yeartotalfrcs_rowal
-            from frcsbill
-    ) b on 1=1
-left join
-    (
-    select
-        sum(hdorder_totalprice) as yeartotalpurchase_price
-            from head_order
-            where hdorder_confm = '승인'
-    ) c on 1=1
-</select>
+<!-- <select id="headyeartotalChart" resultType="headsalestotalVO"> -->
+<!-- select -->
+<!--     a.yeartotalselng_price -->
+<!--     , b.yeartotalfrcs_amt -->
+<!--     , b.yeartotalfrcs_rowal -->
+<!--     , c.yeartotalpurchase_price -->
+<!-- from -->
+<!--     ( -->
+<!--     select  -->
+<!--         sum(a.frcsorder_qy * (c.hdforward_price - c.hdrtrcv_price)) as yeartotalselng_price -->
+<!--             from frcsorder_detail a -->
+<!--                 left join frcsorder b  -->
+<!--                     on a.frcsorder_no = b.frcsorder_no -->
+<!--                 left join head_inventory c -->
+<!--                     on a.vdprod_cd = c.vdprod_cd -->
+<!--                     where b.frcsorder_confm = '승인' -->
+<!--     ) a -->
+<!-- left join -->
+<!--     ( -->
+<!--     select -->
+<!--         sum(frcs_amt*12) as yeartotalfrcs_amt -->
+<!--         , sum(frcs_rowal) as yeartotalfrcs_rowal -->
+<!--             from frcsbill -->
+<!--     ) b on 1=1 -->
+<!-- left join -->
+<!--     ( -->
+<!--     select -->
+<!--         sum(hdorder_totalprice) as yeartotalpurchase_price -->
+<!--             from head_order -->
+<!--             where hdorder_confm = '승인' -->
+<!--     ) c on 1=1 -->
+<!-- </select> -->
 
-<select id="allmonthtotalChart" resultType="headsalesTotalVO">
-select 
-    a.all_month as all_month
-    , coalesce(a.allmonthselng_price, 0) as allmonthselng_price
-    , coalesce(b.allmonthfrcs_amt, 0) as allmonthfrcs_amt
-    , coalesce(b.allmonthfrcs_rowal, 0) as allmonthfrcs_rowal
-from
-    (select 
-        to_char(b.frcsorder_date, 'YYYY-MM') as all_month
-        , sum(a.frcsorder_qy * (c.hdforward_price - c.hdrtrcv_price)) as allmonthselng_price
-    from frcsorder_detail a
-        left join frcsorder b 
-            on a.frcsorder_no = b.frcsorder_no
-        left join head_inventory c
-            on a.vdprod_cd = c.vdprod_cd
-                where b.frcsorder_confm = '승인'
-                and b.frcsorder_date between to_date('2023-01-01', 'YYYY-MM-DD')
-                and to_date('2023-12-31', 'YYYY-MM-DD')
-                group by to_char(b.frcsorder_date, 'YYYY-MM')
-    ) a  
-    left join
-    (select
-        to_char(settle_date, 'YYYY-MM') as all_month
-        , sum(frcs_amt) as allmonthfrcs_amt
-        , sum(frcs_rowal) as allmonthfrcs_rowal
-    from frcsbill
-    group by to_char(settle_date, 'YYYY-MM')
+<!-- <select id="allmonthtotalChart" resultType="headsalestotalVO"> -->
+<!-- select  -->
+<!--     a.all_month as all_month -->
+<!--     , coalesce(a.allmonthselng_price, 0) as allmonthselng_price -->
+<!--     , coalesce(b.allmonthfrcs_amt, 0) as allmonthfrcs_amt -->
+<!--     , coalesce(b.allmonthfrcs_rowal, 0) as allmonthfrcs_rowal -->
+<!-- from -->
+<!--     (select  -->
+<!--         to_char(b.frcsorder_date, 'YYYY-MM') as all_month -->
+<!--         , sum(a.frcsorder_qy * (c.hdforward_price - c.hdrtrcv_price)) as allmonthselng_price -->
+<!--     from frcsorder_detail a -->
+<!--         left join frcsorder b  -->
+<!--             on a.frcsorder_no = b.frcsorder_no -->
+<!--         left join head_inventory c -->
+<!--             on a.vdprod_cd = c.vdprod_cd -->
+<!--                 where b.frcsorder_confm = '승인' -->
+<!--                 and b.frcsorder_date between to_date('2023-01-01', 'YYYY-MM-DD') -->
+<!--                 and to_date('2023-12-31', 'YYYY-MM-DD') -->
+<!--                 group by to_char(b.frcsorder_date, 'YYYY-MM') -->
+<!--     ) a   -->
+<!--     left join -->
+<!--     (select -->
+<!--         to_char(settle_date, 'YYYY-MM') as all_month -->
+<!--         , sum(frcs_amt) as allmonthfrcs_amt -->
+<!--         , sum(frcs_rowal) as allmonthfrcs_rowal -->
+<!--     from frcsbill -->
+<!--     group by to_char(settle_date, 'YYYY-MM') -->
+<!--     ) b -->
+<!--     on a.all_month = b.all_month -->
+<!--     order by all_month -->
+<!-- </select> -->
+
+<!-- <select id="allmonthtotalChart1" parameterType="headsalestotalVO" resultType="headsalestotalVO"> -->
+<!-- select  -->
+<!--     a.all_month as all_month -->
+<!--     , coalesce(a.allmonthselng_price, 0) as allmonthselng_price -->
+<!--     , coalesce(b.allmonthfrcs_amt, 0) as allmonthfrcs_amt -->
+<!--     , coalesce(b.allmonthfrcs_rowal, 0) as allmonthfrcs_rowal -->
+<!-- from -->
+<!--     (select  -->
+<!--         to_char(b.frcsorder_date, 'YYYY-MM') as all_month -->
+<!--         , sum(a.frcsorder_qy * (c.hdforward_price - c.hdrtrcv_price)) as allmonthselng_price -->
+<!--     from frcsorder_detail a -->
+<!--         left join frcsorder b  -->
+<!--             on a.frcsorder_no = b.frcsorder_no -->
+<!--         left join head_inventory c -->
+<!--             on a.vdprod_cd = c.vdprod_cd -->
+<!--                 where b.frcsorder_confm = '승인' -->
+<!--                 and b.frcsorder_date between to_date(#{startYear}, 'YYYY-MM-DD') -->
+<!--                 and to_date(#{endYear}, 'YYYY-MM-DD') -->
+<!--                 group by to_char(b.frcsorder_date, 'YYYY-MM') -->
+<!--     ) a   -->
+<!--     left join -->
+<!--     (select -->
+<!--         to_char(settle_date, 'YYYY-MM') as all_month -->
+<!--         , sum(frcs_amt) as allmonthfrcs_amt -->
+<!--         , sum(frcs_rowal) as allmonthfrcs_rowal -->
+<!--     from frcsbill -->
+<!--     group by to_char(settle_date, 'YYYY-MM') -->
+<!--     ) b -->
+<!--     on a.all_month = b.all_month -->
+<!--     order by all_month -->
+<!-- </select> -->
+
+<select id="headmonthChart" resultType="headmonthVO">
+select months.month, coalesce(monthfrcs_amt, 0) as monthfrcs_amt, coalesce(monthpurchase_price, 0) as monthpurchase_price, coalesce(monthfrcs_rowal, 0) as monthfrcs_rowal, coalesce(monthfrcsorder_amt, 0) as monthfrcsorder_amt, coalesce(monthfrcspersonal_cost, 0) as monthfrcspersonal_cost
+from (
+    select '2023-01' as month from dual
+    union select '2023-02' from dual
+    union select '2023-03' from dual
+    union select '2023-04' from dual
+    union select '2023-05' from dual
+    union select '2023-06' from dual
+    union select '2023-07' from dual
+    union select '2023-08' from dual
+    union select '2023-09' from dual
+    union select '2023-10' from dual
+    union select '2023-11' from dual
+    union select '2023-12' from dual
+) months
+left join
+(
+    select to_char(frcs_opdate, 'YYYY-MM') as month,
+           count(*) * 500000 as monthfrcs_amt
+    from franchise
+    where to_char(frcs_opdate, 'YYYY-MM') in ('2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06', '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12')
+    group by to_char(frcs_opdate, 'YYYY-MM')
+) a on months.month = a.month
+left join
+(
+    select to_char(hdorder_confmdate, 'YYYY-MM') as month,
+           sum(hdorder_totalprice) as monthpurchase_price
+    from head_order
+    where to_char(hdorder_confmdate, 'YYYY-MM') in ('2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06', '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12')
+    group by to_char(hdorder_confmdate, 'YYYY-MM')
+) b on months.month = b.month
+left join
+(
+    select to_char(selng_date, 'YYYY-MM') as month,
+           sum(selng_qy * selng_price) as monthfrcs_rowal
+    from dailyselling
+    where to_char(selng_date, 'YYYY-MM') in ('2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06', '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12')
+    group by to_char(selng_date, 'YYYY-MM')
+) c on months.month = c.month
+left join
+(
+    select to_char(frcsorder_date, 'YYYY-MM') as month,
+           sum(frcsorder_amt) as monthfrcsorder_amt
+    from frcsorder
+    where to_char(frcsorder_date, 'YYYY-MM') in ('2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06', '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12')
+    and frcsorder_confm = '승인'
+    group by to_char(frcsorder_date, 'YYYY-MM')
+) d on months.month = d.month
+left join
+(
+    select a.month as month, a.frcspersonal_cost * b.frcs_cnt  as monthfrcspersonal_cost
+    from
+    (
+        select to_char(frcspersonal_date, 'YYYY-MM') as month,
+               sum(frcspersonal_cost) as frcspersonal_cost
+        from frcs_personal
+        where to_char(frcspersonal_date, 'YYYY-MM') in ('2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06', '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12')
+        group by to_char(frcspersonal_date, 'YYYY-MM')
+    ) a,
+    (
+        select count(*) as frcs_cnt
+        from franchise
     ) b
-    on a.all_month = b.all_month
-    order by all_month
+)e on months.month = e.month
+order by months.month
 </select>
 
-<select id=""></select>
+<select id="quarterheadmonthChartDetails" parameterType="headmonthVO" resultType="headmonthVO">
+select months.month, coalesce(monthfrcs_amt, 0) as monthfrcs_amt, coalesce(monthpurchase_price, 0) as monthpurchase_price, coalesce(monthfrcs_rowal, 0) as monthfrcs_rowal, coalesce(monthfrcsorder_amt, 0) as monthfrcsorder_amt, coalesce(monthfrcspersonal_cost, 0) as monthfrcspersonal_cost
+from (
+    select '2023-01' as month from dual
+    union select '2023-02' from dual
+    union select '2023-03' from dual
+    union select '2023-04' from dual
+    union select '2023-05' from dual
+    union select '2023-06' from dual
+    union select '2023-07' from dual
+    union select '2023-08' from dual
+    union select '2023-09' from dual
+    union select '2023-10' from dual
+    union select '2023-11' from dual
+    union select '2023-12' from dual
+) months
+left join
+(
+    select to_char(frcs_opdate, 'YYYY-MM') as month,
+           count(*) * 500000 as monthfrcs_amt
+    from franchise
+    where to_char(frcs_opdate, 'YYYY-MM') in ('2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06', '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12')
+    group by to_char(frcs_opdate, 'YYYY-MM')
+) a on months.month = a.month
+left join
+(
+    select to_char(hdorder_confmdate, 'YYYY-MM') as month,
+           sum(hdorder_totalprice) as monthpurchase_price
+    from head_order
+    where to_char(hdorder_confmdate, 'YYYY-MM') in ('2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06', '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12')
+    group by to_char(hdorder_confmdate, 'YYYY-MM')
+) b on months.month = b.month
+left join
+(
+    select to_char(selng_date, 'YYYY-MM') as month,
+           sum(selng_qy * selng_price) as monthfrcs_rowal
+    from dailyselling
+    where to_char(selng_date, 'YYYY-MM') in ('2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06', '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12')
+    group by to_char(selng_date, 'YYYY-MM')
+) c on months.month = c.month
+left join
+(
+    select to_char(frcsorder_date, 'YYYY-MM') as month,
+           sum(frcsorder_amt) as monthfrcsorder_amt
+    from frcsorder
+    where to_char(frcsorder_date, 'YYYY-MM') in ('2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06', '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12')
+    and frcsorder_confm = '승인'
+    group by to_char(frcsorder_date, 'YYYY-MM')
+) d on months.month = d.month
+left join
+(
+    select a.month as month, a.frcspersonal_cost * b.frcs_cnt  as monthfrcspersonal_cost
+    from
+    (
+        select to_char(frcspersonal_date, 'YYYY-MM') as month,
+               sum(frcspersonal_cost) as frcspersonal_cost
+        from frcs_personal
+        where to_char(frcspersonal_date, 'YYYY-MM') in ('2023-01', '2023-02', '2023-03', '2023-04', '2023-05', '2023-06', '2023-07', '2023-08', '2023-09', '2023-10', '2023-11', '2023-12')
+        group by to_char(frcspersonal_date, 'YYYY-MM')
+    ) a,
+    (
+        select count(*) as frcs_cnt
+        from franchise
+    ) b
+)e on months.month = e.month
+where months.month between #{quaterstartMonth} and #{quaterendMonth}
+</select>
 
 </mapper>

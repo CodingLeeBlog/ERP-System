@@ -11,7 +11,7 @@ import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 
 public interface FrcsInventoryMapper {
 
-	public List<FrcsInventoryVO> getInventList(String memId);
+	public List<FrcsInventoryVO> getInventList(String frcsId);
 
 	public int selectInventCount(OwnerPaginationInfoVO<FrcsInventoryVO> pagingVO);
 
@@ -34,5 +34,11 @@ public interface FrcsInventoryMapper {
 
 	// 본사 재고 코드 수만큼 insert
 	public int beginSetting(@Param("frcsId")String frcsId, @Param("vdprodCd")String vdprodCd);
+
+	// 내 가맹점에 본사 제품이 있는지 없는지 체크
+	public int getInventCheck(@Param("vdprodCd")String vdprodCd,@Param("frcsId")String frcsId);
+
+	// 없으면 insert
+	public int newInventInsert(@Param("vdprodCd")String vdprodCd, @Param("frcsId")String frcsId);
 
 }

@@ -91,6 +91,8 @@ public class MenuServiceImpl implements IMenuService {
 
 	@Override
 	public void menuDelete(String menuCd) {
+		menuMapper.menuChildDelete(menuCd);
+		
 		menuMapper.menuDelete(menuCd);
 	}
 

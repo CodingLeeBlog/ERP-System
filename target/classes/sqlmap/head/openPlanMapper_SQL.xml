@@ -19,29 +19,54 @@
 	</select>
 
 	<select id="selectOpenPlanList" parameterType="pagingVO" resultType="openPlanVO">
-		select 
-			b.*
-		from (
-			select 
-				a.*, row_number() over (order by frcs_id) rnum
-			from(
-				select c.frcs_id,
-			        f.frcs_name,
-			        f.frcs_cdate,
-			        f.frcs_insdate,
-			        f.frcs_inedate,
-			        f.frcs_opdate,
-			        c.fcmg_hefc,
-			        c.fcmg_iprgst,
-			        c.fcmg_remark
-				from fcmg c
-				left join franchise f on c.frcs_id = f.frcs_id 
-			)a
-		)b	
-		<![CDATA[	
-			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
-		]]>
+	    <![CDATA[
+	    SELECT *
+	    FROM (
+	        SELECT
+	            f.frcs_id,
+	            f.frcs_name,
+	            f.frcs_cdate,
+	            f.frcs_insdate,
+	            f.frcs_inedate,
+	            f.frcs_opdate,
+	            c.fcmg_hefc,
+	            c.fcmg_iprgst,
+	            c.fcmg_remark,
+	            ROW_NUMBER() OVER (ORDER BY f.frcs_opdate DESC) AS rnum
+	        FROM franchise f
+	        LEFT JOIN fcmg c ON f.frcs_id = c.frcs_id
+	    ) tmp
+	    WHERE tmp.rnum >= #{startRow} AND tmp.rnum <= #{endRow}
+	    ]]>
 	</select>
 	
+	<insert id="planRegister" parameterType="openPlanVO">
+		INSERT INTO fcmg (
+			frcs_id,
+			fcmg_hefc,
+			fcmg_iprgst,
+			fcmg_remark
+			) VALUES (
+				#{frcsId},
+				#{fcmgHefc},
+				#{fcmgIprgst},
+				#{fcmgRemark}
+			)
+	</insert>
+	
+	<insert id="insertFcmg" parameterType="openPlanVO">
+		INSERT INTO fcmg (frcs_id,fcmg_hefc, fcmg_iprgst)
+		VALUES (#{frcsId}, #{fcmgHefc}, #{fcmgIprgst})
+	</insert>
+	
+	<update id="planUpdate" parameterType="franchiseVO">
+	    update franchise
+	    set 
+	        frcs_insdate = #{frcsInsdate},
+	        frcs_inedate = #{frcsInedate},
+	        frcs_cdate = #{frcsCdate},
+	        frcs_opdate = #{frcsOpdate}
+	    where frcs_id = #{frcsId}
+	</update>
 
 </mapper>

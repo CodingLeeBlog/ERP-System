@@ -18,6 +18,7 @@ public class ResVO {
 	private String resvState;
 	private Date resvAccDate;
 	private String resvNote;
+	private String reviewYn;
 	private String seatCd;
 	private String memcpnId;
 	

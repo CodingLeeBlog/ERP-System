@@ -51,7 +51,7 @@
 							    </div>
 							    <div class="col-xl-4">
 							        <div class="text-xl-end mt-xl-0 mt-2">
-							            <button type="button" class="btn btn-light mb-2">엑셀 다운로드</button>
+							            <button type="button" class="btn btn-success mb-2" onclick="location.href='/owner/orderDetail/excel.do'">엑셀 다운로드</button>
 							        </div>
 							    </div>
 							</div>
@@ -59,12 +59,7 @@
 		                        <table class="table table-centered table-nowrap mb-0 table-hover">
 		                            <thead class="table-light">
 		                                <tr>
-		                                   <th style="width: 20px;">
-		                                        <div class="form-check">
-		                                            <input type="checkbox" class="form-check-input">
-		                                            <label class="form-check-label" for="customCheck">&nbsp;</label>
-		                                        </div>
-		                                    </th>
+		                                   <th style="width: 20px;"></th>
 		                                    <th style="text-align:center; width:100px;">주문번호</th>
 		                                    <th style="text-align:center; width:150px;">주문명</th>
 		                                    <th style="text-align:center; width:150px;">주문금액</th>
@@ -86,12 +81,7 @@
 		                            	<c:otherwise>
 		                            		<c:forEach items="${orderList }" var="order" varStatus="stat">
 			                            		<tr>
-				                                    <td>
-				                                        <div class="form-check">
-				                                            <input type="checkbox" class="form-check-input" id="customCheck2">
-				                                            <label class="form-check-label" for="customCheck2">&nbsp;</label>
-				                                        </div>
-				                                    </td>
+				                                    <td></td>
 				                                    <td style="text-align:center" class="orderNo">${order.frcsOrderNo }</td>
 				                                    <td style="text-align:center">
 				                                    <a href="javascript: void(0);" data-bs-toggle="modal" data-bs-target="#detailModal">${order.frcsOrderName }</a>
@@ -119,11 +109,11 @@
 												                        </table>
 												                    </div>
 													            </div>
-													        </div><!-- /.modal-content -->
-													    </div><!-- /.modal-dialog -->
-													</div><!-- /.modal -->
+													        </div>
+													    </div>
+													</div>
 				                                    </td>
-					                                <td style="text-align:center"><fmt:formatNumber value="${order.frcsOrderAmt }" type="currency"/>
+					                                <td style="text-align:center"><fmt:formatNumber value="${order.frcsOrderAmt }" type="number"/>(원)
 					                                </td>
 				                                    <td style="text-align:center">
 				                                    <fmt:formatDate value="${order.frcsOrderDate }" pattern="yyyy/MM/dd"/>

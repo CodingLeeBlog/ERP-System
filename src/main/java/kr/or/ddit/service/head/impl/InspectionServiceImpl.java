@@ -15,6 +15,7 @@ import kr.or.ddit.service.head.IInspectionService;
 import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.InspectionVO;
+import kr.or.ddit.vo.owner.FranchiseVO;
 
 @Service
 public class InspectionServiceImpl implements IInspectionService {
@@ -41,13 +42,13 @@ public class InspectionServiceImpl implements IInspectionService {
 	public void inspectionRegister(HttpServletRequest req, InspectionVO inspectionVO) {
 		inspectionMapper.inspectionRegister(inspectionVO);
 
-		List<AttachVO> officeLetterFileList = inspectionVO.getInspectionFileList(); // AttachVO 리스트 가져오기
+		List<AttachVO> inspectionFileList = inspectionVO.getInspectionFileList(); // AttachVO 리스트 가져오기
 
 		String savePath = "/resources/upload/file/";
-
+		
 		int count = 1;
 
-		if (officeLetterFileList != null && !officeLetterFileList.isEmpty()) {
+		if (inspectionFileList != null && !inspectionFileList.isEmpty()) {
 
 			String saveLocate = req.getServletContext().getRealPath(savePath);
 			File fileSaveLocate = new File(saveLocate);
@@ -55,12 +56,12 @@ public class InspectionServiceImpl implements IInspectionService {
 				fileSaveLocate.mkdirs();
 			}
 
-			for (AttachVO attachVO : officeLetterFileList) {
+			for (AttachVO attachVO : inspectionFileList) {
 				// 파일 업로드 처리 시작
 				String saveName = UUID.randomUUID().toString(); // UUID의 랜덤 파일명 생성
 				saveName = saveName + "_" + attachVO.getAttachOrgname().replaceAll(" ", "_"); // 공백일 때 _로 전부 바꿔준다.
 
-				attachVO.setTablePk(String.valueOf(inspectionVO.getFrcsId()));
+				attachVO.setTablePk(String.valueOf(inspectionVO.getIpCode()));
 				attachVO.setFileNo(count++);
 				attachVO.setAttachSavename(savePath + saveName); // 파일명 설정
 
@@ -70,9 +71,21 @@ public class InspectionServiceImpl implements IInspectionService {
 				} catch (IllegalStateException | IOException e) {
 					e.printStackTrace();
 				}
-
 				inspectionMapper.inspectionAttachRegister(attachVO);
 			}
 		}
 	}
+
+	@Override
+	public List<InspectionVO> getDetail(String frcsId) {
+	    List<InspectionVO> detailList = inspectionMapper.getDetail(frcsId); 
+
+	    return detailList;
+	}
+
+	@Override
+	public List<FranchiseVO> getSearch(String searchWord) {
+		return inspectionMapper.getSearch(searchWord);
+	}
+
 }

@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <div class="content-page">
 	<div class="content">
 		<div class="container-fluid">
-		
 		    <div class="row">
 		        <div class="col-12">
 		            <div class="page-title-box">
@@ -28,7 +28,6 @@
 		                        <div class="col-xl-8"><h4 class="mt-1 mb-3">발주 가능 리스트</h4></div>
 		                        <div class="col-xl-4">
 		                            <form id="searchForm" class="row gy-2 gx-2 align-items-center justify-content-xl-start justify-content-between">		                                
-<!--  									<input type="hidden" name="page" id="page"/> -->
 		                                <div class="col-auto">
 		                                    <div class="d-flex align-items-center">
 		                                        <label for="searchType" class="me-2"></label>
@@ -61,7 +60,6 @@
 		                                    <th style="text-align:center; width:150px;">제품 코드</th>
 		                                    <th style="text-align:center; width:200px;">제품명</th>
 		                                    <th style="text-align:center; width:150px;">현 재고수량</th>
-		                                    <th style="text-align:center; width:150px;">적정 재고수량</th>
 		                                    <th style="text-align:center; width:150px;">구매가</th>
 		                                    <th style="text-align:center; width:150px;">주문수량</th>
 		                                    <th style="text-align:center; width:150px;">주문예상금액</th>
@@ -83,8 +81,8 @@
 				                                    <td style="text-align:center"><p data-prodCd="${invent.vdprodCd }" align="center" style="margin: 0;">${invent.vdprodCd }</p></td>
 				                                    <td style="text-align:center" class="vdProdNameTd">${invent.vdprodName }</td>
 					                                <td style="text-align:center" class="invntryQyTd">${invent.invntryQy }</td>
-				                                    <td style="text-align:center" class="proprtQyTd">${invent.proprtQy }</td>
-				                                    <td style="text-align:center" class="hdforwardPriceTd">${invent.hdforwardPrice }</td>
+				                                    <td style="text-align:center" class="hdforwardPriceTd">
+				                                    <fmt:formatNumber value="${invent.hdforwardPrice }" type="number"/></td>
 				                                    <td style="text-align:center">
 					                                    <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected"><span class="input-group-btn input-group-prepend"><button class="btn btn-primary bootstrap-touchspin-down orderDown" type="button">-</button></span>
 					                                    <input data-toggle="touchspin" type="text" value="0" class="form-control text-end orderQyInput">
@@ -105,13 +103,10 @@
 		                    </div>
 		                    </div>
 		                    <br>
-<!-- 								<nav aria-label="Page navigation example" id="pagingArea"> -->
-<%-- 									${pagingVO.pagingHTML } --%>
-<!-- 								</nav> -->
 		       		         </div>
 		       		  	</div> 
 		     	   </div> 
-			</div>
+				</div>
 			
 			<!-- 발주 물품 내역 -->
 			<div class="row">
@@ -166,7 +161,6 @@
 		                                    <th style="text-align:center; width:150px;">제품 코드</th>
 		                                    <th style="text-align:center; width:200px;">제품명</th>
 		                                    <th style="text-align:center; width:150px;">현 재고수량</th>
-		                                    <th style="text-align:center; width:150px;">적정 재고수량</th>
 		                                    <th style="text-align:center; width:150px;">구매가</th>
 		                                    <th style="text-align:center; width:150px;">주문수량</th>
 		                                    <th style="text-align:center; width:150px;">주문예상금액</th>
@@ -174,32 +168,21 @@
 		                                </tr>
 		                            </thead>
 		                            <tbody id="addTbody">
-<%-- 		                            <c:choose> --%>
-<%-- 		                            	<c:when test="${empty autoList }"> --%>
-<!-- 			                            	<tr> -->
-<!-- 			                            		<td colspan="8" style="text-align:center"> -->
-<!-- 			                            			발주 내역이 존재하지 않습니다. -->
-<!-- 		                            			</td> -->
-<!-- 			                            	</tr> -->
-<%-- 		                            	</c:when> --%>
-<%-- 										<c:otherwise> --%>
 											<c:forEach items="${autoList }" var="auto">
 												<tr class="addTr">
 													<td style="text-align:center" class="addTrProdCd">${auto.vdprodCd }</td>
 													<td style="text-align:center">${auto.vdprodName }</td>
 													<td style="text-align:center">${auto.invntryQy }</td>
-													<td style="text-align:center">${auto.proprtQy }</td>
-													<td style="text-align:center">${auto.hdforwardPrice }</td>
+													<td style="text-align:center">
+													<fmt:formatNumber value="${auto.hdforwardPrice }" type="number"/></td>
 													<td style="text-align:center">${auto.atorderQy }</td>
-													<td style="text-align:center" class="addTrOrderPrice">${auto.atorderQy*auto.hdforwardPrice }</td>
+													<td style="text-align:center" class="addTrOrderPrice">
+													<fmt:formatNumber value="${auto.atorderQy*auto.hdforwardPrice }" type="number"/></td>
 													<td style="text-align:center">
 													<input type="button" class="btn btn-danger delBtn" value="삭제">
 													</td>
 												</tr>
 											</c:forEach>
-<%-- 										</c:otherwise>		                             --%>
-<%-- 		                            </c:choose> --%>
-		                            
 		                            </tbody>
 		                        </table>
 		                    </div>
@@ -213,8 +196,6 @@
 	</div> 
 <script type="text/javascript">
 $(function(){
-// 	var pagingArea = $("#pagingArea");
-// 	var searchForm = $("#searchForm");
 	var tBody = $("#tBody");
 	var addTbody = $("#addTbody");
 	var orderQyVal;
@@ -222,19 +203,6 @@ $(function(){
 	var totalPrice = 0;	// 발주 상품 추가 시 총 금액을 저장
 	var orderModalBtn = $("#orderModalBtn");	// 발주하기 모달 버튼
 	var orderBtn = $("#orderBtn"); 	// 발주 모달 안 발주하기 버튼
-	
-	// 페이징처리
-// 	pagingArea.on("click","a",function(event){
-// 		event.preventDefault();
-// 		var pageNo = $(this).data("page");
-		
-// 		$.ajax({
-			
-// 		});
-		
-// 		searchForm.find("#page").val(pageNo);
-// 		searchForm.submit();
-// 	});
 
 	// 검색 ajax
 	$("#searchBtn").on("click",function(){
@@ -273,7 +241,6 @@ $(function(){
                         "<td style='text-align:center'><p data-prodCd='"+res.vdprodCd+"' align='center' style='margin: 0;''>" + res.vdprodCd + "</p></td>" +
                         "<td style='text-align:center' class='vdProdNameTd'>" + res.vdprodName + "</td>" +
                         "<td style='text-align:center' class='invntryQyTd'>" + res.invntryQy + "</td>" +
-                        "<td style='text-align:center' class='proprtQyTd'>" + res.proprtQy + "</td>" +
                         "<td style='text-align:center' class='hdforwardPriceTd'>" + res.hdforwardPrice + "</td>" +
                         "<td style='text-align:center'><div class='input-group bootstrap-touchspin bootstrap-touchspin-injected'><span class='input-group-btn input-group-prepend'><button class='btn btn-primary bootstrap-touchspin-down orderDown' type='button'>-</button></span>" +
                         "<input data-toggle='touchspin' type='text' value='0' class='form-control text-end orderQyInput'>" +
@@ -309,7 +276,7 @@ $(function(){
     var orderQyInput = $(this);
     var orderTotalSpan = orderQyInput.closest('tr').find(".orderTotal");
     var hdforwardPriceTd = orderQyInput.closest('tr').find(".hdforwardPriceTd").text();
-    var hdforwardPrice = parseInt(hdforwardPriceTd);
+    var hdforwardPrice = parseInt(hdforwardPriceTd.replace(/,/g, '')); // 문자열에서 ','를 제거하고 숫자로 변환
     var orderQyVal = parseInt(orderQyInput.val());
 
     if (isNaN(orderQyVal)) {
@@ -318,7 +285,7 @@ $(function(){
     }
    	
     var total = hdforwardPrice * orderQyVal;
-    orderTotalSpan.text(total);
+    orderTotalSpan.text(total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 	});
 	
 	// 주문수량 -
@@ -327,13 +294,13 @@ $(function(){
 	    var orderQyInput = $(this).closest('tr').find(".orderQyInput"); 
 	    var orderTotalSpan = $(this).closest('tr').find(".orderTotal");	// 주문예상금액
 	    var hdforwardPriceTd = $(this).closest('tr').find(".hdforwardPriceTd").text();	// 제품금액
-	   	var hdforwardPrice = parseInt(hdforwardPriceTd);
+	    var hdforwardPrice = parseInt(hdforwardPriceTd.replace(/,/g, '')); // 문자열에서 ','를 제거하고 숫자로 변환
 	    orderQyVal = parseInt(orderQyInput.val());
 	    if(orderQyVal > 0){
 	    orderQyVal -= 1; // 1 감소
 	    orderQyInput.val(orderQyVal);
 	    // 주문수량 * 구매가 
-	    orderTotalSpan.text(hdforwardPrice*orderQyVal);
+	    orderTotalSpan.text((hdforwardPrice*orderQyVal).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 	    }
 	});
 	    	
@@ -343,12 +310,14 @@ $(function(){
 	    var orderQyInput = $(this).closest('tr').find(".orderQyInput"); 
 	    var orderTotalSpan = $(this).closest('tr').find(".orderTotal");	// 주문예상금액
 	    var hdforwardPriceTd = $(this).closest('tr').find(".hdforwardPriceTd").text();	// 제품금액
-	   	var hdforwardPrice = parseInt(hdforwardPriceTd);
+	    var hdforwardPrice = parseInt(hdforwardPriceTd.replace(/,/g, '')); // 문자열에서 ','를 제거하고 숫자로 변환
+	    console.log(hdforwardPriceTd);
+	    console.log(hdforwardPrice);
 	    orderQyVal = parseInt(orderQyInput.val()); 
 	    orderQyVal += 1; // 1 증가
 	    orderQyInput.val(orderQyVal); 
 	    // 주문수량 * 구매가 
-	    orderTotalSpan.text(hdforwardPrice*orderQyVal);
+	    orderTotalSpan.text((hdforwardPrice*orderQyVal).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 	});
 	
 	
@@ -359,14 +328,15 @@ $(function(){
 		var orderProdCd = td.eq(0).text();
 		var orderProdName = td.eq(1).text();
 		var orderInvntryQy = td.eq(2).text();
-		var orderProprtQy = td.eq(3).text();
-		var orderHdforwardPrice = parseInt(td.eq(4).text());
-		var orderQy = parseInt(td.eq(5).text());
-		var orderPrice = parseInt(td.eq(6).text());
+		var orderHdforwardPrice = parseInt(td.eq(3).text().replace(/,/g, ''));
+		var orderHdforwardPriceStr = orderHdforwardPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		var orderQy = parseInt(td.eq(4).text());
+		var orderPrice = parseInt(td.eq(5).text().replace(/,/g, ''));
+		var orderPriceStr = orderPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
-		dataArr.push(orderProdCd + "/" + orderProdName + "/" + orderInvntryQy + "/" + orderProprtQy + "/" +  orderHdforwardPrice + "/" + orderQy + "/" + orderPrice);
+		dataArr.push(orderProdCd + "/" + orderProdName + "/" + orderInvntryQy + "/" + orderHdforwardPriceStr + "/" + orderQy + "/" + orderPriceStr);
 		totalPrice += orderPrice;
-
+		var totalStr = totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
 		$("#totalPrice").val(totalPrice);
 	
@@ -379,10 +349,14 @@ $(function(){
 		var orderProdCd = $(this).closest('tr').find('p').data('prodcd');	// 제품코드
 		var orderProdName = $(this).closest('tr').find('.vdProdNameTd').text();	// 제품명
 		var orderInvntryQy = $(this).closest('tr').find('.invntryQyTd').text();	// 현 재고량
-		var orderProprtQy = $(this).closest('tr').find('.proprtQyTd').text();	// 적정재고수량
-		var orderHdforwardPrice = parseInt($(this).closest('tr').find(".hdforwardPriceTd").text());	// 구매가
+	    var hdforwardPriceTd = $(this).closest('tr').find(".hdforwardPriceTd").text();	// 제품금액
+// 	    var hdforwardPrice = parseInt(hdforwardPriceTd.replace(/,/g, '')); // 문자열에서 ','를 제거하고 숫자로 변환
+
+		var orderHdforwardPrice = parseInt(hdforwardPriceTd.replace(/,/g, '')); // 문자열에서 ','를 제거하고 숫자로 변환
+		var orderHdforwardPriceStr = orderHdforwardPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); 
 	    var orderQy = parseInt($(this).closest('tr').find(".orderQyInput").val()); 	// 주문 수량
-		var orderPrice = parseInt($(this).closest('tr').find(".orderTotal").text());	// 주문예상금액
+		var orderPrice = parseInt($(this).closest('tr').find(".orderTotal").text().replace(/,/g, ''));	// 주문예상금액
+		var orderPriceStr = orderPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
 		console.log("dataArr : " , dataArr);
 		console.log("orderQy : " ,  orderQy);
@@ -393,7 +367,7 @@ $(function(){
 		if(dataArr.length == 0){
 			console.log("배열에 아무 데이터도 없음");
 			// 배열에 데이터 추가
-			dataArr.push(orderProdCd + "/" + orderProdName + "/" + orderInvntryQy + "/" + orderProprtQy + "/" +  orderHdforwardPrice + "/" + orderQy + "/" + orderPrice);
+			dataArr.push(orderProdCd + "/" + orderProdName + "/" + orderInvntryQy + "/" +  orderHdforwardPriceStr + "/" + orderQy + "/" + orderPriceStr);
 			totalPrice += orderPrice;
 		}else{
 			// 배열에 데이터가 있으면
@@ -403,14 +377,14 @@ $(function(){
 					console.log("배열에 내가 이미 누른 데이터가 존재함");
 					
 					// 추가한 만큼 수량과 총 금액을 더해줘야한다...
-					var existOrderQy = parseInt(dataArr[i].split("/")[5]);
+					var existOrderQy = parseInt(dataArr[i].split("/")[4]);
 					existOrderQy += orderQy;
-					var existOrderPrice = parseInt(dataArr[i].split("/")[6]);
+					var existOrderPrice = parseInt(dataArr[i].split("/")[5]);
 					existOrderPrice += orderPrice;
 					
 					totalPrice += orderPrice;
 					// 다시 배열에 넣기
-					dataArr[i] = dataArr[i].split("/")[0] + "/" + dataArr[i].split("/")[1] + "/" + dataArr[i].split("/")[2] + "/" + dataArr[i].split("/")[3] + "/" + dataArr[i].split("/")[4] + "/" + existOrderQy + "/" + existOrderPrice;
+					dataArr[i] = dataArr[i].split("/")[0] + "/" + dataArr[i].split("/")[1] + "/" + dataArr[i].split("/")[2] + "/" + dataArr[i].split("/")[3] + "/"  + existOrderQy + "/" + existOrderPrice;
 					
 					dataFlag = true;
 					break;
@@ -419,7 +393,7 @@ $(function(){
 			// 배열에 존재하는 데이터에 내가 누른 데이터는 없음
 			if(dataFlag == false){
 				console.log("배열에 데이터는 있으나 내가 원하는 데이터는 없음");
-				dataArr.push(orderProdCd+ "/" + orderProdName + "/" + orderInvntryQy + "/" + orderProprtQy + "/" +  orderHdforwardPrice + "/" + orderQy + "/" + orderPrice);
+				dataArr.push(orderProdCd+ "/" + orderProdName + "/" + orderInvntryQy + "/" +  orderHdforwardPriceStr + "/" + orderQy + "/" + orderPriceStr);
 				totalPrice += orderPrice;
 			}
 		}
@@ -431,8 +405,7 @@ $(function(){
 			html += "<td style='text-align:center'>" + dataArr[i].split("/")[2] + "</td>";
 			html += "<td style='text-align:center'>" + dataArr[i].split("/")[3] + "</td>";
 			html += "<td style='text-align:center'>" + dataArr[i].split("/")[4] + "</td>";
-			html += "<td style='text-align:center'>" + dataArr[i].split("/")[5] + "</td>";
-			html += "<td style='text-align:center'class='addTrOrderPrice'>" + dataArr[i].split("/")[6] + "</td>";
+			html += "<td style='text-align:center'class='addTrOrderPrice'>" + dataArr[i].split("/")[5] + "</td>";
 			html += "<td style='text-align:center'>";
 			html += "<input type='button' class='btn btn-danger delBtn' value='삭제'></td>";
 			html += "</tr>";
@@ -452,7 +425,7 @@ $(function(){
 	addTbody.on("click",".delBtn",function(){
 		// 내가 클릭한 제품 코드
 		var clickProdCd = $(this).closest('tr').find(".addTrProdCd").text();
-		var clickOrderPrice = $(this).closest('tr').find(".addTrOrderPrice").text();
+		var clickOrderPrice = parseInt($(this).closest('tr').find(".addTrOrderPrice").text().replace(/,/g, ''));
 		var findIndex;
 		
 		// 배열에서 해당 제품코드와 동일한 인덱스 찾기
@@ -484,13 +457,13 @@ $(function(){
 			orderList += "<tr>";
 			orderList += "<td style='text-align:center'>" + (i+1) + "</td>";
 			orderList += "<td style='text-align:center'>" + dataArr[i].split("/")[1] + "</td>";
+			orderList += "<td style='text-align:center'>" + dataArr[i].split("/")[4] + "</td>";
 			orderList += "<td style='text-align:center'>" + dataArr[i].split("/")[5] + "</td>";
-			orderList += "<td style='text-align:center'>" + dataArr[i].split("/")[6] + "</td>";
 			orderList += "</tr>";
 		}
 		
 		orderList += "<tr><td colspan='3' style='text-align:right'><h3>총 " + (dataArr.length) +"건</h3></td>";
-		orderList += "<td colspan='3'style='text-align:right'><h3>합계 " + totalPrice  +"원</h3></td></tr>";
+		orderList += "<td colspan='3'style='text-align:right'><h3>합계 " + totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")  +"원</h3></td></tr>";
 		
 		$("#modalBody").html(orderList);
 
@@ -504,8 +477,8 @@ $(function(){
 	    for (var i = 0; i < dataArr.length; i++) {
 	        orderList.push({
 	        	vdprodCd : dataArr[i].split("/")[0],
-	            hdforwardPrice: dataArr[i].split("/")[4],
-	            frcsOrderQy: dataArr[i].split("/")[5],
+	            hdforwardPrice: dataArr[i].split("/")[3].replace(/,/g, ''),
+	            frcsOrderQy: dataArr[i].split("/")[4],
 	        });
 	    }
 		

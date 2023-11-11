@@ -15,7 +15,7 @@
 						<div class="col-sm-6 page-title text-primary font-24 ms-3 fw-bold">가맹점 주문내역</div>
                         <div class="row">
                             <div class="col-sm-2 spinner-grow spinner-grow-sm text-success ms-4" role="status"></div>
-                            <div class="col-sm-8 page-title-sub text-dark font-15">관리자님! 새로운 주문이 2건 있습니다.</div>
+                            <div class="col-sm-8 page-title-sub text-dark font-15">관리자님! 새로운 주문이 ${orderCount }건 있습니다.</div>
                         </div>
 					</div>
 					<div class="card-body col-6 fw-bold font-22 d-flex justify-content-end align-items-center me-5">
@@ -58,7 +58,8 @@
                                         <div class="col-4">
                                             <div class="input-group">
                                                 <label for="inputPassword2" class="visually-hidden">Search</label>
-		                                        <input type="search" class="form-control" id="inputPassword2" name="searchFrcsId" placeholder="${param.searchFrcsId }">
+<%-- 		                                        <input type="search" class="form-control" id="inputPassword2" name="searchFrcsId" placeholder="${param.searchFrcsId }"> --%>
+		                                        <input type="search" class="form-control" id="inputPassword2" name="searchFrcsId" placeholder="가맹점코드로 검색...">
                                                 <button type="submit" class="btn btn-secondary">검색</button>
                                             </div>
 		                                </div>
@@ -86,7 +87,7 @@
 		                            <tbody>
 			                            <c:forEach items="${frcsOrder }" var="focus"  varStatus="status">
 			                                <tr>
-			                                    <td style="text-align:center">${status.count }</td>
+			                                    <td style="text-align:center">${focus.rnum }</td>
 			                                    <td style="text-align:center">${focus.frcsId }</td>
 				                                <td style="text-align:center">${focus.frcsName }</td>
 	                                            <td style="text-align:center">${focus.frcsAdd1 }&nbsp;${focus.frcsAdd2 }</td>

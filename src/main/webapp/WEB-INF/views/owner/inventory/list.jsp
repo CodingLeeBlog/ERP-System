@@ -56,8 +56,9 @@
 		                        
 		                        <div class="col-xl-4">
 		                            <div class="text-xl-end mt-xl-0 mt-2">
-		                                <button type="button" class="btn btn-success mb-2">엑셀 다운로드</button>
-		                            </div>
+		                                <button type="button" class="btn btn-light mb-2" id="inventUpdateBtn"><i class="mdi mdi-plus-circle me-2"></i>신규 제품 업데이트</button>
+		                                <button type="button" class="btn btn-success mb-2" onclick="location.href='/owner/inventory/excel.do'">엑셀 다운로드</button>
+		                            </div> 
 		                        </div>
 		                    </div>
 							<br>
@@ -66,18 +67,14 @@
 		                        <table class="table table-centered table-nowrap mb-0 table-hover">
 		                            <thead class="table-light">
 		                                <tr>
-		                                    <th style="width: 20px;">
-		                                        <div class="form-check">
-		                                            <input type="checkbox" class="form-check-input" id="customCheck1">
-		                                            <label class="form-check-label" for="customCheck1">&nbsp;</label>
-		                                        </div>
+		                                    <th style="width: 40px;">
 		                                    </th>
-		                                    <th style="text-align:center; width:100px;">제품 코드</th>
+		                                    <th style="text-align:center; width:110px;">제품 코드</th>
 		                                    <th style="text-align:center; width:200px;">제품명</th>
 		                                    <th style="text-align:center; width:150px;">현 재고수량</th>
 		                                    <th style="text-align:center; width:150px;">적정 재고수량</th>
 		                                    <th style="text-align:center; width:150px;">구매단가</th>
-		                                    <th style="text-align:center; width:150px;">이번달 입고량</th>
+		                                    <th style="text-align:center; width:180px;">이번달 입고량</th>
 		                                    <th style="text-align:center; width:150px;">이번달 출고량</th>
 		                                    <th style="text-align:center; width:150px;"></th>
 		                                </tr>
@@ -99,10 +96,6 @@
 												<c:forEach items="${inventList }" var="invent" varStatus="stat">
 													<tr>
 					                                    <td>
-				                                        <div class="form-check">
-				                                            <input type="checkbox" class="form-check-input" id="customCheck2">
-				                                            <label class="form-check-label" for="customCheck2">&nbsp;</label>
-				                                        </div>
 					                                    </td>
 					                                    <td style="text-align:center">${invent.vdprodCd }</td>
 					                                    <td style="text-align:center">${invent.vdprodName }</td>
@@ -116,7 +109,7 @@
 					                                    </td>
 					                                    <td style="text-align:center" id="hdforwardPricetd">
 					                                    	<input type="hidden" class="hdforwardPriceInput" value="${invent.hdforwardPrice }">
-					                                    	<fmt:formatNumber value="${invent.hdforwardPrice }" type="currency"/>
+					                                    	<fmt:formatNumber value="${invent.hdforwardPrice }" type="number"/>(원)
 					                                    </td>
 					                                    <td style="text-align:center">
 					                              			${invent.frcsorderQy }
@@ -150,6 +143,7 @@ $(function(){
 	var pagingArea = $("#pagingArea");
 	var searchForm = $("#searchForm");
 	var tBody = $("#tBody");
+	var inventUpdateBtn = $("#inventUpdateBtn");	// 신규 제품 업데이트 버튼
 	var invntryQy;	// 현 재고수량 값
 	var proprtQy;	// 적정 재고수량 값
 	var invntryQyVal; // +- 처리 후 값
@@ -346,10 +340,60 @@ $(function(){
 			        });
 				}
 			}
-			
-			
 		});
+	});
+	
+	// 신규 제품 업데이트
+	inventUpdateBtn.on("click",function(){
 		
+		var frcsId = $("#frcsId").val();
+		
+		$.ajax({
+			type : "post",
+			url : "/owner/inventory/inventAdd.do",
+			beforeSend : function(xhr){	// csrf토큰 보내기 위함
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");	//key value로 보낸다.
+			},
+			data : {frcsId : frcsId},
+			success : function(res){
+				console.log(res);
+				
+				if(res == "EXIST"){
+					Swal.fire({
+			            title: "업데이트 내역 없음",
+			            text: "업데이트할 신규 제품이 존재하지 않습니다.",
+			            confirmButtonText: "확인",
+			            icon: "info",
+			            preConfirm: function () {
+			            }
+			        });
+				}
+				
+				if(res == "OK"){
+					 Swal.fire({
+			            title: "업데이트 성공",
+			            text: "정상적으로 제품 업데이트가 되었습니다.",
+			            confirmButtonText: "확인",
+			            icon: "success",
+			            preConfirm: function () {
+			                location.href = "/owner/inventory.do";
+			            }
+			        });
+				}
+				
+				if(res == "FAILED"){
+					 Swal.fire({
+			            title: "업데이트 실패",
+			            text: "제품 업데이트에 실패하였습니다.",
+			            confirmButtonText: "확인",
+			            icon: "error",
+			            preConfirm: function () {
+			                location.href = "/owner/inventory.do";
+			            }
+			        });
+				}
+			}
+		})
 	});
 });
 </script>

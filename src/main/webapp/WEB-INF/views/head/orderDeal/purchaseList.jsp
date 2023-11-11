@@ -58,6 +58,7 @@
                                                 <button type="button" class="btn btn-secondary">검색</button>
                                             </div>
                                       </div>
+                                      <sec:csrfInput/>
                                   </form>                            
                               </div>
                               
@@ -72,7 +73,7 @@
                      
                           <div class="table-responsive">
                           
-                              <table class="table table-centered table-nowrap mb-0 table-hover">
+                              <table id="myTable" class="table table-centered table-nowrap mb-0 table-hover">
                                   <thead class="table-light">
                                       <tr>
                                       		<th></th>
@@ -91,7 +92,7 @@
                                   <c:forEach items="${dataList }" var="list" varStatus="status">
                                       <tr class="trlist">
                                       	<td><input class="orderNo" type="hidden" value="${list.hdorderNo }"></td>
-                                          <td style="text-align:center">${status.count }</td>
+                                          <td style="text-align:center">${list.rnum }</td>
                                             <td style="text-align:center">${list.vdCode }</td>
                                           <td style="text-align:center">${list.vdName }</td>
                                             <td style="text-align:center">${list.hdorderDate }</td>

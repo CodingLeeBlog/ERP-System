@@ -20,6 +20,7 @@ public interface IFrcsReviewService {
 	public ServiceResult reviewAnsInsert(FrcsReviewVO frcsReviewVO, AlarmVO alarmVO);
 	public int selectReviewCount(OwnerPaginationInfoVO<FrcsReviewVO> pagingVO);
 	public List<FrcsReviewVO> selectReviewList(OwnerPaginationInfoVO<FrcsReviewVO> pagingVO);
+	public int selectCount(String frcsId);
 	
 	//가맹점 알림
 	public List<AlarmVO> selectAlarmList(String memId);

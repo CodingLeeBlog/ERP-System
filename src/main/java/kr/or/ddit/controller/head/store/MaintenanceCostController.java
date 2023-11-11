@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,7 @@ public class MaintenanceCostController {
 	@Inject
 	private IMaintenancecostService service;
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/maintenanceCost.do")
 	public String maintenanceCost(
 			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
@@ -57,6 +59,7 @@ public class MaintenanceCostController {
 		return "head/store/maintenanceCost";
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/maintenanceCostDetail.do", method=RequestMethod.GET)
 	public String maintenanceCostDetail(
 			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
@@ -110,6 +113,7 @@ public class MaintenanceCostController {
 	}
 	
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/selectNonpayList.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public ResponseEntity<List<StoreOrderHistoryVO>> selectNonpayList(
 			@RequestBody Map<String, String> param ){

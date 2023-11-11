@@ -58,23 +58,35 @@ public class ResMemberController {
 	 */
 	@PreAuthorize("hasRole('ROLE_MEMBER')")
 	@RequestMapping(value = "/store/res.do", method = RequestMethod.GET)
-	public String mapForm(String memId, String frcsId, Model model) {
+	public String mapForm(String memId, String frcsId, String frcsName, Model model) {
 		
-		// 메뉴 리스트 조회 기능
-		List<FrcsMenuVO> frcsMenuList = menuService.resfrcsMenuList(frcsId);
-		model.addAttribute("menulist", frcsMenuList);
+		// 마른안주 메뉴 리스트 조회 기능
+		List<FrcsMenuVO> dryfrcsMenuList = menuService.dryfrcsMenuList(frcsId);
+		model.addAttribute("dryfrcsMenuList", dryfrcsMenuList);
+
+		// 튀김안주 메뉴 리스트 조회 기능
+		List<FrcsMenuVO> friedfrcsMenuList = menuService.friedfrcsMenuList(frcsId);
+		model.addAttribute("friedfrcsMenuList", friedfrcsMenuList);
+		
+		// 식사안주 메뉴 리스트 조회 기능
+		List<FrcsMenuVO> mainfrcsMenuList = menuService.mainfrcsMenuList(frcsId);
+		model.addAttribute("mainfrcsMenuList", mainfrcsMenuList);
+		
+		// 주류 메뉴 리스트 조회 기능
+		List<FrcsMenuVO> drinkfrcsMenuList = menuService.drinkfrcsMenuList(frcsId);
+		model.addAttribute("drinkfrcsMenuList", drinkfrcsMenuList);
 		
 		// 좌석 리스트 조회 기능
 		List<FrcsSeatVO> frcsSeatList = seatService.frcsSeatList(frcsId);
 		model.addAttribute("seatlist", frcsSeatList);
 		model.addAttribute("frcsId", frcsId);
+		model.addAttribute("frcsName", frcsName);
 		
 		// 쿠폰 리스트 조회 기능
 		List<MyCouponVO> couponList = mycouponService.myCouponList(memId);
 		int mycouponCnt = couponList.size();
 		model.addAttribute("couponList", couponList);
 		model.addAttribute("mycouponCnt", mycouponCnt);
-		
 		
 		return "mainhome/store/resForm";
 	}
@@ -107,7 +119,7 @@ public class ResMemberController {
 	@RequestMapping(value = "/store/review.do" , method = RequestMethod.POST)
 	public String reviewSuccess(
 			RedirectAttributes ra,
-			AlarmVO alarmVO, ReviewVO reviewVO, Model model
+			AlarmVO alarmVO, ReviewVO reviewVO, ResVO resVO, Model model
 			) {
 		
 		String goPage = "";
@@ -122,10 +134,10 @@ public class ResMemberController {
 			model.addAttribute("review", reviewVO);
 			goPage = "";
 		}else {
-			ServiceResult result = memberreviewService.create(reviewVO, alarmVO);
+			ServiceResult result = memberreviewService.create(reviewVO, resVO, alarmVO);
 			if(result.equals(ServiceResult.OK)) {
 				ra.addFlashAttribute("message", "리뷰등록이 완료되였습니다!");
-				goPage = "redirect:/elly/mypage.do?memId=" + reviewVO.getMemId();
+				goPage = "redirect:/elly/mypage/review.do?memId=" + reviewVO.getMemId();
 			}else {
 				model.addAttribute("bodyText", "register-page");
 				model.addAttribute("message", "서버 에러, 다시 시도해주세요!");

@@ -43,5 +43,60 @@
 			]]>
 	</select>
 	
-	
+	<!-- 월별 가맹점 총매출 -->
+	<select id="selectAllPrice" parameterType="franchiseSalesAnalysisVO" resultType="franchiseSalesAnalysisVO">
+		SELECT 
+	    EXTRACT(YEAR FROM selng_date) as year,
+	    SUM(selng_qy * selng_price) as total_price
+		FROM 
+	    dailyselling
+		WHERE 
+	    frcs_id = #{frcsId}
+	    AND EXTRACT(MONTH FROM selng_date) = #{curMonth}
+		GROUP BY 
+	    EXTRACT(YEAR FROM selng_date)
+	</select>
+	<!-- 월별 로얄티 도출 -->
+	<select id="selectRowal" parameterType="franchiseSalesAnalysisVO" resultType="franchiseSalesAnalysisVO">
+		SELECT
+	    EXTRACT(YEAR FROM d.selng_date) AS year,
+	    SUM(d.selng_qy * d.selng_price * 0.03) AS frcs_rowal
+		FROM
+	    dailyselling d
+		JOIN
+	    head_menu h ON d.menu_cd = h.menu_cd
+		WHERE
+	    d.frcs_id = #{frcsId}
+	    AND EXTRACT(MONTH FROM d.selng_date) = #{curMonth}
+		GROUP BY
+	    EXTRACT(YEAR FROM d.selng_date)
+	</select>
+	<!-- 월별 공과금 도출 -->
+	<select id="selectPublicDuesTotal" parameterType="franchiseSalesAnalysisVO" resultType="int">
+		select nvl(sum(dues_elcty + dues_water + dues_gas + dues_mtht),0) as publicdues_total
+		from publicdues
+		where frcs_id = #{frcsId} and dues_payde = #{yearMonth} and dues_mthtyn = 'Y'
+	</select>
+	<!-- 월별 매입가 도출 -->
+	<select id="selectPurchasePrice" parameterType="franchiseSalesAnalysisVO" resultType="int">
+	    SELECT
+	    NVL(SUM(fo.frcsorder_amt), 0) AS frcsorder_total
+		FROM
+	    franchise f
+	    JOIN frcsorder fo ON f.frcs_id = fo.frcs_id
+		WHERE
+	    f.frcs_id = #{frcsId}
+	    AND TO_CHAR(fo.frcsorder_date, 'YYYY-MM') = #{yearMonth}
+	</select>
+	<!-- 차트에그려줄 월별 총매출 데이터 쿼리 -->
+	<select id="selectAllMonthData" parameterType="franchiseSalesAnalysisVO" resultType="int">
+		SELECT 
+	    nvl(SUM(selng_qy * selng_price),0) as month_total
+		FROM 
+	    dailyselling
+		WHERE 
+	    frcs_id = #{frcsId}
+	    AND EXTRACT(YEAR FROM selng_date) = #{year}
+	    AND EXTRACT(MONTH FROM selng_date) = #{curMonth}
+	</select>
 </mapper>

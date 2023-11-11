@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.FrcsInventoryVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
@@ -18,7 +19,7 @@ public interface FrcsTradingMapper {
 	public List<FranchiseVO> getAllFrcsList();
 
 	// 다른 가맹점 재고 현황 가져오기
-	public FrcsInventoryVO getInventList(@Param("searchWord")String searchWord, @Param("searchType")String searchType, @Param("frcsId")String frcsId);
+	public List<FrcsInventoryVO> getInventList(@Param("searchWord")String searchWord, @Param("searchType")String searchType, @Param("frcsId")String frcsId);
 
 	// 트레이딩 신청
 	public int tradingInsert(TradingVO tradVO);
@@ -43,5 +44,19 @@ public interface FrcsTradingMapper {
 
 	// 트레이딩 거절
 	public int tradingRefuse(TradingVO tradVO);
+	
+	// 트레이딩 알림
+	public void insertAlarm(AlarmVO alarmVO);
+	public String getReceiveMemId(String frcsId);
+	public String getMemFrcs(String frcsId2);
+
+	// 금일 트레이딩 들어온 수
+	public int selectCount(String frcsId);
+
+	// 트레이딩 상세내역
+	public FrcsInventoryVO getDetail(FrcsInventoryVO frcsInventVO);
+
+	// 트레이딩 상세내역(응답)
+	public FrcsInventoryVO getReqDetail(FrcsInventoryVO frcsInventVO);
 
 }

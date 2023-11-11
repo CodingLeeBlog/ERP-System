@@ -29,26 +29,30 @@
                          <div class="card-body">
                              <h4 class="header-title mb-4">주간차트</h4>
                              <div dir="ltr">
-                                 <div class="mt-3 chartjs-chart" style="height: 100%;">
+                                 <div class="mt-3 chartjs-chart d-flex justify-content-center align-items-center">
+                                 <div class="chart-container" style="height:84.3%; width:84.3%">
                                      <canvas id="weekChart" data-colors="#727cf5,#0acf97" style="box-sizing: border-box; display: block; height: 320px; width: 450px;" width="450" height="320"></canvas>
+                                 </div>
                                  </div>
                              </div>
                          </div>
                      </div> 
                  </div>
                 
-<!--                 <div class="col-xl-6"> -->
-<!--                     <div class="card"> -->
-<!--                         <div class="card-body"> -->
-<!--                             <h4 class="header-title mb-4">또다른 차트</h4> -->
-<!--                             <div dir="ltr"> -->
-<!--                                 <div class="mt-3 chartjs-chart" style="height: 100%;"> -->
-<%--                                     <canvas id="monthChart" data-colors="#727cf5,#0acf97" style="box-sizing: border-box; display: block; height: 320px; width: 795px;" width="795" height="320"></canvas> --%>
-<!--                                 </div> -->
-<!--                             </div> -->
-<!--                         </div> -->
-<!--                     </div> -->
-<!--                 </div> -->
+                <div class="col-xl-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="header-title mb-4">인기 메뉴 TOP 10</h4>
+                            <div dir="ltr">
+                                <div class="mt-3 chartjs-chart d-flex justify-content-center align-items-center">
+                                <div class="chart-container" style="height:60%; width:60%">
+                              		<canvas id="popularMenu" data-colors="#727cf5,#fa5c7c,#0acf97,#ebeff2, #f56f36"></canvas>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 			<div class="col-12">
 	            <div class="card">
@@ -108,14 +112,10 @@
 											           </div>
 											           <div class="modal-body">
 											           <div class="mb-3">
-											           <div class="input-group">
-<!-- 								                            <input type="text" class="form-control modalSearchText" placeholder="메뉴명을 입력해주세요."> -->
-<!-- 								                            <button class="btn btn-info modalSearchBtn" type="button">검색</button> -->
-														<h5>합계
-														<input type="text" class="addSalesTotal" readonly>
-														</h5>
-								                        </div>
-								                        <br>
+														<div class="input-group" style="display: flex; justify-content: space-between; align-items: center;">
+														    <h5 style="display:inline;">합계 <input type="text" class="addSalesTotal" readonly style="display:inline;"></h5>
+														    <button type="button" class="btn btn-success" id="autoBtn">자동완성</button>
+														</div>				                        <br>
 								                        <div class="card-body py-0" data-simplebar style="max-height: 580px;">
 											               <table class="table table-hover">
 											                   <thead>
@@ -160,7 +160,7 @@
 									    <!-- Multiple modal -->
 									    <button type="button" class="btn btn-info mb-2" data-bs-toggle="modal" data-bs-target="#multiple-one"><i class="mdi mdi-cart-plus me-1"></i> 매출 등록</button>
 									<!-- 등록 모달창 끝 -->
-	                                <button type="button" class="btn btn-success mb-2">엑셀 다운로드</button>
+	                                <button type="button" class="btn btn-success mb-2" onclick="location.href='/owner/dailySales/excel.do'">엑셀 다운로드</button>
 	                            </div>
 	                        </div>
 	                    </div>
@@ -171,10 +171,10 @@
                            <thead class="table-light">
                                 <tr>
                                    <th style="width: 20px;">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" id="customCheck1">
-                                            <label class="form-check-label" for="customCheck1">&nbsp;</label>
-                                        </div>
+<!--                                         <div class="form-check"> -->
+<!--                                             <input type="checkbox" class="form-check-input" id="customCheck1"> -->
+<!--                                             <label class="form-check-label" for="customCheck1">&nbsp;</label> -->
+<!--                                         </div> -->
                                     </th>
                                     <th style="text-align:center; width:100px;">제목</th>
                                     <th style="text-align:center; width:150px;">총 매출금액</th>
@@ -187,7 +187,7 @@
                             <c:choose>
                             	<c:when test="${empty salesList }">
                             		<tr>
-                            			<td colspan="4" style="text-align:center">
+                            			<td colspan="5" style="text-align:center">
                             				일일 매출 내역이 존재하지 않습니다.
                             			</td>
                             		</tr>
@@ -196,13 +196,13 @@
                             		<c:forEach items="${salesList }" var="salesList" varStatus="stat">
 	                            		<tr class="view">
 		                                    <td>
-		                                        <div class="form-check">
-		                                            <input type="checkbox" class="form-check-input" id="customCheck2">
-		                                            <label class="form-check-label" for="customCheck2">&nbsp;</label>
-		                                        </div>
+<!-- 		                                        <div class="form-check"> -->
+<!-- 		                                            <input type="checkbox" class="form-check-input" id="customCheck2"> -->
+<!-- 		                                            <label class="form-check-label" for="customCheck2">&nbsp;</label> -->
+<!-- 		                                        </div> -->
 		                                    </td>
 		                                    <td style="text-align:center" class="selngDate"><fmt:formatDate value="${salesList.selngDate }" pattern="yyyy년 MM월 dd일 매출내역"/></td>
-		                                    <td style="text-align:center"><fmt:formatNumber value="${salesList.totalPrice }" type="currency"/></td>
+		                                    <td style="text-align:center"><fmt:formatNumber value="${salesList.totalPrice }" type="number"/>(원)</td>
 		                                    <td style="text-align:center" class="selngDateOwn"><fmt:formatDate value="${salesList.selngDate }" pattern="yyyy/MM/dd"/></td>
 		                                    <td style="text-align:center">
 			                                    <button type="button" class="btn btn-danger updateBtn" data-bs-toggle="modal" data-bs-target="#updateModal${stat.index }" data-selngdate="${salesList.selngDate}">수정</button>
@@ -265,53 +265,34 @@
 												</div>
 												
 												<!-- 상세내역 모달 -->
-												<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal${stat.index }">상세내역</button>
-												<div id="detailModal${stat.index }" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true">
-												    <div class="modal-dialog modal-dialog-centered">
-												        <div class="modal-content">
-												            <div class="modal-header">
-												                <h4 class="modal-title" id="standard-modalLabel">상세내역</h4>
-												                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
-												            </div>
-												            <div class="modal-body">
-												                <table class="table table-hover">
-												                   <thead>
-												                       <tr>
-													                       <th style="width: 20px;"></th>
-												                           <th style="text-align:center; width: 150px;">메뉴명</th>
-												                           <th style="text-align:center; width: 150px;">가격</th>
-												                           <th style="text-align:center; width: 150px;">판매수량</th>
-												                       </tr>
-												                   </thead>
-												                   <tbody class="detailModalBody">
-<%-- 												                       <c:forEach items="${frcsMenuList }" var="list"> --%>
-<!-- 												                           <tr> -->
-<!-- 													                           <td class="" style="vertical-align:middle;"> -->
-<!-- 																			       <div class="form-check"> -->
-<!-- 																			            <input type="checkbox" class="form-check-input checkBox"> -->
-<!-- 																			       </div> -->
-<!-- 																		       </td> -->
-<%-- 												                               <td class="menuCd" style="text-align:center; vertical-align:middle;">${list.menuCd }</td> --%>
-<%-- 												                               <td class="menuName" style="text-align:center; vertical-align:middle;">${list.menuName }</td> --%>
-<%-- 												                               <td class="menuPrice" style="text-align:center; vertical-align:middle;">${list.menuPrice }</td> --%>
-<!-- 												                               <td class="saleCount" style="text-align:center; width: 180px;" > -->
-<!-- 													                               <div class="input-group bootstrap-touchspin bootstrap-touchspin-injected"> -->
-<!-- 													                               		<span class="input-group-btn input-group-prepend"><button class="btn btn-primary bootstrap-touchspin-down saleCountDown" type="button">-</button></span> -->
-<!-- 													                                    <input data-toggle="touchspin" type="text" value="0" class="form-control text-end saleCountInput"> -->
-<!-- 													                                    <span class="input-group-btn input-group-append"><button class="btn btn-primary bootstrap-touchspin-up saleCountUp" type="button">+</button></span> -->
-<!-- 												                                   </div> -->
-<!-- 											 	                               </td> -->
-<!-- 												                           </tr> -->
-<%-- 												                       </c:forEach> --%>
-												                    </tbody>
-												                </table>
-												            </div>
-												            <div class="modal-footer">
-												                <button type="button" class="btn btn-light" data-bs-dismiss="modal">확인</button>
-												            </div>
-												        </div>
-												    </div>
-												</div>
+<%-- 												<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#detailModal${stat.index }">상세내역</button> --%>
+<%-- 												<div id="detailModal${stat.index }" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="true"> --%>
+<!-- 												    <div class="modal-dialog modal-dialog-centered"> -->
+<!-- 												        <div class="modal-content"> -->
+<!-- 												            <div class="modal-header"> -->
+<!-- 												                <h4 class="modal-title" id="standard-modalLabel">상세내역</h4> -->
+<!-- 												                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button> -->
+<!-- 												            </div> -->
+<!-- 												            <div class="modal-body"> -->
+<!-- 												                <table class="table table-hover"> -->
+<!-- 												                   <thead> -->
+<!-- 												                       <tr> -->
+<!-- 													                       <th style="width: 20px;"></th> -->
+<!-- 												                           <th style="text-align:center; width: 150px;">메뉴명</th> -->
+<!-- 												                           <th style="text-align:center; width: 150px;">가격</th> -->
+<!-- 												                           <th style="text-align:center; width: 150px;">판매수량</th> -->
+<!-- 												                       </tr> -->
+<!-- 												                   </thead> -->
+<!-- 												                   <tbody class="detailModalBody"> -->
+<!-- 												                    </tbody> -->
+<!-- 												                </table> -->
+<!-- 												            </div> -->
+<!-- 												            <div class="modal-footer"> -->
+<!-- 												                <button type="button" class="btn btn-light" data-bs-dismiss="modal">확인</button> -->
+<!-- 												            </div> -->
+<!-- 												        </div> -->
+<!-- 												    </div> -->
+<!-- 												</div> -->
 			                                </td>
 		                                </tr>
                            			</c:forEach>
@@ -345,6 +326,9 @@ $(function(){
 	var modalSearchBtn = $(".modalSearchBtn");	// 모달 안 검색버튼
 	var modalSearchText = $(".modalSearchText");	// 모달 안 검색창
 	var updateConfirmBtn = $(".updateConfirmBtn"); // 모달 안 최종 수정버튼
+	var popularMenuList = ${popularMenuList};	// 인기메뉴
+	var autoBtn = $("#autoBtn");	// 자동완성 버튼
+	
 	
 	// a 태그를 클릭하면 이벤트 실행 (페이징 처리)
 	pagingArea.on("click","a", function(event){
@@ -406,10 +390,11 @@ $(function(){
 	
 		
 	// 등록 모달 체크박스 선택 시 합계 자동 추가
-	$("#multiple-two").on("change", ".checkBox", function(){
- 		var total = 0;
+	$(document).on("change", "#multiple-two .checkBox", function () {
+		
+	var total = 0;
  		
- 		$(".checkBox:checked").each(function(){
+ 		$("#multiple-two .checkBox").each(function(){
 			var row = $(this).closest('tr');
 			var menuPrice = parseInt(row.find(".menuPrice").text());
 			var saleCount = parseInt(row.find(".saleCountInput").val());
@@ -421,7 +406,6 @@ $(function(){
  		});	
  		$("#multiple-two").find(".addSalesTotal").val(total);
  	});
-	
 	
 	// 등록 버튼을 누르면
 	addBtn.on("click",function(){
@@ -487,6 +471,37 @@ $(function(){
 			});
 		}
 	});
+	
+	
+	// 자동 완성
+	$("#autoBtn").on("click", function () {
+	    var modalBody = $(".modalBody");
+	    var total = 0;
+	
+	    for (var i = 0; i < 11; i++) {
+			
+	    	var tr = modalBody.find('tr').eq(i);
+	    	console.log("tr", tr);
+	    		
+	        var checkbox = tr.find(".checkBox");
+	    	console.log("checkbox", checkbox);
+			
+	    	var saleCountInput = tr.find(".saleCountInput");
+	    	console.log("saleCountInput", saleCountInput);
+
+	    	checkbox.prop("checked", true);
+	        saleCountInput.val(10);
+	    	
+
+	        var menuPrice = parseInt(tr.find(".menuPrice").text());
+	        console.log("menuPrice : " + menuPrice);
+	
+	        total += (menuPrice * 10);
+	    }
+	
+	    $("#multiple-two").find(".addSalesTotal").val(total);
+	});
+		
 	
 	// 일일 매출 등록 중복 체크
 	nextBtn.on("click",function(){
@@ -643,10 +658,6 @@ $(function(){
 					selngDateStr : selngDateStr
 				});
 				
-// 				var data = {
-// 				  checkedList: checkedList,
-// 				  selngDateStr : selngDate	
-// 				}
 			}
 				console.log(checkedList);
 			$.ajax({
@@ -710,17 +721,17 @@ $(function(){
 				labels : ["월", "화", "수", "목", "금", "토", "일"],
 				datasets : [
 					{
-						label : '지난주',
-						data : lastWeek,
-					    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-		                borderColor: 'rgba(255, 99, 132, 1)',
+						label : '이번주',
+						data : thisWeek,
+						backgroundColor: 'rgba(255, 99, 132, 0.2)',
+					    borderColor: 'rgba(255, 99, 132, 1)',
 		                borderWidth: 1,
 		                fill: false
 					},
 					{
-						label : '이번주',
-						data : thisWeek,
-					    borderColor: 'rgba(54, 162, 235, 1)',
+						label : '지난주',
+						data : lastWeek,
+		                borderColor: 'rgba(54, 162, 235, 1)',
 		                borderWidth: 1,
 		                fill: false
 					}
@@ -751,6 +762,39 @@ $(function(){
 	}
 	});
 	
+	
+	var popularMenuName = [];
+	var popularMenuCnt = [];
+	
+	console.log("popularMenuList : " + popularMenuList);
+	console.log("popularMenuList : " + popularMenuList.length);
+	
+	for(var i=0; i<10; i++){
+		console.log("popularMenuList(name) : " + popularMenuList[i].name);
+		console.log("popularMenuList(value) : " + popularMenuList[i].value);
+		popularMenuName.push(popularMenuList[i].name);
+		popularMenuCnt.push(popularMenuList[i].value);
+	}
+	
+	console.log("popularMenuName : " + popularMenuName);
+	console.log("popularMenuCnt : " + popularMenuCnt);
+	
+	// 인기 메뉴 가져오기
+		var ctx = document.getElementById('popularMenu').getContext('2d');
+	
+		var chart = new Chart(ctx,{
+			 type: 'doughnut',
+			  data: {
+			    labels: popularMenuName,  // 날짜 라벨 배열 사용
+			    datasets: [{
+			      data: popularMenuCnt,  // 값 배열 사용
+			      backgroundColor: ['#C4CDFF', '#B8E8FF', '#FFEFB8', '#FEDEFF', '#d5d4ff', '#c8f0fa', '#ffcccc', '#d6f6ff', '#e3fade', '#ffdfb8'],
+			    }]
+			  },
+			  options: {
+
+			  }
+			});
 	
 	// 모달이 숨겨질 때마다 이벤트 처리
 	$('.modalArea').on('hidden.bs.modal', function(e) {

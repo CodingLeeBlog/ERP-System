@@ -15,6 +15,9 @@
 		<!-- Sweet Alarm -->
 		<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
 		
+		<!-- SimpleMDE css -->
+        <link href="${pageContext.request.contextPath }/resources/assets/vendor/simplemde/simplemde.min.css" rel="stylesheet" type="text/css" />
+        
         <!-- App favicon -->
         <link rel="shortcut icon" href="${pageContext.request.contextPath }/resources/assets/images/favicon.ico">
 
@@ -115,6 +118,9 @@
 
     <!-- Dashboard App js -->
     <script src="${pageContext.request.contextPath }/resources/assets/js/pages/demo.dashboard.js"></script>
+    
+    <!-- SimpleMDE js -->
+    <script src="${pageContext.request.contextPath }/resources/assets/vendor/simplemde/simplemde.min.js"></script>
 
     <!-- App js -->
     <script src="${pageContext.request.contextPath }/resources/assets/js/app.min.js"></script>
@@ -127,6 +133,9 @@
     <script src="${pageContext.request.contextPath }/resources/assets/js/pages/demo.google-maps.js"></script>
     <!-- Bootstrap Datepicker js -->
     <script src="${pageContext.request.contextPath }/resources/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    
+    <!-- Page init js -->
+    <script src="${pageContext.request.contextPath }/resources/assets/js/pages/demo.inbox.js"></script>
     
     <!-- Datatables js -->
     <script src="${pageContext.request.contextPath }/resources/assets/vendor/datatables.net/js/jquery.dataTables.min.js"></script>

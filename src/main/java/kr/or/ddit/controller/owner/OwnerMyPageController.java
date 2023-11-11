@@ -27,18 +27,26 @@ public class OwnerMyPageController {
 	@Inject
 	private IFrcsIdService idService;
 	
+	@Inject
+	private IFrcsMyPageService myPageService;
+	
 	@PreAuthorize("hasRole('ROLE_OWNER')")
 	@RequestMapping(value="/mypageDetail.do", method = RequestMethod.GET )
 	public String ownerMyPageDetail(Model model) {
+		
+		//헤더 오른쪽 관리자 영역
 		String frcsId = idService.getFrcsId();
+		FranchiseVO frcsHead = myPageService.headerDetail(frcsId);
+		model.addAttribute("frcsHead", frcsHead);
+		
 		FranchiseVO frcs = service.detail(frcsId);
 		model.addAttribute("frcs", frcs);
 		return "owner/info/mypageDetail";
 	}
 	
 	@RequestMapping(value="/mypageUpdate.do", method = RequestMethod.GET )
-	public String ownerMyPageForm(Model model) {
-		String frcsId = idService.getFrcsId();
+	public String ownerMyPageForm(Model model, String frcsId) {
+//		String frcsId = idService.getFrcsId();
 		FranchiseVO frcs = service.detail(frcsId);
 		model.addAttribute("frcs", frcs);
 		return "owner/info/mypageForm";
@@ -50,19 +58,17 @@ public class OwnerMyPageController {
 			RedirectAttributes ra,
 			FranchiseVO franchiseVO, Model model) {
 		log.info("franchiseVO : " + franchiseVO);
-		service.update(franchiseVO);
-//		String goPage = "";
-//		ServiceResult result = service.update(req, franchiseVO);
-//		if(result.equals(ServiceResult.OK)) {
-//			ra.addFlashAttribute("message", "수정이 완료되었습니다!");
-//			goPage = "redirect:/owner/mypageDetail.do?frcsId=" + franchiseVO.getFrcsId();
-//		}else {
-//			model.addAttribute("message", "수정에 실패했습니다!");
-//			model.addAttribute("frcs", franchiseVO);
-//			goPage = "owner/info/myPageForm";
-//		}
-//		return goPage;
-		return "owner/mypageDetail.do?frcsId=" + franchiseVO.getFrcsId();
+		String goPage = "";
+		ServiceResult result = service.update(req, franchiseVO);
+		if(result.equals(ServiceResult.OK)) {
+			ra.addFlashAttribute("message", "수정이 완료되었습니다!");
+			goPage = "redirect:/owner/mypageDetail.do";
+		}else {
+			model.addAttribute("message", "수정에 실패했습니다!");
+			model.addAttribute("frcs", franchiseVO);
+			goPage = "owner/info/myPageForm";
+		}
+		return goPage;
 	}
 	
 }

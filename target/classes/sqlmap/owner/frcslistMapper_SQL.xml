@@ -17,7 +17,7 @@
 	from franchise  a
 	    left join (select distinct frcs_id, mem_id from mem_menu where mem_id = #{memId}) b on a.frcs_id = b.frcs_id
 	    left join reservation c on b.mem_id = c.mem_id
-	where frcs_add1 like '%'||#{frcsAdd1}||'%'
+	where frcs_add1 like #{frcsAdd1}||'%' or frcs_name like #{frcsAdd1}||'%'
 </select>
 
 

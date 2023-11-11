@@ -3,6 +3,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
+<!-- jquery 데이터테이블 -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.min.js"></script>
+
 <script type="text/javascript">
 $(function() {
     var checkboxesAdded = false;
@@ -12,7 +17,7 @@ $(function() {
 	var deleteBtn = $("#deleteBtn");
     
 	updateBtn.on("click", function() {
-		var table = $("#vendorTable");
+		var table = $("#myTable");
         var tbody = table.find("tbody");
         var thead = table.find("thead");
         var container = table.parent(); // 테이블의 부모 컨테이너 가져오기
@@ -77,7 +82,7 @@ $(function() {
 	
 	// DELETE 기능 수행 
  	deleteBtn.on("click", function() {
-	var table = $("#vendorTable");
+	var table = $("#myTable");
     var tbody = table.find("tbody");
     var thead = table.find("thead");
     var container = table.parent(); // 테이블의 부모 컨테이너 가져오기
@@ -148,7 +153,19 @@ $(function() {
 		if($(this).hasClass('confirmUpdate')){
 			$("#udtFrm").submit();	
 		}else if($(this).hasClass('confirmDelete')){
-			$("#delFrm").submit();	
+ 		    			    	
+	    	Swal.fire({
+	            title: "삭제불가!!",
+	            text: "사장님에게문의하세요",
+	            confirmButtonText: "확인",
+	            icon: "error",
+	            preConfirm: function () {
+	                location.href = "/head/customerList.do";
+	            }
+	        });
+	    	// SweetAlarm 끝
+	    	
+// 			$("#delFrm").submit();
 		}
 	});
  
@@ -232,14 +249,14 @@ $(function() {
 		
 		                    <div class="table-responsive mb-3" id="cont">
 		                    
-		                        <table id="vendorTable" class="table table-centered table-nowrap mb-0 table-hover">
+		                        <table id="myTable" class="table table-centered table-nowrap mb-0 table-hover">
 		                            <thead class="table-light">
 		                                <tr>
 		                                    <th style="text-align:center; width:100px;">순번</th>
 		                                    <th style="text-align:center; width:100px;">거래처코드</th>
                                             <th style="text-align:center; width:150px;">거래처명</th>
 		                                    <th style="text-align:center; width:100px;">연락처</th>
-                                            <th style="text-align:center; width:150px;">거래처주소</th>
+                                            <th style="text-align:center; width:120px;">거래처주소</th>
 		                                    <th style="text-align:center; width:150px;">담당자</th>
                                             <th style="text-align:center; width:150px;">이메일</th>
 		                                    <th style="text-align:center; width:150px;">분류</th>
@@ -263,13 +280,13 @@ $(function() {
 					                                    <td style="text-align:center">
 					                                    	${vdList.vdPhone }
 					                                    </td>
-						                                <td style="text-align:center">
+						                                <td style="text-align:left">
 			                                                ${vdList.vdAdd1 }&nbsp;${vdList.vdAdd2 }
 						                                </td>
 			                                            <td style="text-align:center">
 			                                                ${vdList.vdManager }
 			                                            </td>
-			                                            <td style="text-align:center">
+			                                            <td style="text-align:left">
 			                                                ${vdList.vdEmail }
 			                                            </td>
 					                                    <td style="text-align:center">
@@ -333,6 +350,11 @@ $(function() {
 $(function(){
 	var searchForm = $("#searchForm");
 	
+	$('#myTable').DataTable({
+		 searching: false,
+		 paging:false,
+		 info:false
+	 });
 	
 	var vendorStatus = $("#vendorStatus");
 	var vdCategory = "";

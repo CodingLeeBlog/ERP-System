@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,7 @@ public class ProposalController {
 	@Inject
 	private IProposalService proposalService;
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/proposalList.do")
 	public String proposalList(
 			@RequestParam(name = "page", required = false, defaultValue = "1")int currentPage,
@@ -62,6 +64,7 @@ public class ProposalController {
 		return "head/proposal/list";
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/proposalDetail.do")
 	public String proposalDetail(@RequestParam int tableNo, Model model) {
 	    ProposalVO proposal = proposalService.selectProposal(tableNo);
@@ -69,6 +72,7 @@ public class ProposalController {
 	    return "head/proposal/detail"; 
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/proposalInsert.do", method = RequestMethod.POST)
 	public String proposalInsert(
 			RedirectAttributes ra,

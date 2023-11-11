@@ -182,13 +182,13 @@
 												<th></th>
 												<th class="all">문서번호</th>
 												<th>제목</th>
-												<th>지점명</th>
+<!-- 												<th>지점명</th> -->
 												<th>발송일</th>
 												<th>상태</th>
 											</tr>
 										</thead>
 										<tbody id="tBody">
-											<c:set value="${pagingVO.dataList }" var="frcsOfldcList" />
+											<c:set value="${pagingVOF.dataList }" var="frcsOfldcList" />
 											<c:choose>
 												<c:when test="${empty frcsOfldcList }">
 													<tr class="text-center">
@@ -205,7 +205,7 @@
 															<td><a
 																href="/head/readDetail.do?frcsOfldcNo=${frcsOfldc.frcsOfldcNo}"
 																class="email-subject"> ${frcsOfldc.frcsOfldcTtl } </a></td>
-															<td>${frcsOfldc.frcsOfldcSndpty }</td>
+<%-- 															<td>${frcsOfldc.frcsOfldcSndpty }</td> --%>
 															<td><fmt:formatDate
 																	value="${frcsOfldc.frcsOfldcDspymd }"
 																	pattern="yyyy-MM-dd" /></td>

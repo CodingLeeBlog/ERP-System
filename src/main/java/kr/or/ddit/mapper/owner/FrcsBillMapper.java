@@ -9,6 +9,7 @@ import kr.or.ddit.vo.head.FeeVO;
 import kr.or.ddit.vo.owner.FrcsBillVO;
 import kr.or.ddit.vo.owner.FrcsPublicDuesVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
+import kr.or.ddit.vo.owner.TradingVO;
 
 public interface FrcsBillMapper {
 
@@ -77,6 +78,15 @@ public interface FrcsBillMapper {
 
 	// 가맹비 디테일 테이블에 데이터 update
 	public void updateDetail(FrcsBillVO billVO);
+
+	// 납부일자 받아오기
+	public Date getSettleDate(FeeVO feeVO);
+
+	// 트레이딩 상세내역(내가 요청한거)
+	public List<TradingVO> getTradDetail(@Param("frcsId")String frcsId, @Param("thisMonth")Date thisMonth);
+
+	// 트레이딩 상세내역(내가 보내준거)
+	public List<TradingVO> getTradMinDetail(@Param("frcsId")String frcsId, @Param("thisMonth")Date thisMonth);
 
 
 	

@@ -17,6 +17,8 @@ public interface IEducationService {
 
 	public EducationVO educationDetail(EducationVO educationVO);
 
+	public void educationUpdate(EducationVO educationVO);
+
 
 
 }

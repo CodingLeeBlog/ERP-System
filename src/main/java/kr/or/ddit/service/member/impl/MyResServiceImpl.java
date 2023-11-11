@@ -16,6 +16,13 @@ public class MyResServiceImpl implements IMyResService {
 	@Inject
 	private MyResMapper myresMapper;
 	
+	
+	/**
+	 * 나의 예약 내역 조회 서비스 로직
+	 * 
+	 * @param memId
+	 * @return List<ResVO> 타입의 객체 리턴
+	 */
 	@Override
 	public List<ResVO> myResList(String memId) {
 		return myresMapper.myResList(memId);

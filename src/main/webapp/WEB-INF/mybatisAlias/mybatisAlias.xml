@@ -25,27 +25,28 @@
 		<typeAlias type="kr.or.ddit.vo.member.PayVO" alias="payVO"/>
 		
 		<!-- 가맹점 -->
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsPublicDuesVO" alias="duesVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.OwnerPaginationInfoVO" alias="ownerPagingVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsSeatVO" alias="seatVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FranchiseVO" alias="franchiseVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsInventoryVO" alias="inventVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.DeliveryVO" alias="delVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsMenuVO" alias="frcsMenuVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsOrderVO" alias="orderVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsOrderDetailVO" alias="orderDetailVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsInquiryVO" alias="frcsInqVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsOwnershipVO" alias="ownershipVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsAutoOrderVO" alias="autoOrderVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsDailySalesVO" alias="salesVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsReviewVO" alias="FrcsReviewVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsMenuIngredientVO" alias="ingredVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsReservationVO" alias="frcsResvVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsEmployeeVO" alias="frcsEmpVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.TradingVO" alias="tradVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsOfficialDocVO" alias="frcsOfldcVO"/>
-      <typeAlias type="kr.or.ddit.vo.owner.FrcsBillVO" alias="billVO"/>
-      
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsPublicDuesVO" alias="duesVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.OwnerPaginationInfoVO" alias="ownerPagingVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsSeatVO" alias="seatVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FranchiseVO" alias="franchiseVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsInventoryVO" alias="inventVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.DeliveryVO" alias="delVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsMenuVO" alias="frcsMenuVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsOrderVO" alias="orderVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsOrderDetailVO" alias="orderDetailVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsInquiryVO" alias="frcsInqVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsOwnershipVO" alias="ownershipVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsAutoOrderVO" alias="autoOrderVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsDailySalesVO" alias="salesVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsReviewVO" alias="FrcsReviewVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsMenuIngredientVO" alias="ingredVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsReservationVO" alias="frcsResvVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsEmployeeVO" alias="frcsEmpVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.TradingVO" alias="tradVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsOfficialDocVO" alias="frcsOfldcVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsBillVO" alias="billVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsAttendanceManagementVO" alias="frcsAttendanceManagementVO"/>
+		<typeAlias type="kr.or.ddit.vo.owner.FrcsRestDayVO" alias="frcsRestDayVO"/>
 		
 		<!-- 본사 -->
 		<typeAlias type="kr.or.ddit.vo.head.MenuVO" alias="menuVO"/>
@@ -67,8 +68,10 @@
 		<typeAlias type="kr.or.ddit.vo.head.CouponVO" alias="couponVO" />
 		<typeAlias type="kr.or.ddit.vo.head.PurchaseVO" alias="purchaseVO" />
 		<typeAlias type="kr.or.ddit.vo.head.FeeVO" alias="headfeeVO" />
-		<typeAlias type="kr.or.ddit.vo.head.HeadSalesTotalVO" alias="headsalesTotalVO" />
+		<typeAlias type="kr.or.ddit.vo.head.HeadSalesTotalVO" alias="headsalestotalVO" />
+		<typeAlias type="kr.or.ddit.vo.head.HeadMonthVO" alias="headmonthVO" />
 		<typeAlias type="kr.or.ddit.vo.head.FranchiseSalesAnalysisVO" alias="franchiseSalesAnalysisVO" />
+		<typeAlias type="kr.or.ddit.vo.head.DashboardVO" alias="dashboardVO" />
 	</typeAliases>
 	
 </configuration>

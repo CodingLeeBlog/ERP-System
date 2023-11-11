@@ -16,4 +16,6 @@ public class OpenPlanVO {
 	private String fcmgHefc;
 	private String fcmgIprgst;
 	private String fcmgRemark;
+	private int rnum;
+
 }

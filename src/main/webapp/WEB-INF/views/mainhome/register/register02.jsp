@@ -40,9 +40,13 @@
 					</div>
 				</div>
 				
-				<div class="row mb-5">
-					<div class="" style="color: black; font-size: 20px;">&#8251; 표기된 항목은 필수입력 항목입니다.</div>
+				<div class="d-flex mt-5 mb-5">
+					<div class="col-4" style="color: black; font-size: 20px;">&#8251; 표기된 항목은 필수입력 항목입니다.</div>
+					<button class="col-1 btn btn-light" id="memregister">자동완성</button>
+					<button class="col-1 btn btn-light" id="ownerregister" style="display: none;">자동완성</button>
+					<div class="col-7"></div>
 				</div>
+				
 				<div class="mb-5" style="color: rgb(0, 0, 0); border-bottom: 1px solid;"></div>
 				<div class="row mb-3" id="ownerIdTap" style="color: black; font-size: 20px; display: none">
 					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 일련번호</div>
@@ -92,7 +96,7 @@
 				<div class="row mb-3" style="color: black; font-size: 20px;">
 					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 생년월일</div>
 					<div class="col-auto">
-						<input type="text" class="form-control" id="memBir" name="memBir" style="width: 334px" min="6" max="20" placeholder="생년월일을 입력하세요" value="">
+						<input type="text" class="form-control" id="memBir" name="memBir" style="width: 334px" min="6" max="20" placeholder="생년월일 입력해주세요(ex:940101)" value="">
 					</div>
 				</div>
 				<div class="row mb-3" style="color: black; font-size: 20px;">
@@ -227,6 +231,8 @@ $(function(){
 		$("#ownerIdTap").css("display", "none");
 		$("#frcsIdTap").css("display", "none");
 		$("#frcsNameTap").css("display", "none");
+		$("#memregister").show();
+		$("#ownerregister").hide();
 		selectFlag = false;
 		console.log(selectFlag)
 	});
@@ -240,6 +246,8 @@ $(function(){
 		$("#ownerIdTap").css("display", "");
 		$("#frcsIdTap").css("display", "");
 		$("#frcsNameTap").css("display", "");
+		$("#memregister").hide();
+		$("#ownerregister").show();
 		selectFlag = true;
 		console.log(selectFlag)
 	});
@@ -268,12 +276,18 @@ $(function(){
 			success : function(res){
 				console.log("아이디 중복 확인 결과 : " + res);
 				if(res == "NOTEXIST"){					
-					alert("사용 가능한 아이디입니다!");
-				
-					// 가입하기 버튼을 클릭할때 아이디 중복 체크를 했는지 여부
+    				Swal.fire({
+    					title: '알림창',
+    					text: '사용 가능한 아이디입니다 !',
+    					icon: 'success',
+    				})
 					idCheckFlag = true; 
 				}else{
-					alert("이미 사용중인 아이디입니다!")
+    				Swal.fire({
+    					title: '경고',
+    					text: '이미 사용중인 아이디입니다 !',
+    					icon: 'success',
+    				})
 				}
 			}
 		});
@@ -317,6 +331,13 @@ $(function(){
 				$("#mobile3").val(memTel3);
 				$("#memEmail").val(res.ownerEmail);
 				
+			},
+			error : function(xhr, status, error) {
+				Swal.fire({
+					title: '경고',
+					text: '잘못된 일련번호입니다 !',
+					icon: 'warning',
+				})
 			}
 		});
 	});
@@ -348,6 +369,13 @@ $(function(){
 				frcsIdCheckFlag = true;
 				
 				$("#frcsName").val(res.frcsName)
+			},
+			error : function(xhr, status, error) {
+				Swal.fire({
+					title: '경고',
+					text: '잘못된 가맹점코드입니다 !',
+					icon: 'warning',
+				})
 			}
 		});
 	});
@@ -362,11 +390,22 @@ $(function(){
 	        type: "GET",
 	        url: "/elly/mailCheck.do?email=" + email,
 	        success:function(data){
-	            alert("해당 이메일로 인증번호호 발송이 완료되었습니다. \n 확인부탁드립니다.")
+				Swal.fire({
+					title: '알림창',
+					text: '해당 이메일로 인증번호호 발송이 완료되었습니다.',
+					icon: 'success',
+				})
 	            mailCheckInput.attr('disabled', false);
 	            console.log("data : "+data);
 	            code = data;
-        	}
+        	},
+			error : function(xhr, status, error) {
+				Swal.fire({
+					title: '경고',
+					text: '잘못된 이메일 인증번호입니다 !',
+					icon: 'warning',
+				})
+			}
 	    });
 	});
 	
@@ -468,32 +507,57 @@ $(function(){
 			data: JSON.stringify(data),
 			contentType : "application/json; charset=utf-8",
 			success : function(res){
-				alert("회원 가입이 완료되었습니다 !");
+				Swal.fire({
+					title: '알림창',
+					text: '회원 가입이 완료되었습니다 !',
+					icon: 'success',
+				}).then((result) => {
+					if (result.isConfirmed) {
+						location.href = "/elly/login.do"; 
+					}
+				});
+			},
+			error : function(xhr, status, error) {
+				Swal.fire({
+					title: '경고',
+					text: '회원 가입 중 오류 발생 !',
+					icon: 'warning',
+				}).then((result) => {
+					if (result.isConfirmed) {
+						location.href = "/elly/register02.do"; 
+					}
+				});
 			}
 		});
 		
 	});
 	
-	imgFile.on("change", function(event){
-		var file = event.target.files[0];
-		
-		if(isImageFile(file)){
-			var reader = new FileReader();
-			reader.onload = function(e){
-				$("#profileImg").attr("src", e.target.result);
-			}
-			reader.readAsDataURL(file);
-		}else {
-			alert("이미지 파일을 선택해주세요!");
-		}
+	// 일반회원 자동완성
+	$('#memregister').on("click", function(){
+		$("#memIdChk").val("b001");
+		$("#memPw").val("1234");
+		$("#memPwConfirm").val("1234");
+		$("#memName").val("윤선주");
+		$("#memBir").val("940101");
+		$("#mobile1").val("010");
+		$("#mobile2").val("9514");
+		$("#mobile3").val("9812");
+		$("#memEmail").val("sunju_y@naver.com");
+		$("#memPost").val("35275");
+		$("#memAdd1").val("대전 서구 계룡로 314");
+		$("#memAdd2").val("대전일보사");
+	});
+	
+	// 가맹점주 자동완성
+	$('#ownerregister').on("click", function(){
+		$("#memIdChk").val("b001");
+		$("#memPw").val("1234");
+		$("#memPwConfirm").val("1234");
+		$("#memPost").val("35275");
+		$("#memAdd1").val("대전 서구 계룡로 314");
+		$("#memAdd2").val("대전일보사");
 	});
 });
-
-function isImageFile(file){
-	var ext = file.name.split(".").pop().toLowerCase(); // 파일명에서 확장자를 꺼낸다.
-	return ($.inArray(ext, ["jpg", "jpeg", "gif", "png"]) === -1 ? false : true);
-}
-
 
 function DaumPostcode(){
 	new daum.Postcode({

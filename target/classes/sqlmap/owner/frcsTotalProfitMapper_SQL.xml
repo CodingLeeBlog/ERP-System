@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsTotalProfitMapper">
+
+
+	<!-- 매출 총이익 분석 (1개월)- 매출액 조회 -->
+	<select id="getTotalSales" parameterType="map" resultType="int">
+		select nvl(sum(selng_qy * selng_price),0) as total_price
+		from dailyselling
+		where frcs_id = #{frcsId} and trunc(selng_date, 'MM') = trunc(#{thisMonth}, 'MM')
+	</select>
+	
+	<!-- 매출 총이익 분석 (3개월) 매출액 조회 -->
+	<select id="getThreeTotalSales" parameterType="map" resultType="int">
+		select nvl(sum(selng_qy * selng_price),0) as total_price
+		from dailyselling
+		<![CDATA[
+		where frcs_id = #{frcsId} and trunc(selng_date, 'MM') >= add_months(trunc(#{thisMonth}, 'MM'),-2)
+		and trunc(selng_date, 'MM') < add_months(trunc(#{thisMonth}, 'MM'), 1)
+		]]> 
+	</select>
+	
+	<!-- 매출 총이익 분석 (6개월) 매출액 조회 -->
+	<select id="getSixTotalSales" parameterType="map" resultType="int">
+		select nvl(sum(selng_qy * selng_price),0) as total_price
+		from dailyselling
+		<![CDATA[
+		where frcs_id = #{frcsId} and trunc(selng_date, 'MM') >= add_months(trunc(#{thisMonth}, 'MM'),-5)
+		and trunc(selng_date, 'MM') < add_months(trunc(#{thisMonth}, 'MM'), 1)
+		]]> 
+	</select>
+	
+	<!-- 매출 총이익 분석 (1개월)- 매입액 조회 -->
+	<select id="getPurchase" parameterType="map" resultType="int">
+		select nvl(sum(frcsorder_amt),0) as totalorder_price
+		from frcsorder
+		where frcs_id = #{frcsId} and trunc(frcsorder_date, 'MM') = trunc(#{thisMonth}, 'MM')
+		and frcsorder_confm = '승인'
+	</select>
+	
+	<!-- 매출 총이익 분석 (3개월) 매입액 조회 -->
+	<select id="getThreePurchase" parameterType="map" resultType="int">
+		select nvl(sum(frcsorder_amt),0) as totalorder_price
+		from frcsorder
+		<![CDATA[
+		where frcs_id =  #{frcsId} and trunc(frcsorder_date, 'MM')  >= add_months(trunc(#{thisMonth}, 'MM'), -2)
+		and frcsorder_date < add_months(trunc(#{thisMonth}, 'MM'), 1)
+		]]>
+		and frcsorder_confm = '승인'
+	</select>
+
+	<!-- 매출 총이익 분석 (6개월) 매입액 조회 -->
+	<select id="getSixPurchase" parameterType="map" resultType="int">
+		select nvl(sum(frcsorder_amt),0) as totalorder_price
+		from frcsorder
+		<![CDATA[
+		where frcs_id =  #{frcsId} and trunc(frcsorder_date, 'MM') >= add_months(trunc(#{thisMonth}, 'MM'), -5)
+		and frcsorder_date < add_months(trunc(#{thisMonth}, 'MM'), 1)
+		]]>
+		and frcsorder_confm = '승인'
+	</select>
+	
+</mapper>

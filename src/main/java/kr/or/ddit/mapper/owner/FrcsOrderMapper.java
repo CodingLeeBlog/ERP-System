@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import kr.or.ddit.ServiceResult;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.owner.FrcsAutoOrderVO;
 import kr.or.ddit.vo.owner.FrcsInventoryVO;
 import kr.or.ddit.vo.owner.FrcsOrderDetailVO;
@@ -57,5 +58,15 @@ public interface FrcsOrderMapper {
 
 	// 자동발주 수정
 	public int autoOrderUpdate(FrcsAutoOrderVO autoVO);
+	
+	//알림
+	public void insertAlarm(AlarmVO alarmVO);
+	public String getReceiveMemId(String frcsOrderNo);
+	public String getMemFrcs(String frcsId);
+
+	// 발주 상세 내역 (엑셀 다운로드)
+	public List<FrcsOrderVO> getOrderList(String frcsId);
+
+
 	
 }

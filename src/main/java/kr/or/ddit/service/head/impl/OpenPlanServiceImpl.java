@@ -3,6 +3,7 @@ package kr.or.ddit.service.head.impl;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 
@@ -26,4 +27,12 @@ public class OpenPlanServiceImpl implements IOpenPlanService {
 	public List<OpenPlanVO> selectOpenPlanList(HeadPaginationInfoVO<OpenPlanVO> pagingVO) {
 		return openplanmapper.selectOpenPlanList(pagingVO);
 	}
+
+	@Override
+	public void planUpdate(OpenPlanVO openPlanVO) {
+		openplanmapper.planUpdate(openPlanVO);
+		
+		openplanmapper.insertFcmg(openPlanVO);
+	}
+
 }

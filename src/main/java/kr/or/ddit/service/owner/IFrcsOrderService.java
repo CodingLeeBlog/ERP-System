@@ -3,6 +3,7 @@ package kr.or.ddit.service.owner;
 import java.util.List;
 
 import kr.or.ddit.ServiceResult;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.owner.FrcsAutoOrderVO;
 import kr.or.ddit.vo.owner.FrcsInventoryVO;
 import kr.or.ddit.vo.owner.FrcsOrderVO;
@@ -13,7 +14,7 @@ public interface IFrcsOrderService {
 	public List<FrcsInventoryVO> getInventList(String memId);
 	public List<FrcsInventoryVO> inventSearch(String searchWord, String searchType, String frcsId);
 	public String getFrcsId(String memId);
-	public ServiceResult orderInsert(FrcsOrderVO frcsOrderVO);
+	public ServiceResult orderInsert(FrcsOrderVO frcsOrderVO, AlarmVO alarmVO);
 
 	// 발주 페이징 처리
 	public int selectOrderCount(OwnerPaginationInfoVO<FrcsOrderVO> pagingVO);
@@ -46,4 +47,7 @@ public interface IFrcsOrderService {
 	
 	// 자동발주 수정
 	public ServiceResult autoOrderUpdate(FrcsAutoOrderVO autoVO);
+	
+	// 발주 상세내역 페이지 엑셀 다운로드
+	public List<FrcsOrderVO> getOrderList(String frcsId);
 }

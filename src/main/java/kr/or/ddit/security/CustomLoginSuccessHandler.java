@@ -22,6 +22,10 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 
 	private RequestCache requestCache = new HttpSessionRequestCache();
 	
+	/**
+	 * 로그인한 정보에 따라 다른 url 이동
+	 *
+	 */
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) throws IOException, ServletException {
@@ -30,7 +34,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		log.info("username : " + customUser.getUsername());
 		log.info("password : " + customUser.getPassword());
 		
-		clearAuthenticationAttribute(request);
+//		clearAuthenticationAttribute(request);
 		
 //		HttpSession session = request.getSession();
 //		session.setAttribute("SessionInfo", customUser);
@@ -60,14 +64,14 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
 		response.sendRedirect(targetUrl);
 	}
 
-	public void clearAuthenticationAttribute(HttpServletRequest req) {
-		HttpSession session = req.getSession();
-		if(session == null) {
-			return;
-		}
-		
-		// SPRING_SECURITY_LAST_EXCEPTION 값
-		session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-	}
+//	public void clearAuthenticationAttribute(HttpServletRequest req) {
+//		HttpSession session = req.getSession();
+//		if(session == null) {
+//			return;
+//		}
+//		
+//		// SPRING_SECURITY_LAST_EXCEPTION 값
+//		session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+//	}
 
 }

@@ -59,13 +59,13 @@ public interface FrcsDailyMapper {
 	// 매출액 분석 (한달)
 	public List<FrcsDailySalesVO> getOneMonthData(@Param("frcsId")String frcsId, @Param("thisMonth")Date thisMonth);
 	
-	// 매출 총이익 분석 (한달)- 매출액 조회
-	public int getTotalSales(@Param("frcsId")String frcsId, @Param("thisMonth")Date thisMonth);
-
-	// 매출 총이익 분석 (한달)- 매입액 조회
-	public int getPurchase(@Param("frcsId")String frcsId, @Param("thisMonth")Date thisMonth);
+	// 인기 메뉴
+	public List<FrcsDailySalesVO> getPopularMenu(String frcsId);
 	
-	// 매입 분석 (한달)
-	public List<FrcsOrderDetailVO> getOnePurchase(@Param("frcsId")String frcsId, @Param("thisMonth")Date thisMonth);
+	// 엑셀 다운로드
+	public List<FrcsDailySalesVO> getDailySalesCellList(String frcsId);
+	
+	
+	
 
 }

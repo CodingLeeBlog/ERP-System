@@ -72,7 +72,7 @@
 				                                        </td>
 				                                        <td>${headInquiry.inqryNo }</td>
 				                                        <td>
-				                                            <a href="/owner/inqDetail.do?inqryNo=${headInquiry.inqryNo }" class="text-body fw-bold">${headInquiry.inqryTtl }</a>
+				                                            <a href="/head/inquiryDetail.do?inqryNo=${headInquiry.inqryNo }" class="text-body fw-bold">${headInquiry.inqryTtl }</a>
 				                                        </td>
 				                                        <!-- 내용 일정 글자 초과시 뒤에 ...으로 표시하기 -->
 				                                        <td><fmt:formatDate value="${headInquiry.inqryYmd }" pattern="yyyy-MM-dd"/></td>

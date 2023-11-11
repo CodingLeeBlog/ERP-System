@@ -46,7 +46,7 @@
 	<select id="selectBoardList" parameterType="pagingVO" resultType="boardVO">
 		with b as(
 			select
-			    row_number() over(order by t.rnum2 desc) rnum, t.*
+			    row_number() over(order by t.rnum2 asc)rnum, t.*
 			from(
 			    select 
 			        a.*, row_number() over (order by a.table_no desc) rnum2
@@ -58,7 +58,7 @@
 			        where 1=1
 			        AND FIELD = '건의'
 			        <include refid="boardSearch"/>
-			        order by table_no desc
+			        order by table_no asc
 			    )a
 			) t
 		)
@@ -128,9 +128,9 @@
 	
 	<!-- 게시글. 본사의 아이디 구하기 -->
 	<select id="getReceiveMemId" parameterType="String" resultType="String">
-	SELECT MEM_ID	
+	SELECT DISTINCT MEM_ID	
 		FROM
-		    ALARM
+		    MEMBER
 		WHERE
 			MEM_ID = 'admin'
 	</select>

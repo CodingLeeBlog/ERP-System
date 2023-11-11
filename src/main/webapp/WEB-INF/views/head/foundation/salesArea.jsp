@@ -117,10 +117,10 @@
                                                 <thead>
                                                     <tr>
                                                         <td>
-                                                            <h5 class="font-14 my-1"><a href="javascript:void(0);" class="text-body">가맹점명</a></h5>
+                                                            <h5 class="font-14 my-1" ><a href="javascript:void(0);" class="text-body">가맹점명</a></h5>
                                                         </td>
                                                         <td>
-                                                            <h5 class="font-14 my-1"><a href="javascript:void(0);" class="text-body">가맹점주명</a></h5>
+                                                            <h5 class="font-14 my-1" style="font-weight: bold;"><a href="javascript:void(0);" class="text-body">가맹점주명</a></h5>
                                                         </td>
                                                         <td>
                                                             <h5 class="font-14 my-1"><a href="javascript:void(0);" class="text-body">주소</a></h5>
@@ -151,16 +151,16 @@
 			                                                            <h5 class="font-14 my-1"><span class="text-body" style="cursor: pointer;}">${totalinfoVo.frcsName }</span></h5>
 			                                                        </td>
 			                                                        <td>
-			                                                            <span class="text-muted font-13" style="text-align:center;">${totalinfoVo.memName }</span> <br/>
+			                                                            <span class="font-13" style="text-align:center; font-weight: bold;">${totalinfoVo.memName }</span> <br/>
 			                                                        </td>
 			                                                        <td>
-			                                                            <span class="text-muted font-13" style="text-align: center;">${totalinfoVo.frcsAdd1 }&nbsp;${totalinfoVo.frcsAdd2 }</span>
+			                                                            <span class="text-muted font-13" style="text-align: center; font-weight: bold;">${totalinfoVo.frcsAdd1 }&nbsp;${totalinfoVo.frcsAdd2 }</span>
 			                                                        </td>
 			                                                        <td>
-			                                                            <span class="text-muted font-13" style="text-align: center;"> <fmt:formatDate value="${totalinfoVo.frcsOpdate }" pattern="yyyy-MM-dd"/> </span>
+			                                                            <span class="text-muted font-13" style="text-align: center; font-weight: bold;"> <fmt:formatDate value="${totalinfoVo.frcsOpdate }" pattern="yyyy/MM/dd"/> </span>
 			                                                        </td>
 			                                                        <td >
-			                                                            <span class="text-muted font-13" style="text-align: center;">${totalinfoVo.frcsTel }</span>
+			                                                            <span class="text-muted font-13" style="text-align: center; font-weight: bold;">${totalinfoVo.frcsTel }</span>
 			                                                        </td>
 			                                                    </tr>
 		                                                	</tbody>
@@ -347,7 +347,7 @@
 					datasets : [ {
 						label : '# 영업이익',
 						data : sales,
-						borderWidth : 2
+						backgroundColor: 'rgba(182, 225, 233, 1)'
 					} ]
 				},
 				options : {

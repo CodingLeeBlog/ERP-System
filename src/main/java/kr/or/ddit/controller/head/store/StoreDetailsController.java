@@ -2,6 +2,7 @@ package kr.or.ddit.controller.head.store;
 
 import javax.inject.Inject;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ public class StoreDetailsController {
 		@Inject
 		private IStoreInquiryService service;
 	
+		@PreAuthorize("hasRole('ROLE_HEAD')")
 	   @RequestMapping(value = "/storeDetails.do")
 	   public String storeDetails(
 	         @RequestParam("frcsName") String frcsName,

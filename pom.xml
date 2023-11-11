@@ -158,6 +158,15 @@
 			<version>2.9.5</version>
 		</dependency>
 		
+		<!-- fullcalendar -->
+		<dependency>
+		    <groupId>com.googlecode.json-simple</groupId>
+		    <artifactId>json-simple</artifactId>
+		    <version>1.1.1</version>
+		</dependency>
+				
+				
+		
 		<!-- Database 라이브러리 등록 시작 -->
 		<!-- XML로 쿼리를 작성하게 해주는 라이브러리 -->
 		<dependency>

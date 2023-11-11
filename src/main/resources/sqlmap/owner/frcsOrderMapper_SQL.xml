@@ -94,9 +94,9 @@
 			select to_char(sysdate, 'yyyyMMdd')|| '-' ||to_char(seq_order.currval, 'FM000000') from dual
 		</selectKey>
 		insert into frcsorder_detail(
-			frcsorder_no, vdprod_cd, frcsorder_qy, hdforward_price
+			frcsorder_no, vdprod_cd, frcsorder_qy, hdforward_price, frcs_id
 		) values (
-			#{frcsOrderNo}, #{vdprodCd}, #{frcsOrderQy}, #{hdforwardPrice}
+			#{frcsOrderNo}, #{vdprodCd}, #{frcsOrderQy}, #{hdforwardPrice}, #{frcsId}
 		)
 	</insert>
 	
@@ -154,6 +154,13 @@
         where h.vdprod_cd= fd.vdprod_cd and f.frcsorder_no = fd.frcsorder_no and f.frcsorder_no = #{frcsOrderNo}
 	</select>
 	
+	<!-- 발주상세내역 엑셀 다운로드 -->
+	<select id="getOrderList" parameterType="string" resultType="orderVO">
+		select frcsorder_no, frcsorder_date, frcsorder_amt, frcsorder_confm, frcsorder_name
+		from frcsorder
+		where frcs_id = #{frcsId}
+		order by frcsorder_date desc
+	</select>
 	
 	<!-- 자동발주 리스트 페이징  -->
 	<select id="selectAutoOrderCount" parameterType="ownerPagingVO" resultType="int">
@@ -226,5 +233,39 @@
 			atorder_qy = #{atorderQy}
 		where frcs_id = #{frcsId} and autoorder_no = #{autoorderNo}
 	</update>
+	
+	<!-- 알림 -->
+	<!-- 발주를 보낸 owner의 mem_Id 아이디 구하기 -->
+	<select id="getMemFrcs" parameterType="String" resultType="String">
+		SELECT DISTINCT
+		    c.MEM_ID
+		FROM
+		    FRCSORDER a
+		LEFT OUTER JOIN FRCSORDER b ON a.FRCSORDER_NO = b.FRCSORDER_NO
+		LEFT OUTER JOIN FRCS_OWNERSHIP c ON a.FRCS_ID = c.FRCS_ID
+		WHERE
+		    a.FRCS_ID = #{frcsId}
+	</select>
+	
+	<!-- 발주 받을 아이디 구하기 -->
+	<select id="getReceiveMemId" parameterType="String" resultType="String">
+		SELECT DISTINCT MEM_ID	
+		FROM
+		    MEMBER
+		WHERE
+			MEM_ID = 'admin'
+	</select>
+	
+	<!-- 관리자 홈페이지에서 보여지는 부분 -->
+	<insert id="insertAlarm" parameterType="alarmVO">
+	    INSERT INTO alarm (
+	        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL, RECEIVEMEM_ID, TBL_NAME, TBL_NO
+	    ) VALUES (
+	        SEQ_ALARM.nextval, #{memId}, '발주 확인하기!', sysdate, '/head/storeOrderHistory.do', #{receiveMemId}, #{tblName}, #{tblNo}
+	    )
+	</insert>
+	
+	
+	
 	
 </mapper>

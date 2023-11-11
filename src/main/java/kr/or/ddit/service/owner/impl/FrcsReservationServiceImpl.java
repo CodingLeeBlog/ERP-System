@@ -56,5 +56,22 @@ public class FrcsReservationServiceImpl implements IFrcsReservationService {
 		}
 		return result;
 	}
+
+	@Override
+	public int selectCount(String frcsId) {
+		return mapper.selectCount(frcsId);
+	}
+
+	@Override
+	public ServiceResult rsevDelete(String resvNo) {
+		ServiceResult result = null;
+		int status = mapper.rsevDelete(resvNo);
+		if(status > 0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
+	}
 	
 }

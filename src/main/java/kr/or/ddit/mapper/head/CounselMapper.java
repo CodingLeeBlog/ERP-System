@@ -16,5 +16,6 @@ public interface CounselMapper {
 	public void counselAttachRegister(AttachVO attachVO);
 	public void counselRegister(FranchiseVO frcsVO);
 	public FranchiseVO frcsCheck(String frcsName);
+	public String getFrcsId(int ownerId);
 
 }

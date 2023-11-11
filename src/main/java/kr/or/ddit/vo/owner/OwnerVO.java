@@ -35,6 +35,7 @@ public class OwnerVO {
 	private String ownerYn;
 	private Date ownerRgdate;
 	private String tableName;
+	private int rnum;
 	
 	private Integer[] delBoardNo;
 	private MultipartFile[] boFile;

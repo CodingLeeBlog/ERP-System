@@ -23,7 +23,25 @@ public class MemberVO {
 	private String memPosition;
 	private Date memRegdate;
 	private String enabled;
+	List<MemberAuthVO> authList;
 	private String ownerId;
 	private String frcsId;
-	List<MemberAuthVO> authList;
+	private String frcsName;
+	private String frcsAdd1;
+	private String regCode;
+	private String add1;
+	private String add2;
+	private String add3;
+	private String nx;
+	private String ny;
+	private String secNy;
+	private String secNx;
+	private String baseDate;
+	
+	
+	
+	
+	
+	
+	
 }

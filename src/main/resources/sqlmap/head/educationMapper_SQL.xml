@@ -43,27 +43,24 @@
 	</select>
 
 	<select id="selectEducationList" parameterType="pagingVO" resultType="educationVO">
-		select 
-			b.*
-		from (
-			select 
-				a.*, row_number() over (order by frcs_id) rnum
-			from(
-				select g.frcs_id,
-			        f.frcs_name,
-			        g.edu_sdate,
-			        g.edu_fdate,
-			        g.edu_fnsh_yn,
-			        g.edu_remark,
-			        a.attach_no
-				from goedumg g
-				left join franchise f on g.frcs_id = f.frcs_id 
-				left join attach a on g.frcs_id = a.table_pk
-			)a
-		)b	
-		<![CDATA[	
-			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
-		]]>
+	    <![CDATA[
+	    SELECT *
+	    FROM (
+	        SELECT
+	            f.frcs_id,
+	            f.frcs_name,
+	            g.edu_sdate,
+	            g.edu_fdate,
+	            g.edu_fnsh_yn,
+	            g.edu_remark,
+	            a.attach_no,
+	            ROW_NUMBER() OVER (ORDER BY f.frcs_name) AS rnum
+	        FROM franchise f
+	        LEFT JOIN goedumg g ON f.frcs_id = g.frcs_id
+	        LEFT JOIN attach a ON g.frcs_id = a.table_pk
+	    ) tmp
+	    WHERE tmp.rnum >= #{startRow} AND tmp.rnum <= #{endRow}
+	    ]]>
 	</select>
 	
 	<select id="selectFileInfo" parameterType="int" resultType="attachVO">
@@ -78,25 +75,27 @@
 	</select>
 	
 	<insert id="educationRegister" parameterType="educationVO">
-	    <selectKey resultType="int" order="BEFORE" keyProperty="frcsName">
-	        SELECT frcs_name FROM franchise WHERE frcs_id = #{frcsId}
-	    </selectKey>
-	    INSERT INTO goedumg (frcs_name, edu_sdate, edu_fdate, edu_fnsh_yn, edu_remark)
-	    VALUES (#{frcsName}, #{eduSdate}, #{eduFdate}, #{eduFnshyn}, #{eduRemark})
+		INSERT INTO goedumg (
+			frcs_id,
+			edu_content,
+			edu_sdate,
+			edu_fdate,
+			edu_fnsh_yn
+			) VALUES (
+				#{frcsId},
+				'위생/성폭력/소방',
+				#{eduSdate},
+				#{eduFdate},
+				'N'
+			)
 	</insert>
 	
-	<select id="educationDetail" parameterType="string" resultMap="educationMap">
-	   select g.frcs_id,
-	        f.frcs_name,
-	        g.edu_sdate,
-	        g.edu_fdate,
-	        g.edu_fnsh_yn,
-	        g.edu_remark,
-	        a.attach_no
-		from goedumg g
-		left join franchise f on g.frcs_id = f.frcs_id 
-	    where g.frcs_id = #{frcsId}
-	</select>
-
+	<update id="educationUpdate" parameterType="educationVO">
+		update goedumg
+		set 
+			edu_sdate = #{eduSdate},
+			edu_fdate = #{eduFdate}
+		where frcs_id= #{frcsId} 
+	</update>
 	
 </mapper>

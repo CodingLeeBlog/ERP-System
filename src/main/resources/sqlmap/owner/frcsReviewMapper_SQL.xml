@@ -64,6 +64,15 @@
 		<include refid="reviewSearch"/>
 	</select>
 	
+	<select id="selectCount" parameterType="string" resultType="int">
+		SELECT
+		    count(review_no)
+		FROM
+		    review
+		WHERE 
+			frcs_id = #{frcsId} and review_yn = 'N'
+	</select>
+	
 	<select id="selectReviewList" parameterType="pagingVO" resultType="frcsReviewVO">
 		select 
 			b.*
@@ -88,7 +97,8 @@
 				    review a
 				LEFT OUTER JOIN review_answer b ON a.review_no = b.review_no
 				where
-					1 = 1
+					1 = 1 
+					and frcs_id = #{frcsId}
 				<include refid="reviewSearch"/>
 				order by 
 					review_no desc

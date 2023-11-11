@@ -21,36 +21,38 @@
 		        </div>
 		    </div>
 		
-			<input type="hidden" id="page" name="page">
+<!-- 			<input type="hidden" id="page" name="page"> -->
 		    <div class="row">
 		        <div class="col-12">
 		            <div class="card">
 		                <div class="card-body">
+		                    <form id="searchForm">
 		                    <div class="row mb-2">
 		                        <div class="col-xl-8">
 		                            <h5>필터</h5>
 		                            <div class="mt-2">
 									    <div class="form-check form-check-inline">
-									        <input type="checkbox" class="form-check-input" id="customCheck3">
-									        <label class="form-check-label" for="customCheck3">전체</label>
+									        <input type="checkbox" class="form-check-input" id="all" checked>
+									        <label class="form-check-label" for="all">전체</label>
 									    </div>
 									    <div class="form-check form-check-inline">
-									        <input type="checkbox" class="form-check-input" id="customCheck4">
-									        <label class="form-check-label" for="customCheck4">발신</label>
+									        <input type="checkbox" class="form-check-input" id="send">
+									        <label class="form-check-label" for="send">발신</label>
 									    </div>
 									    <div class="form-check form-check-inline">
-									        <input type="checkbox" class="form-check-input" id="customCheck5">
-									        <label class="form-check-label" for="customCheck5">수신</label>
+									        <input type="checkbox" class="form-check-input" id="receive">
+									        <label class="form-check-label" for="receive">수신</label>
 									    </div>
 									</div>                       
 		                        </div>
 		                    </div>
+		                    </form>
 							<div class="row mb-2">
 		                        <div class="col-xl-8">
 		                            <h5>진행상태</h5>
 		                            <div class="mt-2">
 									    <div class="form-check form-check-inline">
-									        <input type="checkbox" class="form-check-input" id="customCheck3">
+									        <input type="checkbox" class="form-check-input" id="customCheck3" checked>
 									        <label class="form-check-label" for="customCheck3">전체</label>
 									    </div>
 									    <div class="form-check form-check-inline">
@@ -103,6 +105,7 @@
 					                                    <input type="hidden" class="vdprodCd" value="${trad.vdprodCd }">
 					                                    <input type="hidden" class="frcsId" value="${trad.frcsId }">
 					                                    <input type="hidden" class="frcsId2" value="${trad.frcsId2 }">
+					                                    <input type="hidden" class="tradStts" value="${trad.tradStts }">
 					                                    </div></td>
 					                                    <td style="text-align:center">${stat.count }</td>
 					                                    <td style="text-align:center">
@@ -154,8 +157,9 @@
 							                                    	<button class="btn btn-primary detailBtn">상세내역</button>
 					                                    		</c:if>
 							                                </c:if>
+							                                <!-- 내가 요청했을 때 -->
 							                                <c:if test="${trad.frcsId eq myfrcsId }">
-						                                    	<button class="btn btn-primary detailBtn">상세내역</button>
+						                                    	<button class="btn btn-primary detailMyBtn">상세내역</button>
 							                                </c:if>
 					                                    </td>
 					                                </tr>
@@ -186,7 +190,14 @@ $(function(){
 	var pagingArea = $("#pagingArea");
 	var pageForm = $("#pageForm");
 	var reqBtn = $(".reqBtn");	// 요청 btn
-
+	var detailMyBtn = $(".detailMyBtn");
+	var detailBtn = $(".detailBtn");
+	var searchForm = $("#searchForm");
+	
+	searchForm.on("click",function(){
+		searchForm.submit();
+	});
+	
 	pagingArea.on("click","a",function(event){
 		event.preventDefault();
 		var pageNo = $(this).data("page");
@@ -301,5 +312,96 @@ $(function(){
             }	
    		});
 	});
-});
+	
+	detailMyBtn.on("click",function(){
+		
+		var frcsName = $(this).closest('tr').find('.frcsName').text().trim();
+		var vdprodName =$(this).closest('tr').find('.vdprodName').text().trim();
+		var tradQy =$(this).closest('tr').find('.tradQy').text().trim();
+		var frcsId =$(this).closest('tr').find('.frcsId').val();
+		var frcsId2 =$(this).closest('tr').find('.frcsId2').val();
+		var vdprodCd =$(this).closest('tr').find('.vdprodCd').val();
+		var tradNo =$(this).closest('tr').find('.tradNo').val();
+		var tradStts =$(this).closest('tr').find('.tradStts').val();
+		
+		var data = {
+			frcsId : frcsId,
+			vdprodCd : vdprodCd
+		}
+		
+		$.ajax({
+			type : "post",
+			url : "/owner/tradingDetail.do",
+			beforeSend : function(xhr){	// csrf토큰 보내기 위함
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");	//key value로 보낸다.
+			},
+			data : JSON.stringify(data),
+        	contentType : "application/json; charset=utf-8",
+			success : function(res){
+				
+				console.log(res)
+				
+				var str = "";
+				str += "요청 가맹점 : "+ frcsName + "<br>";
+				str += vdprodName + " " + tradQy + "개 " + tradStts + "<br>";
+				str += "내 재고 수량 ▶ " + res.invntryQy ; 
+				
+				Swal.fire({
+		            title: "상세내역",
+		            html: str,
+		            confirmButtonText: "확인",
+		            icon: "info",
+		            preConfirm: function () {
+		            }
+		        });
+			}
+		});
+	});
+		// 응답 가맹점
+		detailBtn.on("click",function(){
+			
+			var frcsName = $(this).closest('tr').find('.frcsName').text().trim();
+			var vdprodName =$(this).closest('tr').find('.vdprodName').text().trim();
+			var tradQy =$(this).closest('tr').find('.tradQy').text().trim();
+			var frcsId =$(this).closest('tr').find('.frcsId').val();
+			var frcsId2 =$(this).closest('tr').find('.frcsId2').val();
+			var vdprodCd =$(this).closest('tr').find('.vdprodCd').val();
+			var tradNo =$(this).closest('tr').find('.tradNo').val();
+			var tradStts =$(this).closest('tr').find('.tradStts').val();
+			
+			var data = {
+				frcsId : frcsId2,
+				vdprodCd : vdprodCd
+			}
+			
+			$.ajax({
+				type : "post",
+				url : "/owner/tradingReqDetail.do",
+				beforeSend : function(xhr){	// csrf토큰 보내기 위함
+					xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");	//key value로 보낸다.
+				},
+				data : JSON.stringify(data),
+	        	contentType : "application/json; charset=utf-8",
+				success : function(res){
+					
+					console.log(res)
+					
+					var str = "";
+					str += "요청 가맹점 : "+ frcsName + "<br>";
+					str += vdprodName + " " + tradQy + "개 " + tradStts + "<br>";
+					str += "내 재고 수량 ▶ " + res.invntryQy ; 
+					
+					Swal.fire({
+			            title: "상세내역",
+			            html: str,
+			            confirmButtonText: "확인",
+			            icon: "info",
+			            preConfirm: function () {
+			            }
+			        });
+				}
+			});
+		
+		});
+	});
 </script>

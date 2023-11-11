@@ -54,7 +54,12 @@
 											<fmt:formatDate value="${review.reviewRegdate }" pattern="yyyy. MM. dd"/>
 										</div>
 										<div class="col-1">
-											${review.reviewYn }										
+											<c:if test="${review.reviewYn eq 'Y' }">
+												<div>상세보기</div>
+											</c:if>
+											<c:if test="${review.reviewYn ne 'Y' }">
+												<div>대기중</div>
+											</c:if>
 										</div>
 										<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 1px solid;"></div>
 									</div>
@@ -66,85 +71,84 @@
 			</div>
 			
 			<c:forEach items="${reviewList }" var="review">
-	                       		<div class="modal fade" id="${review.reviewNo }" tabindex="-1"
-									role="dialog" aria-hidden="true">
-									<div class="modal-dialog modal-dialog-centered">
-										<div class="modal-content">
-											<div class="modal-header">
-												<h4 class="modal-title text-dark" id="myCenterModalLabel">리뷰 상세보기</h4>
-												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
-											</div>
-											<div class="modal-body" id="modal">
-													
-													<div class="m-3 text-dark">
-														<p class="m-0 d-inline-block align-middle font-16">
-															별점 :
-															<c:if test="${review.reviewStar eq '5' }">
-				                                                <span class="text-warning mdi mdi-star"></span>
-				                                                <span class="text-warning mdi mdi-star"></span>
-				                                                <span class="text-warning mdi mdi-star"></span>
-				                                                <span class="text-warning mdi mdi-star"></span>
-				                                                <span class="text-warning mdi mdi-star"></span>
-			                                                </c:if>
-			                                                <c:if test="${review.reviewStar eq '4' }">
-				                                                <span class="text-warning mdi mdi-star"></span>
-				                                                <span class="text-warning mdi mdi-star"></span>
-				                                                <span class="text-warning mdi mdi-star"></span>
-				                                                <span class="text-warning mdi mdi-star"></span>
-			                                                </c:if>
-			                                                <c:if test="${review.reviewStar eq '3' }">
-				                                                <span class="text-warning mdi mdi-star"></span>
-				                                                <span class="text-warning mdi mdi-star"></span>
-				                                                <span class="text-warning mdi mdi-star"></span>
-			                                                </c:if>
-			                                                <c:if test="${review.reviewStar eq '2' }">
-				                                                <span class="text-warning mdi mdi-star"></span>
-				                                                <span class="text-warning mdi mdi-star"></span>
-			                                                </c:if>
-			                                                <c:if test="${review.reviewStar eq '1' }">
-				                                                <span class="text-warning mdi mdi-star"></span>
-			                                                </c:if>
-			                                                ${review.reviewStar } 점
-			                                            </p>
-														<p class="m-0 inline-block">작성자  : ${review.memId }</p>
-														<p class="m-0 inline-block">작성일  : <fmt:formatDate value="${review.reviewRegdate }" pattern="yyyy. MM. dd"/></p>
-														<hr>
-														<label class="inline-block form-label text-dark">내용 : </label>
-														<p class="mt-1 inline-block">${review.reviewContent }</p>
-													</div>
-													
-													<c:if test="${review.reviewYn eq 'N' }">
-															<div class="m-3 text-dark">
-															<hr>
-																<label class="form-label text-dark">리뷰 답변 : </label>
-																<p class="text-dark">답변이 아직 없습니다.</p>
-															</div>
-				                  							<sec:csrfInput/>
-		                                         	</c:if>
-		                                         	
-		                                         	<c:if test="${review.reviewYn eq 'Y' }">
-			                                         		<div class="m-3 text-dark">
-			                                         		<hr>
-																<label class="form-label text-dark">리뷰 답변 : </label>
-																<input type="hidden" id="ansNo" name="ansNo" value="${review.ansNo }">
-																<p class="text-dark">${review.ansCn }</p>
-															</div>
-														<sec:csrfInput/>
-		                                         	</c:if>
-		                                         	
-												</div>
-												
-												<div class="modal-footer">
-													<button type="button" class="btn btn-dark"	data-bs-dismiss="modal">닫기</button>
-												</div>
-												
-											</div>
-											<!-- /.modal-content -->
+			<div class="modal fade" id="${review.reviewNo }" tabindex="-1" role="dialog" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h4 class="modal-title text-dark" id="myCenterModalLabel">리뷰 상세보기</h4>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+						</div>
+						<div class="modal-body" id="modal">
+								
+								<div class="m-3 text-dark">
+									<p class="m-0 d-inline-block align-middle font-16">
+										별점 :
+										<c:if test="${review.reviewStar eq '5' }">
+                                               <span class="text-warning mdi mdi-star"></span>
+                                               <span class="text-warning mdi mdi-star"></span>
+                                               <span class="text-warning mdi mdi-star"></span>
+                                               <span class="text-warning mdi mdi-star"></span>
+                                               <span class="text-warning mdi mdi-star"></span>
+                                              </c:if>
+                                              <c:if test="${review.reviewStar eq '4' }">
+                                               <span class="text-warning mdi mdi-star"></span>
+                                               <span class="text-warning mdi mdi-star"></span>
+                                               <span class="text-warning mdi mdi-star"></span>
+                                               <span class="text-warning mdi mdi-star"></span>
+                                              </c:if>
+                                              <c:if test="${review.reviewStar eq '3' }">
+                                               <span class="text-warning mdi mdi-star"></span>
+                                               <span class="text-warning mdi mdi-star"></span>
+                                               <span class="text-warning mdi mdi-star"></span>
+                                              </c:if>
+                                              <c:if test="${review.reviewStar eq '2' }">
+                                               <span class="text-warning mdi mdi-star"></span>
+                                               <span class="text-warning mdi mdi-star"></span>
+                                              </c:if>
+                                              <c:if test="${review.reviewStar eq '1' }">
+                                               <span class="text-warning mdi mdi-star"></span>
+                                              </c:if>
+                                              ${review.reviewStar } 점
+                                          </p>
+									<p class="m-0 inline-block">작성자  : ${review.memId }</p>
+									<p class="m-0 inline-block">작성일  : <fmt:formatDate value="${review.reviewRegdate }" pattern="yyyy. MM. dd"/></p>
+									<hr>
+									<label class="inline-block form-label text-dark">내용 : </label>
+									<p class="mt-1 inline-block">${review.reviewContent }</p>
+								</div>
+								
+								<c:if test="${review.reviewYn eq 'N' }">
+										<div class="m-3 text-dark">
+										<hr>
+											<label class="form-label text-dark">리뷰 답변 : </label>
+											<p class="text-dark">답변이 아직 없습니다.</p>
 										</div>
-										<!-- /.modal-dialog -->
-									</div>
-									<!-- /.modal -->
-								</c:forEach>
+                 							<sec:csrfInput/>
+                                      	</c:if>
+                                      	
+                                      	<c:if test="${review.reviewYn eq 'Y' }">
+                                       		<div class="m-3 text-dark">
+                                       		<hr>
+											<label class="form-label text-dark">리뷰 답변 : </label>
+											<input type="hidden" id="ansNo" name="ansNo" value="${review.ansNo }">
+											<p class="text-dark">${review.ansCn }</p>
+										</div>
+									<sec:csrfInput/>
+                                      	</c:if>
+                                      	
+							</div>
+							
+							<div class="modal-footer">
+								<button type="button" class="btn btn-dark"	data-bs-dismiss="modal">닫기</button>
+							</div>
+							
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal-dialog -->
+				</div>
+				<!-- /.modal -->
+			</c:forEach>
 			
 <script type="text/javascript">
 </script>

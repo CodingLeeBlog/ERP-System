@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.service.head.IStoreService;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.StoreOrderHistoryVO;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,7 @@ public class StoreOrderHistory {
 	@Inject
 	private IStoreService service;
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/storeOrderHistory.do")
 	public String storeOrderHistory(
 			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
@@ -83,12 +86,17 @@ public class StoreOrderHistory {
 			}
 		}
 		
+		int orderCount = service.selectOrderCnt();
+		log.debug("최근3일간 가맹점주문 COUNT -> {}", orderCount);
+		
 		model.addAttribute("pagingVO", pagingVO);
 		model.addAttribute("frcsList", frcsList);
+		model.addAttribute("orderCount", orderCount);
 		
 		return "head/orderDeal/storeOrderHistory";
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/storeOrderHistoryDetails.do")
 	public String storeOrderHistoryDetails(
 			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
@@ -143,6 +151,7 @@ public class StoreOrderHistory {
 	}
 	
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/checkOne.do", method = RequestMethod.POST)
 	public ResponseEntity<List<StoreOrderHistoryVO>> checkOne(
 			String frcsorderNo ){
@@ -157,9 +166,10 @@ public class StoreOrderHistory {
 	}
 	
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/commitBtn.do", method = RequestMethod.POST, consumes = "application/json; charset=utf-8")
 	public ResponseEntity<ServiceResult> commitBtn(
-			@RequestBody List<StoreOrderHistoryVO> storeOrderHistoryVO ){
+			@RequestBody List<StoreOrderHistoryVO> storeOrderHistoryVO, AlarmVO alarmVO){
 
 		log.info("checkOne() -> 시작");
 		
@@ -176,7 +186,7 @@ public class StoreOrderHistory {
 			log.debug("가맹점 주문 승인버튼 눌렀을 시 넘어오는 frcsorderNo -> {}", frcsorderNo);
 			log.debug("가맹점 주문 승인버튼 눌렀을 시 넘어오는 frcsId -> {}", frcsId);
 			
-			result = service.updateOrderDetails(soh);
+			result = service.updateOrderDetails(soh, alarmVO);
 			
 			if(result == ServiceResult.FAILED) {
 				log.info("주문상세 승인처리중 오류 발생!!");
@@ -188,26 +198,43 @@ public class StoreOrderHistory {
 	}
 	
 	@ResponseBody
-	@RequestMapping(value = "/cancleModal.do", method = RequestMethod.POST, consumes = "application/json; charset=utf-8")
+	@PreAuthorize("hasRole('ROLE_HEAD')")
+	@RequestMapping(value = "/cancleModal.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	public ResponseEntity<List<StoreOrderHistoryVO>> cancleModal(
-			@RequestBody List<StoreOrderHistoryVO> frcsorderNo){
+			@RequestBody StoreOrderHistoryVO storeOrderHistoryVO){
 		
 		log.info("cancleModal() -> 시작");
 		//{checkData=[{frcsorderNo=20231013-0057}, {frcsorderNo=20231013-0056}]}
-		log.info("cancleModal->frcsorderNo : " + frcsorderNo);
+		log.info("cancleModal->storeOrderHistoryVO : " + storeOrderHistoryVO.toString());
+		String frcsId = storeOrderHistoryVO.getFrcsId().toString();
+		String frcsorderNo = "";
 		
-		List<StoreOrderHistoryVO> orderList = new ArrayList<StoreOrderHistoryVO>();
+		log.debug("반려버튼클릭시 넘겨받은 frcsId -> {}", frcsId);
 		
-		for (StoreOrderHistoryVO soh : frcsorderNo) {
-			String frcsorderNumber = soh.getFrcsorderNo().toString();
-			StoreOrderHistoryVO sohVO = service.frcsOrderDetails(frcsorderNumber);
-			orderList.add(sohVO);
+		List<StoreOrderHistoryVO> dataList = new ArrayList<StoreOrderHistoryVO>();
+		
+		String[] frcsorderNumbers = storeOrderHistoryVO.getFrcsorderNo().toString().split(",");
+		
+		for (int i = 0; i < frcsorderNumbers.length; i++) {
+			StoreOrderHistoryVO sohVO = new StoreOrderHistoryVO();
+			
+			if(frcsorderNumbers[i] != "") {
+				
+				frcsorderNo = frcsorderNumbers[i];
+				log.debug("스플릿한 frcsorderNo -> {}", frcsorderNo);
+				sohVO.setFrcsId(frcsId);
+				sohVO.setFrcsorderNo(frcsorderNo);
+				
+				sohVO = service.frcsOrderDetails(sohVO);
+				dataList.add(sohVO);
+			}
 		}
 		
-		return new ResponseEntity<List<StoreOrderHistoryVO>>(orderList,HttpStatus.OK);
+		return new ResponseEntity<List<StoreOrderHistoryVO>>(dataList,HttpStatus.OK);
 	}
 	
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/cancleModalButton.do", method = RequestMethod.POST, consumes = "application/json; charset=utf-8")
 	public ResponseEntity<ServiceResult> cancleModalButton(
 			@RequestBody List<StoreOrderHistoryVO> storeOrderHistoryVO){

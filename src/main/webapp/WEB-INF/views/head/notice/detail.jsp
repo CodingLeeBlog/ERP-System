@@ -40,7 +40,7 @@
 								
 								<hr />
 
-								<div class="my-3 overflow-auto" style="height: 300px" >
+								<div class="my-3">
 									${headBoardVO.boardContent }
 								</div>
 								
@@ -84,14 +84,13 @@
 									<!-- end row-->
 								</c:if>
 
-								<form action="/owner/inqDelete.do" method="post" id="procForm">
+								<form action="/head/delete.do" method="post" id="procForm">
 									<input type="hidden" name="boardNo" value="${headBoardVO.boardNo }"/>
 									<sec:csrfInput/>
 								</form>
 
 								<div class="mt-4 text-xl-end">
 									<button type="button" class="btn btn-light me-2" id="listBtn">목록</button>
-<!-- 									답글달리기 전까지 수정,삭제 가능하게?? -->
 									<button type="button" class="btn btn-light me-2" id="delBtn">삭제</button>
 									<button type="button" class="btn btn-secondary" id="udtBtn">수정</button> 
 								</div>

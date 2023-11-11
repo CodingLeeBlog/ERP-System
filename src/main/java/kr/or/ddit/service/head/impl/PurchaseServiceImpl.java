@@ -64,9 +64,9 @@ public class PurchaseServiceImpl implements IPurchaseService{
 	}
 
 	@Override
-	public List<PurchaseVO> selectDetailList(String hdorderNo) {
+	public List<PurchaseVO> selectDetailList(HeadPaginationInfoVO<PurchaseVO> pagingVO) {
 		
-		List<PurchaseVO> dataList = mapper.selectDetailList(hdorderNo);
+		List<PurchaseVO> dataList = mapper.selectDetailList(pagingVO);
 		
 		for (PurchaseVO pcVO : dataList) {
 			int hdorderQy = pcVO.getHdorderQy();

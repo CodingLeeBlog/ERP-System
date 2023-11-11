@@ -64,11 +64,11 @@
 														class="form-check-label" for="checkAll">&nbsp;</label>
 												</div>
 											</th>
-											<th>No.</th>
-											<th>제목</th>
-											<th>작성자</th>
-											<th>등록일시</th>
-											<th>조회수</th>
+											<th style='text-align: center'>No.</th>
+											<th style='text-align: center'>제목</th>
+											<th style='text-align: center'>작성자</th>
+											<th style='text-align: center'>등록일시</th>
+											<th style='text-align: center'>조회수</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -83,7 +83,7 @@
 											<c:otherwise>
 												<c:forEach items="${boardList }" var="headBoardVO">
 													<tr>
-														<td>
+														<td style='text-align: center'>
 															<div class="form-check">
 																<input type="checkbox" class="form-check-input"
 																	id="check${headBoardVO.rnum2 }" name="checkbox"
@@ -92,15 +92,15 @@
 																	for="check${headBoardVO.rnum2 }">&nbsp;</label>
 															</div>
 														</td>
-														<td>${headBoardVO.rnum2 }</td>
-														<td><a
+														<td style='text-align: center'>${headBoardVO.rnum2 }</td>
+														<td style='text-align: left'><a
 															href="/head/detail.do?boardNo=${headBoardVO.boardNo }">${headBoardVO.boardTitle }</a>
 														</td>
-														<td>관리자</td>
-														<td><fmt:formatDate
+														<td style='text-align: center'>관리자</td>
+														<td style='text-align: center'><fmt:formatDate
 																value="${headBoardVO.boardRegdate }"
 																pattern="yyyy. MM. dd" /></td>
-														<td>${headBoardVO.boardHit }</td>
+														<td style='text-align: center'>${headBoardVO.boardHit }</td>
 													</tr>
 												</c:forEach>
 											</c:otherwise>

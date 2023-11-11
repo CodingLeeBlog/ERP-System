@@ -3,6 +3,7 @@ package kr.or.ddit.service.owner;
 import java.util.List;
 
 import kr.or.ddit.ServiceResult;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.FrcsInventoryVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
@@ -20,7 +21,7 @@ public interface IFrcsTradingService {
 	public List<FrcsInventoryVO> getNearInventList(String searchWord, String searchType, List<Object> nearList);
 
 	// 트레이딩 신청
-	public ServiceResult tradingInsert(TradingVO tradVO);
+	public ServiceResult tradingInsert(TradingVO tradVO, AlarmVO alarmVO);
 
 	// 트레이딩 신청내역 페이징1
 	public int selectTradeCount(OwnerPaginationInfoVO<TradingVO> pagingVO);
@@ -33,4 +34,13 @@ public interface IFrcsTradingService {
 
 	// 트레이딩 거절
 	public ServiceResult tradingRefuse(TradingVO tradVO);
+
+	// 금일 받은 트레이딩 내역 개수
+	public int selectCount(String frcsId);
+
+	// 트레이딩 상세내역
+	public FrcsInventoryVO getDetail(FrcsInventoryVO frcsInventVO);
+	
+	// 트레이딩 상세(응답)
+	public FrcsInventoryVO getReqDetail(FrcsInventoryVO frcsInventVO);
 }

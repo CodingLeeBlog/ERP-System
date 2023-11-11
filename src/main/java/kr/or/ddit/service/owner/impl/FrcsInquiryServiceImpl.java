@@ -193,4 +193,6 @@ public class FrcsInquiryServiceImpl implements IFrcsInquiryService {
 		return mapper.selectInq(inqryNo);
 	}
 
+
+
 }

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +22,11 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.service.head.IMenuService;
 import kr.or.ddit.service.owner.IFrcsIdService;
 import kr.or.ddit.service.owner.IFrcsMenuService;
+import kr.or.ddit.service.owner.IFrcsMyPageService;
 import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.head.MenuVO;
 import kr.or.ddit.vo.member.MemberVO;
+import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.FrcsMenuVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,84 +41,76 @@ public class OwnerMenuController {
 	@Inject
 	private IFrcsIdService idService;
 	
+	@Inject
+	private IFrcsMyPageService myPageService;
+	
 	@PreAuthorize("hasRole('ROLE_OWNER')")
 	@RequestMapping(value="/menu.do", method = RequestMethod.GET )
-	public String ownerMenuList(Model model) {
+	public String ownerMenuList(Model model, FrcsMenuVO frcsMenuVO) {
 		
+		//헤더 오른쪽 관리자 영역
 		String frcsId = idService.getFrcsId();
+		FranchiseVO frcsHead = myPageService.headerDetail(frcsId);
+		model.addAttribute("frcsHead", frcsHead);
+		
+		List<FrcsMenuVO> validationId = service.selectFrcsIdList(frcsId);
+		
+		if(validationId.isEmpty()) {
+			List<MenuVO> selectMenu = service.selectHeadMenu();
+			for (MenuVO menuVO : selectMenu) {
+				String menuCd = menuVO.getMenuCd();
+				
+				FrcsMenuVO frcs = new FrcsMenuVO();
+				
+				frcs.setFrcsId(frcsId);
+				frcs.setMenuCd(menuCd);
+				
+				ServiceResult result = service.newInsert(frcs);
+				
+				log.info("신규가맹점주가 메뉴정보 들어갔을때 insert되는 메소드");
+				log.debug("result결과 -> {}", result);
+			}
+		}
+		
+//		for (FrcsMenuVO fmVO : validationId) {
+//			String frId = fmVO.getFrcsId();
+//			if(!frId.equalsIgnoreCase(frcsId)){
+//				List<MenuVO> selectMenu = service.selectHeadMenu();
+//				for (MenuVO menuVO : selectMenu) {
+//					String menuCd = menuVO.getMenuCd();
+//					
+//					FrcsMenuVO frcs = new FrcsMenuVO();
+//					
+//					frcs.setFrcsId(frcsId);
+//					frcs.setMenuCd(menuCd);
+//					
+//					ServiceResult result = service.newInsert(frcs);
+//					
+//					log.info("신규가맹점주가 메뉴정보 들어갔을때 insert되는 메소드");
+//					log.debug("result결과 -> {}", result);
+//				}
+//				break;
+//			}
+//		}
+		
 		List<FrcsMenuVO> frcsMenuList = service.frcsMenuList(frcsId);
 		model.addAttribute("list", frcsMenuList);
-		log.info("메뉴 : " + frcsMenuList.get(0).toString());
+		log.info("메뉴 : " + frcsMenuList);
 		
-//		List<FrcsMenuVO> frcsMenu = service.selectMenuImg(frcsId);
-//		FrcsMenuVO frcsMenuVO = service.selectMenuImg(frcsId);
-//		model.addAttribute("frcsMenuVO", frcsMenuVO);
-//		log.info("가맹메뉴 : " + frcsMenuVO);
+//		String attachOrgname = frcsMenuVO.getAttachList().get(0).getAttachOrgname();
+//		frcsMenuVO.setAttachOrgname(attachOrgname);
 		
 		return "owner/info/menuList";
 	}
 	
-//	본사메뉴를 가져와 저장하는 기능도 만들어야 할듯! 본사 메뉴코드만 가져와서 frcsId와 saleYn을 넣어 저장(값이 있을때는 업데이트 없을때는 인서트)...모달로해야하나..?
-//	@RequestMapping(value="/menu.do", method = RequestMethod.POST )
-//	public String ownerHeadMenuList(List<MenuVO> headMenuList, Model model) {
-//		
-//		for(MenuVO menuVO : headMenuList) {
-//			
-//			log.info("MenuCd : " + menuVO.getMenuCd());
-//			log.info("FrcsId : " + idService.getFrcsId());
-//			
-//			FrcsMenuVO frcsMenu = new FrcsMenuVO();
-//			frcsMenu.setMenuCd(menuVO.getMenuCd());
-//			frcsMenu.setFrcsId(idService.getFrcsId());
-//			frcsMenu.setSaleYn("Y");
-//			
-//			service.headMenuUpdate(frcsMenu);
-//		}
-//		
-//		return "owner/info/menuList";
-//	}
-	
-	// 기존에 등록해놓은 데이터가 있을경우 삭제후 입력, 데이터가 없을 경우 입력  < 가맹점아이디 기준으로 데이터 확인
-//	@RequestMapping(value="/menuSet.do", method = RequestMethod.POST )
-//	public String ownerHeadMenuSet(
-//			RedirectAttributes ra,
-//			FrcsMenuVO frcsMenuVO, Model model) {
-//		String goPage = "";
-//		String frcsId = idService.getFrcsId();
-//		if(frcsId != null) {
-//			service.frcsMenuDelete(frcsId);
-//			frcsMenuVO.setFrcsId(frcsId);
-//			String menuCd = frcsMenuVO.getMenuCd();
-//			frcsMenuVO.setMenuCd(menuCd );
-//			frcsMenuVO.setSaleYn("Y");
-//			ServiceResult result = service.frcsMenuInsert(frcsMenuVO);
-//			if(result.equals(ServiceResult.OK)) {
-//				ra.addFlashAttribute("message", "본사 메뉴 업데이트 완료!");
-//				goPage = "redirect:/owner/menu.do";
-//			}else {
-//				model.addAttribute("message", "서버에러, 다시 시도해주세요.");
-//				goPage = "owner/info/menuList";
-//			}
-//			return goPage;
-//		}else {
-//			frcsMenuVO.setFrcsId(frcsId);
-//			ServiceResult result = service.frcsMenuInsert(frcsMenuVO);
-//			if(result.equals(ServiceResult.OK)) {
-//				ra.addFlashAttribute("message", "본사 메뉴 업데이트 완료!");
-//				goPage = "redirect:/owner/menu.do";
-//			}else {
-//				model.addAttribute("message", "서버에러, 다시 시도해주세요.");
-//				goPage = "owner/info/menuList";
-//			}
-//			return goPage;
-//		}
-//	}
-	
 	@ResponseBody
 	@RequestMapping(value = "/menuUpdate.do", method = RequestMethod.POST)
 	public ResponseEntity<List<FrcsMenuVO>> ownerMenuUpdate(
+			HttpServletRequest req,
+			RedirectAttributes ra,
 			@RequestBody List<FrcsMenuVO> frcsMenuList) {
 		
+		String goPage;
 		for(FrcsMenuVO menuVO : frcsMenuList) {
 			log.info("menuCd : " + menuVO.getMenuCd());
 			log.info("frcsId : " + idService.getFrcsId());
@@ -130,10 +125,54 @@ public class OwnerMenuController {
 			menu.setFrcsId(frcsId);
 			menu.setSaleYn(saleYn);
 			
-			service.menuUpdate(menu);
+			ServiceResult result = service.menuUpdate(req, menu);
+			if(result.equals(ServiceResult.OK)) {
+				ra.addFlashAttribute("message", "저장이 완료되었습니다!");
+				goPage = "redirect:/owner/menu.do";
+			}else {
+				ra.addFlashAttribute("message", "서버오류, 다시 시도해주세요!");
+				goPage = "redirect:/owner/menu.do";
+			}
 		}
 		
 		return new ResponseEntity<List<FrcsMenuVO>>(HttpStatus.OK);
 	}
+	
+	// 기존에 등록해놓은 데이터가 있을경우 삭제후 menu데이터 가져와 입력
+	@RequestMapping(value="/menuSet.do", method = RequestMethod.POST )
+	public String ownerHeadMenuSet(
+			HttpServletRequest req,
+			RedirectAttributes ra,
+			FrcsMenuVO frcsMenuVO, Model model) {
+		String goPage = "";
+		String frcsId = idService.getFrcsId();
+		frcsMenuVO.setFrcsId(frcsId);
+		if(frcsId != null) {
+			ServiceResult result = service.frcsMenuDelete(req, frcsId);
+			if(result.equals(ServiceResult.OK)) {
+				List<MenuVO> selectMenu = service.selectHeadMenu();
+				for(MenuVO menuVO : selectMenu) {
+					frcsMenuVO = new FrcsMenuVO();
+					String menuCd = menuVO.getMenuCd();
+					frcsMenuVO.setMenuCd(menuCd);
+					frcsMenuVO.setFrcsId(frcsId);
+					ServiceResult result2 = service.frcsMenuInsert(req, frcsMenuVO);
+					if(result2.equals(ServiceResult.OK)) {
+						ra.addFlashAttribute("message", "본사 메뉴 업데이트 완료!");
+						goPage = "redirect:/owner/menu.do";
+					}else {
+						model.addAttribute("message", "업데이트 서버에러, 다시 시도해주세요.");
+						goPage = "owner/info/menuList";
+					}
+				}
+			}else {
+				model.addAttribute("message", "삭제 서버에러, 다시 시도해주세요.");
+				goPage = "owner/info/menuList";
+			}
+		}
+		return goPage;
+	}
+	
+	
 	
 }

@@ -7,6 +7,7 @@ import javax.inject.Inject;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +31,7 @@ public class PurchaseListController {
 	@Inject
 	private IPurchaseService service;
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/purchaseList.do")
 	public String purchaseList(
 			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
@@ -53,7 +55,8 @@ public class PurchaseListController {
 		return "head/orderDeal/purchaseList";
 	}
 	
-	@RequestMapping(value = "/purchaseListDetail.do", method=RequestMethod.GET)
+	@PreAuthorize("hasRole('ROLE_HEAD')")
+	@RequestMapping(value = "/purchaseListDetail.do")
 	public String purchaseListDetail(
 			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
 			@RequestParam String hdorderNo,
@@ -61,12 +64,12 @@ public class PurchaseListController {
 		log.info("purchaseListDetail() GET -> 시작");
 		
 		HeadPaginationInfoVO<PurchaseVO> pagingVO = new HeadPaginationInfoVO<PurchaseVO>();
-		
+		pagingVO.setHdorderNo(hdorderNo);
 		pagingVO.setCurrentPage(currentPage);
 		int totalRecord = service.selectDetailCount(hdorderNo);
 		pagingVO.setTotalRecord(totalRecord);
 		
-		List<PurchaseVO> dataList = service.selectDetailList(hdorderNo);
+		List<PurchaseVO> dataList = service.selectDetailList(pagingVO);
 		pagingVO.setDataList(dataList);
 		
 		model.addAttribute("pagingVO", pagingVO);
@@ -74,6 +77,7 @@ public class PurchaseListController {
 		return "head/orderDeal/purchaseListDetail";
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/purchaseListOrder.do", method=RequestMethod.GET)
 	public String purchaseListOrder(Model model) {
 		log.info("purchaseListOrder() GET -> 시작");
@@ -81,6 +85,7 @@ public class PurchaseListController {
 	}
 	
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/selectPurchaseVendorName.do", produces = "application/json;charset=utf-8")
 	public ResponseEntity<List<PurchaseVO>> selectPurchaseVendorName(
 			@RequestBody Map<String, String> param,
@@ -99,6 +104,7 @@ public class PurchaseListController {
 	}
 	
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/selectPurchaseDataList.do", produces = "application/json;charset=utf-8")
 	public ResponseEntity<List<PurchaseVO>> selectPurchaseDataList(
 			@RequestBody Map<String, String> param,
@@ -119,6 +125,7 @@ public class PurchaseListController {
 	}
 	
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/insertHeadOrder.do", produces = "application/json;charset=utf-8")
 	public ResponseEntity<ServiceResult> insertHeadOrder(
 			@RequestBody Map<String, String> param,
@@ -144,6 +151,7 @@ public class PurchaseListController {
 	}
 	
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/selectPurchaseOrderList.do", produces = "application/json;charset=utf-8")
 	public ResponseEntity<ServiceResult> selectPurchaseOrderList(
 			@RequestBody List<Map<String, Object>> params,
@@ -190,6 +198,7 @@ public class PurchaseListController {
 	}
 	
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/updateCancelOrderList.do", produces = "application/json;charset=utf-8")
 	public ResponseEntity<ServiceResult> updateCancelOrderList(
 			@RequestBody Map<String, String> param,

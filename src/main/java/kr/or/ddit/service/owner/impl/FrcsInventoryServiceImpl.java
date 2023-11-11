@@ -13,7 +13,9 @@ import kr.or.ddit.vo.head.HeadInventoryVO;
 import kr.or.ddit.vo.owner.DeliveryVO;
 import kr.or.ddit.vo.owner.FrcsInventoryVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class FrcsInventoryServiceImpl implements IFrcsInventoryService{
 
@@ -21,9 +23,8 @@ public class FrcsInventoryServiceImpl implements IFrcsInventoryService{
 	private FrcsInventoryMapper mapper;
 
 	@Override
-	public List<FrcsInventoryVO> getInventList(String memId) {
-//		mapper.getMonthInventList(memId);
-		return mapper.getInventList(memId);
+	public List<FrcsInventoryVO> getInventList(String frcsId) {
+		return mapper.getInventList(frcsId);
 	}
 
 	@Override
@@ -97,8 +98,33 @@ public class FrcsInventoryServiceImpl implements IFrcsInventoryService{
 		return result;
 	}
 
-//	@Override
-//	public void deliveryMinInsert(FrcsInventoryVO frcsVO) {
-//		mapper.deliveryMinInsert(frcsVO);
-//	}
+	// 신규 제품 업데이트
+	@Override
+	public ServiceResult inventAdd(String frcsId) {
+		ServiceResult result = null;
+		int status = 0;
+		
+		// 본사 재고 테이블을 for문을 돌려서 본사 재고 품목을 가져온다
+		List<HeadInventoryVO> headVO = mapper.getVdprodCd();
+		log.info(headVO.toString());
+		
+		// 내 가맹점에 해당 품목이 있는지 check
+		for(int i=0; i<headVO.size(); i++) {
+			String vdprodCd = headVO.get(i).getVdprodCd();
+			int cnt = mapper.getInventCheck(vdprodCd, frcsId);
+			
+			// 체크해서 없으면 insert, 있으면 pass
+			if(cnt > 0) {
+				
+			}else {
+				status = mapper.newInventInsert(vdprodCd,frcsId);
+				if(status>0) {
+					result = ServiceResult.OK;
+				}else {
+					result = ServiceResult.FAILED;
+				}
+			}
+		}
+		return result;
+	}
 }

@@ -58,6 +58,7 @@
                                                 <button type="button" class="btn btn-secondary">검색</button>
                                             </div>
                                       </div>
+                                      <sec:csrfInput/>
                                   </form>                            
                               </div>
                               
@@ -88,7 +89,7 @@
                                   <tbody>
                                   <c:forEach items="${dataList }" var="list" varStatus="status">
                                       <tr class="trlist">
-                                          <td style="text-align:center">${status.count }</td>
+                                          <td style="text-align:center">${list.rnum }</td>
                                             <td style="text-align:center">${list.hdorderNo }</td>
                                           <td style="text-align:center">${list.vdprodCd }</td>
                                          <td style="text-align:center">${list.vdprodName }</td>
@@ -122,7 +123,7 @@
                           </div>
                           <br>
                         <nav aria-label="Page navigation example" id="pagingArea">
-                           ${pagingVO.pagingHTML }
+                          ${pagingVO.pagingHTML }
                         </nav>
                      
                       </div> <!-- end card-body-->

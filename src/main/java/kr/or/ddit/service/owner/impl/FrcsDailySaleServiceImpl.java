@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -21,7 +22,9 @@ import kr.or.ddit.vo.owner.FrcsMenuIngredientVO;
 import kr.or.ddit.vo.owner.FrcsMenuVO;
 import kr.or.ddit.vo.owner.FrcsOrderDetailVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class FrcsDailySaleServiceImpl implements IFrcsDailySaleService {
 
@@ -384,37 +387,16 @@ public class FrcsDailySaleServiceImpl implements IFrcsDailySaleService {
 		return chartArr;
 	}
 
-	// 매출액 분석 (한달)
+	// 인기 메뉴
 	@Override
-	public List<FrcsDailySalesVO> getOneMonthData(String frcsId, Date thisMonth) {
-		return mapper.getOneMonthData(frcsId,thisMonth);
+	public List<FrcsDailySalesVO> getPopularMenu(String frcsId) {
+		return mapper.getPopularMenu(frcsId);
 	}
 
-	// 매출 총이익 분석 (한달)
+	// 엑셀 다운로드
 	@Override
-	public FrcsDailySalesVO getTotalOneMonthList(String frcsId, Date thisMonth) {
-		
-		FrcsDailySalesVO oneTotalProfit = new FrcsDailySalesVO();
-		
-		// 총 매출액
-		int totalPrice = mapper.getTotalSales(frcsId,thisMonth);		
-		
-		// 총 매입금액
-		int totalorderPrice = mapper.getPurchase(frcsId,thisMonth);
-		
-		oneTotalProfit.setTotalPrice(totalPrice);
-		oneTotalProfit.setTotalorderPrice(totalorderPrice);
-		
-		return oneTotalProfit;
-	}
-
-	// 매입 분석 (한달)
-	@Override
-	public List<FrcsOrderDetailVO> getOnePurchase(String frcsId, Date thisMonth) {
-		
-		List<FrcsOrderDetailVO> onePurchase = mapper.getOnePurchase(frcsId,thisMonth);
-		
-		return onePurchase;
+	public List<FrcsDailySalesVO> getDailySalesCellList(String frcsId) {
+		return mapper.getDailySalesCellList(frcsId);
 	}
 }
 

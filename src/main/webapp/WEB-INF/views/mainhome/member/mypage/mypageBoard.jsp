@@ -26,7 +26,7 @@
 									</div>
 									<div class="col-md-3">
 										<div class="input-group" >
-											<input type="search" class="form-control" placeholder="검색하기..." id="boardlistSearch" name="searchWord">
+											<input type="search" class="form-control" placeholder="검색할 제목을 입력하세요" id="boardlistSearch" name="searchWord">
 											<button class="btn btn-secondary" type="submit" >검색</button>
 										</div>
 									</div>

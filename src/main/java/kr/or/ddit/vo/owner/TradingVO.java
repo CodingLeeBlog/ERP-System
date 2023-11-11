@@ -20,5 +20,7 @@ public class TradingVO {
 	
 	private String frcsName; // 내 가맹점명?
 	private String frcsName2;	// 상대방 가맹점명?
+	
+	private String thisMonth;
 
 }

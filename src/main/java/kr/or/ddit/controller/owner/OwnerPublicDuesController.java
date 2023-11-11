@@ -1,11 +1,20 @@
 package kr.or.ddit.controller.owner;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,16 +30,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.service.owner.IFrcsBillService;
+import kr.or.ddit.service.owner.IFrcsIdService;
+import kr.or.ddit.service.owner.IFrcsMyPageService;
+import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.FrcsPublicDuesVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/owner")
 public class OwnerPublicDuesController {
 
-   @Inject
-   private IFrcsBillService service;
+    @Inject
+    private IFrcsBillService service;
+   
+    @Inject
+	private IFrcsMyPageService myPageService;
+	
+	@Inject
+	private IFrcsIdService idService;
    
    // 공과금 납부 리스트
    @PreAuthorize("hasRole('ROLE_OWNER')")
@@ -41,6 +58,11 @@ public class OwnerPublicDuesController {
          @RequestParam(required = false) String searchMonth,
          Model model) {
       
+	   //헤더 오른쪽 관리자 영역
+	   String frcsId1 = idService.getFrcsId();
+	   FranchiseVO frcsHead = myPageService.headerDetail(frcsId1);
+	   model.addAttribute("frcsHead", frcsHead); 
+	   
       // 사용자 정보 가져오기
       User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
       String memId = user.getUsername();
@@ -143,6 +165,79 @@ public class OwnerPublicDuesController {
 	  return new ResponseEntity<List<FrcsPublicDuesVO>>(chartList,HttpStatus.OK);
    }
 
+   // 엑셀 다운로드
+   @RequestMapping(value="/publicDues/excel.do", method = RequestMethod.GET)
+   public void excelDownload(HttpServletResponse response) throws IOException {
+	   
+	   /*
+	    *  HSSF : Excel 2007 하위버전(.xls) 파일 포맷을 사용할 때 사용
+	    *  XSSF : Excel 2007 (.xlsx) 파일 포맷을 사용할 때 사용
+	    *  SXSSF : 대용량 엑셀 파일을 출력할 때 사용
+	    * 
+	    */  
    
+      // 사용자 정보 가져오기
+      User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      String memId = user.getUsername();
+	
+     // workbook => 엑셀 파일 객체
+	 Workbook workbook = new HSSFWorkbook();
+	   
+	 // 하나의  sheet 생성
+	 Sheet sheet = workbook.createSheet("공과금 내역");
+
+	 // 숫자형 데이터 콤마 찍기 위한 작업
+	 CellStyle formatCs = workbook.createCellStyle();
+	 formatCs = workbook.createCellStyle();
+	 formatCs.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));
+	 
+	 // row 갯수를 카운팅 하기 위한 변수
+	 int rowNo = 0;
+	 
+	 // 엑셀 파일 최상위 행에 삽입될 변수명
+	 Row headerRow = sheet.createRow(rowNo++);
+	 headerRow.createCell(0).setCellValue("순번");
+	 headerRow.createCell(1).setCellValue("납부년월");
+	 headerRow.createCell(2).setCellValue("전기세");
+	 headerRow.createCell(3).setCellValue("수도세");
+	 headerRow.createCell(4).setCellValue("가스비");
+	 headerRow.createCell(5).setCellValue("월세");
+	 
+	 // db에서 받아온 데이터들을 반복문을 이용하여 각각의 row 작성
+	 List<FrcsPublicDuesVO> duesList = service.duesList(memId);
+	 
+	 for(int i=0; i<duesList.size(); i++) {
+		 // createRow 메소드를 통해 행을 생성하고, 해당 행의 지정된 열에 반복문을 통해 값을 넣어준다.
+		 Row row = sheet.createRow(rowNo++);
+		 row.createCell(0).setCellValue(i+1);
+		 row.createCell(1).setCellValue(duesList.get(i).getDuesPayde());
+		 
+		 Cell cell2 = row.createCell(2);
+		 cell2.setCellValue(duesList.get(i).getDuesElcty());
+		 cell2.setCellStyle(formatCs);
+
+		 Cell cell3 = row.createCell(3);
+		 cell3.setCellValue(duesList.get(i).getDuesWater());
+		 cell3.setCellStyle(formatCs);
+		 
+		 Cell cell4 = row.createCell(4);
+		 cell4.setCellValue(duesList.get(i).getDuesGas());
+		 cell4.setCellStyle(formatCs);
+
+		 Cell cell5 = row.createCell(5);
+		 cell5.setCellValue(duesList.get(i).getDuesMtht());
+		 cell5.setCellStyle(formatCs);
+		 
+	 }
+	 
+	 // 응답 컨텐츠와 헤더를 정해주기
+	 // header를 통해 파일명을 지정해주는 방식으로 한글 파일명을 사용할 수 없음
+	 response.setContentType("application/vnd.ms-excel");
+	 response.setHeader("Content-Disposition", "attachment;filename=publicDuesList.xls");
    
+	 // 다운로드
+ 	 workbook.write(response.getOutputStream());
+ 	 // 마무리로 close();
+     workbook.close();
+   }
 }

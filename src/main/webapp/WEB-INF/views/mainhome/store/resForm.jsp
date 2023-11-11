@@ -64,6 +64,7 @@
 }
 </style>
 
+<sec:authentication property="principal.member" var="member"/>
 <!-- ======= res Section ======= -->
 <section id="res" class="d-flex align-items-center">
 	<div class="container position-relative text-center text-lg-start" data-aos="zoom-in" data-aos-delay="100">
@@ -91,9 +92,11 @@
 			<div class="col-10 bg-white">
 				<div class="row" id="resInfo">
 					<div class="col-6" style="color: black">
-						<div class="mt-5 mb-3">SPECIALS</div>
-						<div class="mb-5">대전 오류점</div>
-						<div class="mb-5">원하는 시간을 선택해주세요.</div>
+						<div class="mt-5" style="font-size: 20px;">SPECIALS</div>
+						<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 1px solid;"></div>
+						<div class="" id="frcsName" style="font-size: 40px;">${frcsName }</div>
+						<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 1px solid;"></div>
+						<div class="mb-5" style="font-size: 20px;">원하는 시간을 선택해주세요.</div>
 						<div class="d-flex text-center mb-3">
 						    <div class="col">
 								<button class="resvTimeBtn" id="resvTimeBtn">15시</button>
@@ -122,7 +125,7 @@
 								<button class="resvTimeBtn" id="resvTimeBtn">22시</button>
 							</div>
 						</div>
-						<div class="mb-5">원하는 시간을 선택해주세요.</div>
+						<div class="mb-5" style="font-size: 20px;">원하는 시간을 선택해주세요.</div>
 						<div class="d-flex text-center mb-3">
 							<div class="col">
 								<button class="resvMcntBtn" id="resvMcntBtn">1명</button>
@@ -164,43 +167,166 @@
 					</div>
 				</div>
 				<div class="row" id="menuInfo" style="display: none">
-					<div class="col-7 pe-2" style="color: black">
-						<div class="mt-5 mb-5">메뉴 목록</div>
+					<div class="col-7 pb-5 pe-2" style="color: black">
+						<div class="mt-5" style="font-size: 40px; text-align: center;">🍳&nbsp;&nbsp;&nbsp;Dry Snacks</div>
+						<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 1px solid;"></div>
+						<div class="row pt-3 pb-3" style="font-size: 20px">
+							<div class="col-10">메뉴</div>
+							<div class="col-1">가격</div>
+							<div class="col-1">주문</div>
+						</div>
 					    <div class="container-fluid mb-3">
-						<c:set value="${menulist}" var="menuList" />
-							<c:choose>
-								<c:when test="${empty menuList }">
-									<div style="color: rgb(0, 0, 0);"></div>
-									<p class="d-flex justify-content-center align-items-center n-table-none" style="color:rgb(0, 0, 0); height: 400px">
-										<span class="">메뉴 리뉴얼 중입니다.</span>
-									</p>
-									<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 1px solid;"></div>
-								</c:when>
-								<c:otherwise>
-									<c:forEach items="${menuList }" var="menu">
-										<div class="row mb-4">
-											
-						                    <div class="col-2" style="display: flex; justify-content: center; align-items: center;">
-						                   		 <img src="${pageContext.request.contextPath }/resources/upload/img/${menu.attachOrgname }" style="width: 120px; height: 120px;">
-						                    </div>
-						                    <div class="col-9">
-						                    	<input type="hidden" class="menuCd" name="menuCd" value="${menu.menuCd }" />
-						                    	<div class="d-flex mb-5">
-							                    	<div class="col-4 text-start menuName" style="font-size: 20px">${menu.menuName }</div>
-							                    	<div class="col me-2 text-end" style="font-size: 12px">▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️ ▪️  </div>
-							                    	<div class="col-1 text-end menuPrice" style="font-size: 16px">${menu.menuPrice }</div>
-						                    	</div>
-						                    	<div class="menuDes" style="font-size: 16px">${menu.menuDes }</div>
-						                    </div>
-						                    <button type="button" class="col-1 selectMenuPlus" style="display: flex; justify-content: center; align-items: center; background-color: white; border: none;">&#10133;</button>
+						<c:set value="${dryfrcsMenuList}" var="dryfrcsMenuList" />
+						<c:choose>
+							<c:when test="${empty dryfrcsMenuList }">
+								<div style="color: rgb(0, 0, 0);"></div>
+								<p class="d-flex justify-content-center align-items-center n-table-none" style="color:rgb(0, 0, 0); height: 400px">
+									<span class="">메뉴 리뉴얼 중입니다.</span>
+								</p>
+								<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 1px solid;"></div>
+							</c:when>
+							<c:otherwise>
+								<c:forEach items="${dryfrcsMenuList }" var="menu">
+									<div class="row drySnacks pt-3 pb-3">
+					                    <div class="col-2" style="display: flex; justify-content: center; align-items: center;">
+					                   		 <img src="${pageContext.request.contextPath }/resources/upload/img/${menu.attachOrgname }" style="width: 120px; height: 120px;">
 					                    </div>
-									</c:forEach>
-								</c:otherwise>
-							</c:choose>
+					                    <div class="col-7 my-auto">
+					                    	<input type="hidden" class="menuCd" name="menuCd" value="${menu.menuCd }" />
+					                    	<div class="text-start menuName" style="font-size: 25px">${menu.menuName }</div>
+					                    	<div class="menuDes" style="font-size: 15px">${menu.menuDes }</div>
+					                    </div>
+					                    <div class="col-2 d-flex justify-content-center align-items-center">
+					                    	<div class="col-2 text-end menuPrice" style="font-size: 16px">
+					                    		<fmt:formatNumber type="currency" value="${menu.menuPrice }"/>
+					                    	</div>
+					                    </div>
+					                    <button type="button" class="col-1 selectMenuPlus" style="display: flex; justify-content: center; align-items: center; background-color: white; border: none;">&#10133;</button>
+				                    </div>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
+					    </div>
+						<div class="mt-5" style="font-size: 40px; text-align: center;">🍤&nbsp;&nbsp;&nbsp;Fried Snacks</div>
+						<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 1px solid;"></div>
+						<div class="row pt-3 pb-3" style="font-size: 20px">
+							<div class="col-10">메뉴</div>
+							<div class="col-1">가격</div>
+							<div class="col-1">주문</div>
+						</div>
+					    <div class="container-fluid mb-3">
+						<c:set value="${friedfrcsMenuList}" var="friedfrcsMenuList" />
+						<c:choose>
+							<c:when test="${empty friedfrcsMenuList }">
+								<div style="color: rgb(0, 0, 0);"></div>
+								<p class="d-flex justify-content-center align-items-center n-table-none" style="color:rgb(0, 0, 0); height: 400px">
+									<span class="">메뉴 리뉴얼 중입니다.</span>
+								</p>
+								<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 1px solid;"></div>
+							</c:when>
+							<c:otherwise>
+								<c:forEach items="${friedfrcsMenuList }" var="menu">
+									<div class="row drySnacks pt-3 pb-3">
+					                    <div class="col-2" style="display: flex; justify-content: center; align-items: center;">
+					                   		 <img src="${pageContext.request.contextPath }/resources/upload/img/${menu.attachOrgname }" style="width: 120px; height: 120px;">
+					                    </div>
+					                    <div class="col-7 my-auto">
+					                    	<input type="hidden" class="menuCd" name="menuCd" value="${menu.menuCd }" />
+					                    	<div class="text-start menuName" style="font-size: 25px">${menu.menuName }</div>
+					                    	<div class="menuDes" style="font-size: 15px">${menu.menuDes }</div>
+					                    </div>
+					                    <div class="col-2 d-flex justify-content-center align-items-center">
+					                    	<div class="col-2 text-end menuPrice" style="font-size: 16px">
+					                    		<fmt:formatNumber type="currency" value="${menu.menuPrice }"/>
+					                    	</div>
+					                    </div>
+					                    <button type="button" class="col-1 selectMenuPlus" style="display: flex; justify-content: center; align-items: center; background-color: white; border: none;">&#10133;</button>
+				                    </div>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
+					    </div>
+						<div class="mt-5" style="font-size: 40px; text-align: center;">🥘&nbsp;&nbsp;&nbsp;Main</div>
+						<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 1px solid;"></div>
+						<div class="row pt-3 pb-3" style="font-size: 20px">
+							<div class="col-10">메뉴</div>
+							<div class="col-1">가격</div>
+							<div class="col-1">주문</div>
+						</div>
+					    <div class="container-fluid mb-3">
+						<c:set value="${mainfrcsMenuList}" var="mainfrcsMenuList" />
+						<c:choose>
+							<c:when test="${empty mainfrcsMenuList }">
+								<div style="color: rgb(0, 0, 0);"></div>
+								<p class="d-flex justify-content-center align-items-center n-table-none" style="color:rgb(0, 0, 0); height: 400px">
+									<span class="">메뉴 리뉴얼 중입니다.</span>
+								</p>
+								<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 1px solid;"></div>
+							</c:when>
+							<c:otherwise>
+								<c:forEach items="${mainfrcsMenuList }" var="menu">
+									<div class="row drySnacks pt-3 pb-3">
+					                    <div class="col-2" style="display: flex; justify-content: center; align-items: center;">
+					                   		 <img src="${pageContext.request.contextPath }/resources/upload/img/${menu.attachOrgname }" style="width: 120px; height: 120px;">
+					                    </div>
+					                    <div class="col-7 my-auto">
+					                    	<input type="hidden" class="menuCd" name="menuCd" value="${menu.menuCd }" />
+					                    	<div class="text-start menuName" style="font-size: 25px">${menu.menuName }</div>
+					                    	<div class="menuDes" style="font-size: 15px">${menu.menuDes }</div>
+					                    </div>
+					                    <div class="col-2 d-flex justify-content-center align-items-center">
+					                    	<div class="col-2 text-end menuPrice" style="font-size: 16px">
+					                    		<fmt:formatNumber type="currency" value="${menu.menuPrice }"/>
+					                    	</div>
+					                    </div>
+					                    <button type="button" class="col-1 selectMenuPlus" style="display: flex; justify-content: center; align-items: center; background-color: white; border: none;">&#10133;</button>
+				                    </div>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
+					    </div>
+						<div class="mt-5" style="font-size: 40px; text-align: center; background">🍺&nbsp;&nbsp;&nbsp;Drink</div>
+						<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 1px solid;"></div>
+						<div class="row pt-3 pb-3" style="font-size: 20px">
+							<div class="col-10">메뉴</div>
+							<div class="col-1">가격</div>
+							<div class="col-1">주문</div>
+						</div>
+					    <div class="container-fluid mb-3">
+						<c:set value="${drinkfrcsMenuList}" var="drinkfrcsMenuList" />
+						<c:choose>
+							<c:when test="${empty drinkfrcsMenuList }">
+								<div style="color: rgb(0, 0, 0);"></div>
+								<p class="d-flex justify-content-center align-items-center n-table-none" style="color:rgb(0, 0, 0); height: 400px">
+									<span class="">메뉴 리뉴얼 중입니다.</span>
+								</p>
+								<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 1px solid;"></div>
+							</c:when>
+							<c:otherwise>
+								<c:forEach items="${drinkfrcsMenuList }" var="menu">
+									<div class="row drySnacks pt-3 pb-3">
+					                    <div class="col-2" style="display: flex; justify-content: center; align-items: center;">
+					                   		 <img src="${pageContext.request.contextPath }/resources/upload/img/${menu.attachOrgname }" style="width: 120px; height: 120px;">
+					                    </div>
+					                    <div class="col-7 my-auto">
+					                    	<input type="hidden" class="menuCd" name="menuCd" value="${menu.menuCd }" />
+					                    	<div class="text-start menuName" style="font-size: 25px">${menu.menuName }</div>
+					                    	<div class="menuDes" style="font-size: 15px">${menu.menuDes }</div>
+					                    </div>
+					                    <div class="col-2 d-flex justify-content-center align-items-center">
+					                    	<div class="col-2 text-end menuPrice" style="font-size: 16px">
+					                    		<fmt:formatNumber type="currency" value="${menu.menuPrice }"/>
+					                    	</div>
+					                    </div>
+					                    <button type="button" class="col-1 selectMenuPlus" style="display: flex; justify-content: center; align-items: center; background-color: white; border: none;">&#10133;</button>
+				                    </div>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
 					    </div>
 					</div>
 					<div class="col-5 ps-2" id="resDetail" style="color: black">
-						<div class="card mt-5 mb-3 mx-auto" style="max-width: 25rem;">
+						<div class="card mt-5 mb-3 mx-auto sticky-top" style="max-width: 25rem;">
 							<div class="card-header bg-transparent text-center">상세보기</div>
 							<div class="card-body">
 							    <div>
@@ -227,11 +353,11 @@
 							    </div>
 							    <div>
 							    	<select id="mycouponList" style="width: 100%">
-							    		<option>쿠폰을 선택해주세요.</option>
+							    		<option data-memcpnid="null">쿠폰을 선택해주세요.</option>
 							    	<c:set value="${couponList }" var="couponList"/>
 								    	<c:choose>
 								    		<c:when test="${empty couponList }">
-								    			<option>보유하신 쿠폰이 없습니다.</option>
+								    			<option data-memcpnid="null">보유하신 쿠폰이 없습니다.</option>
 								    		</c:when>
 								    		<c:otherwise>
 								    			<c:forEach items="${couponList }" var="coupon">
@@ -246,7 +372,7 @@
 						  	</div>
 						  	<div class="card-footer bg-transparent border-success">
 						  		<input type="hidden" name="frcsId" id="frcsId" value="${frcsId }" />
-						  		<input type="hidden" name="memId" id="memId" value="<sec:authentication property="principal.member.memId"/>" />
+						  		<input type="hidden" name="memId" id="memId" value="${member.memId }" />
 						  		<input type="button" class="" id="resBtn" style="width: 100%" value="예약하기"/>
 						  	</div>
 						</div>
@@ -259,6 +385,69 @@
 	</div>
 </div>
 
+<!-- 결제 완료시 영수증 모달창 -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="color: black">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 800px;">
+		<div class="modal-content">
+			<div class="modal-body">
+			<div class="container-fluid">
+				<div class="row">
+				<div class="col-1"></div>
+				<div class="col mt-3">
+					<div class="row justify-content-center" style="font-size: 40px;">영수증</div>
+					<div class="mt-4 mb-4" style="color: #5a5a5a; border-bottom: 3px dashed;"></div>
+					<div class="row mb-4">
+					<div class="col text-start">매 장 명</div>
+					<div class="col text-end receiptFrcsName"></div>
+					</div>
+					<div class="row mb-4">
+					<div class="col text-start">날 짜</div>
+					<div class="col text-end receiptDate">YYYY / MM / DD</div>
+					</div>
+					<div class="row">
+					<div class="col text-start">결 제 자 명</div>
+					<div class="col text-end receiptName"></div>
+					</div>
+					<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 3px dashed;"></div>
+					<div class="row justify-content-start">
+					<div class="col-6 text-start">품명</div>
+					<div class="col-3 text-end">수량</div>
+					<div class="col-3 text-end">금액</div>
+					</div>
+					<div class="mt-4 mb-4" style="color: #f5f5f5; border-bottom: 3px dashed;"></div>
+					<div class="row receiptMenu">
+<!-- 					<div class="col-6 text-start receiptMenuName">오징어</div> -->
+<!-- 					<div class="col-2 text-end receiptMenuCate">마른안주</div> -->
+<!-- 					<div class="col-2 text-end receiptMenuCnt">1</div> -->
+<!-- 					<div class="col-2 text-end receiptMenuPrice">10,000</div> -->
+					</div>
+					<div class="mt-3 mb-4" style="color: #f5f5f5; border-bottom: 3px dashed;"></div>
+					<div class="row">
+					<div class="col text-start">할 인 금 액</div>
+					<div class="col text-end receiptDisprice"></div>
+					</div>
+					<div class="mt-4 mb-4" style="color: #5a5a5a; border-bottom: 3px dashed;"></div>
+					<div class="row" style="font-size: 40px;">
+					<div class="col">합 계 금 액</div>
+					<div class="col text-end receiptTotalPrice"></div>
+					</div>
+					<div class="mt-4 mb-4" style="color: #5a5a5a; border-bottom: 3px dashed;"></div>
+					<div class="row mb-2">
+					<div class="text-center">이용해주셔서 감사합니다.</div>
+					</div>
+				</div>
+				<div class="col-1"></div>
+				</div>
+			</div>	
+			</div>
+			<div class="modal-footer">
+				 <a href="/elly/mypage/res.do?memId=${member.memId }"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 <script type="text/javascript">
 
 $(function(){
@@ -277,6 +466,8 @@ $(function(){
 	var box = $(".box")
 	var resvSeatFlag = false;
 	var old_resvSeat = "";
+	
+	$('.card').css('top', '350px');
 	
 	// 원하는 시간 예약 기능
 	resvTimeBtn.on("click", function(event){
@@ -325,7 +516,7 @@ $(function(){
 		console.log("old_resvSeat : " + old_resvSeat);
 		
 		if(old_resvSeat === new_resvSeat){
-			alert('이미 선택한 인원입니다.')
+			alert('이미 선택한 좌석입니다.')
 		};
 		
 		old_resvSeat = new_resvSeat;
@@ -343,6 +534,9 @@ $(function(){
 			
 			var menuInfo = $("#menuInfo")
 	        menuInfo.css("display", "flex");
+			
+	        $(".drySnacks:even").css("background-color", "#f2f2f2");
+	        $(".selectMenuPlus:even").css("background-color", "#f2f2f2");
 			
 			var today = new Date();
 			var year = today.getFullYear(); // 년도
@@ -376,7 +570,9 @@ $(function(){
 		
 		var menuCd = $(this).closest('.row').find('.menuCd').val();
 		var menuName = $(this).closest('.row').find('.menuName').text();
-		var menuPrice = parseInt($(this).closest('.row').find('.menuPrice').text());
+		var menuPriceText  = $(this).closest('.row').find('.menuPrice').text().trim();
+		var menuPrice = parseInt(menuPriceText.replace(/\D/g, ''));
+		
 		
 		console.log(menuCd)
 		
@@ -403,7 +599,7 @@ $(function(){
 			newMenu += '<div class="col-1 menuCnt" style="display: flex; justify-content: center; align-items: center;">' + menuArr[i].split("_")[3] + '</div>';
 			newMenu += '<div class="col-1" style="display: flex; justify-content: center; align-items: center;">x</div>';
 			newMenu += '<div class="col menuName" style="display: flex; justify-content: left; align-items: center;">' + menuArr[i].split("_")[1] + '</div>';
-			newMenu += '<div class="col menuPrice" style="display: flex; justify-content: right; align-items: center;">' + menuArr[i].split("_")[2] + '원</div>';
+			newMenu += '<div class="col menuPrice" style="display: flex; justify-content: right; align-items: center;">' + formatPrice(menuArr[i].split("_")[2]) + '원</div>';
 			newMenu += '</div>';
             price += parseInt(menuArr[i].split("_")[2] * menuArr[i].split("_")[3]);
 		}
@@ -412,7 +608,7 @@ $(function(){
         
 		// 총 가격 변수
 		var restotalPrice = $("#restotalPrice");
-		restotalPrice.text(price);
+		restotalPrice.text(formatPrice(price));
 		
 	});
 	
@@ -426,7 +622,8 @@ $(function(){
 		var menuFlag = true;
 		var menuCd = $(this).closest('.selectMenu').attr('id');
 		var menuName = $(this).closest('.selectMenu').find('.menuName').text();
-		var menuPrice = parseInt($(this).closest('.selectMenu').find('.menuPrice').text());
+		var menuPriceText  = $(this).closest('.selectMenu').find('.menuPrice').text().trim();
+		var menuPrice = parseInt(menuPriceText.replace(/\D/g, ''));
 		var menuCnt = $(this).closest('.selectMenu').find('.menuCnt').text();
 		var newMenu = "";
 		
@@ -459,11 +656,13 @@ $(function(){
 		
 		// 총 가격 변수
 		var restotalPrice = $("#restotalPrice");
-		restotalPrice.html(price);
+		restotalPrice.html(formatPrice(price));
 	});
 	
 	// 쿠폰 적용 기능
 	var mycouponList = $("#mycouponList")
+	
+	var disPrice = ''
 	
 	mycouponList.on("change", function(){
 		
@@ -471,7 +670,10 @@ $(function(){
 		var selectedOption = $(this).find('option:selected');
 		
 		// 기존 가격
-		var restotalPrice = $("#restotalPrice").text();
+// 		var menuPriceText  = $(this).closest('.selectMenu').find('.menuPrice').text().trim();
+// 		var menuPrice = parseInt(menuPriceText.replace(/\D/g, ''));
+		var restotalPriceText = $("#restotalPrice").text().trim(); 
+		var restotalPrice = parseInt(restotalPriceText.replace(/\D/g, ''));
 		
 		// 쿠폰 선택시 할인율
 		var memcpnId = selectedOption.data('memcpnid');
@@ -482,18 +684,20 @@ $(function(){
 			distotal.hide();
 			distotalPrice.hide();
 			$('#restotalPrice').css('text-decoration', 'none');
+			
+			distotalPrice.html('');
 		}else {
 			distotal.show();
 			distotalPrice.show();
 			$('#restotalPrice').css('text-decoration', 'line-through');
 			var cpnContent = selectedOption.data('cpncontent');
 
-			var disprice = parseInt(cpnContent.slice(0,2));
+			var disPercent = parseInt(cpnContent.slice(0,2));
 			
-			var totalPrice = parseInt(restotalPrice)
-			var disPrice = totalPrice * (disprice / 100)
+			var totalPrice = parseInt(restotalPrice);
+			disPrice = totalPrice * (disPercent / 100);
 			
-			distotalPrice.html(totalPrice - disPrice)
+			distotalPrice.html(formatPrice(totalPrice - disPrice));
 		}
 	});
 	
@@ -503,6 +707,17 @@ $(function(){
 	
 	resBtn.on("click", function(){
 		
+		var IMP = window.IMP; 
+		IMP.init('imp58730656');
+	  
+	    var today = new Date();   
+	    var hours = today.getHours(); // 시
+	    var minutes = today.getMinutes();  // 분
+	    var seconds = today.getSeconds();  // 초
+	    var milliseconds = today.getMilliseconds();
+	    var makeMerchantUid = hours +  minutes + seconds + milliseconds;
+	    
+	 	// 결제 내역에 들어갈 파라미터
 		var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
 		var resvNo = ''
 		for (var i = 0; i < 6; i++) {
@@ -512,16 +727,21 @@ $(function(){
 		
 		var memId = $("#memId").val();
 		var frcsId = $("#frcsId").val();
-		var distotalPrice = $("#distotalPrice").text();
-		var restotalPrice = '';
+		var frcsName = $("#frcsName").text();
 		
-		if(distotalPrice != null){
-			restotalPrice = distotalPrice;
+		var distotalPriceText = $("#distotalPrice").text().trim();
+		var distotalPrice = parseInt(distotalPriceText.replace(/\D/g, ''));
+		
+		var restotalPriceText = $("#restotalPrice").text().trim();
+		var restotalPrice = parseInt(restotalPriceText.replace(/\D/g, ''));
+
+		var resvPrice = '';
+		
+		if(distotalPriceText != null && distotalPriceText !== ""){
+			resvPrice = distotalPrice;
 		}else {
-			restotalPrice = $("#restotalPrice").text();
+			resvPrice = restotalPrice;
 		}
-		
-// 		var restotalPrice = $("#restotalPrice").text();
 		
 		var selectedOption = mycouponList.find('option:selected');
 		var memcpnId = selectedOption.data('memcpnid');
@@ -531,43 +751,226 @@ $(function(){
 		for(var i = 0; i < menuArr.length; i++){
 			menuList.push({
 				memId : memId,
-				menuCd : menuArr[i].split("_")[0],
 				frcsId : frcsId,
+				menuCd : menuArr[i].split("_")[0],
+				menuName : menuArr[i].split("_")[1],
+				menuPrice : menuArr[i].split("_")[2],
 				menuCnt : menuArr[i].split("_")[3]
 			})
 		}
 		
-		
-		var data = {
-				resvNo : resvNo,
-				memId : memId,
-				frcsId : frcsId,
-				resvMcnt : old_resvMcnt,
-				resvTime : old_resvTime,
-				seatCd : old_resvSeat,
-				resvPrice : restotalPrice,
-				menuList : menuList
-		};
-		
-		if(memcpnId !== null){
-			data.memcpnId = memcpnId;
-		}
-		
-		$.ajax({
-			type : "post",
-			url : "/elly/store/res.do",
-			beforeSend: function(xhr){
-				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
-			},
-			data : JSON.stringify(data),
-			contentType : "application/json; charset=utf-8",
-			success : function(res){
-				if(res === "OK"){
-					location.href = "/elly/main.do";
-				}
-			}
+	    var name = '${member.memName}';
+	    var payNo = (Math.floor(Math.random() * 89999999) + 10000000);
+	    
+	    requestPay(memId, resvNo, resvPrice, name, payNo, menuList, memcpnId, frcsId, frcsName);
+	})
+	
+	// 결제 요청 Function
+    function requestPay(memId, resvNo, resvPrice, name, payNo, menuList, memcpnId, frcsId, frcsName) {
+        IMP.request_pay(
+        	{
+	            pg : 'kakaopay',
+	            merchant_uid: 'merchant_' + new Date().getTime(),
+	            name : '엘리할머니맥주 '+ frcsName,
+	            amount : resvPrice,
+	            buyer_email : '${member.memEmail }',
+	            buyer_name : '${member.memName }',
+	            buyer_tel : '${member.memTel }',
+	            buyer_addr : '${member.memAdd1 }',
+	            buyer_postcode : '${member.memPost }',
+	            resvNo : resvNo,
+	            memId : memId,
+	            payNo : payNo,
+	            payYn : 'Y'
+	        }, 
+	        function (rsp) { // callback
+			console.log(rsp);
+		    if ( rsp.success ) {
+		    	
+		    	var data = {
+		    			resvNo : resvNo,
+		    			memId : memId,
+		    			payNo : payNo,
+		    			payPrice : resvPrice,
+		    			payYn : 'Y',
+		    			resvState : 'Y'
+		    	}
+		    	
+		    	// 결제 성공시 결제정보 DB 저장 기능
+		    	$.ajax({
+		    		type : "post",
+		    		url : "/elly/mypage/pay.do",
+					beforeSend: function(xhr){
+						xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+					},
+					data : JSON.stringify(data),
+					contentType : "application/json; charset=utf-8",
+					success : function(res){
+						if(res === "OK"){
+							
+							var data = {
+									resvNo : resvNo,
+									memId : memId,
+									frcsId : frcsId,
+									resvMcnt : old_resvMcnt,
+									resvTime : old_resvTime,
+									seatCd : old_resvSeat,
+									resvPrice : resvPrice,
+									menuList : menuList
+							};
+							
+							if(memcpnId !== null){
+								data.memcpnId = memcpnId;
+							}
+							
+							$.ajax({
+								type : "post",
+								url : "/elly/store/res.do",
+								beforeSend: function(xhr){
+									xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+								},
+								data : JSON.stringify(data),
+								contentType : "application/json; charset=utf-8",
+								success : function(res){
+									if(res === "OK"){
+										
+										var today = new Date();
+										var year = today.getFullYear();
+										var month = today.getMonth() + 1;
+										var day = today.getDate();
+										
+										if (month < 10){
+											month = '0' + month;
+										}
+										if(day < 0){
+											day = '0' + day;
+										}
+										
+										var payDate = year + '. ' + month + '. ' + day;
+										
+										var formattedPrice = formatPrice(resvPrice);
+										
+										if(disPrice == null){
+											$(".receiptDisprice").html('₩ 0');
+										}else {
+											$(".receiptDisprice").html(formatPrice(disPrice));
+										}
+										
+										var receiptMenu = ''
+										for(var i = 0; i < menuList.length; i++){
+										receiptMenu += '<div class="col-6 mb-2 text-start receiptMenuName">' + menuList[i].menuName + '</div>'
+										receiptMenu += '<div class="col-3 mb-2 text-end receiptMenuCnt">' + menuList[i].menuCnt + '</div>'
+										receiptMenu += '<div class="col-3 mb-2 text-end receiptMenuPrice">' + formatPrice(menuList[i].menuPrice) + '</div>'
+										}
+										
+								    	$('.receiptFrcsName').html(frcsName);
+								    	$('.receiptDate').html(payDate);
+								    	$('.receiptName').html(name);
+								    	$('.receiptTotalPrice').html(formattedPrice);
+								    	$('.receiptMenu').html(receiptMenu);
+								    	
+								    	$('#exampleModal').modal('show');
+									}
+								},
+								error : function(xhr, status, error) {
+									Swal.fire({
+										title: '경고',
+										text: '예약 오류 발생 ! 다시 시도해주세요 !',
+										icon: 'warning',
+									})
+								}
+							});
+						}
+					},
+					error : function(xhr, status, error) {
+						Swal.fire({
+							title: '경고',
+							text: '결제 정보 오류 ! 다시 시도해주세요 !',
+							icon: 'warning',
+						})
+					}
+		    	});
+		    } else {
+				Swal.fire({
+					title: '경고',
+					text: '결제에 실패하였습니다 !',
+					icon: 'warning',
+				})
+		    }
 		});
-	});
+    }
+	
+	// 최종 예약 버튼
+// 	var resBtn = $("#resBtn");
+	
+// 	resBtn.on("click", function(){
+		
+// 		var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz'
+// 		var resvNo = ''
+// 		for (var i = 0; i < 6; i++) {
+// 			var rnum = Math.floor(Math.random() * chars.length)
+// 			resvNo += chars.substring(rnum, rnum + 1)
+// 	    }
+		
+// 		var memId = $("#memId").val();
+// 		var frcsId = $("#frcsId").val();
+// 		var distotalPrice = $("#distotalPrice").text();
+// 		var restotalPrice = $("#restotalPrice").text();
+// 		var resvPrice = '';
+		
+// 		if(distotalPrice != null && distotalPrice !== ""){
+// 			resvPrice = distotalPrice;
+// 		}else {
+// 			resvPrice = restotalPrice;
+// 		}
+		
+// 		var restotalPrice = $("#restotalPrice").text();
+		
+// 		var selectedOption = mycouponList.find('option:selected');
+// 		var memcpnId = selectedOption.data('memcpnid');
+		
+		// 예약 버튼 누를 시 넘어가야할 menuList
+// 		var menuList = [];
+// 		for(var i = 0; i < menuArr.length; i++){
+// 			menuList.push({
+// 				memId : memId,
+// 				menuCd : menuArr[i].split("_")[0],
+// 				frcsId : frcsId,
+// 				menuCnt : menuArr[i].split("_")[3]
+// 			})
+// 		}
+		
+		
+// 		var data = {
+// 				resvNo : resvNo,
+// 				memId : memId,
+// 				frcsId : frcsId,
+// 				resvMcnt : old_resvMcnt,
+// 				resvTime : old_resvTime,
+// 				seatCd : old_resvSeat,
+// 				resvPrice : resvPrice,
+// 				menuList : menuList
+// 		};
+		
+// 		if(memcpnId !== null){
+// 			data.memcpnId = memcpnId;
+// 		}
+		
+// 		$.ajax({
+// 			type : "post",
+// 			url : "/elly/store/res.do",
+// 			beforeSend: function(xhr){
+// 				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+// 			},
+// 			data : JSON.stringify(data),
+// 			contentType : "application/json; charset=utf-8",
+// 			success : function(res){
+// 				if(res === "OK"){
+// 					location.href = "/elly/main.do";
+// 				}
+// 			}
+// 		});
+// 	});
 	
 // 	// 쿠폰 적용 기능
 // 	var mycouponList = $("#mycouponList")
@@ -628,4 +1031,9 @@ function change_resvMcntBtn(e) {
 		}
 	});
 };
+
+function formatPrice(price) {
+	  return '₩ ' + price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 </script>

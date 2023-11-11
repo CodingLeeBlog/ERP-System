@@ -40,13 +40,11 @@
 	                            </div>
 	                            
 	                            <div class="nav flex-column mt-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-						            <a class="nav-link active show" id="v-pills-home-tab" data-bs-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home"
-						                aria-selected="true">
+						            <a class="nav-link active show" id="v-pills-home-tab" href="/owner/doc.do">
 						                <i class="mdi mdi-home-variant d-md-none d-block"></i>
 						                <span class="d-none d-md-block"><i class="ri-inbox-line me-2"></i>받은 공문</span>
 						            </a>
-						            <a class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile"
-						                aria-selected="false">
+						            <a class="nav-link" id="v-pills-profile-tab" href="/owner/doc.do">
 						                <i class="mdi mdi-account-circle d-md-none d-block"></i>
 						                <span class="d-none d-md-block"><i class="ri-mail-send-line me-2"></i>보낸 공문</span>
 						            </a>
@@ -79,15 +77,12 @@
 								<c:if test="${not empty ofldcFileList}">
 									<h5 class="mt-3 mb-3">첨부파일</h5>
 									<div class="row">
-										<div class="col-xl-4">
-											<div class="card mb-1 shadow-none border">
-												<c:forEach items="${ofldcFileList}" var="ofldcFile">
+										<c:forEach items="${ofldcFileList}" var="ofldcFile">
+											<div class="col-xl-4">
+												<div class="card mb-1 shadow-none border">
 													<div class="p-2">
 														<div class="row align-items-center">
 															<div class="col-auto">
-																<div class="avatar-sm">
-																	<img src="${pageContext.request.contextPath}/resources/upload/file/${ofldcFile.attachOrgname }" alt="img" class="avatar-sm rounded">
-																</div>
 															</div>
 															<div class="col ps-0">
 																<a href="javascript:void(0);" class="text-muted fw-bold">${ofldcFile.attachOrgname }</a>
@@ -95,31 +90,29 @@
 															</div>
 															<div class="col-auto">
 																<!-- Button -->
-																<a href="javascript:void(0);" class="btn btn-link btn-lg text-muted" data-file-no="${ofldcFile.fileNo }"> 
-																	<i class="ri-download-2-line" ></i>
-																</a>
+																<button type="button" class="btn btn-link btn-lg fileDownload"
+																		data-attach-no="${ofldcFile.attachNo }" name="attachNo"><i class="ri-download-2-line" ></i></button>
 															</div>
 														</div>
 													</div>
-												</c:forEach>
-												
+												</div>
 											</div>
-										</div>
+										</c:forEach>
 										<!-- end col -->
 									</div>
 									<!-- end row-->
 								</c:if>
 
-								<form action="/owner/docDelete.do" method="post" id="procForm">
+<!-- 								<form action="/owner/docDelete.do" method="post" id="procForm"> -->
 									<input type="hidden" id="frcsOfldcNo" name="frcsOfldcNo" value="${frcsOfldcVO.frcsOfldcNo}"/>
-									<sec:csrfInput/>
-								</form>
+<%-- 									<sec:csrfInput/> --%>
+<!-- 								</form> -->
 
 								<div class="mt-4 text-xl-end">
 									<button type="button" class="btn btn-light me-2" id="listBtn">목록</button>
 <!-- 									답글달리기 전까지 수정,삭제 가능하게?? -->
 									<button type="button" class="btn btn-light me-2" id="delBtn">삭제</button>
-									<button type="button" class="btn btn-secondary" id="udtBtn">수정</button> 
+<!-- 									<button type="button" class="btn btn-secondary" id="udtBtn">수정</button>  -->
 								</div>
 								
 							</div>
@@ -202,36 +195,43 @@ $(function(){
 		location.href = '/owner/doc.do';
 	});
 	
-	delBtn.on("click", function(){
-		if(confirm("정말로 삭제하시겠습니까?")){
-			procForm.submit();
-		}
-	});
-
-// 	delBtn.on('click', function() {
-// 		var selectedItems = [];
-// 		selectedItems.push({ frcsOfldcNo: $("#frcsOfldcNo").val()});
-		
-// 		$.ajax({
-// 	        type: "POST",
-// 	        url: "/owner/docDelete.do",
-// 	        beforeSend: function(xhr){
-// 			xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
-// 			},
-// 	        data: JSON.stringify(selectedItems),
-// 	        contentType: "application/json;charset=UTF-8",
-// 	        success: function (response) {
-// 	            console.log("삭제 성공:", response);
-// 	            alert("삭제되었습니다!");
-// 	            location.reload();
-// 	        },
-// 	        error: function (error) {
-// 	            console.error("삭제 실패:", error);
-// 	            alert("다시 시도해주세요!");
-// 	        }
-// 	    });
-        
+// 	delBtn.on("click", function(){
+// 		if(confirm("정말로 삭제하시겠습니까?")){
+// 			procForm.submit();
+// 		}
 // 	});
+
+	delBtn.on('click', function() {
+		var selectedItems = [];
+		selectedItems.push({ frcsOfldcNo: $("#frcsOfldcNo").val()});
+		
+		$.ajax({
+	        type: "POST",
+	        url: "/owner/docDelete.do",
+	        beforeSend: function(xhr){
+			xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+			},
+	        data: JSON.stringify(selectedItems),
+	        contentType: "application/json;charset=UTF-8",
+	        success: function (response) {
+	            console.log("삭제 성공:", response);
+	            alert("삭제되었습니다!");
+	            location.href='/owner/doc.do';
+	        },
+	        error: function (error) {
+	            console.error("삭제 실패:", error);
+	            alert("다시 시도해주세요!");
+	        }
+	    });
+        
+	});
+	
+	// 파일 다운로드
+	$(".fileDownload").on("click", function() {
+		var attachNo = $(this).data("attach-no");
+
+		location.href = "/owner/docDownload.do?attachNo=" + attachNo;
+	});
 	
 });
 </script>

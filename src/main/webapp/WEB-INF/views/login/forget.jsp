@@ -93,8 +93,23 @@ $(function(){
 			},
 			data : JSON.stringify(userObject),
 			contentType : "application/json; charset=utf-8",
-			success : function(result){
-				console.log("result : " + result.memId);
+	        success:function(data){
+				Swal.fire({
+					title: '알림창',
+					text: '해당 이메일로 비밀번호가 발송 되었습니다.',
+					icon: 'success',
+				})
+        	},
+			error : function(xhr, status, error) {
+				Swal.fire({
+					title: '경고',
+					text: '로그인 후 이용해주세요!',
+					icon: 'warning',
+				}).then((result) => {
+					if (result.isConfirmed) {
+						location.href = "/elly/login.do"; 
+					}
+				});
 			}
 		});
 	});

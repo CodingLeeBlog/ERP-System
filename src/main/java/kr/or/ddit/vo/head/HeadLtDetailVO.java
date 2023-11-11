@@ -11,5 +11,7 @@ public class HeadLtDetailVO {
 	private String hdLtreciever;
 	private Date hdLtsddate;
 	private String hdLtstate;
-
+	
+	private String memId;
+	private String admin;
 }

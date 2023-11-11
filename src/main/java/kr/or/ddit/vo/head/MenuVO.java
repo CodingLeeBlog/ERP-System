@@ -22,6 +22,7 @@ public class MenuVO {
 	public Date menuRsdate;
 	public Date menuDeldate;
 	public String tableName;
+	private int rnum;
 	
 	private Integer[] delBoardNo;
 	private MultipartFile[] boFile;

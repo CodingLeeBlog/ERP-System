@@ -206,9 +206,37 @@ $(function(){
 	
 	/* 삭제버튼은 데이터가 있을때만 나타나도록? */
 	delBtn.on("click", function(){
-		if(confirm("정말로 삭제하시겠습니까?")){
-			delForm.submit();
-		};
+		
+		Swal.fire({
+		   title: '정말로 삭제하시겠습니까?',
+		   text: '되돌릴 수 없으니 다시 한번 생각해주세요.',
+		   icon: 'warning',
+		   
+		   showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+		   confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+		   cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+		   confirmButtonText: '삭제', // confirm 버튼 텍스트 지정
+		   cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+		   
+		   reverseButtons: true, // 버튼 순서 거꾸로
+		   
+		}).then(result => {
+		   // 만약 Promise리턴을 받으면,
+		   if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
+		     
+		   	  Swal.fire({
+			      title: '알림창',
+			      icon: 'success',
+			      text: '삭제가 완료되었습니다!'
+			    }).then((result) => {
+		            if (result.isConfirmed) {
+		            	delForm.submit();
+		                    }
+		          });
+// 		      location.reload();
+		   }
+		});
+		
 	});
 	
 	reBtn.on("click", function(){

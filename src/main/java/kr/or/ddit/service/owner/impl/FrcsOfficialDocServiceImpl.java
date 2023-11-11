@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.mapper.owner.FrcsOfficialDocMapper;
 import kr.or.ddit.service.owner.IFrcsOfficialDocService;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.owner.FrcsInquiryVO;
 import kr.or.ddit.vo.owner.FrcsOfficialDocVO;
@@ -35,11 +36,12 @@ public class FrcsOfficialDocServiceImpl implements IFrcsOfficialDocService {
 	}
 
 	@Override
-	public ServiceResult ofldcInsert(HttpServletRequest req, FrcsOfficialDocVO frcsOfldcVO) {
+	public ServiceResult ofldcInsert(HttpServletRequest req, FrcsOfficialDocVO frcsOfldcVO, AlarmVO alarmVO) {
 		ServiceResult result = null;
 		int status = mapper.ofldcInsert(frcsOfldcVO);
 		if(status > 0) {
 			List<AttachVO> ofldcFileList = frcsOfldcVO.getOfldcFileList();
+			
 			try {
 				//  파일 업로드 처리 함수
 				ofldcFileUpload(ofldcFileList, frcsOfldcVO.getFrcsOfldcNo(), status, req);
@@ -47,6 +49,27 @@ public class FrcsOfficialDocServiceImpl implements IFrcsOfficialDocService {
 				e.printStackTrace();
 			}
 			result = ServiceResult.OK;
+			
+			// 알람데이터 넣기 
+			String frcsId = frcsOfldcVO.getFrcsOfldcSndpty(); //답변자의 가맹점 코드
+			String frcsOfldcNo = frcsOfldcVO.getFrcsOfldcNo(); //공문 번호 
+			//1) FROM
+			String memIdfrcs = this.mapper.getMemFrcs(frcsId); //가맹점 코드를 mem_Id로 만들기 위함
+			alarmVO.setMemId(memIdfrcs);
+			//2) WHAT
+			alarmVO.setTblName("FRCS_OFFICIALDOCUMENT");
+			alarmVO.setTblNo(frcsOfldcNo+"");
+			//3) TO
+			String receiveMemId = this.mapper.getReceiveMemId(frcsOfldcNo);
+			alarmVO.setReceiveMemId(receiveMemId);
+			// 알람데이터 넣기 
+			mapper.insertAlarm(alarmVO);
+			
+			
+			
+			
+			
+			
 		}else {
 			result = ServiceResult.FAILED;
 		}
@@ -141,5 +164,16 @@ public class FrcsOfficialDocServiceImpl implements IFrcsOfficialDocService {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public List<FrcsOfficialDocVO> selectHdList(OwnerPaginationInfoVO<FrcsOfficialDocVO> pagingVO) {
+		return mapper.selectHdList(pagingVO);
+	}
+
+	@Override
+	public AttachVO selectFileInfo(int attachNo) {
+		return mapper.selectFileInfo(attachNo);
+	}
+
 
 }

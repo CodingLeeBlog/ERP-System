@@ -62,6 +62,7 @@
                                                                                 <option value="소스">소스</option>
                                                                                 <option value="수산">수산</option>
                                                                                 <option value="냉동제품">냉동제품</option>
+                                                                                <option value="주류">주류</option>
 																			</select>
 																		</div>
 																	</div>
@@ -77,9 +78,9 @@
 																</div>
 																
 																<div class="row mb-5" >
-																	<div class="col-md-12" style="overflow: auto; height:400px; ">
+																	<div class="col-md-12" style="overflow: auto ; height:400px; position:relative;">
 																		<table class="table table-outline" style="border-collapse: collapse;">
-																			<thead style="position: sticky;top: 0px; background-color:#65A4BE;">
+																			<thead style="position: sticky;top: 0px; background-color:#65A4BE; z-index: 1;">
 																				<tr class="ttr">
 																					<th style="text-align:center; width:150px; color:white;">제품코드</th>
 																					<th style="text-align:center; width:150px; color:white;">제품명</th>
@@ -94,12 +95,10 @@
 																			<tbody id="tbody">
 																				
 																			</tbody>
-																		</table>																			
+																		</table>
 																	</div>
 																</div>
 																<div id="ss" style="position: relative;"></div>
-																
-																
 																
 																<div class="row">
 																	<div class="col-md-6">
@@ -372,7 +371,7 @@ $(function(){
 				    html += "<td style='text-align:center;width:150px;'>" + purchaseVO.hdremainQy + "</td>";
 				    html += "<td class='sellPrice' style='text-align:center;width:150px;'>" + purchaseVO.hdrtrcvPrice + "</td>";
 				    html += "<td style='text-align:center;width:150px;'>";
-				    html += "   <div class='input-group bootstrap-touchspin bootstrap-touchspin-injected'>";
+				    html += "   <div class='input-group bootstrap-touchspin bootstrap-touchspin-injected' style='z-index: 0;' >";
 				    html += "       <span class='input-group-btn input-group-prepend'><button class='btn btn-primary bootstrap-touchspin-down minus' type='button'>-</button></span>";
 				    html += "       <input data-toggle='touchspin' type='text' placeholder='0' value='0' class='orderQty form-control text-end'>";
 				    html += "       <span class='input-group-btn input-group-append'><button class='btn btn-primary bootstrap-touchspin-up plus' type='button'>+</button></span>";

@@ -31,7 +31,9 @@ import kr.or.ddit.ServiceResult;
 import kr.or.ddit.controller.MediaUtils;
 import kr.or.ddit.service.owner.IFrcsIdService;
 import kr.or.ddit.service.owner.IFrcsInquiryService;
+import kr.or.ddit.service.owner.IFrcsMyPageService;
 import kr.or.ddit.vo.AttachVO;
+import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.FrcsInquiryVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
 import lombok.extern.slf4j.Slf4j;
@@ -47,6 +49,9 @@ public class OwnerInquiryController {
 	@Inject
 	private IFrcsIdService idService;
 	
+	@Inject
+	private IFrcsMyPageService myPageService;
+	
 	//root-context에서 설정했던 bean의 value값이 바인딩되어 여기에 들어온다.
 	@Resource(name="uploadPath")
 	private String resourcePath; 
@@ -59,6 +64,11 @@ public class OwnerInquiryController {
 			@RequestParam(required = false) String searchWord,
 			Model model) {
 		
+		//헤더 오른쪽 관리자 영역
+		String frcsId = idService.getFrcsId();
+		FranchiseVO frcsHead = myPageService.headerDetail(frcsId);
+		model.addAttribute("frcsHead", frcsHead);
+		
 		OwnerPaginationInfoVO<FrcsInquiryVO> pagingVO = new OwnerPaginationInfoVO<FrcsInquiryVO>();
 		
 		// 검색이 이루어지면 아래가 실행됨
@@ -68,8 +78,6 @@ public class OwnerInquiryController {
 			model.addAttribute("searchType", searchType);
 			model.addAttribute("searchWord", searchWord);
 		}
-		
-		String frcsId = idService.getFrcsId();
 		
 		pagingVO.setFrcsId(frcsId);
 		pagingVO.setCurrentPage(currentPage); // startRow, endRow, startPage, endPage가 결정
@@ -187,7 +195,7 @@ public class OwnerInquiryController {
 		return new ResponseEntity<List<FrcsInquiryVO>>(HttpStatus.OK) ;
 	}
 	
-	@RequestMapping(value="/download.do", method = RequestMethod.GET)
+	@RequestMapping(value="/inqDownload.do", method = RequestMethod.GET)
 	   public ResponseEntity<byte[]> fileDownload(int attachNo) throws IOException{
 		   InputStream in = null;
 		   ResponseEntity<byte[]> entity = null;

@@ -4,6 +4,33 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.mapper.owner.FrcsEmployeeMapper">
 
+	<resultMap type="frcsEmpVO" id="frcsEmpMap">
+		<result property="frcsEmpCd" column="frcs_emp_cd"/>
+		<result property="frcsId" column="frcs_id"/>
+		<result property="frcsEmpNm" column="frcs_emp_nm"/>
+		<result property="frcsEmpBrdt" column="frcs_emp_brdt"/>
+		<result property="frcsEmpTelno" column="frcs_emp_telno"/>
+		<result property="frcsEmpSalary" column="frcs_emp_salary"/>
+		<result property="frcsEmpRspofc" column="frcs_emp_rspofc"/>
+		<result property="frcsEmpYn" column="frcs_emp_yn"/>
+		<result property="tableName" column="table_name"/>
+<!-- 		<result property="frcsEmpProfileimg" column="frcs_emp_profileimg"/> -->
+		<collection property="empFileList" resultMap="attachMap"></collection>
+	</resultMap>
+	
+	<resultMap type="attachVO" id="attachMap">
+		<id property="attachNo" column="ATTACH_NO"/>
+		<result property="attachNo" column="ATTACH_NO"/>
+		<result property="fileNo" column="FILE_NO"/>
+		<result property="attachOrgname" column="ATTACH_ORGNAME"/>
+		<result property="attachSavename" column="ATTACH_SAVENAME"/>
+		<result property="tableName" column="TABLE_NAME"/>
+		<result property="tablePk" column="TABLE_PK"/>
+		<result property="attachMime" column="ATTACH_MIME"/>
+		<result property="attachSize" column="ATTACH_SIZE"/>
+		<result property="thumbImg" column="THUMB_IMG"/>
+	</resultMap>
+
 	<select id="frcsEmpList" parameterType="string" resultType="frcsEmpVO">
 		SELECT
 		    frcs_emp_cd
@@ -15,14 +42,91 @@
 		  , frcs_emp_rspofc
 		  , frcs_emp_yn
 		  , table_name
-		  , frcs_emp_profileimg
+		  , frcs_emp_profileimg 
+          , (
+                select attach_savename from attach
+                where table_name in ('frcsEmp')
+                and table_pk in ('emp' || emp.frcs_emp_cd)
+                and file_no in (1)
+          ) as empImg1
+          , (
+                select attach_savename from attach
+                where table_name in ('frcsEmp')
+                and table_pk in ('emp' || emp.frcs_emp_cd)
+                and file_no in (2)
+          ) as empImg2
+          , (
+                select attach_savename from attach
+                where table_name in ('frcsEmp')
+                and table_pk in ('emp' || emp.frcs_emp_cd)
+                and file_no in (3)
+          ) as empImg3
+          , (
+                select attach_savename from attach
+                where table_name in ('frcsEmp')
+                and table_pk in ('emp' || emp.frcs_emp_cd)
+                and file_no in (4)
+          ) as empImg4
 		FROM
-		    frcs_employee
+		    frcs_employee emp
 		WHERE
 			frcs_id = #{frcsId}
+		order by 
+			frcs_emp_cd desc
 	</select>
 	
-	<insert id="frcsEmpInsert" parameterType="frcsEmpVO">
+<!-- 	<select id="frcsEmpList" parameterType="string" resultType="frcsEmpVO"> -->
+<!-- 		SELECT -->
+<!-- 		    frcs_emp_cd -->
+<!-- 		  , frcs_id -->
+<!-- 		  , frcs_emp_nm -->
+<!-- 		  , frcs_emp_brdt -->
+<!-- 		  , frcs_emp_telno -->
+<!-- 		  , frcs_emp_salary -->
+<!-- 		  , frcs_emp_rspofc -->
+<!-- 		  , frcs_emp_yn -->
+<!-- 		  , table_name -->
+<!-- 		  , (select ATTACH_ORGNAME -->
+<!--              from attach at -->
+<!--              where at.table_name = emp.table_name -->
+<!--                  and rownum = 1) as frcs_emp_profileimg  -->
+<!-- 		FROM -->
+<!-- 		    frcs_employee emp -->
+<!-- 		WHERE -->
+<!-- 			frcs_id = #{frcsId} -->
+<!-- 		order by  -->
+<!-- 			frcs_emp_cd desc -->
+<!-- 	</select> -->
+	
+<!-- 	<select id="frcsEmpFileList" parameterType="string" resultType="frcsEmpVO"> -->
+<!-- 		SELECT -->
+<!-- 		    a.frcs_emp_cd -->
+<!-- 		  , a.frcs_id -->
+<!-- 		  , a.frcs_emp_nm -->
+<!-- 		  , a.frcs_emp_brdt -->
+<!-- 		  , a.frcs_emp_telno -->
+<!-- 		  , a.frcs_emp_salary -->
+<!-- 		  , a.frcs_emp_rspofc -->
+<!-- 		  , a.frcs_emp_yn -->
+<!-- 		  , a.table_name -->
+<!-- 		  , a.frcs_emp_profileimg -->
+<!-- 		  , c.attach_no -->
+<!-- 		  , c.file_no -->
+<!-- 		  , c.attach_orgname -->
+<!-- 		  , c.attach_savename -->
+<!-- 		  , c.attach_mime -->
+<!-- 		  , c.attach_size -->
+<!-- 		  , c.table_name -->
+<!-- 		  , c.table_pk -->
+<!-- 		  , c.thumb_img -->
+<!-- 		FROM -->
+<!-- 		    frcs_employee a -->
+<!-- 		JOIN attach c ON a.table_name = 'frcsEmp' and a.table_name = c.table_name and a.frcs_emp_cd = c.table_pk  -->
+<!-- 		WHERE -->
+<!-- 			a.frcs_id = #{frcsId} -->
+<!-- 	</select> -->
+	
+	<insert id="frcsEmpInsert" parameterType="frcsEmpVO" useGeneratedKeys="true">
 		<selectKey keyProperty="frcsEmpCd" resultType="string" order="BEFORE">
 			select seq_employee.nextval from dual
 		</selectKey>
@@ -36,7 +140,7 @@
 		    , frcs_emp_rspofc
 		    , frcs_emp_yn
 		    , table_name
-		    , frcs_emp_profileimg
+<!-- 		    , frcs_emp_profileimg -->
 		) VALUES (
 		    #{frcsEmpCd}
 		  , #{frcsId}
@@ -46,8 +150,8 @@
 		  , #{frcsEmpSalary}
 		  , #{frcsEmpRspofc}
 		  , #{frcsEmpYn}
-		  , #{tableName}
-		  , #{frcsEmpProfileimg}
+		  , 'frcsEmp'
+<!-- 		  , #{frcsEmpProfileimg} -->
 		)
 	</insert>
 	
@@ -67,10 +171,106 @@
 		    , frcs_emp_salary = #{frcsEmpSalary}
 		    , frcs_emp_rspofc = #{frcsEmpRspofc}
 		    , frcs_emp_yn = #{frcsEmpYn}
-		    , table_name = #{tableName}
-		    , frcs_emp_profileimg = #{frcsEmpProfileimg}
+<!-- 		    , frcs_emp_profileimg = #{frcsEmpProfileimg} -->
 		WHERE
 		    frcs_emp_cd = #{frcsEmpCd}
 	</update>
+	
+	<insert id="insertEmpFile" parameterType="attachVO">
+		INSERT INTO attach (
+	    ATTACH_NO
+	    , FILE_NO
+	    , ATTACH_ORGNAME
+	    , ATTACH_SAVENAME
+	    , ATTACH_MIME
+	    , ATTACH_SIZE
+	    , TABLE_NAME
+	    , TABLE_PK
+	  )
+	  VALUES (
+	    seq_attach.nextval
+	    , #{fileNo}
+	    , #{attachOrgname}
+	    , #{attachSavename}
+	    , #{attachMime}
+	    , #{attachSize}
+	    , 'frcsEmp'
+	    , #{tablePk}
+	  )
+	</insert>
+	
+	<select id="selectFileInfo" parameterType="int" resultType="attachVO">
+		select
+			 ATTACH_NO
+			 , FILE_NO
+			 , ATTACH_ORGNAME
+			 , ATTACH_SAVENAME
+			 , ATTACH_MIME
+			 , ATTACH_SIZE
+			 , TABLE_NAME
+			 , TABLE_PK
+		from 
+			attach
+		where 
+			ATTACH_NO = #{attachNo}
+	</select>
+	
+	<select id="selectEmpFile" parameterType="int" resultType="attachVO">
+		select
+			ATTACH_NO
+			, FILE_NO
+			, ATTACH_ORGNAME
+			, ATTACH_SAVENAME
+			, ATTACH_MIME
+			, ATTACH_SIZE
+			, TABLE_NAME
+		from attach
+		where ATTACH_NO = #{attachNo}
+		and TABLE_NAME = 'frcsEmp'
+	</select>
+	
+	<delete id="deleteEmpFile" parameterType="int">
+		delete from attach
+		where ATTACH_NO = #{attachNo}
+	</delete>
+	
+	<delete id="deleteEmpFileCustom">
+		delete from attach
+		where file_no = #{order} 
+		and table_pk = #{tablePk}
+	</delete>
+	
+	<select id="selectEmp" parameterType="string" resultMap="frcsEmpMap">
+		SELECT
+		    e.frcs_emp_cd
+		  , e.frcs_id
+		  , e.frcs_emp_nm
+		  , e.frcs_emp_brdt
+		  , e.frcs_emp_telno
+		  , e.frcs_emp_salary
+		  , e.frcs_emp_rspofc
+		  , e.frcs_emp_yn
+		  , e.table_name
+		  , e.frcs_emp_profileimg
+		  , a.attach_no
+		  , a.file_no
+		  , a.attach_orgname
+		  , a.attach_savename
+		  , a.attach_mime
+		  , a.attach_size
+		  , a.table_name
+		  , a.table_pk
+		  , a.thumb_img
+		FROM
+		    frcs_employee e 
+		LEFT OUTER JOIN ATTACH a ON e.frcs_emp_cd = a.table_pk and e.table_name = 'frcsEmp'
+		WHERE 
+			e.frcs_emp_cd = #{frcsEmpCd}
+	</select>
+	
+	<delete id="deleteEmpFileByEmpCd" parameterType="string">
+		delete from attach
+		where table_pk = #{tablePk}
+	</delete>
 
 </mapper>

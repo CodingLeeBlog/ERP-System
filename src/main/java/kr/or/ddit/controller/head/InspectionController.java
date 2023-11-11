@@ -3,6 +3,7 @@ package kr.or.ddit.controller.head;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -30,6 +31,9 @@ import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.InspectionVO;
 import kr.or.ddit.vo.head.OfficeLetterVO;
+import kr.or.ddit.vo.owner.FranchiseVO;
+import kr.or.ddit.vo.owner.FrcsInventoryVO;
+import kr.or.ddit.vo.owner.FrcsOrderVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -76,8 +80,9 @@ public class InspectionController {
 		return "head/store/inspection";
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value="/inspectionDownload.do", method = RequestMethod.GET)
-	   public ResponseEntity<byte[]> inspectionDownload(int attachNo) throws IOException{
+	   public ResponseEntity<byte[]> inspectionDownload(int attachNo, HttpServletRequest req) throws IOException{
 		   InputStream in = null;
 		   ResponseEntity<byte[]> entity = null;
 		   
@@ -90,7 +95,7 @@ public class InspectionController {
 				   String attachSavename = attachOrgname.substring(attachOrgname.lastIndexOf(".") + 1);
 				   MediaType mType = MediaUtils.getMediaType(attachSavename);
 				   HttpHeaders headers = new HttpHeaders();
-				   in = new FileInputStream(attachVO.getAttachSavename());
+				   in = new FileInputStream(req.getServletContext().getRealPath("")+attachVO.getAttachSavename());
 				   
 				   attachOrgname = attachOrgname.substring(attachOrgname.indexOf("_") +1);
 				   if(mType != null) {
@@ -116,14 +121,32 @@ public class InspectionController {
 	   }
 	   
 	   @PreAuthorize("hasRole('ROLE_HEAD')")
+	   @ResponseBody
+	   @RequestMapping(value = "/inspectionDetailModal.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	   public ResponseEntity<List<InspectionVO>> inspectionDetailModal(String frcsId) {
+	       List<InspectionVO> detailList = inspectionService.getDetail(frcsId);
+
+	       return new ResponseEntity<>(detailList, HttpStatus.OK);
+	   }
+	   
+	    @PreAuthorize("hasRole('ROLE_HEAD')")
 		@ResponseBody
 		@RequestMapping(value = "/inspectionRegister.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-		public ResponseEntity<String> inspectionRegister(HttpServletRequest req, InspectionVO inspectionVO) {
+		public ResponseEntity<String> inspectionRegister(HttpServletRequest req, InspectionVO franchiseVO) {
 			   
-		   inspectionService.inspectionRegister(req, inspectionVO);
+		   inspectionService.inspectionRegister(req, franchiseVO);
 		    
 		    ResponseEntity<String> entity = new ResponseEntity<String>("{\"result\": \"OK\"}", HttpStatus.OK);
 		    return entity;
 		}
-	
+	   
+		@PreAuthorize("hasRole('ROLE_HEAD')")
+		@ResponseBody
+		@RequestMapping(value="/frcsSearch.do", method =RequestMethod.POST)
+		public ResponseEntity<List<FranchiseVO>> inventSearch(String searchWord){
+			List<FranchiseVO> franchiseVO = inspectionService.getSearch(searchWord);
+			
+			return new ResponseEntity<List<FranchiseVO>>(franchiseVO, HttpStatus.OK);
+		}
+		
 }

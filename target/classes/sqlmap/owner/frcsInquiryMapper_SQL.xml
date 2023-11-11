@@ -83,6 +83,7 @@
 				    FRCS_INQUIRY
 				WHERE 
 					1 = 1
+					and frcs_id = #{frcsId}
 				<include refid="inqSearch"/>
 				order by 
 					inqry_no desc

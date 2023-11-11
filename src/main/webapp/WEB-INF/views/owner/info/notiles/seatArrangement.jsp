@@ -11,6 +11,8 @@
             integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ"
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<!-- sweetAlert cdn -->
+	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
 
 	<style>
 	    body {
@@ -122,6 +124,7 @@
 </body>
 
 <script src="${pageContext.request.contextPath }/resources/assets/js/seat-arrangement.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
 <script>
 	// 파라미터 가져오기
     var t2 = <%= request.getParameter("t2") %>;
@@ -197,22 +200,37 @@
                 contentType: "application/json;charset=UTF-8",
                 success : function(result){
     				console.log("result : " + result);
-//     				if(result === "SUCCESS"){
-//     					alert(result);
-//     				}
     			}
 //                 success: function(response) {
-//                     console.log(response);  // 서버에서의 응답을 콘솔에 출력 (필요시 사용)
-//                     alert("데이터가 성공적으로 저장되었습니다.");
+//                     console.log(response);  
+                    
+//                     Swal.fire({
+// 					      title: '알림창',
+// 					      icon: 'success',
+// 					      text: '좌석 생성이 완료되었습니다!',
+// 					    }).then((result) => {
+// 				            if (result.isConfirmed) {
+// 				                    }
+// 				          });
 //                 },
 //                 error: function(error) {
-//                     console.error(error);  // 오류 발생 시 콘솔에 에러를 출력 (필요시 사용)
-//                     alert("데이터 저장 중 오류가 발생했습니다.");
+//                     console.error(error);  
+                    
+//                     Swal.fire({
+// 						title: '알림창',
+// 					    icon: 'error',
+// 					    text: '다시 시도해주세요!'
+// 					}).then((result) => {
+// 			            if (result.isConfirmed) {
+// 			            	location.reload();
+// 			                    }
+// 			          });
+                    
 //                 }
 
             });
-        opener.parent.location.reload('/owner/seat.do');
         window.close();
+        opener.parent.location.reload('/owner/seat.do');
         });
     });
 

@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -52,6 +55,7 @@ public class ExcelController {
 	 * @param response
 	 * @throws IOException
 	 */
+	@PreAuthorize("hasRole('ROLE_HEAD')")
     @GetMapping(value = "/excel.do")
     public void excelDownload(HttpServletResponse response) throws IOException{
     	/*
@@ -77,7 +81,7 @@ public class ExcelController {
     	headerRow.createCell(3).setCellValue("가맹점주명");
     	headerRow.createCell(4).setCellValue("주소");
     	headerRow.createCell(5).setCellValue("운영상태");
-    	headerRow.createCell(6).setCellValue("금월점검점수");
+    	headerRow.createCell(6).setCellValue("오픈일자");
     	headerRow.createCell(7).setCellValue("매장전화번호");
     	headerRow.createCell(8).setCellValue("가맹점주ID");
     	
@@ -92,9 +96,9 @@ public class ExcelController {
     		row.createCell(1).setCellValue(total.getFrcsId());
     		row.createCell(2).setCellValue(total.getFrcsName());
     		row.createCell(3).setCellValue(total.getMemName());
-    		row.createCell(4).setCellValue(total.getFrcsAdd1() + " " + total.getFrcsAdd2());
+    		row.createCell(4).setCellValue(total.getFrcsAdd1() + "_" + total.getFrcsAdd2());
     		row.createCell(5).setCellValue(total.getFrcsState());
-    		row.createCell(6).setCellValue(total.getIpStts());
+    		row.createCell(6).setCellValue(total.getFrcsOpdate());
     		row.createCell(7).setCellValue(total.getFrcsTel());
     		row.createCell(8).setCellValue(total.getMemId());
     		log.debug("total -> {}" , total);
@@ -112,6 +116,7 @@ public class ExcelController {
     }
     
     @ResponseBody
+    @PreAuthorize("hasRole('ROLE_HEAD')")
     @RequestMapping(value="/excelUpload.do", method = RequestMethod.POST)
     public ResponseEntity<ServiceResult> uploadExcel(@RequestParam("excelFile") MultipartFile excelFile) throws InvalidFormatException {
     	
@@ -187,10 +192,10 @@ public class ExcelController {
     			store.setRnum(storeRnum);	// 순번
     			store.setFrcsId(row.getCell(1).getStringCellValue()); // 가맹점코드
     			store.setFrcsName(row.getCell(2).getStringCellValue()); // 가맹점명
-    			store.setMemName(row.getCell(3).getStringCellValue()); // 가맹점주이름
-    			if(row.getCell(4).getStringCellValue() != null) { // 가맹점 주소
+    			store.setMemName(row.getCell(3).getStringCellValue()); // 가맹점주명
+    			if(row.getCell(4).getStringCellValue() != null) { // 주소
     				String location = row.getCell(4).getStringCellValue();
-    				String[] frcsAdd = location.split(" ");
+    				String[] frcsAdd = location.split("_");
     				if(frcsAdd.length >= 2) {
     					store.setFrcsAdd1(frcsAdd[0]);
     					store.setFrcsAdd2(String.join(" ", Arrays.copyOfRange(frcsAdd, 1, frcsAdd.length)));
@@ -199,10 +204,16 @@ public class ExcelController {
     				}
     			}
     			store.setFrcsState(row.getCell(5).getStringCellValue()); // 운영상태
-    			int storeIpStts = (int)row.getCell(6).getNumericCellValue();
-    			store.setIpStts(storeIpStts); // 금월점검점수
-    			store.setFrcsTel(row.getCell(7).getStringCellValue()); // 전화번호
+    			
+    			Date frOpdate = row.getCell(6).getDateCellValue();
+    			SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd");
+    			String frcsOpdate = format.format(frOpdate);
+    			store.setFrOpdate(frcsOpdate);	// 오픈일자
+    			
+    			store.setFrcsTel(row.getCell(7).getStringCellValue()); // 매장전화번호
     			store.setMemId(row.getCell(8).getStringCellValue());// 가맹점주ID
+//    			int storeIpStts = (int)row.getCell(6).getNumericCellValue();
+//    			store.setIpStts(storeIpStts); // 금월점검점수
     			
     			log.info("가맹점 액셀 업로드 시 행 업데이트.");
     			result = service.registerExcel(store);

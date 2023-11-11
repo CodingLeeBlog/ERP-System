@@ -49,7 +49,7 @@
 			b.*
 		from (
 			select 
-				a.*, row_number() over (order by menu_cd) rnum
+				a.*, row_number() over (order by menu_rsdate desc) rnum
 			from(
 				select menu_cd, menu_name, menu_cg, menu_price, menu_rsdate, menu_des, table_name
 				from head_menu
@@ -141,8 +141,13 @@
 		where menu_cd= #{menuCd} 
 	</update>
 	
-	<delete id="menuDelete" parameterType="map">
+	<delete id="menuDelete" parameterType="string">
 		delete from head_menu
+		where menu_cd = #{menuCd}
+	</delete>
+	
+	<delete id="menuChildDelete" parameterType="string">
+		delete from frcs_menu
 		where menu_cd = #{menuCd}
 	</delete>
 	

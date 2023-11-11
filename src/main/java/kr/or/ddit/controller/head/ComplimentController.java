@@ -55,6 +55,7 @@ public class ComplimentController {
 		return "head/compliment/list";
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/complimentDetail.do")
 	public String complimentDetail(@RequestParam int tableNo, Model model) {
 	    ProposalVO proposal = complimentService.selectCompliment(tableNo);

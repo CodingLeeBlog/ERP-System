@@ -13,8 +13,56 @@
 		</if>
 	</sql>
 
+	<!-- 예약 메뉴 상세보기 -->
 	<select id="frcsResvList" parameterType="string" resultType="frcsResvVO">
-		SELECT
+	
+	SELECT
+      b.MENU_CD
+      , b.FRCS_ID
+      , b.MENU_CNT
+      , c.MENU_NAME
+      , c.MENU_PRICE
+	FROM
+	    mem_menu b
+	left join HEAD_MENU c on b.MENU_CD = c.MENU_CD
+	where
+	     b.RESV_NO = #{resvNo}
+	
+<!-- 		SELECT -->
+<!-- 		      a.resv_no -->
+<!-- 			  , a.mem_id -->
+<!-- 			  , a.resv_mcnt -->
+<!-- 			  , a.resv_time -->
+<!-- 			  , a.resv_date -->
+<!-- 			  , a.resv_yn -->
+<!-- 			  , a.resv_state -->
+<!-- 			  , a.resv_acc_date -->
+<!-- 			  , a.resv_note -->
+<!-- 			  , a.seat_cd -->
+<!-- 			  , a.resv_price -->
+<!-- 			  , a.review_yn -->
+<!-- 			  , b.MENU_CD -->
+<!-- 			  , b.FRCS_ID -->
+<!-- 			  , b.MENU_CNT -->
+<!-- 			  , c.MENU_NAME -->
+<!-- 			  , c.MENU_PRICE -->
+<!-- 		FROM -->
+<!-- 		    reservation a -->
+<!-- 		left join mem_menu b on a.mem_id = b.mem_id -->
+<!-- 		left join HEAD_MENU c on b.MENU_CD = c.MENU_CD -->
+<!-- 		where -->
+<!-- 	    	 b.frcs_id = #{frcsId} -->
+	</select>
+	
+	<!-- 예약 리스트 -->
+	<select id="selectResvList" parameterType="pagingVO" resultType="frcsResvVO">
+		select 
+			b.*
+		from(
+			select 
+				a.*, row_number() over (order by a.resv_no desc) rnum
+			from (
+				SELECT
 		    a.resv_no
 		  , a.resv_mcnt
 		  , a.resv_time
@@ -32,9 +80,17 @@
 		    reservation a
 		left join (select distinct frcs_id, mem_id from mem_menu ) b 
     		on a.mem_id = b.mem_id
-    	where b.frcs_id = #{frcsId}
-    	order by 
-			a.resv_date desc
+				where
+					1 = 1
+					and b.FRCS_ID = #{frcsId}
+				<include refid="resvSearch"/>
+				order by 
+					a.resv_no desc
+			) a
+		) b
+		<![CDATA[
+ 			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+		]]> 
 	</select>
 	
 	<select id="selectResvCount" parameterType="pagingVO" resultType="int">
@@ -47,46 +103,16 @@
 		<include refid="resvSearch"/>
 	</select>
 	
-	<select id="selectResvList" parameterType="pagingVO" resultType="frcsResvVO">
-		select 
-			b.*
-		from(
-			select 
-				a.*, row_number() over (order by a.resv_no desc) rnum
-			from (
-				SELECT
-				      a.resv_no
-					  , a.mem_id
-					  , a.resv_mcnt
-					  , a.resv_time
-					  , a.resv_date
-					  , a.resv_yn
-					  , a.resv_state
-					  , a.resv_acc_date
-					  , a.resv_note
-					  , a.seat_cd
-					  , a.resv_price
-					  , a.review_yn
-					  , b.MENU_CD
-					  , b.FRCS_ID
-					  , b.MENU_CNT
-					  , c.MENU_NAME
-					  , c.MENU_PRICE
-				FROM
-				    reservation a
-				left join mem_menu b on a.mem_id = b.mem_id and b.FRCS_ID = #{frcsId}
-				left join HEAD_MENU c on b.MENU_CD = c.MENU_CD
-				where
-					1 = 1
-				<include refid="resvSearch"/>
-				order by 
-					a.resv_no desc
-			) a
-		) b
-		<![CDATA[
-			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
-		]]>
+	<select id="selectCount" parameterType="string" resultType="int">
+		SELECT
+		    count(a.resv_no)
+		FROM
+		    reservation a
+		left join frcs_seat b 
+    		on a.seat_cd = b.seat_cd
+    	where b.frcs_id = #{frcsId} and TO_CHAR(a.resv_date,'yy/mm/dd') = TO_CHAR(sysdate,'yy/mm/dd')
 	</select>
+	
 	
 	<update id="resvStateUpdate" parameterType="string">
 		UPDATE reservation
@@ -107,5 +133,11 @@
 		WHERE
 		    resv_no = #{resvNo}
 	</update>
+	
+	<delete id="rsevDelete" parameterType="string">
+		DELETE FROM reservation
+		WHERE
+        	resv_no = #{resvNo}
+	</delete>
 
 </mapper>

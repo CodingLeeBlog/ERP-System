@@ -61,7 +61,7 @@
 			b.*
 		from (
 			select 
-				a.*, row_number() over (order by owner_id) rnum
+				a.*, row_number() over (order by owner_rgdate desc) rnum
 			from(
 				select owner_id, owner_name, owner_tel, owner_email, owner_rgdate, owner_telyn, owner_const
 				from owner
@@ -152,5 +152,9 @@
 	    #{attachNo}, #{fileNo}, #{attachOrgname}, #{attachSavename}, #{attachMime}, #{attachSize}, 'owner', #{tablePk}
 	  )
 	</insert>
+	
+	<select id="getFrcsId" resultType="string" parameterType="int">
+		SELECT frcs_id FROM franchise WHERE owner_id = #{ownerId}
+	</select>
 
 </mapper>

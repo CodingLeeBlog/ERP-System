@@ -178,10 +178,14 @@
 															</div>
 														</div>
 														
+														<!-- 메뉴 따로 리스트로 받아서 넣어야할듯?! -->
 														<div class="row mb-2">
 															<label class="col-3 col-form-label">메뉴</label>
 															<div class="col-9">
-																<p class="form-control-plaintext">${resv.menuName } ${resv.menuCnt }개</p>
+																<c:set value="${resvMenuList }" var="resvmenuList" />
+																<c:forEach items="${resvmenuList }" var="resvmenu">
+																	<p class="form-control-plaintext">${resvmenu.menuName } ${resvmenu.menuCnt }개</p>
+																</c:forEach>
 															</div>
 														</div>
 														
@@ -355,19 +359,19 @@ $(function(){
 		 if (selectedItems.length > 0) {
              $.ajax({
                  type: "POST",
-                 url: "/owner/rsevStateUpdate.do",
+                 url: "/owner/rsevDelete.do",
                  beforeSend: function(xhr){
      				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
      			 },
                  data: JSON.stringify(selectedItems),
                  contentType: "application/json;charset=UTF-8",
                  success: function (response) {
-                     console.log("예약상태 업데이트 성공:", response);
+                     console.log("예약 취소 성공:", response);
                      alert("예약 취소되었습니다!");
                      location.reload();
                  },
                  error: function (error) {
-                     console.error("예약상태 업데이트 실패:", error);
+                     console.error("예약 취소 실패:", error);
                      alert("다시 시도해주세요!");
                      
                  }

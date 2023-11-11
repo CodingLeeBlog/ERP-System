@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsOperationMapper">
+
+	<select id="getSumPublicDues" parameterType="map" resultType="int">
+		select nvl(sum(dues_elcty+dues_water+dues_gas+dues_mtht),0) as publicDues
+		from publicdues
+		where frcs_id = #{frcsId} and trunc(dues_date, 'MM') = trunc(#{thisMonth}, 'MM')
+	</select>
+	
+</mapper>

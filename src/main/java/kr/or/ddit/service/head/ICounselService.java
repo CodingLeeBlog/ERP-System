@@ -18,5 +18,6 @@ public interface ICounselService {
 	public void counselRegister(FranchiseVO frcsVO);
 	public ServiceResult frcsCheck(String frcsName);
 	public String makeFrcsId();
+	public String getFrcsId(int ownerId);
 
 }

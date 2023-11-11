@@ -148,4 +148,9 @@ public class FrcsReviewServiceImpl implements IFrcsReviewService {
 	public List<FrcsReviewVO> selectReviewList(OwnerPaginationInfoVO<FrcsReviewVO> pagingVO) {
 		return mapper.selectReviewList(pagingVO);
 	}
+
+	@Override
+	public int selectCount(String frcsId) {
+		return mapper.selectCount(frcsId);
+	}
 }

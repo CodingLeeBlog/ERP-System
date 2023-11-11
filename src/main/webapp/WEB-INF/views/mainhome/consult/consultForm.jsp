@@ -52,15 +52,17 @@
 					<label for="inquiryPolicyCheck" class="b_ff_m b_c_l text-dark">위 개인정보 수집 및 활용에 동의합니다.</label>
 				</div>
 				
-				<div class="row mt-5 mb-5">
-					<div class="" style="color: black; font-size: 20px;">&#8251; 표기된 항목은 필수입력 항목입니다.</div>
+				<div class="d-flex mt-5 mb-5">
+					<div class="col-4" style="color: black; font-size: 20px;">&#8251; 표기된 항목은 필수입력 항목입니다.</div>
+					<button class="col-1 btn btn-light" id="consultant">자동완성</button>
+					<div class="col-7"></div>
 				</div>
 				<div class="mb-5" style="color: rgb(0, 0, 0); border-bottom: 1px solid;"></div>
 				<input type="hidden" name="ownerId" id="ownerId"/>
 				<div class="row mb-3" style="color: black; font-size: 20px;">
 					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 이름</div>
 					<div class="col-auto">
-						<input type="text" class="form-control" name="ownerName" id="ownerName" style="width: 334px" min="6" max="20" placeholder="이름을 입력하세요" value="">
+						<input type="text" class="form-control" name="ownerName" id="ownerName" style="width: 334px" min="6" max="20" placeholder="이름을 입력해주세요" value="">
 					</div>
 				</div>
 				<div class="row mb-3" style="color: black; font-size: 20px;">
@@ -75,7 +77,7 @@
 				<div class="row mb-3" style="color: black; font-size: 20px;">
 					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 생년월일</div>
 					<div class="col-auto">
-						<input type="text" class="form-control" name="ownerBir" id="ownerBir" style="width: 334px" min="6" max="20" placeholder="생년월일을 입력하세요" value="">
+						<input type="text" class="form-control" name="ownerBir" id="ownerBir" style="width: 334px" min="6" max="20" placeholder="생년월일 입력해주세요(ex:940101)" value="">
 					</div>
 				</div>
 				<div class="row mb-3" style="color: black; font-size: 20px;">
@@ -112,13 +114,13 @@
 				<div class="row mb-3" style="color: black; font-size: 20px;">
 					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 창업 희망 지역</div>
 					<div class="col-auto">
-						<input type="text" class="form-control" name="ownerArea" id="ownerArea" style="width: 334px" min="6" max="20" placeholder="이름을 입력하세요" value="">
+						<input type="text" class="form-control" name="ownerArea" id="ownerArea" style="width: 334px" min="6" max="20" placeholder="창업 희망 지역을 입력해주세요" value="">
 					</div>
 				</div>
 				<div class="row mb-3" style="color: black; font-size: 20px;">
 					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 창업 희망동</div>
 					<div class="col-auto">
-						<input type="text" class="form-control" name="ownerDong" id="ownerDong" style="width: 334px" min="6" max="20" placeholder="이름을 입력하세요" value="">
+						<input type="text" class="form-control" name="ownerDong" id="ownerDong" style="width: 334px" min="6" max="20" placeholder="창업 희망동을 입력해주세요" value="">
 					</div>
 				</div>
 				<div class="row mb-3" style="color: black; font-size: 20px;">
@@ -144,7 +146,7 @@
 				<div class="row mb-3" style="color: black; font-size: 20px;">
 					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 상가 주소</div>
 					<div class="col-auto">
-						<input type="text" class="form-control" name="ownerBuildingadd" id="ownerBuildingadd" style="width: 334px" min="6" max="20" placeholder="이름을 입력하세요" value="">
+						<input type="text" class="form-control" name="ownerBuildingadd" id="ownerBuildingadd" style="width: 334px" min="6" max="20" placeholder="보유 상가 주소를 입력해주세요" value="">
 					</div>
 				</div>
 				<div class="row mb-3" style="color: black; font-size: 20px;">
@@ -163,7 +165,7 @@
 				<div class="row mb-3" style="color: black; font-size: 20px;">
 					<div class="col-2 d-flex justify-content-start align-items-center">&#8251; 상담 희망 시간</div>
 					<div class="col-auto">
-						<input type="text" class="form-control" name="ownerHopetime" id="ownerHopetime" style="width: 334px" min="6" max="20" placeholder="이름을 입력하세요" value="">
+						<input type="text" class="form-control" name="ownerHopetime" id="ownerHopetime" style="width: 334px" min="6" max="20" placeholder="희망 시간을 입력하세요(ex:15시)" value="">
 					</div>
 				</div>
 				<div class="row mb-3" style="color: black; font-size: 20px;">
@@ -235,11 +237,22 @@ $(function(){
 	        type: "GET",
 	        url: "/elly/mailCheck.do?email=" + email,
 	        success:function(data){
-	            alert("해당 이메일로 인증번호호 발송이 완료되었습니다. \n 확인부탁드립니다.")
+				Swal.fire({
+					title: '알림창',
+					text: '해당 이메일로 인증번호 발송이 완료되었습니다.',
+					icon: 'success',
+				})
 	            mailCheckInput.attr('disabled', false);
 	            console.log("data : "+data);
 	            code = data;
-        	}
+        	},
+			error : function(xhr, status, error) {
+				Swal.fire({
+					title: '경고',
+					text: '잘못된 이메일 인증번호입니다 !',
+					icon: 'warning',
+				})
+			}
 	    });
 		
 	});
@@ -337,10 +350,32 @@ $(function(){
 						msg += '</div>'
 						msg += '</div>'
 					$(".modal-body").html(msg);
+				},
+				error : function(xhr, status, error) {
+					Swal.fire({
+						title: '경고',
+						text: '창업문의 중 오류 발생 ! 다시 시도해주세요 !',
+						icon: 'warning',
+					})
 				}
 			});
 			
 		$('#exampleModal').modal('show');
+	});
+	
+	// 자동완성
+	$('#consultant').on("click", function(){
+		$("#ownerName").val("윤선주");
+		$("#ownerBir").val("940101");
+		$("#mobile1").val("010");
+		$("#mobile2").val("9514");
+		$("#mobile3").val("9812");
+		$("#ownerEmail").val("sunju_y@naver.com");
+		$("#ownerArea").val("대전");
+		$("#ownerDong").val("오류동");
+		$("#ownerBuildingadd").val("없음");
+		$("#ownerHopetime").val("15시");
+		$("#ownerContentdetail").val("2조 다들 고생 많았어~~!!");
 	});
 });
 

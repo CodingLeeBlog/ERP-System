@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.mapper.head.StoreMapper;
 import kr.or.ddit.service.head.IStoreService;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.InventoryUpdateVO;
 import kr.or.ddit.vo.head.StoreOrderHistoryVO;
@@ -52,7 +53,7 @@ public class StoreServiceImpl implements IStoreService{
 	
 	// 승인처리시 진행하는 로직
 	@Override
-	public ServiceResult updateOrderDetails(StoreOrderHistoryVO soh) {
+	public ServiceResult updateOrderDetails(StoreOrderHistoryVO soh, AlarmVO alarmVO) {
 		
 		ServiceResult result = null;
 		
@@ -98,6 +99,21 @@ public class StoreServiceImpl implements IStoreService{
 		
 		if(status > 0) {
 			result = ServiceResult.OK;
+			
+			// 알람데이터 넣기 
+			String frcsorderNo = soh.getFrcsorderNo(); //발주 번호 
+			//1) FROM
+			String memIdfrcs = this.mapper.getMemFrcs(frcsId); //mem_Id로 만들기 위함
+			alarmVO.setMemId(memIdfrcs);
+			//2) WHAT
+			alarmVO.setTblName("FRCSORDER");
+			alarmVO.setTblNo(frcsorderNo);
+			//3) TO
+			String receiveMemId = this.mapper.getReceiveMemId(frcsId);
+			alarmVO.setReceiveMemId(receiveMemId);
+			// 알람데이터 넣기 
+			mapper.insertAlarm(alarmVO);
+			
 		}else {
 			result = ServiceResult.FAILED;
 		}
@@ -106,9 +122,9 @@ public class StoreServiceImpl implements IStoreService{
 	}
 	// 반려버튼 클릭시 데이터 받아오기
 	@Override
-	public StoreOrderHistoryVO frcsOrderDetails(String frcsorderNumber) {
+	public StoreOrderHistoryVO frcsOrderDetails(StoreOrderHistoryVO storeOrderHistoryVO) {
 		
-		return mapper.frcsOrderDetails(frcsorderNumber);
+		return mapper.frcsOrderDetails(storeOrderHistoryVO);
 	}
 	
 	// 반려모달에서 확인버튼을 눌렀을때 최종 업데이트 처리
@@ -126,6 +142,10 @@ public class StoreServiceImpl implements IStoreService{
 		}
 		
 		return result;
+	}
+	@Override
+	public int selectOrderCnt() {
+		return mapper.selectOrderCnt();
 	}
 	
 	

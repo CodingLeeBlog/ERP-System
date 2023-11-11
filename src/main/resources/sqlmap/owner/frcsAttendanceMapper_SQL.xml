@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsAttendanceMapper">
+
+	<insert id="insert" parameterType="frcsAttendanceManagementVO">
+		INSERT INTO FRCS_ATTENDANCE_MANAGEMENT(ATND_NO, FRCS_EMP_CD, FRCS_ID, ATND_STYMD, ATND_ENYMD, ATND_TTL, ATND_COLOR)
+		VALUES(seq_frcsattendancemanagement.nextval, #{frcsEmpCd}, #{frcsId}, #{atndStymd}, #{atndEnymd}, #{atndTtl}, #{atndColor})
+	</insert>
+	
+
+	<select id="findAll" resultType="frcsAttendanceManagementVO">
+			SELECT 
+		    a.ATND_NO, a.FRCS_EMP_CD, a.FRCS_ID, a.ATND_STYMD, a.ATND_ENYMD, a.ATND_TTL, a.ATND_COLOR,
+		    b.frcs_emp_nm, b.frcs_emp_brdt, b.frcs_emp_telno, b.frcs_emp_salary, b.frcs_emp_rspofc, b.frcs_emp_yn, b.table_name, b.frcs_emp_profileimg
+		FROM 
+		    FRCS_ATTENDANCE_MANAGEMENT a
+		JOIN 
+		    frcs_employee b
+		ON 
+		    a.FRCS_EMP_CD = b.FRCS_EMP_CD
+		WHERE
+		    a.FRCS_ID = #{frcsId}
+	</select>
+
+
+	<select id="getMemFrcsList" resultType="frcsEmpVO">
+		SELECT
+		    frcs_emp_cd
+		  , frcs_id
+		  , frcs_emp_nm
+		  , frcs_emp_brdt
+		  , frcs_emp_telno
+		  , frcs_emp_salary
+		  , frcs_emp_rspofc
+		  , frcs_emp_yn
+		  , table_name
+		  , frcs_emp_profileimg
+		FROM
+		    frcs_employee
+		WHERE
+			frcs_id = #{frcsId}
+	</select>
+	
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM FRCS_ATTENDANCE_MANAGEMENT WHERE ATND_STYMD = #{data}
+	</delete>
+	
+
+	<update id="update" parameterType="frcsAttendanceManagementVO">
+		UPDATE FRCS_ATTENDANCE_MANAGEMENT
+		SET ATND_STYMD = #{atndStymd},
+		ATND_ENYMD = #{atndEnymd}
+		WHERE ATND_STYMD = #{oldAtndStymd}
+	</update>
+
+
+</mapper>

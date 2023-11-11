@@ -86,7 +86,7 @@
                            <div class="input-group">
                            <div class="col-md-3">
                               <select class="form-select" id="example-select" name="searchStatus">
-                                 <option value="">지역선택</option>
+                                 <option value="">운영상태선택</option>
                                  <option value="운영중" <c:if test="${searchStatus eq '운영중' }">selected</c:if>>운영중</option>
                                  <option value="휴업중" <c:if test="${searchStatus eq '휴업중' }">selected</c:if>>휴업중</option>
                                  <option value="개점예정" <c:if test="${searchStatus eq '개점예정' }">selected</c:if>>개점예정</option>
@@ -95,7 +95,7 @@
                            </div>
                            <div class="col-md-9">
                               <div class="input-group" >
-                                 <input type="search" class="form-control" placeholder="검색하기..." id="frcsSearch" name="searchWord">
+                                 <input type="search" class="form-control" placeholder="지역이름을 검색하세요.." id="frcsSearch" name="searchWord">
                                  <button class="btn btn-secondary" type="submit" style="background-color: #abb2b8;">검색</button>
                               </div>
                            </div>
@@ -156,7 +156,7 @@
                         <th>가맹점주명</th>
                         <th>위치</th>
                         <th>운영상태</th>
-                        <th>금월점검점수</th>
+                        <th>오픈일자</th>
                         <th>매장전화번호</th>
                      </tr>
                   </thead>
@@ -207,7 +207,7 @@
                                        </span>
                                     </c:if>
                                  </td>
-                                 <td>${frcs.ipStts }</td>
+                                 <td>${frcs.frOpdate }</td>
                                  <td>${frcs.frcsTel }</td>
                               </tr>
                            </tbody>

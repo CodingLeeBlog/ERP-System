@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsPurchaseMapper">
+
+	<!-- 매입 분석 (한달) -->
+	<select id="getOnePurchase" parameterType="map" resultType="orderDetailVO">
+		select h.vdprod_cd, sum(frcsorder_qy) as frcsorder_qy, h.vdprod_name, fd.hdforward_price, sum(frcsorder_qy*fd.hdforward_price) as total_price
+		from frcsorder_detail fd, frcsorder f, head_inventory h
+		where h.hdforward_price = fd.hdforward_price
+		and h.vdprod_cd = fd.vdprod_cd
+		and f.frcs_id = fd.frcs_id
+		and f.frcsorder_no = fd.frcsorder_no
+		and f.frcs_id = #{frcsId} and trunc(frcsorder_date, 'MM') = trunc(#{thisMonth}, 'MM')
+		and frcsorder_confm = '승인'
+		group by trunc(frcsorder_date,'MM'), h.vdprod_cd, h.vdprod_name, fd.hdforward_price
+	</select>
+	
+	<!-- 매입 분석 (3개월) -->
+	<select id="getThreePurchase" parameterType="map" resultType="orderDetailVO">
+		select h.vdprod_cd, sum(frcsorder_qy) as frcsorder_qy, h.vdprod_name, fd.hdforward_price, sum(frcsorder_qy*fd.hdforward_price) as total_price
+		from frcsorder_detail fd, frcsorder f, head_inventory h
+		where h.hdforward_price = fd.hdforward_price
+		and f.frcs_id = fd.frcs_id
+		and h.vdprod_cd = fd.vdprod_cd
+		and f.frcsorder_no = fd.frcsorder_no
+		<![CDATA[
+		and f.frcs_id = #{frcsId} and trunc(frcsorder_date, 'MM') >= add_months(trunc(#{thisMonth}, 'MM'),-2)
+		and frcsorder_date < add_months(trunc(#{thisMonth}, 'MM'), 1)
+		]]>
+		and frcsorder_confm = '승인'
+		group by h.vdprod_cd, h.vdprod_name, fd.hdforward_price
+	</select>
+	
+	<!-- 매입 분석 (6개월) -->
+	<select id="getSixPurchase" parameterType="map" resultType="orderDetailVO">
+		select h.vdprod_cd, sum(frcsorder_qy) as frcsorder_qy, h.vdprod_name, fd.hdforward_price, sum(frcsorder_qy*fd.hdforward_price) as total_price
+		from frcsorder_detail fd, frcsorder f, head_inventory h
+		where h.hdforward_price = fd.hdforward_price
+		and f.frcs_id = fd.frcs_id
+		and h.vdprod_cd = fd.vdprod_cd
+		and f.frcsorder_no = fd.frcsorder_no
+		<![CDATA[
+		and f.frcs_id = #{frcsId} and trunc(frcsorder_date, 'MM') >= add_months(trunc(#{thisMonth}, 'MM'),-5)
+		and frcsorder_date < add_months(trunc(#{thisMonth}, 'MM'), 1)
+		]]>
+		and frcsorder_confm = '승인'
+		group by h.vdprod_cd, h.vdprod_name, fd.hdforward_price
+	</select>
+	
+	<!-- 매입 분석 12개월 차트 -->
+	<select id="getTotalPurchse" parameterType="map" resultType="int">
+		select nvl(sum(frcsorder_qy*fd.hdforward_price),0) as total_price
+		from frcsorder_detail fd, frcsorder f
+		where f.frcsorder_no = fd.frcsorder_no
+		and f.frcs_id = fd.frcs_id
+		and f.frcs_id = #{frcsId} and trunc(frcsorder_date, 'MM') = trunc(#{thisMonth}, 'MM')
+		and frcsorder_confm = '승인'
+	</select>
+	
+</mapper>

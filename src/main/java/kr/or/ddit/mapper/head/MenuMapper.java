@@ -18,5 +18,6 @@ public interface MenuMapper {
 	public int selectMemberMenuCount(HeadPaginationInfoVO<MenuVO> pagingVO);
 	public AttachVO selectMenuFile(int attachNo);
 	public void menuAttachRegister(AttachVO attachVO);
+	public void menuChildDelete(String menuCd);
 }
 

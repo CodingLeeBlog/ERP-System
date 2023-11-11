@@ -58,7 +58,7 @@
 			b.*
 		from (
 			select 
-				a.*, row_number() over (order by hd_ltno) rnum
+				a.*, row_number() over (order by hd_ltno desc) rnum
 			from(
 				select hd_ltno, hd_lttitle, hd_ltsender, hd_ltcontent, hd_ltsdate, hd_ltstate, table_name
 				from head_letter
@@ -76,6 +76,7 @@
 	    	h.hd_ltcontent,
 	    	h.hd_ltsdate,
 	    	h.hd_ltstate,
+	    	a.attach_no,
 	        a.attach_orgname,
 	        a.attach_savename,
 	        a.attach_mime,
@@ -83,7 +84,7 @@
 	        a.thumb_img
 	    from head_letter h
 	    left join attach a on h.hd_ltno = a.table_pk and a.table_name = 'officeLetter'
-	    where h.hd_ltno = #{hdLtno}
+	    where h.hd_ltno = #{hdLtno}  
 	</select>
 	
 	<insert id="officeLetterRegister" parameterType="officeLetterVO" useGeneratedKeys="true">
@@ -114,9 +115,50 @@
 	    where hd_ltno = #{hdLtno}
 	</update>
 	
-	<select id="getFrcsName" resultType="franchiseVO">
-		select frcs_name
-		from franchise
+	<select id="getseFrcsName" resultType="franchiseVO">
+		select a.frcs_id, a.frcs_name, a.owner_id, b.mem_id
+		from franchise a 
+		left join frcs_ownership b 
+		on  a.frcs_id = b.frcs_id
+		where a.frcs_state = '운영중'
+		and a.frcs_name like '서울%'
+		or a.frcs_name like '경기%'
+	</select>
+	
+	<select id="getdjFrcsName" resultType="franchiseVO">
+		select a.frcs_id, a.frcs_name, a.owner_id, b.mem_id
+		from franchise a 
+		left join frcs_ownership b 
+		on  a.frcs_id = b.frcs_id
+		where a.frcs_state = '운영중'
+		and a.frcs_name like '대전%'
+	</select>
+	
+	<select id="getbsFrcsName" resultType="franchiseVO">
+		select a.frcs_id, a.frcs_name, a.owner_id, b.mem_id
+		from franchise a 
+		left join frcs_ownership b 
+		on  a.frcs_id = b.frcs_id
+		where a.frcs_state = '운영중'
+		and a.frcs_name like '부산%'
+	</select>
+	
+	<select id="getdgFrcsName" resultType="franchiseVO">
+		select a.frcs_id, a.frcs_name, a.owner_id, b.mem_id
+		from franchise a 
+		left join frcs_ownership b 
+		on  a.frcs_id = b.frcs_id
+		where a.frcs_state = '운영중'
+		and a.frcs_name like '대구%'
+	</select>
+	
+	<select id="getgjFrcsName" resultType="franchiseVO">
+		select a.frcs_id, a.frcs_name, a.owner_id, b.mem_id
+		from franchise a 
+		left join frcs_ownership b 
+		on  a.frcs_id = b.frcs_id
+		where a.frcs_state = '운영중'
+		and a.frcs_name like '광주%'
 	</select>
 	
 	<insert id="officeLetterAttachRegister" parameterType="attachVO" useGeneratedKeys="true">
@@ -152,5 +194,41 @@
 	    WHERE
 	        hd_ltno = #{hdLtno}
 	</update>
+	
+	<!-- 공문 발송시 알람 등록 -->
+	<insert id="insertAlarm" parameterType="alarmVO">
+	    INSERT INTO alarm (
+	        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL, RECEIVEMEM_ID, TBL_NAME, TBL_NO
+	    ) VALUES (
+	        SEQ_ALARM.nextval, #{memId}, '공문 확인하기!', sysdate, '/owner/doc.do', #{receiveMemId}, #{tblName}, #{tblNo}
+	    )
+	</insert>
+	
+	<select id="selectFileInfo" parameterType="int" resultType="attachVO">
+		select
+			 ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, ATTACH_SIZE, TABLE_NAME, TABLE_PK
+		from attach
+		where ATTACH_NO = #{attachNo} and TABLE_NAME = 'officeLetter'
+	</select>
+	
+	<select id="getAllFrcs" resultType="franchiseVO">
+        select FRCS_NAME, o.FRCS_ID, o.mem_id
+		from FRANCHISE f, frcs_ownership o
+		where frcs_state = '운영중'
+		and f.frcs_id = o.frcs_id
+	</select>
+	
+	<!-- 가맹점 대쉬보드 받은공문count -->
+	<select id="selectCount" parameterType="string" resultType="int">
+		SELECT
+   			count(a.hd_ltno)
+		FROM
+		    head_letter a, head_lt_detail b, franchise f 
+		where
+		    a.hd_ltno=b.hd_ltno
+		    and b.hd_ltreciever = f.frcs_name
+		    and f.frcs_id = #{frcsId}
+		    and TO_CHAR(b.hd_ltsddate,'yy/mm/dd') = TO_CHAR(sysdate,'yy/mm/dd')
+	</select>
 
 </mapper>

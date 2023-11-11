@@ -109,7 +109,8 @@
 <script type="text/javascript">
 $(function(){
 	CKEDITOR.replace("boardContent",{
-		filebrowserUploadUrl:"/imageUpload.do?${_csrf.parameterName}=${_csrf.token}"
+		filebrowserUploadUrl:"/imageUpload.do?${_csrf.parameterName}=${_csrf.token}",
+		height: 500 
 	});
 	
 	var listBtn = $("#listBtn");
@@ -138,8 +139,15 @@ $(function(){
 			boardForm.attr("action","/head/update.do");
 		}
 		
+		Swal.fire({
+            title: '알림창', // Alert 제목
+            text: '등록이 완료되었습니다.', // Alert 내용
+            icon: 'success', // Alert 타입
+        }).then((result) => {
+            if (result.isConfirmed) {
 		boardForm.submit();
-		
+            }
+        });
 	});
 	
 	cancleBtn.on("click", function(){

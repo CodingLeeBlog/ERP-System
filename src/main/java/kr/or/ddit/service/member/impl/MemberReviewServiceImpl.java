@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.mapper.member.MemberReviewMapper;
+import kr.or.ddit.mapper.member.MyResMapper;
 import kr.or.ddit.service.member.IMemberReviewService;
 import kr.or.ddit.vo.AlarmVO;
+import kr.or.ddit.vo.member.ResVO;
 import kr.or.ddit.vo.member.ReviewVO;
 
 @Service
@@ -18,8 +20,17 @@ public class MemberReviewServiceImpl implements IMemberReviewService {
 	@Inject
 	private MemberReviewMapper memberreviewMapper;
 	
+	@Inject
+	private MyResMapper myresMapper;
+	
+	/**
+	 * 리뷰 쓰기 서비스 로직
+	 * 
+	 * @param reviewVO, resVO, alarmVO
+	 * @return result
+	 */
 	@Override
-	public ServiceResult create(ReviewVO reviewVO, AlarmVO alarmVO) {
+	public ServiceResult create(ReviewVO reviewVO, ResVO resVO, AlarmVO alarmVO) {
 		
 		ServiceResult result = null;
 		
@@ -42,6 +53,9 @@ public class MemberReviewServiceImpl implements IMemberReviewService {
 			// 알람데이터 넣기 
 			memberreviewMapper.insertMemberReviewAlarm(alarmVO);
 			
+			resVO.setReviewYn("Y");
+			myresMapper.myResReviewUpdate(resVO);
+			
 			result = ServiceResult.OK;
 		}else {
 			result = ServiceResult.FAILED;
@@ -50,6 +64,12 @@ public class MemberReviewServiceImpl implements IMemberReviewService {
 		return result;
 	}
 
+	/**
+	 * 나의 리뷰 내역 조회 서비스 로직
+	 * 
+	 * @param memId 회원 아이디
+	 * @return List<ReviewVO> 타입의 객체 리턴
+	 */
 	@Override
 	public List<ReviewVO> myReviewList(String memId) {
 		return memberreviewMapper.myReviewList(memId);

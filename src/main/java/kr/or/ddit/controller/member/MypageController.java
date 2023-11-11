@@ -2,7 +2,6 @@ package kr.or.ddit.controller.member;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -393,7 +392,7 @@ public class MypageController {
 	}
 	
 	/**
-	 * 회원페이지 예약 내역 결제 정보 추가 기능
+	 * 회원페이지 예약 결제 기능
 	 * 
 	 * @param payVO
 	 * @return
@@ -403,6 +402,22 @@ public class MypageController {
 	public ResponseEntity<ServiceResult> registerPay (@RequestBody	PayVO payVO){
 		
 		ServiceResult result = memberpayService.create(payVO);
+		
+		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
+		
+	}
+	
+	/**
+	 * 회원페이지 기존 예약 결제 취소 기능
+	 * 
+	 * @param payVO
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/mypage/cancel.do")
+	public ResponseEntity<ServiceResult> cancelPay (@RequestBody PayVO payVO){
+		
+		ServiceResult result = memberpayService.delete(payVO);
 		
 		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 		

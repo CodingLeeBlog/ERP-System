@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 
 <sec:authorize access="isAuthenticated()">
@@ -142,10 +144,10 @@
 							</a>
 							<div class="text-center pt-4 pb-2" style="background-color: red;">
 								<h4>
-									<a href="#" class="fs-4 text text-white">대전 한밭대점</a>
+									<a href="#" class="fs-4 text text-white">대전 탄방점</a>
 								</h4>
 								<h4>
-									<a class="fs-6 text text-white">2023.09.26 오픈</a>
+									<a class="fs-6 text text-white">2023.10.12 오픈</a>
 								</h4>
 							</div>
 						</div>
@@ -155,10 +157,10 @@
 							</a>
 							<div class="text-center pt-4 pb-2" style="background-color: red;">
 								<h4>
-									<a href="#" class="fs-4 text text-white">서울 문래6가점</a>
+									<a href="#" class="fs-4 text text-white">대전 시청점</a>
 								</h4>
 								<h4>
-									<a class="fs-6 text text-white">2023.09.26 오픈</a>
+									<a class="fs-6 text text-white">2022.05.10 오픈</a>
 								</h4>
 							</div>	
 						</div>
@@ -168,10 +170,10 @@
 							</a>
 							<div class="text-center pt-4 pb-2" style="background-color: red;">
 								<h4>
-									<a href="#" class="fs-4 text text-white">인천 검단신도시점</a>
+									<a href="#" class="fs-4 text text-white">대전 둔산점</a>
 								</h4>
 								<h4>
-									<a class="fs-6 text text-white">2023.09.26 오픈</a>
+									<a class="fs-6 text text-white">2023.01.30 오픈</a>
 								</h4>
 							</div>
 						</div>
@@ -181,10 +183,10 @@
 							</a>
 							<div class="text-center pt-4 pb-2" style="background-color: red;">
 								<h4>
-									<a href="#" class="fs-4 text text-white">청주 오송2산단점</a>
+									<a href="#" class="fs-4 text text-white">대전 대흥점</a>
 								</h4>
 								<h4>
-									<a class="fs-6 text text-white">2023.09.26 오픈</a>
+									<a class="fs-6 text text-white">2021.08.25 오픈</a>
 								</h4>
 							</div>
 						</div>
@@ -238,58 +240,57 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=806a49ec63336f4fd1e46074f5163d44&libraries=services"></script>
 <script>
 
-
-//마커를 담을 배열입니다
-var markers = [];
-
-var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-    mapOption = {
-        center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
-    };  
-
-// 지도를 생성합니다    
-var map = new kakao.maps.Map(mapContainer, mapOption); 
-
-// 장소 검색 객체를 생성합니다
-var ps = new kakao.maps.services.Places();  
-
-// 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
-var infowindow = new kakao.maps.InfoWindow({zIndex:1});            
-
-//주소-좌표 변환 객체를 생성합니다
-var geocoder = new kakao.maps.services.Geocoder();
-
-// 주소로 좌표를 검색합니다
-geocoder.addressSearch('${member.memAdd1}', function(result, status) {
-
-    // 정상적으로 검색이 완료됐으면 
-     if (status === kakao.maps.services.Status.OK) {
-
-        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-
-        // 결과값으로 받은 위치를 마커로 표시합니다
-        var marker = new kakao.maps.Marker({
-            map: map,
-            position: coords
-        });
-
-        // 인포윈도우로 장소에 대한 설명을 표시합니다
-        var infowindow = new kakao.maps.InfoWindow({
-            content: '<div style="width:150px; text-align:center; padding:6px 0; color:black">내위치</div>'
-        });
-        infowindow.open(map, marker);
-
-        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-        map.setCenter(coords);
-    } 
-});
-
-
 //마커를 표시할 위치와 title 객체 배열입니다 
 $(function(){
 	
-	var searchBtn = $("#searchBtn")
+	//마커를 담을 배열입니다
+	var markers = [];
+
+	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+	    mapOption = {
+	        center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
+	        level: 2 // 지도의 확대 레벨
+	    };  
+
+	// 지도를 생성합니다    
+	var map = new kakao.maps.Map(mapContainer, mapOption); 
+
+	// 장소 검색 객체를 생성합니다
+	var ps = new kakao.maps.services.Places();  
+
+	// 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
+	var infowindow = new kakao.maps.InfoWindow({zIndex:1});            
+
+	//주소-좌표 변환 객체를 생성합니다
+	var geocoder = new kakao.maps.services.Geocoder();
+
+	// 주소로 좌표를 검색합니다
+	geocoder.addressSearch('${member.memAdd1}', function(result, status) {
+
+	    // 정상적으로 검색이 완료됐으면 
+	     if (status === kakao.maps.services.Status.OK) {
+
+	        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+	        // 결과값으로 받은 위치를 마커로 표시합니다
+	        var marker = new kakao.maps.Marker({
+	            map: map,
+	            position: coords
+	        });
+
+	        // 인포윈도우로 장소에 대한 설명을 표시합니다
+//	         var infowindow = new kakao.maps.InfoWindow({
+//	             content: '<div style="width:150px; text-align:center; padding:6px 0; color:black">내위치</div>'
+//	         });
+//	         infowindow.open(map, marker);
+
+	        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+	        map.setCenter(coords);
+	    } 
+	});
+	
+	var searchBtn = $("#searchBtn");
+	
 	searchBtn.on("click", function(){
 		var keyword = $("#keyword").val();
 		var memId = '${member.memId}'
@@ -299,6 +300,16 @@ $(function(){
 			memId : memId
 		};
 		
+		search(data);
+		
+	});
+	
+	<c:set value="${resfrcsName }" var="resfrcsName"/>	// 리뷰쓰기를 클릭했을때 마이페이지에서 넘어온 flag 키 값 
+	<c:set value="${resfrcsReview }" var="resfrcsReview"/>
+	var pointX = "";
+	var pointY = "";
+	
+	function search(data){
 		$.ajax({
 			type : "post",
 			url : "/elly/store/list.do",
@@ -321,6 +332,15 @@ $(function(){
 			    removeMarker();
 			    
 			    for ( var i=0; i<res.length; i++ ) {
+			    	
+			    	// 마이페이지에서 넘어온 flag 키값이 존재한다면 아래 if가 돌아간다
+			    	if('${resfrcsReview}' == "review"){
+			    		if(res[i].frcsName == '${resfrcsName}'){
+			    			pointX = res[i].frcsXmap;
+			    			pointY = res[i].frcsYmap;
+			    		}
+			    	}
+			    	
 			    	// 마커를 생성하고 지도에 표시합니다
 			    	var placePosition = new kakao.maps.LatLng(res[i].frcsXmap, res[i].frcsYmap)
 		            var marker = addMarker(placePosition, i) 
@@ -369,8 +389,15 @@ $(function(){
 								});
 								
 								$("#reviewBtn").on("click", function(){
-	
-									$("#reviewForm").submit();
+									
+									var reviewStar = $("#reviewStar").val();
+									
+									if(reviewStar == null && reviewStar == ""){
+										alert("별점을 입력해주세요")
+									}else{
+										$("#reviewForm").submit();
+									}
+									
 								});
 			            	}else {
 			            		openInfoFlag = false;
@@ -402,8 +429,22 @@ $(function(){
 			    map.setBounds(bounds);
 			}
 		})
-		
-	});
+	}
+	
+	setTimeout(() => {
+		if('${resfrcsReview}' == "review"){
+			$("#keyword").val('${resfrcsName}');
+			console.log("review click...!");
+			var keyword = $("#keyword").val();
+			var memId = '${member.memId}'
+			
+			var data = {
+				keyword : keyword,
+				memId : memId
+			};
+			search(data)
+		}
+	}, 500);
 	
 	// 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
 	function addMarker(position, idx, title) {
@@ -412,7 +453,7 @@ $(function(){
 	        markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize),
 	            marker = new kakao.maps.Marker({
 	            position: position, // 마커의 위치
-	            image: markerImage 
+	            image: markerImage
 	        });
 
 	    marker.setMap(map); // 지도 위에 마커를 표출합니다
@@ -471,6 +512,7 @@ $(function(){
 		    + '<div style="padding-left: 5px; padding-top: 10px; padding-bottom: 10px;">'
 		    + '<form action="/elly/store/res.do" method="get" id="resForm">'
 		    + '<input type="hidden" name="frcsId" id="frcsId" value="' + title.frcsId + '"/>'
+		    + '<input type="hidden" name="frcsName" id="frcsName" value="' + title.frcsName + '"/>'
 		    + '<input type="hidden" name="memId" id="memId" value="${member.memId}"/>'
 		    + '<input type="button" id="resBtn" style="padding:5px; margin-left: 38px; z-index:1; color:black;" value="예약하기" />'
 		    + '<sec:csrfInput/></form>'
@@ -478,26 +520,24 @@ $(function(){
 		}else {
 			if(title.reviewYn == 'N'){
 				var content = '<div class="container-fluid">'
-				+ '<div class="text-center" style="padding:5px;z-index:1;color:black;">' + title.frcsName + '</div>'
+				+ '<div class="text-center mt-1" style="padding:5px; z-index:1; color:black; font-size: 16px; font-weight: bold;">' + title.frcsName + '</div>'
 			    + '<form action="/elly/store/review.do" method="post" id="reviewForm">'
 			    + '<input type="hidden" name="resvNo" id="resvNo" value="' + title.resvNo +'"/>'
 			    + '<input type="hidden" name="memId" id="memId" value="' + title.memId + '"/>'
 			    + '<input type="hidden" name="frcsId" id="frcsId" value="' + title.frcsId + '"/>'
 			    + '<input type="hidden" name="reviewStar" id="reviewStar" value=""/>'
 			    + '<div>'
-			    + '<div class="d-flex">'
-			    + '<div class="col-4 mt-3" style="color:black; font-size: 17px">매장만족도</div>'
-			    + '<div class="col d-flex align-items-end ms-2" style="color:black; font-size: 12px">(별점을 눌러 평가해주세요)</div>'
-			    + '</div>'
+			    + '<div class="col" style="color:black; font-size: 15px">매장만족도</div>'
+			    + '<div class="col d-flex align-items-end" style="color:black; font-size: 12px">(별점을 눌러 평가해주세요)</div>'
 			    + '<div class="d-flex justify-content-center align-items-center mt-3 ">'
 				+ '<div class="star-rating"><div class="d-flex stars"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><div class="ms-2 print" style="color: black; font-size: 15px;" name="review" id="review"></div><div style="color: black; font-size: 15px;">/5</div></div></div></div>'
 				+ '</div>'
 			    + '<div class="d-flex">'
-			    + '<div class="col-4 mt-3" style="color:black; font-size: 17px">이용후기</div>'
-			    + '<div class="col d-flex align-items-end ms-2" style="color:black; font-size: 12px">(선택사항)</div>'
+			    + '<div class="col-4 mt-3" style="color:black; font-size: 15px">이용후기</div>'
+			    + '<div class="col d-flex align-items-end ms-1" style="color:black; font-size: 12px">(선택사항)</div>'
 			    + '</div>'
 			    + '<div class="mt-3 mb-3">'
-			    + '<textarea class="form-control" rows="3" cols="20" class="pe-2" name="reviewContent" id="reviewContent" placeholder="음식의 맛, 양, 서비스 등 매장에 대한 솔직한 리뷰를 남겨주세요."></textarea>'
+			    + '<textarea class="form-control" rows="3" cols="20" class="pe-2" name="reviewContent" id="reviewContent"  style="color:black; font-size: 12px" placeholder="음식의 맛, 양, 서비스 등 매장에 대한 솔직한 리뷰를 남겨주세요."></textarea>'
 				+ '</div>'
 				+ '<div class="d-flex justify-content-center align-items-center mb-3">'
 				+ '<input class="btn btn-secondary" type="button" id="reviewBtn" style="z-index:1; color:white;" value="리뷰쓰기" />'
@@ -526,10 +566,12 @@ $(function(){
 		// 이동할 위도 경도 위치를 생성합니다 
 	    var moveLatLon = new kakao.maps.LatLng(dataX, dataY);
 	    
-	    level: 7 // 지도의 확대 레벨
+	    // level: 7 // 지도의 확대 레벨
 	    // 지도 중심을 부드럽게 이동시킵니다
 	    // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-	    map.panTo(moveLatLon);            
+	    map.panTo(moveLatLon);
+    	map.setCenter(moveLatLon);
+    	map.setLevel(2);
 	}  
 	
     // 리뷰 제출 버튼 클릭 이벤트 처리

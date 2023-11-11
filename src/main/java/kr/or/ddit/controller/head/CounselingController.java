@@ -73,6 +73,7 @@ public class CounselingController {
 		return "head/foundation/counseling";
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@ResponseBody
 	@RequestMapping(value = "/counselDetail.do", produces = "application/json;charset=utf-8")
 	public ResponseEntity<OwnerVO> counselDetail(@RequestBody OwnerVO ownerVO) {
@@ -82,6 +83,7 @@ public class CounselingController {
 	return new ResponseEntity<OwnerVO>(owner, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@ResponseBody
 	@RequestMapping(value = "/counselUpdate.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public ResponseEntity<String> counselUpdate(HttpServletRequest req, OwnerVO ownerVO) {
@@ -104,6 +106,7 @@ public class CounselingController {
 	    return entity;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/frcsIdMake.do", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity <String> makeFrcsId(Model model) {
@@ -112,6 +115,7 @@ public class CounselingController {
 		return new ResponseEntity<String> (newFrcsId, HttpStatus.OK) ;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@ResponseBody
 	@RequestMapping(value = "/frcsCheck.do", method = RequestMethod.POST)
 	public ResponseEntity<ServiceResult> frcsCheck (@RequestBody Map<String, String> map){
@@ -120,18 +124,41 @@ public class CounselingController {
 		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/counselMail.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailCheck(@RequestBody Map<String, String> map) throws Exception {
 	    
+		String ownerId = map.get("ownerId").toString();
 	    String frcsId = map.get("frcsId").toString();
 	    String email = map.get("email").toString();
 	    
 	    String from = "qweiop1541@naver.com"; // 보내는 이메일 주소
 	    String to = email;
-	    String title = "가맹점 회원가입시 필요한 가맹점 코드입니다.";
-	    String content = "[가맹점 코드] "+ frcsId +" 입니다. <br/> 인증번호 확인란에 기입해주십시오.";
+	    String title = "[엘리할머니맥주] 창업문의 일련번호 및 가맹점 코드 인증번호입니다.";
+	    String content = "<div>";
+		content += "<div style='margin:30px auto;width:600px;border:10px solid #f7f7f7'>";
+		content += "<div style='border:1px solid #000000'>";
+		content += "<h1 style='padding:30px 30px 0;background:#f7f7f7;color:#555;font-size:1.4em'>창업문의 일련번호 및 가맹점 코드 안내</h1>";
+		content += "<span style='display:block;padding:10px 30px 30px;background:#f7f7f7;text-align:right'>";
+		content += "<a href='https://coolenjoy.net:443' target='_blank' rel='noreferrer noopener'>엘리할머니맥주</a>";
+		content += "</span>";
+		content += "<p style='margin:20px 0 0;padding:30px 30px 30px;border-bottom:1px solid #eee;line-height:1.7em'>";
+		content += "안녕하세요 고객님<br>";
+		content += "'회원가입'을 위해 필요한 창업문의 일련번호와 가맹점 코드 인증번호입니다.<br>";
+		content += "아래 발급된 인증번호를 확인하신 후, <span style='color:#ff3061'><strong>회원가입 바로 가기</strong> 링크를 클릭 하십시오.</span><br>";
+		content += "감사합니다.</p>";
+		content += "<p style='margin:0;padding:30px 30px 30px;border-bottom:1px solid #eee;line-height:1.7em'>";
+		content += "<span style='display:inline-block;width:65px'>일련번호 :</span> <strong style='color:#ff3061'>" + ownerId + "</strong><br>";
+		content += "<span style='display:inline-block;width:80px'>가맹점 코드 :</span> <strong style='color:#ff3061'>" + frcsId + "</strong>";
+		content += "</p>";
+		content += "<a href='http://localhost/elly/register02.do' target='_blank' style='display:block;padding:30px 0;background:#484848;color:#fff;text-decoration:none;text-align:center' rel='noreferrer noopener'>회원가입 바로 가기</a>";
+		content += "</div>";
+		content += "</div>";
+		content += "</div>";
 	    
+	    
+
 	    try {
 	        MimeMessage mail = emailSender.createMimeMessage();
 	        MimeMessageHelper mailHelper = new MimeMessageHelper(mail, true, "UTF-8");
@@ -143,9 +170,20 @@ public class CounselingController {
 	        
 	        emailSender.send(mail);
 	    } catch(Exception e) {
+	        e.printStackTrace();
 	        return "error";
 	    }
 	    
 	    return frcsId;
 	}
+	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
+	@ResponseBody
+	@RequestMapping("/frcsIdByOwnerId.do") // GET 요청을 처리할 메서드를 지정
+    public ResponseEntity<String> getFrcsId(int ownerId) {
+            // ownerId를 사용하여 frcsId를 데이터베이스에서 가져오는 서비스 메서드 호출
+            String frcsId = counselService.getFrcsId(ownerId);
+            
+            return new ResponseEntity<String>(frcsId, HttpStatus.OK);
+    }
 }

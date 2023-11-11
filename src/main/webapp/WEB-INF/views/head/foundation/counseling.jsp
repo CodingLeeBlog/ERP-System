@@ -60,14 +60,15 @@
 									id="products-datatable">
 									<thead class="table-light">
 										<tr>
-											<th class="all">성명</th>
-											<th>신청날짜</th>
-											<th>연락처</th>
-											<th>이메일</th>
-											<th>연락여부</th>
-											<th>계약현황</th>
-											<th>상세보기</th>
-											<th>비고</th>
+											<th style='text-align: center'>순번</th>
+											<th style='text-align: center'>성명</th>
+											<th style='text-align: center'>신청날짜</th>
+											<th style='text-align: center'>연락처</th>
+											<th style='text-align: center'>이메일</th>
+											<th style='text-align: center'>연락여부</th>
+											<th style='text-align: center'>계약현황</th>
+											<th style='text-align: center'>상세보기</th>
+											<th style='text-align: center'></th>
 										</tr>
 									</thead>
 									<tbody id="tbody">
@@ -85,22 +86,23 @@
 														<input type="hidden" id="frcsId">
 													</div>
 													<tr class="text-left">
-														<td id="menuName">${owner.ownerName }</td>
-														<td><fmt:formatDate value="${owner.ownerRgdate }"
+														<td id="menuName" style='text-align: center'>${owner.rnum }</td>
+														<td id="menuName" style='text-align: center'>${owner.ownerName }</td>
+														<td style='text-align: center'><fmt:formatDate value="${owner.ownerRgdate }"
 																pattern="yyyy-MM-dd" /></td>
-														<td>${owner.ownerTel }</td>
-														<td>${owner.ownerEmail }</td>
-														<td><span class="badge bg-success">${owner.ownerTelyn }</span></td>
-														<td><span class="badge bg-success">${owner.ownerConst }</span></td>
-														<td class="table-action"><a
+														<td style='text-align: center'>${owner.ownerTel }</td>
+														<td style='text-align: center'>${owner.ownerEmail }</td>
+														<td style='text-align: center'><span class="badge bg-success">${owner.ownerTelyn }</span></td>
+														<td style='text-align: center'><span class="badge bg-success">${owner.ownerConst }</span></td>
+														<td class="table-action" style='text-align: center'><a
 															href="javascript:void(0);" class="action-icon"> <i
 																class="mdi mdi-eye detailBtn" data-bs-toggle="modal"
 																data-bs-target="#info-header-modal"
 																data-ownerid="${owner.ownerId}"></i>
 														</a></td>
-														<td>
-															<button type="button" class="btn btn-info btn-sm"
-																id="mailCheckBtn" data-ownerid="${owner.ownerId}">승인</button>
+														<td style='text-align: center'>
+															<button type="button" class="btn btn-info btn-sm mailCheckBtn"
+																data-ownerid="${owner.ownerId}" data-email="${owner.ownerEmail}">승인</button>
 														</td>
 													</tr>
 												</c:forEach>
@@ -416,6 +418,7 @@
 							<a href="javascript:void(0);" class="btn btn-light"
 								data-bs-dismiss="modal">취소</a>
 							<button type="button" class="btn btn-primary" id="regBtn">저장</button>
+							<button type="button" class="btn btn-success" id="autoBtn">자동완성</button>
 						</div>
 					</div>
 				</div>
@@ -437,16 +440,14 @@
 										<label for="ownerConst1" class="col-form-label">계약현황</label> <select
 											class="form-select form-select-sm mb-3" id="ownerConst2"
 											name="ownerConst">
-											<option selected>선택</option>
-											<option value="계약전">계약전</option>
 											<option value="계약완료">계약완료</option>
+											<option value="계약전">계약전</option>
 										</select>
 									</div>
 									<div class="mb-3 col-md-6">
 										<label for="ownerTelyn2" class="col-form-label">연락여부</label> <select
 											class="form-select form-select-sm mb-3" id="ownerTelyn2"
 											name="ownerTelyn">
-											<option selected>선택</option>
 											<option value="O">O</option>
 											<option value="X">X</option>
 										</select>
@@ -454,37 +455,37 @@
 								</div>
 								<div class="row g-2">
 									<div class="mb-3 col-md-6">
-										<label for="ownerFile1" class="col-form-label">보건증</label> <input
-											type="file" class="form-control" id="ownerFile1">
+									    <label for="ownerFiles" class="col-form-label">첨부파일</label>
+									    <input type="file" class="form-control" id="ownerFiles" name="files[]" multiple>
 									</div>
-									<div class="mb-3 col-md-6">
-										<label for="ownerFile2" class="col-form-label">위생교육필증</label>
-										<input type="file" class="form-control" id="ownerFile2">
-									</div>
-									<div class="mb-3 col-md-6">
-										<label for="ownerFile3" class="col-form-label">임대차계약</label> <input
-											type="file" class="form-control" id="ownerFile3">
-									</div>
-									<div class="mb-3 col-md-6">
-										<label for="ownerFile4" class="col-form-label">영업신고증</label> <input
-											type="file" class="form-control" id="ownerFile4">
-									</div>
-									<div class="mb-3 col-md-6">
-										<label for="ownerFile5" class="col-form-label">사업자등록증</label>
-										<input type="file" class="form-control" id="ownerFile5">
-									</div>
-									<div class="mb-3 col-md-6">
-										<label for="ownerFile6" class="col-form-label">가맹점계약서</label>
-										<input type="file" class="form-control" id="ownerFile6">
-									</div>
-									<div class="mb-3 col-md-6">
-										<label for="ownerFile7" class="col-form-label">사업자통장/카드</label>
-										<input type="file" class="form-control" id="ownerFile7">
-									</div>
-									<div class="mb-3 col-md-6">
-										<label for="ownerFile8" class="col-form-label">안전시설완비증명서</label>
-										<input type="file" class="form-control" id="ownerFile8">
-									</div>
+<!-- 									<div class="mb-3 col-md-6"> -->
+<!-- 										<label for="ownerFile2" class="col-form-label">위생교육필증</label> -->
+<!-- 										<input type="file" class="form-control" id="ownerFile2"> -->
+<!-- 									</div> -->
+<!-- 									<div class="mb-3 col-md-6"> -->
+<!-- 										<label for="ownerFile3" class="col-form-label">임대차계약</label> <input -->
+<!-- 											type="file" class="form-control" id="ownerFile3"> -->
+<!-- 									</div> -->
+<!-- 									<div class="mb-3 col-md-6"> -->
+<!-- 										<label for="ownerFile4" class="col-form-label">영업신고증</label> <input -->
+<!-- 											type="file" class="form-control" id="ownerFile4"> -->
+<!-- 									</div> -->
+<!-- 									<div class="mb-3 col-md-6"> -->
+<!-- 										<label for="ownerFile5" class="col-form-label">사업자등록증</label> -->
+<!-- 										<input type="file" class="form-control" id="ownerFile5"> -->
+<!-- 									</div> -->
+<!-- 									<div class="mb-3 col-md-6"> -->
+<!-- 										<label for="ownerFile6" class="col-form-label">가맹점계약서</label> -->
+<!-- 										<input type="file" class="form-control" id="ownerFile6"> -->
+<!-- 									</div> -->
+<!-- 									<div class="mb-3 col-md-6"> -->
+<!-- 										<label for="ownerFile7" class="col-form-label">사업자통장/카드</label> -->
+<!-- 										<input type="file" class="form-control" id="ownerFile7"> -->
+<!-- 									</div> -->
+<!-- 									<div class="mb-3 col-md-6"> -->
+<!-- 										<label for="ownerFile8" class="col-form-label">안전시설완비증명서</label> -->
+<!-- 										<input type="file" class="form-control" id="ownerFile8"> -->
+<!-- 									</div> -->
 								</div>
 							</form>
 						</div>
@@ -501,7 +502,7 @@
 	</div>
 	<!-- content -->
 </div>
-
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=806a49ec63336f4fd1e46074f5163d44&libraries=services"></script>
 <script type="text/javascript">
 $(function() {
 	var tBody = $("#tBody");
@@ -518,6 +519,29 @@ $(function() {
 	// 가맹점 중복체크
 	var frcsCheckBtn = $("#frcsCheckBtn");
 	var frcsCheckFlag = false;
+	
+	
+	// 자동완성
+	$("#autoBtn").on("click", function(){
+		$("#frcsName1").val("대전 선화점");
+		$("#frcsState1").val("개점예정");
+		$("#frcsTel1").val("041-350-1237");
+		$("#frcsStdate1").val("2023-11-16");
+		$("#frcsEnddate1").val("2028-11-15");
+		$("#frcsPost1").val("34834");
+		$("#frcsAdd3").val("대전 중구 대종로 543-8");
+		$("#frcsAdd4").val("1층");
+		$("#frcsSttime1").val("17:00");
+		$("#frcsEndtime1").val("01:00");
+		$("#frcsCdate1").val("2023-11-16");
+		$("#frcsInsdate1").val("2023-11-30");
+		$("#frcsOpdate1").val("2023-12-10");
+		$("#frcsInedate1").val("2023-12-12");
+		$("#frcsXmap1").val("36.3315745622429");
+		$("#frcsYmap1").val("127.421484942001");
+		$("#frcsStar1").val("0");
+		$("#frcsPsncpa1").val("30");
+	});
 
 	// 페이징
 	pagingArea.on("click", "a", function(event){
@@ -620,39 +644,61 @@ $(function() {
 		});
 	});
 	
-	// 승인 버튼 클릭시 메일 전송	
-	var code = "";
 
-	mailCheckBtn.on("click", function(){
-	    var email = $('#ownerEmail1').val();
-	    var frcsId = $('#frcsId1').val(); // frcsId 가져오기
-	    
-	    console.log("frcsId", frcsId);
-	
-	    var data = {
-	        frcsId: frcsId, // frcsId를 설정
-	        email: email
-	    };
-	
-	    // mailCheckBtn 데이터 속성에 frcsId를 설정
-	    mailCheckBtn.data('frcsId1', frcsId);
-	
-	    $.ajax({
-	        type: "post",
-	        url: "/head/counselMail.do",
-	        data: JSON.stringify(data),
-	        contentType: "application/json; charset=utf-8",
-	        beforeSend: function(xhr) {
-	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
-	        },
-	        success:function(res){
-	            alert("해당 이메일로 코드가 발송되었습니다.")
-	            mailCheckInput.attr('disabled', false);
-	            console.log("res : "+res);
-	            code = res;
-	        }
-	    });
-	});
+// 승인 버튼 클릭시 메일 전송 및 frcsId 가져오기
+var code = "";
+
+$(".mailCheckBtn").on("click", function(){
+    var email = $(this).data("email");
+    var ownerId = $(this).data("ownerid");
+
+    // ownerId를 사용하여 frcsId를 서버로부터 가져오기
+    $.ajax({
+        url: "/head/frcsIdByOwnerId.do",
+        method: "GET",
+        data: { ownerId: ownerId },
+        success: function(response) {
+            // 성공적으로 frcsId를 받았을 때 메일 전송 요청
+            var frcsId = response;
+//             console.log("frcsId", frcsId);
+            
+			// 이제 frcsId와 email을 사용하여 메일 전송 요청
+			var mailData = {
+				ownerId: ownerId,
+			    frcsId: frcsId,
+			    email: email
+			};
+			console.log(email);
+
+            $.ajax({
+                type: "post",
+                url: "/head/counselMail.do",
+                data: JSON.stringify(mailData),
+                contentType: "application/json; charset=utf-8",
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+                },
+                success: function(res){
+                	Swal.fire({
+	                    title: '알림창',
+	                    text: '해당 이메일로 발송되었습니다.',
+	                    icon: 'success',
+	                }).then((result) => {
+	                    if (result.isConfirmed) {
+	                        location.href = "/head/counseling.do"; 
+	                    }
+	                });
+                    console.log("res : " + res);
+                    code = res;
+                }
+            });
+        },
+        error: function() {
+            console.error("frcsId를 가져오는데 실패했습니다.");
+        }
+    });
+});
+
 
 	
 	// addBtn 클릭 시 ownerId 설정
@@ -698,9 +744,6 @@ $(function() {
 		                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
 		            },
 		            success: function(res) {
-		            	var frcsId = res.frcsId;
-		                $('#mailCheckBtn').data('frcsId1', frcsId);
-		            	
 		                Swal.fire({
 		                    title: '알림창',
 		                    text: '등록이 완료되었습니다.',
@@ -725,14 +768,19 @@ $(function() {
 		
         // 저장 버튼을 클릭했을 때 데이터를 서버로 전송합니다.
         var formData = new FormData();
-        formData.append("boFile", ownerFile1.files[0]);
-        formData.append("boFile", ownerFile2.files[0]);
-        formData.append("boFile", ownerFile3.files[0]);
-        formData.append("boFile", ownerFile4.files[0]);
-        formData.append("boFile", ownerFile5.files[0]);
-        formData.append("boFile", ownerFile6.files[0]);
-        formData.append("boFile", ownerFile7.files[0]);
-        formData.append("boFile", ownerFile8.files[0]);
+        
+        var ownerFiles = document.getElementById('ownerFiles').files;
+
+        for (var i = 0; i < ownerFiles.length; i++) {
+            formData.append("boFile", ownerFiles[i]);
+        }
+//         formData.append("boFile", ownerFile2.files[0]);
+//         formData.append("boFile", ownerFile3.files[0]);
+//         formData.append("boFile", ownerFile4.files[0]);
+//         formData.append("boFile", ownerFile5.files[0]);
+//         formData.append("boFile", ownerFile6.files[0]);
+//         formData.append("boFile", ownerFile7.files[0]);
+//         formData.append("boFile", ownerFile8.files[0]);
         formData.append("ownerId", $("#ownerId1").val()); 
         formData.append("ownerConst", $("#ownerConst2").val()); 
         formData.append("ownerTelyn", $("#ownerTelyn2").val());
@@ -766,6 +814,37 @@ $(function() {
             }
         });
      });
+	
+	// 수연이가 만든 지도 활용 기능(주소를 입력받으면 x,y 좌표를 얻을 수 있다.)
+	// 주소-좌표 변환 객체를 생성합니다
+	var geocoder = new kakao.maps.services.Geocoder();
+	
+	$("#frcsAdd4").focusout(function(){
+		console.log("focusout...!");
+		var addr1 = $("#frcsAdd3").val();
+		var addr2 = $("#frcsAdd4").val();
+		console.log("data : " + addr1 + ", " + addr2);
+		if((addr1 != null || addr1 != "") && (addr2 != null || addr2 != "")){
+			getAddressXYPoint(geocoder, addr1+ " " +addr2);
+			console.log("pointXY : " + pointXY);
+		}else{
+			console.log("주소 입력이 온전치 않네요?");
+		}
+	});
+	
+	function getAddressXYPoint(geocoder, address){
+		// 주소로 좌표를 검색합니다
+		geocoder.addressSearch(address, function(result, status) {
+
+		    // 정상적으로 검색이 완료됐으면 
+	    	if (status === kakao.maps.services.Status.OK) {
+	    		console.log(result[0].x);
+	    		console.log(result[0].y);
+	    		$("#frcsXmap1").val(result[0].y);
+	    		$("#frcsYmap1").val(result[0].x);
+		    } 
+		});  
+	}
 });
 	
 	
@@ -831,6 +910,5 @@ $(function() {
 	        }
 	    });
 	});
-
-
+  
 </script>

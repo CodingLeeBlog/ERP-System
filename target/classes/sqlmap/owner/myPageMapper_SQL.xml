@@ -14,7 +14,7 @@
 <!--  		where FRCS_ID = 'aaabbb2' -->
 <!--  	</select> -->
  	
-	<select id="detail" parameterType="String" resultType="FranchiseVO">
+	<select id="detail" parameterType="String" resultType="franchiseVO">
  		SELECT
 		    a.frcs_id
 		  , a.frcs_name
@@ -56,5 +56,57 @@
 		where frcs_id= #{frcsId}
  	</update>
 
-
+	<select id="headerDetail" parameterType="String" resultType="franchiseVO">
+ 		SELECT
+		    frcs_id
+		  , frcs_name
+		  , frcs_state
+		  , frcs_tel
+		  , frcs_stdate
+		  , frcs_enddate
+		  , frcs_post
+		  , frcs_add1
+		  , frcs_add2
+		  , frcs_sttime
+		  , frcs_endtime
+		  , frcs_cdate
+		  , frcs_insdate
+		  , frcs_inedate
+		  , frcs_opdate
+		  , frcs_xmap
+		  , frcs_ymap
+		  , frcs_star
+		  , frcs_psncpa
+		FROM
+		    franchise
+		where
+		    frcs_id=#{frcsId}
+ 	</select>
+ 	
+ 	<select id="frcsHeaderList" parameterType="string" resultType="franchiseVO">
+ 		SELECT
+		    frcs_id
+		  , frcs_name
+		  , frcs_state
+		  , frcs_tel
+		  , frcs_stdate
+		  , frcs_enddate
+		  , frcs_post
+		  , frcs_add1
+		  , frcs_add2
+		  , frcs_sttime
+		  , frcs_endtime
+		  , frcs_cdate
+		  , frcs_insdate
+		  , frcs_inedate
+		  , frcs_opdate
+		  , frcs_xmap
+		  , frcs_ymap
+		  , frcs_star
+		  , frcs_psncpa
+		FROM
+		    franchise
+		where
+		    frcs_id=#{frcsId}
+ 	</select>
 </mapper>

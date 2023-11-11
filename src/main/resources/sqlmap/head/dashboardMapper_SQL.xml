@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.head.DashboardMapper">
+	<!-- 최근주문 몇건인지 카운트 -->
+	<select id="selectOrderCount" resultType="int">
+		select count(frcsorder_date) as cnt
+		from(
+		select fo.frcs_id, f.frcs_name, f.frcs_tel, fo.frcsorder_amt, to_char(fo.frcsorder_date, 'yy-mm-dd') as frcsorder_date, fo.frcsorder_no
+		from franchise f, frcsorder fo
+		where f.frcs_id = fo.frcs_id
+		and fo.frcsorder_date >= (select sysdate - 3 as start_date from dual)
+		and frcs_state = '운영중'
+		and frcsorder_confm = '대기'
+		order by fo.frcsorder_date desc
+		)
+	</select> 
+	<!-- 메인페이지 최근 가맹점 주문내역 -->
+	<select id="selectOrderFrcsList" resultType="dashboardVO">
+		select fo.frcs_id, f.frcs_name, f.frcs_tel, fo.frcsorder_amt, to_char(fo.frcsorder_date, 'yy-mm-dd') as frcsorder_date
+		from franchise f, frcsorder fo
+		where f.frcs_id = fo.frcs_id
+		and frcs_state = '운영중'
+		and frcsorder_confm = '대기'
+		and fo.frcsorder_date >= (select sysdate - 3 as start_date from dual)
+		order by fo.frcsorder_date desc
+	</select>
+	<!-- 최근 3개월간 오픈한매장 카운트 -->
+	<select id="selectOpenFranchiseCount" resultType="int">
+		select count(frcs_name) as cnt
+		from(
+		select frcs_id, frcs_name, frcs_post, frcs_add1, frcs_add2, to_char(frcs_opdate, 'yy/mm/dd') as frcs_opdate
+		from franchise
+		where frcs_opdate >= (SELECT SYSDATE - INTERVAL '3' MONTH FROM dual)
+		and frcs_state = '운영중'
+		order by frcs_opdate desc
+		)
+	</select>
+	<!-- 최근 3개월간 오픈한매장 리스트 -->
+	<select id="selectOpenFranchiseDate" resultType="dashboardVO">
+		SELECT frcs_id, frcs_name, frcs_post, frcs_add1, frcs_add2, to_char(frcs_opdate, 'yy/mm/dd') as frcs_opdate
+		FROM (
+		    SELECT frcs_id, frcs_name, frcs_post, frcs_add1, frcs_add2, frcs_opdate
+		    FROM franchise
+		    WHERE frcs_opdate >= (SELECT SYSDATE - INTERVAL '3' MONTH FROM dual)
+		    AND frcs_state = '운영중'
+		    ORDER BY frcs_opdate DESC
+		)
+		<![CDATA[
+			WHERE ROWNUM <= 3 
+ 		]]> 
+	</select>
+	
+	<!-- 공문 리스트  -->
+	<select id="selectOfficeLetterList" resultType="dashboardVO">
+		SELECT *
+		FROM FRCS_OFFICIALDOCUMENT
+		WHERE FRCS_OFLDC_RCVR = 'admin'
+		AND TRUNC(FRCS_OFLDC_DSPYMD) = TRUNC(SYSDATE)
+		order by FRCS_OFLDC_DSPYMD desc
+	</select>
+	
+	<!-- 공문 카운트 -->
+	<select id="selectOfficeLetterCount" resultType="int">
+		SELECT COUNT(FRCS_OFLDC_NO) AS cnt
+		FROM FRCS_OFFICIALDOCUMENT
+		WHERE FRCS_OFLDC_RCVR = 'admin'
+	  	AND TRUNC(FRCS_OFLDC_DSPYMD) = TRUNC(SYSDATE)
+	</select>
+	
+	<!-- 창업 리스트  -->
+	<select id="selectCounselList" resultType="dashboardVO">
+		SELECT *
+		FROM OWNER
+		where 1=1
+		and OWNER_RGDATE >= (SELECT SYSDATE - INTERVAL '3' MONTH FROM dual)
+		order by OWNER_RGDATE desc
+	</select>
+	
+	<!-- 창업 카운트 -->
+	<select id="selectCounselCount" resultType="int">
+		select count(owner_no)
+		from owner
+		where 1=1
+		and OWNER_RGDATE >= (SELECT SYSDATE - INTERVAL '3' MONTH FROM dual)
+	</select>
+	
+</mapper>

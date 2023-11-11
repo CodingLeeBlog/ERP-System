@@ -52,7 +52,7 @@
 							<!-- 테이블 -->
 	                        <div class="table-responsive">
 <!-- 	                            <table id="basic-datatable" class="table dt-responsive nowrap table-centered w-100"> -->
-	                            <table class="table nowrap table-centered w-100">
+	                            <table class="table nowrap table-centered w-100 table-hover " style="table-layout:fixed">
 	                                <thead class="table-light">
 	                                    <tr>
 	                                        <th class="all" style="width: 20px;">
@@ -63,7 +63,7 @@
 	                                        </th>
 	                                        <th>No.</th>
 	                                        <th>제목</th>
-	                                        <th>내용</th>
+<!-- 	                                        <th>내용</th> -->
 	                                        <th>작성일</th>
 	                                        <th>답변여부</th>
 	                                    </tr>
@@ -73,7 +73,7 @@
 	                                	<c:choose>
 	                                		<c:when test="${empty frcsInqList }">
 	                                			<tr class="text-center">
-													<td colspan="6" class="text-dark font-weight-bolder">문의글이 존재하지 않습니다.</td>
+													<td colspan="5" class="text-dark font-weight-bolder">문의글이 존재하지 않습니다.</td>
 												</tr>
 	                                		</c:when>
 	                                		<c:otherwise>
@@ -90,7 +90,7 @@
 				                                            <a href="/owner/inqDetail.do?inqryNo=${frcsInq.inqryNo }" class="text-body fw-bold">${frcsInq.inqryTtl }</a>
 				                                        </td>
 				                                        <!-- 내용 일정 글자 초과시 뒤에 ...으로 표시하기 -->
-				                                        <td><p><a href="/owner/inqDetail.do?inqryNo=${frcsInq.inqryNo }" class="text-body ">${frcsInq.inqryCn }</a></p></td>
+<%-- 				                                        <td style="max-width:100px; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;"><p><a href="/owner/inqDetail.do?inqryNo=${frcsInq.inqryNo }" class="text-body">${frcsInq.inqryCn }</a></p></td> --%>
 				                                        <td><fmt:formatDate value="${frcsInq.inqryYmd }" pattern="yyyy-MM-dd"/></td>
 				                                        <td>
 				                                            <c:if test="${frcsInq.inqryYn eq 'N'}">

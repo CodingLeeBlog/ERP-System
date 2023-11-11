@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
+<input type="hidden" value="${frcsId }" id="frcsId">
 <input type="hidden" value="${yearMonth }" id="monthInfo">
 <div class="content-page">
 	<div class="content">
@@ -42,7 +43,7 @@
 														            <span class="d-none d-md-block">3개월</span>
 														        </a>
 														    </li>
-														    <li class="nav-item">
+														    <li class="nav-item" id="sixMonth">
 														        <a href="javascript:void(0);" data-bs-toggle="tab" aria-expanded="false" class="nav-link rounded-0">
 														            <i class="mdi mdi-settings-outline d-md-none d-block"></i>
 														            <span class="d-none d-md-block">6개월</span>
@@ -51,7 +52,7 @@
 														</ul>
                                            			</div>	
                                            		<div>
- 				                          		<h3 class="my-1" style="text-align:center">
+ 				                          		<h3 class="my-1" style="text-align:center" id="mainText">
  				                          		<a href="javascript:void(0);" id="leftMonth">
  				                          		<i class="me-3 ri-arrow-left-s-line" style="font-size: 20px"></i>
  				                          		</a>${yearMonth }월 매입 분석
@@ -59,7 +60,8 @@
  				                          		<i class="ms-3 ri-arrow-right-s-line" style="font-size: 20px"></i></a></h3>
  				                          		</div>
  				                          		<br>
- 				                          		
+               									
+               								   <div class="card-body py-0" data-simplebar style="max-height: 500px;">
                                                <table class="table table-borderless table-nowrap table-centered table-hover">
                                                    <thead class="table-light">
                                                        <tr>
@@ -67,16 +69,16 @@
                                                            <th style="text-align:center">매입 수량</th>
                                                            <th style="text-align:center">매입 단가</th>
                                                            <th style="text-align:center">총 매입 금액</th>
-                                                           <th style="width: 30px;"></th>
                                                        </tr>
                                                    </thead>
-                                                   <tbody>
+                                                   <tbody id="tBody">
+                                                   
                                                    <c:set value="0" var="allPrice"/>
                                                    <c:set value="${onePurchase }" var="oneList"/>
                                                    <c:choose>
                                                    		<c:when test="${empty oneList }">
 	                                                   		<tr>
-	                                                           <td style="text-align:center" colspan="5">
+	                                                           <td style="text-align:center" colspan="4">
 	                                                           	    집계된 월 매입액이 존재하지 않습니다.
 	                                                           </td>
 	                                                       </tr>
@@ -88,13 +90,10 @@
 		                                                           	   ${oneList.vdprodName }
 		                                                           </td>
 		                                                           <td style="text-align:center">${oneList.frcsOrderQy }개</td>
-		                                                           <td style="text-align:center"><fmt:formatNumber value="${oneList.hdforwardPrice }" type="currency"/></td>         
-		                                                           <td style="text-align:center"><fmt:formatNumber value="${oneList.totalPrice }" type="currency"/>         
+		                                                           <td style="text-align:center"><fmt:formatNumber value="${oneList.hdforwardPrice }" type="number"/>(원)</td>         
+		                                                           <td style="text-align:center"><fmt:formatNumber value="${oneList.totalPrice }" type="number"/>(원)         
 		                                                               <c:set value="${oneList.totalPrice }" var="totalPrice"/>
 		                                                               <c:set value="${allPrice+totalPrice }" var="allPrice"/>
-		                                                           </td>
-		                                                           <td>
-		                                                               <a href="javascript:void(0);" class="action-icon"> <i class="mdi mdi-eye"></i></a>
 		                                                           </td>
 		                                                       </tr>
                                                    			</c:forEach>
@@ -103,21 +102,26 @@
                                                  </tbody>
                                        		</table>
                                        </div> 
+                                       </div>
                                        <div class="row mt-4">
                                            <div class="col-sm-6">
                                            </div>
                                            <div class="col-sm-6">
-                                               <div class="text-sm-end">
-                                                  	<h4>총계 : <fmt:formatNumber value="${allPrice }" type="currency"/></h4>
+                                               <div class="text-sm-end" id="total">
+                                                  	<h4>총계 : <fmt:formatNumber value="${allPrice }" type="number"/>(원)</h4>
                                                </div>
                                            </div>
                                        </div>
                                        </div>
 	
                                        <div class="col-lg-6">
-                                      	  <div class="border p-3 mt-4 mt-lg-0 rounded" style="height:100%">
-                                            <h4 class="header-title mb-3">일별 매출 그래프</h4>
-												차트...
+                                      	  <div class="border p-3 mt-4 mt-lg-0 rounded">
+                                            <h4 class="header-title mb-4">월별 차트</h4>
+					                            <div dir="ltr">
+					                                <div class="mt-3 chartjs-chart">
+					                                    <canvas id="monthChart" data-colors="#727cf5,#0acf97" style="box-sizing: border-box; display: block; height: 320px; width: 795px;" width="795" height="320"></canvas>
+					                                </div>
+					                            </div>
                                       	  </div>
                                      </div>
                                  </div>
@@ -133,10 +137,14 @@
 $(function(){
 	var oneMonth = $("#oneMonth");	// 1개월
 	var threeMonth = $("#threeMonth");	// 3개월
+	var sixMonth = $("#sixMonth");	// 6개월
 	var leftMonth = $("#leftMonth");	// 이전달 클릭
 	var rightMonth = $("#rightMonth");	// 다음달 클릭
 	var monthInfo = $("#monthInfo").val();	// 현재 페이지 달 정보
-	
+	var frcsId = $("#frcsId").val();
+	var total = $("#total");	// 총계
+	var mainText = $("#mainText");	// 제목
+
 	// 왼쪽 버튼을 누르면 현재 페이지의 ${yearMonth }를 가져와서
 	// 월 -1 을 해줘야한다.
 	// 만약에 월이 1이면 년-1 하고 월을 12로 셋팅을 하게끔
@@ -212,7 +220,198 @@ $(function(){
 	});
 	
 	oneMonth.on("click",function(){
-		alert("add");
+		getData("oneMonth");
+	});
+	
+	threeMonth.on("click",function(){
+		getData("threeMonth");
+	});
+	
+	sixMonth.on("click",function(){
+		getData("sixMonth");
+	});
+	
+	
+	// 1개월, 3개월, 6개월별로 데이터를 가져오기위한...
+	function getData(monthParam){
+		
+		var data = {
+			thisMonth : monthInfo,
+			frcsId : frcsId
+		};
+		
+		console.log(data);
+		
+		$.ajax({
+			type : "post",
+			url : "/owner/purchaseAnalysis/"+monthParam+".do",
+			data : JSON.stringify(data),
+			beforeSend : function(xhr){	// csrf토큰 보내기 위함
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");	//key value로 보낸다.
+			},
+			contentType : "application/json; charset=utf-8",
+			success : function(res){
+				console.log(res);
+				var str = "";
+                var totalTemp = 0;
+                
+				for(var i=0; i<res.length; i++){
+					
+					var hdforwarPrice = res[i].hdforwardPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+					var totalPrice = res[i].totalPrice.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+					var intTotal = parseInt(res[i].totalPrice); 
+					
+					str += '<tr><td style="text-align:center">'+res[i].vdprodName+'</td>';
+                    str += '<td style="text-align:center">'+res[i].frcsOrderQy+'개</td>';
+                    str += '<td style="text-align:center">'+hdforwarPrice+'(원)</td>';
+                    str += '<td style="text-align:center">'+totalPrice+'(원)</td></tr>';
+                    
+                    totalTemp += intTotal;
+				}
+				
+				$("#tBody").html(str);
+				var totalStr = "<h4>총계 : ￦"+totalTemp.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+"</h4>";
+				total.html(totalStr);
+				
+				var thisMonth = monthInfo;
+				var year =  thisMonth.split("/")[0];	 // 년
+				var month = thisMonth.split("/")[1];	 // 월
+				var intYear = parseInt(year);
+				var intMonth = parseInt(month);
+				
+				
+				// 1개월
+				if(monthParam === "oneMonth"){
+					var str = "";
+					str += '<a href="javascript:void(0);" id="leftMonth">';
+	           		str += '<i class="me-3 ri-arrow-left-s-line" style="font-size: 20px"></i></a>';
+	           		str += +year+"/"+month+ "월 매출 총이익 분석";
+	           		str += '<a href="javascript:void(0);" id="rightMonth">';
+	           		str +='<i class="ms-3 ri-arrow-right-s-line" style="font-size: 20px"></i></a>'
+				}
+
+				
+				// 3개월
+				if(monthParam === "threeMonth"){
+					var str = "";
+					// 1월이면
+					if(intMonth == 1){
+						str += '<a href="javascript:void(0);" id="leftMonth">';
+		           		str += '<i class="me-3 ri-arrow-left-s-line" style="font-size: 20px"></i></a>';
+		           		str += (intYear-1)+"/11~"+year+"/"+month+ "월 매출 총이익 분석";
+		           		str += '<a href="javascript:void(0);" id="rightMonth">';
+		           		str +='<i class="ms-3 ri-arrow-right-s-line" style="font-size: 20px"></i></a>'
+					}else if(intMonth == 2){	// 2월이면
+						str += '<a href="javascript:void(0);" id="leftMonth">';
+		           		str += '<i class="me-3 ri-arrow-left-s-line" style="font-size: 20px"></i></a>';
+		           		str += (intYear-1)+"/12~"+year+"/"+month+ "월 매출 총이익 분석";
+		           		str += '<a href="javascript:void(0);" id="rightMonth">';
+		           		str +='<i class="ms-3 ri-arrow-right-s-line" style="font-size: 20px"></i></a>'
+					}else{
+						str += '<a href="javascript:void(0);" id="leftMonth">';
+		           		str += '<i class="me-3 ri-arrow-left-s-line" style="font-size: 20px"></i></a>';
+		           		str += year+"/0"+(intMonth-2)+"~"+year+"/"+month+ "월 매출 총이익 분석";
+		           		str += '<a href="javascript:void(0);" id="rightMonth">';
+		           		str +='<i class="ms-3 ri-arrow-right-s-line" style="font-size: 20px"></i></a>'
+					}
+				}
+				
+				
+				// 6개월
+				if(monthParam == "sixMonth"){
+					var pre = 0;
+					var str = "";
+					
+					if((intMonth+7)<13){
+						intYear= intYear-1;
+						pre = intMonth+7;
+						if(pre < 10){
+							pre = "0"+pre;
+						}
+					}else{
+						pre = (intMonth+7)-12;
+						if(pre < 10){
+							pre = "0"+pre;
+						}
+					}
+					str += '<a href="javascript:void(0);" id="leftMonth">';
+	           		str += '<i class="me-3 ri-arrow-left-s-line" style="font-size: 20px"></i></a>';
+	           		str += intYear+"/"+pre+"~"+year+"/"+month+ "월 매출 총이익 분석";
+	           		str += '<a href="javascript:void(0);" id="rightMonth">';
+	           		str +='<i class="ms-3 ri-arrow-right-s-line" style="font-size: 20px"></i></a>'
+				}
+				
+				mainText.html(str);
+				
+			}
+		});
+	}
+	
+	// 매입 12개월 차트
+	var purchaseChart = [];
+	
+	for(var i=0; i<12; i++){
+		purchaseChart.push(0);	
+	}
+	
+	$.ajax({
+		type: "post",
+		url : "/owner/purchaseAnalysis/chart.do",
+		beforeSend : function(xhr){	// csrf토큰 보내기 위함
+			xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");	//key value로 보낸다.
+		},
+		data : {frcsId : frcsId},
+		success : function(res){
+			for(var i=0; i<res.length; i++){
+				purchaseChart[i]= res[i].totalPrice;
+			}
+			
+			console.log(purchaseChart);
+			
+		    // 캔버스 엘리먼트 설정
+			var ctx = document.getElementById('monthChart').getContext('2d');
+		    
+			// 월별
+		    var months = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
+			
+			var chart = new Chart(ctx,{
+				type : "bar",
+				data : {
+					labels: months,
+				    datasets:[
+			            {
+			                label: '매입 총금액',
+			                data: purchaseChart,
+			                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+			                borderColor: 'rgba(255, 99, 132, 1)',
+			                borderWidth: 1
+			            }
+			        ]
+				},
+				options: {
+			        responsive: true,
+			        scales: {
+			            x: {
+			                title: {
+			                    display: true,
+			                    text: '월'
+			                }
+			            },
+			            y: {
+			                beginAtZero: true,
+			                title: {
+			                    display: true,
+			                    text: '금액'
+			                },
+			                grid: {
+			                    display: false
+			                }
+			            }
+			        }
+			    }
+			});			
+			
+		}
 	});
 	
 });

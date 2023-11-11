@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.mapper.owner.FrcsTradingMapper;
 import kr.or.ddit.service.owner.IFrcsTradingService;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.FrcsInventoryVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
@@ -40,17 +41,17 @@ public class FrcsTradingServiceImpl implements IFrcsTradingService {
 		List<FrcsInventoryVO> getNearInventList = new ArrayList<FrcsInventoryVO>();
 		
 		for(int i=0; i<nearList.size(); i++) {
-			String frcsId = nearList.get(i).toString();
-			FrcsInventoryVO inventVO = mapper.getInventList(searchWord,searchType,frcsId);
-			getNearInventList.add(inventVO);
-		}
-		
+		    String frcsId = nearList.get(i).toString();
+	        List<FrcsInventoryVO> inventList = mapper.getInventList(searchWord, searchType, frcsId);
+	        getNearInventList.addAll(inventList);
+	    }
+	
 		return getNearInventList;
 	}
 
 	// 트레이딩 신청
 	@Override
-	public ServiceResult tradingInsert(TradingVO tradVO) {
+	public ServiceResult tradingInsert(TradingVO tradVO, AlarmVO alarmVO) {
 		
 		ServiceResult result = null;
 		
@@ -65,6 +66,25 @@ public class FrcsTradingServiceImpl implements IFrcsTradingService {
 		
 		if(status>0) {
 			result = ServiceResult.OK;
+			// 트레이딩 주고 받는 알람데이터 넣기
+			String frcsId = tradVO.getFrcsId(); //답변자의 가맹점 코드
+			String frcsId2 = tradVO.getFrcsId2(); //답변자의 가맹점 코드
+			String tradNo = tradVO.getTradNo(); // 답변 번호
+			alarmVO.setAnsNo(tradNo);
+//			//1) FROM
+			String getFrcsId = this.mapper.getMemFrcs(frcsId); //가맹점 코드를 mem_Id로 만들기 위함
+			alarmVO.setMemId(getFrcsId);
+			//2) WHAT
+			alarmVO.setTblName("TRADING");
+			alarmVO.setTblNo(tradNo);
+//			//3) TO
+			String receiveMemId = this.mapper.getReceiveMemId(frcsId2);
+//			
+			alarmVO.setReceiveMemId(receiveMemId);
+//			
+//			// 알람데이터 넣기 
+			mapper.insertAlarm(alarmVO);
+			
 		}else {
 			result = ServiceResult.FAILED;
 		}
@@ -125,6 +145,24 @@ public class FrcsTradingServiceImpl implements IFrcsTradingService {
 		}
 		
 		return result;
+	}
+
+	// 금일 들어온 트레이딩 수
+	@Override
+	public int selectCount(String frcsId) {
+		return mapper.selectCount(frcsId);
+	}
+
+	// 트레이딩 상세내역
+	@Override
+	public FrcsInventoryVO getDetail(FrcsInventoryVO frcsInventVO) {
+		return mapper.getDetail(frcsInventVO);
+	}
+
+	// 트레이딩 상세내역(응답)
+	@Override
+	public FrcsInventoryVO getReqDetail(FrcsInventoryVO frcsInventVO) {
+		return mapper.getReqDetail(frcsInventVO);
 	}
 
 	

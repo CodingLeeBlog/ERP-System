@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import kr.or.ddit.mapper.head.OfficeLetterMapper;
 import kr.or.ddit.service.head.IOfficeService;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.AttachVO;
 import kr.or.ddit.vo.head.HeadLtDetailVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
@@ -35,10 +36,30 @@ public class OfficeServiceImpl implements IOfficeService {
 	}
 
 	@Override
-	public List<FranchiseVO> getFrcsName() {
-		return officeLetterMapper.getFrcsName();
+	public List<FranchiseVO> getseFrcsName() {
+		return officeLetterMapper.getseFrcsName();
+	}
+	
+	@Override
+	public List<FranchiseVO> getdjFrcsName() {
+		return officeLetterMapper.getdjFrcsName();
 	}
 
+	@Override
+	public List<FranchiseVO> getbsFrcsName() {
+		return officeLetterMapper.getbsFrcsName();
+	}
+	
+	@Override
+	public List<FranchiseVO> getdgFrcsName() {
+		return officeLetterMapper.getdgFrcsName();
+	}
+	
+	@Override
+	public List<FranchiseVO> getgjFrcsName() {
+		return officeLetterMapper.getgjFrcsName();
+	}
+	
 	@Override
 	public void officeLetterRegister(HttpServletRequest req, OfficeLetterVO officeLetterVO) {
 		officeLetterMapper.officeLetterRegister(officeLetterVO);
@@ -88,11 +109,18 @@ public class OfficeServiceImpl implements IOfficeService {
 	}
 
 	
+	/**
+	 * 공문 발송시 공문마다 알림 등록 서비스 로직
+	 */
 	@Override
-	public void officeLtDetailRegister(List<HeadLtDetailVO> requestBody) {
+	public void officeLtDetailRegister(List<HeadLtDetailVO> requestBody, AlarmVO alarmVO) {
 	    for (int i = 0; i < requestBody.size(); i++) {
 	        String hdLtreciever = requestBody.get(i).getHdLtreciever();
 	        int hdLtno = requestBody.get(i).getHdLtno();
+	        
+	        String memId = requestBody.get(i).getAdmin();
+	        String receiveMemId = requestBody.get(i).getMemId();
+	        String tblNo = String.valueOf(hdLtno);
 
 	        HeadLtDetailVO headLtDetailVO = new HeadLtDetailVO();
 	        headLtDetailVO.setHdLtno(hdLtno);
@@ -103,6 +131,14 @@ public class OfficeServiceImpl implements IOfficeService {
 
 	        // 2. head_letter 테이블의 hd_ltstate를 '완료'로 업데이트
 	        officeLetterMapper.updateOfficeLetterState(hdLtno);
+	        
+	        // 3. 공문 발송 완료시 선택한 가맹점주에게 알림 발송
+	        alarmVO.setMemId(memId);
+	        alarmVO.setReceiveMemId(receiveMemId);
+	        alarmVO.setTblName("HEAD_LT_DETAIL");
+	        alarmVO.setTblNo(tblNo);
+	        
+	        officeLetterMapper.insertAlarm(alarmVO);
 	    }
 	}
 
@@ -116,6 +152,26 @@ public class OfficeServiceImpl implements IOfficeService {
 	public void officeLetterUpdate(OfficeLetterVO officeLetterVO) {
 		officeLetterMapper.officeLetterUpdate(officeLetterVO);
 		
+	}
+
+	@Override
+	public OfficeLetterVO officeLetterDetail(int hdLtno) {
+		return officeLetterMapper.officeLetterDetail(hdLtno);
+	}
+
+	@Override
+	public AttachVO selectFileInfo(int attachNo) {
+		return officeLetterMapper.selectFileInfo(attachNo);
+	}
+	
+	@Override
+	public List<FranchiseVO> getAllFrcs() {
+		return officeLetterMapper.getAllFrcs();
+	}
+
+	@Override
+	public int selectCount(String frcsId) {
+		return officeLetterMapper.selectCount(frcsId);
 	}
 
 

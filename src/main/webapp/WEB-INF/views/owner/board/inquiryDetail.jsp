@@ -62,15 +62,12 @@
 								<c:if test="${not empty inqFileList}">
 									<h5 class="mt-3 mb-3">첨부파일</h5>
 									<div class="row">
-										<div class="col-xl-4">
-											<div class="card mb-1 shadow-none border">
-												<c:forEach items="${inqFileList}" var="inqFile">
+										<c:forEach items="${inqFileList}" var="inqFile">
+											<div class="col-xl-4">
+												<div class="card mb-1 shadow-none border">
 													<div class="p-2">
 														<div class="row align-items-center">
 															<div class="col-auto">
-																<div class="avatar-sm">
-																	<img src="${pageContext.request.contextPath}/resources/upload/file/${inqFile.attachOrgname }" alt="img" class="avatar-sm rounded">
-																</div>
 															</div>
 															<div class="col ps-0">
 																<a href="javascript:void(0);" class="text-muted fw-bold">${inqFile.attachOrgname }</a>
@@ -78,23 +75,21 @@
 															</div>
 															<div class="col-auto">
 																<!-- Button -->
-																<a href="javascript:void(0);" class="btn btn-link btn-lg text-muted" data-file-no="${inqFile.fileNo }"> 
-																	<i class="ri-download-2-line" ></i>
-																</a>
+																<button type="button" class="btn btn-link btn-lg fileDownload"
+																		data-attach-no="${inqFile.attachNo }" name="attachNo"><i class="ri-download-2-line" ></i></button>
 															</div>
 														</div>
 													</div>
-												</c:forEach>
-												
+												</div>
 											</div>
-										</div>
+										</c:forEach>
 										<!-- end col -->
 									</div>
 									<!-- end row-->
 								</c:if>
 
 								<form action="/owner/inqDelete.do" method="post" id="procForm">
-									<input type="hidden" name="inqryNo" value="${inqVO.inqryNo}"/>
+									<input type="hidden" id="inqryNo" name="inqryNo" value="${inqVO.inqryNo}"/>
 									<sec:csrfInput/>
 								</form>
 
@@ -130,15 +125,48 @@ $(function(){
 	});
 	
 	udtBtn.on("click", function(){
+		console.log("수정버튼클릭");
 		procForm.attr("method", "get");
 		procForm.attr("action", "/owner/inqUpdate.do");
 		procForm.submit();
 	});
 	
-	delBtn.on("click", function(){
-		if(confirm("정말로 삭제하시겠습니까?")){
-			procForm.submit();
-		}
+// 	delBtn.on("click", function(){
+// 		if(confirm("정말로 삭제하시겠습니까?")){
+// 			procForm.submit();
+// 		}
+// 	});
+
+	delBtn.on('click', function() {
+		var selectedItems = [];
+		selectedItems.push({ inqryNo: $("#inqryNo").val()});
+		
+		$.ajax({
+	        type: "POST",
+	        url: "/owner/inqDelete.do",
+	        beforeSend: function(xhr){
+			xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+			},
+	        data: JSON.stringify(selectedItems),
+	        contentType: "application/json;charset=UTF-8",
+	        success: function (response) {
+	            console.log("삭제 성공:", response);
+	            alert("삭제되었습니다!");
+	            location.href='/owner/inquiry.do';
+	        },
+	        error: function (error) {
+	            console.error("삭제 실패:", error);
+	            alert("다시 시도해주세요!");
+	        }
+	    });
+        
+	});
+	
+	// 파일 다운로드
+	$(".fileDownload").on("click", function() {
+		var attachNo = $(this).data("attach-no");
+
+		location.href = "/owner/inqDownload.do?attachNo=" + attachNo;
 	});
 	
 });

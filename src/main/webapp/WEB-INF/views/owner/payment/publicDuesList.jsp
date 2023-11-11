@@ -25,7 +25,7 @@
 		    <!-- 월별 차트 -->
 			<div class="row">
                 <div class="col-xl-7">
-                    <div class="card" style="height: 500px;">
+                    <div class="card" style="height: 450px;">
                         <div class="card-body">
                             <h4 class="header-title mb-4">월별 차트</h4>
                             <div dir="ltr">
@@ -38,66 +38,83 @@
                 </div>
                 
                 <div class="col-xl-5">
-	                <div class="card" style="height:500px;">
+	                <div class="card" style="height:450px;">
 		                <div class="alert alert-warning border-0 rounded-0" role="alert">
-		                    <i class="uil-folder-heart me-1 h4 align-middle"></i><b></b>내 가맹점 평균 공과금 내역입니다.
+		                    <i class="ri-bar-chart-box-line me-1 h4 align-middle"></i><b></b>전체 가맹점 평균 공과금 대비 내 가맹점 평균 공과금입니다.
 		                </div>
-		                <div class="card-body pt-1">
+		                <div class="card-body pt-1" style="display: flex; flex-direction: column; justify-content: center;">
 		                    <div class="d-flex align-items-center border border-light rounded p-2 mb-2">
 		                        <div class="flex-shrink-0 me-2">
-		                            <i class="mdi mdi-account-group widget-icon rounded-circle"></i>
+		                            <i class="ri-drop-line widget-icon rounded-circle bg-info-lighten text-info"></i>
 		                        </div>
+		                        
+                                <c:set value="${((totalAverage.duesWater-average.duesWater)/totalAverage.duesWater)*-100 }" var="duesW"/>
+				                <c:set value="${((totalAverage.duesElcty-average.duesElcty)/totalAverage.duesElcty)*-100 }" var="duesE"/>
+				                <c:set value="${((totalAverage.duesGas-average.duesGas)/totalAverage.duesGas)*-100 }" var="duesG"/>
+				                <c:set value="${((totalAverage.duesMtht-average.duesMtht)/totalAverage.duesMtht)*-100 }" var="duesM"/>
+		                        
 		                        <div class="flex-grow-1">
 		                            <h5 class="fw-semibold my-0">수도세</h5>
-		                            <p class="mb-0"><fmt:formatNumber value="${average.duesWater }" type="currency"/>원</p>
+		                            <p class="mb-0"><span><fmt:formatNumber value="${average.duesWater }" type="number"/>원</span>
+		                            <c:if test="${duesW ge 0}">
+		                            <span class="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i><fmt:formatNumber maxFractionDigits="3" value="${duesW }"/>%</span>
+		                            </c:if>
+		                            <c:if test="${duesW le 0}">
+		                            <span class="text-danger me-2"><i class="mdi mdi-arrow-down-bold"></i><fmt:formatNumber maxFractionDigits="3" value="${duesW }"/>%</span>
+		                            </c:if>
+		                            </p>
 		                        </div>
 		                    </div>
 		                    
 		                    <div class="d-flex align-items-center border border-light rounded p-2 mb-2">
 		                        <div class="flex-shrink-0 me-2">
-		                            <i class="mdi mdi-progress-pencil widget-icon rounded-circle bg-warning-lighten text-warning"></i>
+		                            <i class="ri-flashlight-line widget-icon rounded-circle bg-warning-lighten text-warning"></i>
 		                        </div>
 		                        <div class="flex-grow-1">
 		                            <h5 class="fw-semibold my-0">전기세</h5>
-		                            <p class="mb-0"><fmt:formatNumber value="${average.duesElcty }" type="currency"/>원</p>
+		                            <p class="mb-0"><span><fmt:formatNumber value="${average.duesElcty }" type="number"/>원</span>
+		                            <c:if test="${duesE ge 0}">
+		                            <span class="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i><fmt:formatNumber maxFractionDigits="3" value="${duesE }"/>%</span>
+		                            </c:if>
+		                            <c:if test="${duesE le 0}">
+		                            <span class="text-danger me-2"><i class="mdi mdi-arrow-down-bold"></i><fmt:formatNumber maxFractionDigits="3" value="${duesE }"/>%</span>
+		                            </c:if>
+		                            </p>
 		                        </div>
 		                    </div>
 		
 		                    <div class="d-flex align-items-center border border-light rounded p-2 mb-2">
 		                        <div class="flex-shrink-0 me-2">
-		                            <i class="mdi mdi-checkbox-marked-circle-outline widget-icon rounded-circle bg-danger-lighten text-danger"></i>
+		                            <i class="ri-fire-line widget-icon rounded-circle bg-danger-lighten text-danger"></i>
 		                        </div>
 		                        <div class="flex-grow-1">
 		                            <h5 class="fw-semibold my-0">가스비</h5>
-		                            <p class="mb-0"><fmt:formatNumber value="${average.duesGas }" type="currency"/>원</p>
+		                            <p class="mb-0"><span><fmt:formatNumber value="${average.duesGas }" type="number"/>원</span>
+		                            <c:if test="${duesG ge 0}">
+		                            <span class="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i><fmt:formatNumber maxFractionDigits="3" value="${duesG }"/>%</span>
+		                            </c:if>
+		                            <c:if test="${duesG le 0}">
+		                            <span class="text-danger me-2"><i class="mdi mdi-arrow-down-bold"></i><fmt:formatNumber maxFractionDigits="3" value="${duesG }"/>%</span>
+		                            </c:if>
+		                            </p>
 		                        </div>
 		                    </div>
 		
 		                    <div class="d-flex align-items-center border border-light rounded p-2">
 		                        <div class="flex-shrink-0 me-2">
-		                            <i class="mdi mdi-send widget-icon rounded-circle bg-success-lighten text-success"></i>
+		                            <i class="ri-building-line widget-icon rounded-circle bg-success-lighten text-success"></i>
 		                        </div>
 		                        <div class="flex-grow-1">
 		                            <h5 class="fw-semibold my-0">월세</h5>
-		                            <p class="mb-0"><fmt:formatNumber value="${average.duesMtht }" type="currency"/>원</p>
-		                        </div>
-		                    </div>
-		                    
-		                    <div class="d-flex align-items-center border border-light rounded p-2">
-		                        <div class="flex-shrink-0 me-2">
-		                            <i class="mdi mdi-send widget-icon rounded-circle bg-success-lighten text-success"></i>
-		                        </div>
-		                        <div class="flex-grow-1">
-		                        
-		                        <c:set value="${((totalAverage.duesWater-average.duesWater)/totalAverage.duesWater)*-100 }" var="duesW"/>
-		                        <c:set value="${((totalAverage.duesElcty-average.duesElcty)/totalAverage.duesElcty)*-100 }" var="duesE"/>
-		                        <c:set value="${((totalAverage.duesGas-average.duesGas)/totalAverage.duesGas)*-100 }" var="duesG"/>
-		                        <c:set value="${((totalAverage.duesMtht-average.duesMtht)/totalAverage.duesMtht)*-100 }" var="duesM"/>
-		                        <h5 class="fw-semibold my-0">전체 가맹점 대비 평균 공과금</h5>
-		                        <p class="mb-0">수도세 : <fmt:formatNumber maxFractionDigits="3" value="${duesW }"/>%</p>
-		                        <p class="mb-0">전기세 : <fmt:formatNumber maxFractionDigits="3" value="${duesE }"/>%</p>
-		                        <p class="mb-0">가스비 : <fmt:formatNumber maxFractionDigits="3" value="${duesG }"/>%</p>
-		                        <p class="mb-0">월세 : <fmt:formatNumber maxFractionDigits="3" value="${duesM }"/>%</p>
+		                            <p class="mb-0"><span><fmt:formatNumber value="${average.duesMtht }" type="number"/>원</span>
+		                            <c:if test="${duesM ge 0}">
+		                            <span class="text-success me-2"><i class="mdi mdi-arrow-up-bold"></i><fmt:formatNumber maxFractionDigits="3" value="${duesM }"/>%</span>
+		                            </c:if>
+		                            <c:if test="${duesM le 0}">
+		                            <span class="text-danger me-2"><i class="mdi mdi-arrow-down-bold"></i><fmt:formatNumber maxFractionDigits="3" value="${duesM }"/>%</span>
+		                            </c:if>
+		                            </p>
+		                            
 		                        </div>
 		                    </div>
 		                </div>
@@ -204,6 +221,7 @@
 									                    <div class="mb-3 text-center">
 									                        <input type="button" class="btn btn-light" style="margin-right: 0.08rem;" data-bs-dismiss="modal" value="닫기">
 									                        <input type="button" class="btn btn-primary" id="registerBtn" value="등록">
+									                        <input type="button" class="btn btn-success" id="autoBtn" value="자동완성">
 									                    </div>
 									                    <sec:csrfInput/>
 									                </form>
@@ -212,7 +230,7 @@
 									    </div>
 									</div>
 									<!-- 등록 모달창 끝 -->
-	                                <button type="button" class="btn btn-success mb-2">엑셀 다운로드</button>
+	                                <button type="button" class="btn btn-success mb-2" onclick="location.href='/owner/publicDues/excel.do'">엑셀 다운로드</button>
 	                            </div>
 	                        </div>
 	                    </div>
@@ -252,8 +270,8 @@
 			                                        </div>
 			                                    </td>
 			                                    <td style="text-align:center">${dues.duesPayde }월 공과금 내역</td>
-			                                    <td style="text-align:center"><fmt:formatDate value="${dues.duesDate }" pattern="yy-MM-dd"/></td>
-			                                    <td style="text-align:center"><fmt:formatNumber value="${dues.duesGas+dues.duesWater+dues.duesElcty+dues.duesMtht }" type="currency"/></td>
+			                                    <td style="text-align:center"><fmt:formatDate value="${dues.duesDate }" pattern="yyyy/MM/dd"/></td>
+			                                    <td style="text-align:center"><fmt:formatNumber value="${dues.duesGas+dues.duesWater+dues.duesElcty+dues.duesMtht }" type="number"/>(원)</td>
 			                                    <td style="text-align:center">
 												<!-- 수정 모달창  -->
 												<button type="button" class="btn btn-primary" id="updateFormBtn" data-payde="${dues.duesPayde }" data-bs-target="#updatemodal${stat.count }"> 수정 </button>
@@ -339,48 +357,6 @@
 												<!-- 삭제 모달창 종료 -->			
 												</td>
 			                            	</tr>
-			                            	<!-- 상세내역  -->
-<!-- 			                            	 <tr class="fold" style="display:none;"> -->
-<!-- 									            <td colspan="5"> -->
-<!-- 									              <div class="fold-content"> -->
-<!-- 									                <table>내부테이블 -->
-<!-- 									                  <thead> -->
-<!-- 									                    <tr> -->
-<!-- 					                                    <th style="text-align:center; width:200px;">공과금 항목</th> -->
-<!-- 					                                    <th style="text-align:center; width:150px;">납부금액</th> -->
-<!-- 					                                    <th style="text-align:center; width:150px;"></th> -->
-<!-- 									                    </tr> -->
-<!-- 									                  </thead> -->
-<!-- 									                  <tbody> -->
-<!-- 									                    <tr> -->
-<!-- 									                      <td style="text-align:center; width:200px;">가스비</td> -->
-<!-- 									                      <td style="text-align:center; width:150px;"> -->
-<%-- 									                      <fmt:formatNumber value="${dues.duesGas }" type="currency"/> --%>
-<!-- 									                      </td> -->
-<!-- 									                    </tr> -->
-<!-- 									                    <tr> -->
-<!-- 									                      <td style="text-align:center; width:200px;">전기세</td> -->
-<!-- 									                      <td style="text-align:center; width:150px;"> -->
-<%-- 									                      <fmt:formatNumber value="${dues.duesElcty }" type="currency"/> --%>
-<!-- 									                      </td> -->
-<!-- 									                    </tr> -->
-<!-- 									                    <tr> -->
-<!-- 									                      <td style="text-align:center; width:200px;">수도세</td> -->
-<!-- 									                      <td style="text-align:center; width:150px;"> -->
-<%-- 									                      <fmt:formatNumber value="${dues.duesWater }" type="currency"/> --%>
-<!-- 									                      </td> -->
-<!-- 									                    </tr> -->
-<!-- 									                    <tr> -->
-<!-- 									                      <td style="text-align:center; width:200px;">월세</td> -->
-<!-- 									                      <td style="text-align:center; width:150px;"> -->
-<%-- 									                      <fmt:formatNumber value="${dues.duesMtht }" type="currency"/> --%>
-<!-- 									                      </td> -->
-<!-- 									                    </tr> -->
-<!-- 									                  </tbody> -->
-<!-- 									                </table>내부테이블           -->
-<!-- 									              </div> -->
-<!-- 									            </td> -->
-<!-- 									          </tr> -->
 	                            			</c:forEach>
 	                            		</c:otherwise>
 	                            	</c:choose>
@@ -410,6 +386,17 @@ $(function(){
 	var searchForm = $("#searchForm");	// 검색 폼
 	var pagingArea = $("#pagingArea");
 	var frcsId = $("#frcsId").val();
+	var autoBtn = $("#autoBtn");
+	
+	// 자동완성
+	autoBtn.on("click",function(){
+		$("#duesElcty").val(180000);
+		$("#duesWater").val(300000);
+		$("#duesGas").val(200000);
+		$("#duesmthtYes").attr("checked", true);
+		$("#duesMtht").attr("disabled", false);
+		$("#duesMtht").val(1000000);
+	});
 	
 	// a 태그를 클릭하면 이벤트 실행 (페이징 처리)
 	pagingArea.on("click","a", function(event){
@@ -670,20 +657,6 @@ $(function(){
 			
 		}
 	});
-	
-	
-	
-// 	// 상세 내역 열고 닫기
-// 	var rows = $(".view");
-
-// 	rows.on("click", function () {
-//        var content = $(this).next();
-//        if (content.is(":visible")) {
-//            content.hide();
-//        } else {
-//            content.show(); 
-//        }
-// 	});
 });
 
 </script>

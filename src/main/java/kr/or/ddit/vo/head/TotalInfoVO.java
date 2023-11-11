@@ -24,6 +24,7 @@ public class TotalInfoVO {
 	private Date frcsInsdate;
 	private Date frcsInedate;
 	private Date frcsOpdate;
+	private String frOpdate;
 	private double frcsXmap;
 	private double frcsYmap;
 	private int frcsStar;

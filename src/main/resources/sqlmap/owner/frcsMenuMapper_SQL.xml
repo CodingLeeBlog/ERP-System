@@ -160,19 +160,19 @@
 		    and a.table_name = c.table_name
 	</select>
 	
-	<insert id="resRegister" parameterType="resVO" useGeneratedKeys="true">
+	<insert id="resRegister" parameterType="resVO">
 		insert into reservation (
 			resv_no, mem_id, resv_mcnt, resv_time, resv_date, resv_yn, resv_state, resv_acc_date, resv_note, seat_cd, resv_price, review_yn
 		) values (
-			#{resvNo}, #{memId}, #{resvMcnt}, #{resvTime}, sysdate, 'N', 'Y', sysdate, '안녕하세요', #{seatCd}, #{resvPrice}, 'N'
+			#{resvNo}, #{memId}, #{resvMcnt}, #{resvTime}, sysdate, 'Y', 'Y', sysdate, '안녕하세요', #{seatCd}, #{resvPrice}, 'N'
 		)
 	</insert>
 	
-	<insert id="menuInsert" parameterType="menuListVO" useGeneratedKeys="true">
+	<insert id="menuInsert" parameterType="menuListVO">
 		insert into mem_menu (
-			MEM_ID, MENU_CD, FRCS_ID, MENU_CNT
+			RESV_NO, MEM_ID, MENU_CD, FRCS_ID, MENU_CNT
 		) values (
-			#{memId}, #{menuCd}, #{frcsId}, #{menuCnt}
+			#{resvNo}, #{memId}, #{menuCd}, #{frcsId}, #{menuCnt}
 		)
 	</insert>
 	
@@ -181,6 +181,25 @@
 		WHERE
 		    frcs_id = #{frcsId}
 	</delete>
+	
+	<select id="selectHeadMenu" resultType="menuVO">
+		SELECT
+		    menu_cd
+		FROM
+		    head_menu
+	</select>
+	
+	<insert id="frcsMenuInsert" parameterType="FrcsMenuVO">
+		INSERT INTO frcs_menu (
+		    menu_cd
+		    , frcs_id
+		    , sale_yn
+		) VALUES (
+		    #{menuCd}
+		  , #{frcsId}
+		  , 'Y'
+		)
+	</insert>
 	
 	<!-- 예약 완료시 가맹점에게 보낼 알람데이터 넣기  -->
 	<insert id="insertResAlarm" parameterType="alarmVO">
@@ -204,4 +223,22 @@
 	        )
 	</select>
 
+	<!-- 신규가맹점주 메뉴 인설트 -->
+	<insert id="newInsert" parameterType="FrcsMenuVO">
+		INSERT INTO frcs_menu (
+		    menu_cd
+		    , frcs_id
+		    , sale_yn
+		) VALUES (
+		    #{menuCd}
+		  , #{frcsId}
+		  , 'Y'
+		)
+	</insert>
+	
+	<select id="selectFrcsIdList" parameterType="string" resultType="FrcsMenuVO">
+		select *
+		from frcs_menu
+		where frcs_id = #{frcsId}
+	</select>
 </mapper>

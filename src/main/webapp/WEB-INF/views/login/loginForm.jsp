@@ -74,6 +74,22 @@
                         </li>
                     </ul>
                 </div>
+                <div class="text-center mt-4">
+                    <ul class="list-inline">
+                    	<li class="list-inline-item">
+                    		<button class="btn btn-light" type="button" id="admin">본사</button>
+                    	</li>
+                    	<li class="list-inline-item">
+                    		<button class="btn btn-light" type="button" id="owner">봉명점</button>
+                    	</li>
+                    	<li class="list-inline-item">
+                    		<button class="btn btn-light" type="button" id="pika">시청점</button>
+                    	</li>
+                    	<li class="list-inline-item">
+                    		<button class="btn btn-light" type="button" id="a001">일반회원</button>
+                    	</li>
+                    </ul>
+				</div>
             </div>
 
             <!-- Footer-->
@@ -255,10 +271,13 @@ $(function(){
 			},
 			data : JSON.stringify(userObject),
 			contentType : "application/json; charset=utf-8",
-			success : function(result){
-				console.log("result : " + result.memId);
-				alert(result.memId);
-			}
+	        success:function(data){
+				Swal.fire({
+					title: '알림창',
+					text: '회원님의 아이디는 "' + data.memId + '" 입니다.',
+					icon: 'success',
+				})
+        	},
 		});
 	});
 	
@@ -283,12 +302,42 @@ $(function(){
 			},
 			data : JSON.stringify(userObject),
 			contentType : "application/json; charset=utf-8",
-			success : function(result){
-				console.log("result : " + result.memPw);
-				alert("이메일로 전송되었습니다 !");
+	        success:function(data){
+				Swal.fire({
+					title: '알림창',
+					text: '해당 이메일로 비밀번호가 발송 되었습니다.',
+					icon: 'success',
+				})
+        	},
+			error : function(xhr, status, error) {
+				Swal.fire({
+					title: '경고',
+					text: '입력 양식을 다시 입력해주세요 !',
+					icon: 'warning',
+				}).then((result) => {
+					if (result.isConfirmed) {
+						location.href = "/elly/login.do"; 
+					}
+				});
 			}
 		});
 	});
 	
+	$("#admin").on("click", function(){
+		$("#username").val("admin");
+		$("#password").val("1234");
+	});
+	$("#owner").on("click", function(){
+		$("#username").val("owner");
+		$("#password").val("1234");
+	});
+	$("#pika").on("click", function(){
+		$("#username").val("pika");
+		$("#password").val("1234");
+	});
+	$("#a001").on("click", function(){
+		$("#username").val("a001");
+		$("#password").val("1234");
+	});
 })
 </script>

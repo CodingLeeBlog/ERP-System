@@ -11,4 +11,6 @@ public interface IInquiryService {
 
 	public List<HeadInquiryVO> selectInquiryList(PaginationInfoVO<HeadInquiryVO> pagingVO);
 
+	public HeadInquiryVO inquiryDetail(String inqryNo);
+
 }

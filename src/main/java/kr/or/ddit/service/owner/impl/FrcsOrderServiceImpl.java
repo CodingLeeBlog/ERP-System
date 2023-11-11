@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.mapper.owner.FrcsOrderMapper;
 import kr.or.ddit.service.owner.IFrcsOrderService;
+import kr.or.ddit.vo.AlarmVO;
 import kr.or.ddit.vo.owner.FrcsAutoOrderVO;
 import kr.or.ddit.vo.owner.FrcsInventoryVO;
 import kr.or.ddit.vo.owner.FrcsOrderDetailVO;
@@ -39,11 +40,26 @@ public class FrcsOrderServiceImpl implements IFrcsOrderService{
 	}
 
 	@Override
-	public ServiceResult orderInsert(FrcsOrderVO frcsOrderVO) {
+	public ServiceResult orderInsert(FrcsOrderVO frcsOrderVO, AlarmVO alarmVO) {
 		ServiceResult result = null;
 		
 		// 발주 테이블
 		int status = mapper.orderInsert(frcsOrderVO);
+		
+		// 알람데이터 넣기 
+		String frcsId = frcsOrderVO.getFrcsId(); //답변자의 가맹점 코드
+		String frcsOrderNo = frcsOrderVO.getFrcsOrderNo(); //공문 번호 
+		//1) FROM
+		String memIdfrcs = this.mapper.getMemFrcs(frcsId); //가맹점 코드를 mem_Id로 만들기 위함
+		alarmVO.setMemId(memIdfrcs);
+		//2) WHAT
+		alarmVO.setTblName("FRCSORDER");
+		alarmVO.setTblNo(frcsOrderNo+"");
+		//3) TO
+		String receiveMemId = this.mapper.getReceiveMemId(frcsOrderNo);
+		alarmVO.setReceiveMemId(receiveMemId);
+		// 알람데이터 넣기 
+		mapper.insertAlarm(alarmVO);
 		 
 		// 발주 테이블 성공했으면
 		if(status > 0) {
@@ -181,5 +197,11 @@ public class FrcsOrderServiceImpl implements IFrcsOrderService{
 		}
 		
 		return result;
+	}
+
+	// 발주 상세내역 엑셀 다운로드
+	@Override
+	public List<FrcsOrderVO> getOrderList(String frcsId) {
+		return mapper.getOrderList(frcsId);
 	}
 }

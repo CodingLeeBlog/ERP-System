@@ -8,12 +8,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.or.ddit.service.head.IInquiryService;
+import kr.or.ddit.vo.head.HeadBoardVO;
 import kr.or.ddit.vo.head.HeadInquiryVO;
 import kr.or.ddit.vo.member.PaginationInfoVO;
+import kr.or.ddit.vo.owner.FrcsInquiryVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -53,5 +57,12 @@ public class InquiryController {
 		model.addAttribute("pagingVO", pagingVO);
 		
 		return "head/inquiry/list";
+	}
+	
+	@RequestMapping(value = "/inquiryDetail.do" )
+	public String inquiryDetail(String inqryNo, Model model) {
+		HeadInquiryVO headInquiryVO = inquiryService.inquiryDetail(inqryNo);
+		model.addAttribute("headInquiryVO", headInquiryVO);
+		return "head/inquiry/detail";
 	}
 }

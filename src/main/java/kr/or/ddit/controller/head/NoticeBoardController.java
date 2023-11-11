@@ -86,7 +86,7 @@ public class NoticeBoardController {
 		
 		return "head/notice/list";
 	}
-	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@GetMapping(value = "/detail.do" )
 	public String boardDetail(int boardNo, Model model) {
 		HeadBoardVO headBoardVO = noticeboardService.selectBoard(boardNo);
@@ -139,6 +139,7 @@ public class NoticeBoardController {
 		return goPage;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/update.do", method = RequestMethod.GET)
 	public String boardModifyForm(int boardNo, Model model) {
 		HeadBoardVO headBoardVO = noticeboardService.selectBoard(boardNo);
@@ -146,6 +147,7 @@ public class NoticeBoardController {
 		model.addAttribute("status", "u"); //지금 응답은 수정이야!
 		return "head/notice/form";
 	}
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/update.do", method = RequestMethod.POST)
 	public String boardModify(
 			HttpServletRequest req,
@@ -182,6 +184,7 @@ public class NoticeBoardController {
 			return goPage;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value="/download.do", method = RequestMethod.GET)
 	   public ResponseEntity<byte[]> fileDownload(int attachNo) throws IOException{
 		   InputStream in = null;

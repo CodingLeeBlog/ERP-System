@@ -7,13 +7,13 @@
 
     <head>
         <meta charset="utf-8" />
-        <title>Dashboard | Hyper - Responsive Bootstrap 5 Admin Dashboard</title>
+        <title>엘리할머니 맥주</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description" />
         <meta content="Coderthemes" name="author" />
 
         <!-- App favicon -->
-        <link rel="shortcut icon" href="${pageContext.request.contextPath }/resources/assets/images/favicon.ico">
+        <link rel="shortcut icon" href="${pageContext.request.contextPath }/resources/assets/images/favicon2.ico">
         
         <!-- Select2 css -->
         <link href="${pageContext.request.contextPath }/resources/assets/vendor/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
@@ -77,7 +77,10 @@
   	
   		<!-- kakao map cdn -->
   		<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=806a49ec63336f4fd1e46074f5163d44&libraries=services"></script>
-  
+  	
+  		<!-- Britecharts css -->
+        <link href="${pageContext.request.contextPath }/resources/assets/vendor/britecharts/css/britecharts.min.css" rel="stylesheet" type="text/css" />
+  	
     </head>
 
     <body>
@@ -810,6 +813,19 @@
         <!-- Apex Charts js -->
         <script src="${pageContext.request.contextPath }/resources/assets/vendor/apexcharts/apexcharts.min.js"></script>
 
+		<!-- Apex Chart line Demo js -->
+        <script src="https://apexcharts.com/samples/assets/stock-prices.js"></script>
+        <script src="https://apexcharts.com/samples/assets/irregular-data-series.js"></script>
+        <script src="${pageContext.request.contextPath }/resources/assets/js/pages/demo.apex-line.js"></script>
+        
+        <!-- Apex Chart Column Demo js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.0/dayjs.min.js"></script>  
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.0/plugin/quarterOfYear.min.js"></script>        
+        <script src="${pageContext.request.contextPath }/resources/assets/js/pages/demo.apex-column.js"></script>
+        
+        <!-- Apex Chart Area Demo js -->
+        <script src="${pageContext.request.contextPath }/resources/assets/js/app.min.js"></script>
+
         <!-- Vector Map js -->
         <script src="${pageContext.request.contextPath }/resources/assets/vendor/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js"></script>
         <script src="${pageContext.request.contextPath }/resources/assets/vendor/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js"></script>
@@ -872,5 +888,11 @@
         <!-- Input Mask Plugin js -->
         <script src="${pageContext.request.contextPath }/resources/assets/vendor/jquery-mask-plugin/jquery.mask.min.js"></script>
         
+        <!-- Brite Charts js -->
+        <script src="${pageContext.request.contextPath }/resources/assets/vendor/d3/d3.min.js"></script>
+        <script src="${pageContext.request.contextPath }/resources/assets/vendor/britecharts/bundled/britecharts.min.js"></script>
+
+        <!-- Brite Charts Demo js -->
+        <script src="${pageContext.request.contextPath }/resources/assets/js/pages/demo.britechart.js"></script>
     </body>
 </html> 

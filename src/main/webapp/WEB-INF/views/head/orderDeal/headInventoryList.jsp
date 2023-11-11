@@ -108,7 +108,7 @@
 		                            <tbody>
 		                            <c:forEach items="${dataList }" var="list" varStatus="status">
 		                                <tr>
-		                                    <td style="text-align:center">${status.count }</td>
+		                                    <td style="text-align:center">${list.rnum }</td>
 		                                    <td style="text-align:center">${list.vdName }</td>
                                             <td style="text-align:center">
 		                                    	${list.vdprodCd }
@@ -117,20 +117,20 @@
 		                                    	${list.vdprodName }
 		                                    </td>
 			                                <td style="text-align:center">
-                                                ${list.hdmaxQy }
+			                                <fmt:formatNumber value="${list.hdmaxQy }" type="number"/>
 			                                </td>
                                             <td style="text-align:center">
-	                                            <c:if test="${list.hdremainQy le 500}">
+	                                            <c:if test="${list.hdremainQy le 1500}">
 		                                            <span class="blinking" style="color:red; font-weight: bold;">
-		                                            	${list.hdremainQy}
+		                                            <fmt:formatNumber value="${list.hdremainQy}" type="number"/>	
 		                                            </span>	
 	                                            </c:if>
-	                                            <c:if test="${list.hdremainQy gt 500}">
-		                                            	${list.hdremainQy}
+	                                            <c:if test="${list.hdremainQy gt 1500}">
+		                                            <fmt:formatNumber value="${list.hdremainQy}" type="number"/>	
 	                                            </c:if>
                                             </td>
                                             <td style="text-align:center">
-                                                ${list.hdrtrcvPrice }
+                                            	<fmt:formatNumber value="${list.hdrtrcvPrice }" type="number"/>(원)
                                             </td>
 		                                    <td style="text-align:center">
 		                                        ${list.hdprodLifestartday }

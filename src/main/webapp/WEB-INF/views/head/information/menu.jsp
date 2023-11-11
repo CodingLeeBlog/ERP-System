@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+<script src="${pageContext.request.contextPath }/resources/ckeditor/ckeditor.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
 
@@ -49,6 +50,7 @@
 										<input type="button" class="btn btn-info" id="registerBtn"
 											value="등록" data-bs-toggle="modal"
 											data-bs-target="#bs-example-modal-lg">
+											<a href="/head/officeLetter.do" class="btn btn-danger">공문</a>
 									</div>
 								</div>
 								<!-- end col-->
@@ -59,11 +61,12 @@
 									id="products-datatable">
 									<thead class="table-light">
 										<tr>
-											<th class="all">메뉴명</th>
-											<th>카테고리</th>
-											<th>가격</th>
-											<th>출시일자</th>
-											<th>기타</th>
+											<th style='text-align: center'>순번</th>
+											<th style='text-align: center'>메뉴명</th>
+											<th style='text-align: center'>카테고리</th>
+											<th style='text-align: center'>가격</th>
+											<th style='text-align: center'>출시일자</th>
+											<th style='text-align: center'></th>
 										</tr>
 									</thead>
 									<tbody id="tBody">
@@ -78,13 +81,16 @@
 											<c:otherwise>
 												<c:forEach items="${menuList }" var="menu">
 													<tr class="text-left">
-														<td id="menuName">${menu.menuName }</td>
-														<td>${menu.menuCg }</td>
-														<td><fmt:formatNumber value="${menu.menuPrice }"
-																type="currency" /></td>
-														<td><fmt:formatDate value="${menu.menuRsdate }"
-																pattern="yyyy-MM-dd" /></td>
-														<td>
+														<td style='text-align: center'>${menu.rnum }</td>
+														<td style='text-align: center'>
+														    <div style='text-align: center'>${menu.menuName}</div>
+														</td>
+														<td style='text-align: center'>${menu.menuCg }</td>
+														<td style='text-align: center'><fmt:formatNumber value="${menu.menuPrice }"
+																type="number" />(원)</td>
+														<td style='text-align: center'><fmt:formatDate value="${menu.menuRsdate }"
+																pattern="yyyy/MM/dd" /></td>
+														<td style='text-align: center'>
 															<button type="button" class="btn btn-info btn-sm"
 																id="detailBtn" data-menucd="${menu.menuCd}">상세보기</button>
 														</td>
@@ -239,6 +245,7 @@
 								<div class="modal-footer">
 									<button type="button" class="btn btn-light" data-bs-dismiss="modal">목록</button>
 									<button type="button" class="btn btn-info" id="insertBtn">등록</button>
+									<button type="button" class="btn btn-success" id="autoBtn">자동완성</button>
 								</div>
 							</div>
 						</div>
@@ -390,9 +397,15 @@ $(function() {
 	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}"); // csrf 토큰 보내기 위함
 	        },
 	        success: function(res) {
-	            console.log(res.result);
-	            alert("등록 되었습니다.");
-	            location.href = "/head/menu.do";
+	        	 Swal.fire({
+                     title: '알림창', // Alert 제목
+                     text: '등록이 완료되었습니다.', // Alert 내용
+                     icon: 'success', // Alert 타입
+                 }).then((result) => {
+                     if (result.isConfirmed) {
+                         location.href = "/head/menu.do"; 
+                     }
+                 });
 	        },
 	        error: function(err) {
 	            alert("데이터 저장 중 오류가 발생했습니다.", err);
@@ -411,6 +424,15 @@ $(function() {
 			// "확인" 버튼 클릭 시 폼 제출
 			delForm.submit(); // 폼 제출
 		});
+	});
+	
+	
+	// 자동완성
+	$("#autoBtn").on("click", function(){
+		$("#rgMenuName").val("고구마");
+		$("#rgMenuCg").val("마른안주");
+		$("#rgMenuDes").val("촉촉하고 부드러운 고구마를 한입에~");
+		$("#rgMenuPrice").val("7000");
 	});
 });
 </script>

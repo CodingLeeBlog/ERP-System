@@ -9,5 +9,6 @@ public interface InquiryMapper {
 
 	public int selectInquiryCount(PaginationInfoVO<HeadInquiryVO> pagingVO);
 	public List<HeadInquiryVO> selectInquiryList(PaginationInfoVO<HeadInquiryVO> pagingVO);
+	public HeadInquiryVO inquiryDetail(String inqryNo);
 
 }

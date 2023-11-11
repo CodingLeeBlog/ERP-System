@@ -22,6 +22,7 @@ import kr.or.ddit.service.head.IEducationService;
 import kr.or.ddit.vo.head.EducationVO;
 import kr.or.ddit.vo.head.HeadPaginationInfoVO;
 import kr.or.ddit.vo.head.OfficeLetterVO;
+import kr.or.ddit.vo.head.OpenPlanVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -76,7 +77,7 @@ public class EducationController {
 	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@ResponseBody
 	@RequestMapping(value = "/educationRegister.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public ResponseEntity<String> educationRegister(EducationVO educationVO) {
+	public ResponseEntity<String> educationRegister(@RequestBody EducationVO educationVO) {
 		   
 		educationService.educationRegister(educationVO);
 	    
@@ -84,12 +85,25 @@ public class EducationController {
 	    return entity;
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
+	@ResponseBody
+	@RequestMapping(value = "/educationUpdate.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public ResponseEntity<String> educationUpdate(@RequestBody EducationVO educationVO) {
+		
+		educationService.educationUpdate(educationVO);
+		
+		ResponseEntity<String> entity = new ResponseEntity<String>("{\"result\": \"OK\"}", HttpStatus.OK);
+		return entity;
+	}
+	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/educationVideo.do", method=RequestMethod.GET)
 	public String educationVideo(Model model) {
 		log.info("educationVideo(): 시작");
-		return "head/grandopening/educationVideo";
+		return "owner/board/educationVideo";
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@ResponseBody
 	@RequestMapping(value = "/educationDetail.do", produces = "application/json;charset=utf-8")
 	public ResponseEntity<EducationVO> educationDetail(@RequestBody EducationVO educationVO) {

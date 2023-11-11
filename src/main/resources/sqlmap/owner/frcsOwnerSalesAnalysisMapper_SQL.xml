@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsSalesAnalysisMapper">
+
+	<!-- 매출액 분석 (한달) -->
+	<select id="getOneMonthData" parameterType="map" resultType="salesVO">
+		select sum(selng_qy) as selng_qy, sum(selng_qy * selng_price) as total_price, selng_price, h.menu_cd, h.menu_name
+		from dailyselling d, head_menu h
+		where frcs_id = #{frcsId} and trunc(selng_date, 'MM') = trunc(#{thisMonth}, 'MM')
+		and d.menu_cd = h.menu_cd
+		group by h.menu_cd, h.menu_name, selng_price
+	</select>
+
+	<!-- 매출액 분석(3개월) -->
+	<select id="getThreeSalesAnalysis" parameterType="map" resultType="salesVO">
+		select sum(selng_qy) as selng_qy, sum(selng_qy * selng_price) as selng_total, selng_price, h.menu_cd, h.menu_name
+		from dailyselling d, head_menu h
+		where frcs_id = #{frcsId}
+		and trunc(selng_date,'MM') >= add_months(trunc(#{thisMonth}, 'MM'), -2)
+		and d.menu_cd = h.menu_cd
+		group by h.menu_cd, h.menu_name, selng_price
+	</select>
+
+	<!-- 매출액 분석(6개월) -->
+	<select id="getSixSalesAnalysis" parameterType="map" resultType="salesVO">
+		select sum(selng_qy) as selng_qy, sum(selng_qy * selng_price) as selng_total, selng_price, h.menu_cd, h.menu_name
+		from dailyselling d, head_menu h
+		where frcs_id = #{frcsId}
+		and trunc(selng_date,'MM') >= add_months(trunc(#{thisMonth}, 'MM'), -5)
+		and d.menu_cd = h.menu_cd
+		group by h.menu_cd, h.menu_name, selng_price
+	</select>
+	
+	<!-- 매출액 12개월 차트 -->
+	<select id="getTotalSalesAnalysis" parameterType="map" resultType="int">
+		select nvl(sum(selng_price*selng_qy),0) as total_price
+		from dailyselling
+		where frcs_id = #{frcsId} and trunc(selng_date, 'MM') = trunc(#{thisMonth}, 'MM')
+	</select>
+	
+</mapper>

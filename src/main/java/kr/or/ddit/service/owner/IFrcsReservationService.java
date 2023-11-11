@@ -13,5 +13,7 @@ public interface IFrcsReservationService {
 	public int selectResvCount(OwnerPaginationInfoVO<FrcsReservationVO> pagingVO);
 	public List<FrcsReservationVO> selectResvList(OwnerPaginationInfoVO<FrcsReservationVO> pagingVO);
 	public ServiceResult resvUpdate(FrcsReservationVO frcsResvVO);
+	public int selectCount(String frcsId);
+	public ServiceResult rsevDelete(String resvNo);
 
 }

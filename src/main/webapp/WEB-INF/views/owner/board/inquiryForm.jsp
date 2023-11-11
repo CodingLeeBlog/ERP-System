@@ -65,15 +65,15 @@
 									<c:if test="${not empty inqVO.inqFileList[0].attachNo }">
 										<c:forEach items="${inqVO.inqFileList}" var="inqFile">
 											<li>
-												<span class="mailbox-attachment-icon">
-													<i class="far fa-file-pdf"></i>
-												</span>
+<!-- 												<span class="mailbox-attachment-icon"> -->
+<!-- 													<i class="ri-file-line"></i> -->
+<!-- 												</span> -->
 												<div class="mailbox-attachment-info">
-													<a href="#" class="mailbox-attachment-name"><i class="fas fa-paperclip"></i> ${inqFile.attachOrgname }</a> 
+													<a class="mailbox-attachment-name"><i class="mdi mdi-paperclip"></i> ${inqFile.attachOrgname }</a> 
 													<span class="mailbox-attachment-size clearfix mt-1"> 
 														<span>${inqFile.attachSize }</span> 
 														<span class="btn btn-default btn-sm float-right attachmentFileDel" id="span_${inqFile.attachNo }">
-															<i class="fas fa-times"></i>
+															<i class="mdi mdi-delete-forever-outline"></i>
 														</span>
 													</span>
 												</div>

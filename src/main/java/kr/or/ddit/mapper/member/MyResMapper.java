@@ -11,4 +11,10 @@ public interface MyResMapper {
 
 	public void myResUpdate(PayVO payVO);
 
+	public void myResDelete(PayVO payVO);
+
+	public void myResMenuDelete(PayVO payVO);
+
+	public void myResReviewUpdate(ResVO resVO);
+
 }

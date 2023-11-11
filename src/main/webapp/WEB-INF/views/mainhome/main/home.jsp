@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 
 <main id="main">
 
@@ -50,24 +51,25 @@
 </main>
 
 <!-- 창업 문의 완료시 모달창 -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="color: black">
-	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 400px;">
-		<div class="modal-content">
-			<div class="modal-body">
-			</div>
-			<div class="modal-footer">
-				<div class="col" id="check">
-					<input type="checkbox" value="checkbox" name="checkbox" id="modalchkbox">
-				    <label for="chkbox" style="font-size: 17px;">&nbsp;&nbsp;오늘 하루동안 보지 않기</label>
+<sec:authorize access="isAuthenticated()">
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="color: black">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: 400px;">
+			<div class="modal-content">
+				<div class="modal-body">
 				</div>
-				<div class="col-1" id="modalclose">
-					<a href="/elly/main.do" style="color: black">닫기</a>
+				<div class="modal-footer">
+					<div class="col" id="check">
+						<input type="checkbox" value="checkbox" name="checkbox" id="modalchkbox">
+					    <label for="chkbox" style="font-size: 17px;">&nbsp;&nbsp;오늘 하루동안 보지 않기</label>
+					</div>
+					<div class="col-1" id="modalclose">
+						<a href="/elly/main.do" style="color: black">닫기</a>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-
+</sec:authorize>
 <script type="text/javascript">
 $(function(){
 	var msg = '<div class="container-fluid">'

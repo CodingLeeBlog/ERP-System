@@ -21,6 +21,7 @@ public class OfficeLetterVO {
 	private Date hdLtrdate;
 	private String tableName;
 	private String hdLtstate;
+	private int rnum;
 	
 	private Integer[] delBoardNo;
 	private MultipartFile[] boFile;

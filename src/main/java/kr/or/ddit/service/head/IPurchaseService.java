@@ -14,7 +14,7 @@ public interface IPurchaseService {
 	
 	// 매입내역관리 상세화면 데이터 뿌리기
 	public int selectDetailCount(String hdorderNo);
-	public List<PurchaseVO> selectDetailList(String hdorderNo);
+	public List<PurchaseVO> selectDetailList(HeadPaginationInfoVO<PurchaseVO> pagingVO);
 	
 	// 거래처 발주시 분류클릭했을때 거래처의 거래처코드,거래처이름 가져오기
 	public List<PurchaseVO> selectDataList(String vdCategory);

@@ -32,6 +32,7 @@ public class CustomerListController {
 	@Inject
 	private ICustomerService service;
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/customerList.do")
 	public String customerList(
 			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
@@ -63,6 +64,7 @@ public class CustomerListController {
 	}
 	
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/vendorList.do")
 	public ResponseEntity<List<VendorVO>> vendorList(
 			@RequestBody VendorVO vendorVO,
@@ -78,6 +80,7 @@ public class CustomerListController {
 	}
 	
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/vendorNameSelect.do")
 	public ResponseEntity<VendorVO> vendorNameSelect(@RequestBody VendorVO vendorVO){
 		
@@ -85,6 +88,7 @@ public class CustomerListController {
 		return new ResponseEntity<VendorVO>(vendorInfoList, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/customerListRegister.do", method = RequestMethod.GET)
 	public String customerListRegister(Model model) {
 		log.info("customerListRegister() GET -> 시작");
@@ -92,6 +96,7 @@ public class CustomerListController {
 	}
 	
 	@ResponseBody
+	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/vendorRegister.do", consumes = "application/json; charset=UTF-8")
 	public ResponseEntity<String> vendorRegister(
 			@RequestBody List<VendorVO> vendorVO,

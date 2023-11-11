@@ -28,4 +28,10 @@ public class InquiryServiceImpl implements IInquiryService {
 		return inquirymapper.selectInquiryList(pagingVO);
 	}
 
+	@Override
+	public HeadInquiryVO inquiryDetail(String inqryNo) {
+		return inquirymapper.inquiryDetail(inqryNo);
+
+	}
+
 }

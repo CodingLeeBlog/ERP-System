@@ -66,7 +66,7 @@
 			<%-- 				<option value="writer" <c:if test="${searchType eq 'writer' }">selected</c:if>>작성자</option> --%>
 			<%-- 				<option value="both" <c:if test="${searchType eq 'both' }">selected</c:if>>제목+작성자</option> --%>
 			<!-- 			</select> &nbsp;&nbsp;<br> -->
-						<input type="text" name="searchWord" value="${searchWord }" class="form-control float-right bg-transparent rounded-3 me-3"  style="width: 100px;">
+						<input type="text" name="searchWord" value="${searchWord }" placeholder="검색할 제목을 입력하세요" class="form-control float-right bg-transparent rounded-3 me-3"  style="width: 100px;">
 						<div class="input-group-append">
 							<button type="submit" class="btn btn-dark text-light">검색</button>
 						</div>

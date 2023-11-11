@@ -52,7 +52,7 @@
 	<select id="selectBoardList" parameterType="pagingVO" resultType="headBoardVO">
 	with b as(
 		select
-		    row_number() over(order by t.rnum2 desc) rnum, t.*
+		    row_number() over(order by t.rnum2 asc) rnum, t.*
 		from(
 		    select 
 		        a.*, row_number() over (order by a.BOARD_NO desc) rnum2
@@ -64,7 +64,7 @@
 		        where 1=1
 		        AND TABLE_NAME = 'notice'
 		        <include refid="boardSearch"/>
-		        order by BOARD_NO desc
+		        order by BOARD_NO asc
 		    )a
 		) t
 	)

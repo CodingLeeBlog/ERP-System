@@ -11,4 +11,10 @@ public interface OpenPlanMapper {
 
 	public List<OpenPlanVO> selectOpenPlanList(HeadPaginationInfoVO<OpenPlanVO> pagingVO);
 
+	public void planRegister(OpenPlanVO openPlanVO);
+
+	public void planUpdate(OpenPlanVO openPlanVO);
+
+	public void insertFcmg(OpenPlanVO openPlanVO);
+
 }

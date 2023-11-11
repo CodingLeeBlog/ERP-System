@@ -31,8 +31,8 @@
 		<result property="vdremainQy" column="vdremain_qy" />
 		<result property="vdforwardPrice" column="vdforward_price" />
 		<result property="vdrtrcvPrice" column="vdrtrcv_price" />
-		<result property="hdprodLifestartday" column="hdprod_lifestartday" />
-		<result property="hdprodLifeendday" column="hdprod_lifeendday" />
+		<result property="vdprodLifestartday" column="vdprod_lifestartday" />
+		<result property="vdprodLifeendday" column="vdprod_lifeendday" />
 		<result property="hdrtrcvPrice" column="hdrtrcv_price" />
 		<result property="vdCode" column="vd_code" />
 	</resultMap>
@@ -76,8 +76,8 @@
 		SELECT DISTINCT 
 		A.VDPROD_CD, A.VDPROD_NAME, A.VDMAX_QY, A.VDREMAIN_QY,
 		A.VDFORWARD_PRICE, TO_CHAR(A.VDPROD_LIFESTARTDAY, 'yyyy-MM-dd')
-		HDPROD_LIFESTARTDAY, TO_CHAR(A.VDPROD_LIFEENDDAY, 'yyyy-MM-dd')
-		HDPROD_LIFEENDDAY, A.VDRTRCV_PRICE,A.VD_CODE, A.VDMAX_QY,VD.* FROM
+		VDPROD_LIFESTARTDAY, TO_CHAR(A.VDPROD_LIFEENDDAY, 'yyyy-MM-dd')
+		VDPROD_LIFEENDDAY, A.VDRTRCV_PRICE,A.VD_CODE, A.VDMAX_QY,VD.* FROM
 		VENDOR_INVENTORY A , VENDOR VD WHERE A.VD_CODE = #{vdCode} and VD_name
 		= #{vdName}
 	</select>

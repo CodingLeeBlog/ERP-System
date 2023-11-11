@@ -12,7 +12,9 @@
 
 	<resultMap type="inspectionVO" id="inspectionMap">
 		<id property="frcsId" column="frcs_id"/>
+		<id property="ipCode" column="ip_code"/>
 		<result property="frcsId" column="frcs_id"/>
+		<result property="ipCode" column="ip_code"/>
 		<result property="ipStts" column="ip_stts"/>
 		<result property="ipDate" column="ip_date"/>
 		<result property="tableName" column="table_name"/>
@@ -41,33 +43,37 @@
 	</select>
 
 	<select id="selectInspectionList" parameterType="pagingVO" resultType="inspectionVO">
-		select 
+	    select 
 			b.*
 		from (
 			select 
-				a.*, row_number() over (order by frcs_id) rnum
+				a.*, row_number() over (order by ip_date DESC) rnum
 			from(
-				select i.frcs_id,
-			        f.frcs_name,
-			        i.ip_stts,
-			        i.ip_date,
-			        i.st_edu_fnsh_yn,
-			        a.attach_no
+				select i.frcs_id, 
+	            f.frcs_name, 
+	            i.ip_code, 
+	            i.ip_stts, 
+	            i.ip_date, 
+	            a.attach_no
 				from frcs_ipmg i
-				left join franchise f on i.frcs_id = f.frcs_id 
-				left join attach a on i.frcs_id = a.table_pk
+				LEFT JOIN franchise f ON f.frcs_id = i.frcs_id 
+	        	LEFT JOIN attach a ON i.ip_code = a.table_pk 
 			)a
 		)b	
 		<![CDATA[	
 			where b.rnum >= #{startRow} and b.rnum <= #{endRow}
 		]]>
 	</select>
+
 	
 	<insert id="inspectionRegister" parameterType="inspectionVO" useGeneratedKeys="true">
-	  insert into head_letter (
-	    frcs_id, frcs_name, ip_stts, ip_date, st_edu_fnsh_yn
+	  <selectKey keyProperty="ipCode" resultType="String" order="BEFORE">
+	   	select 'i' || LPAD(seq_frcsipmg.nextval, 4, '0') FROM dual
+	  </selectKey>
+	  insert into frcs_ipmg (
+	    frcs_id, ip_code, ip_stts, ip_date, table_name
 	  ) values (
-	    #{frcsId}, #{frcsName}, #{ipStts}, #{ipDate}, 'Y'
+	    #{frcsId}, #{ipCode}, #{ipStts}, #{ipDate}, 'ipmg'
 	  )
 	</insert>
 	
@@ -79,7 +85,7 @@
 	    ATTACH_NO, FILE_NO, ATTACH_ORGNAME, ATTACH_SAVENAME, ATTACH_MIME, ATTACH_SIZE, TABLE_NAME, TABLE_PK
 	  )
 	  VALUES (
-	    #{attachNo}, #{fileNo}, #{attachOrgname}, #{attachSavename}, #{attachMime}, #{attachSize}, 'inspection', #{tablePk}
+	    #{attachNo}, #{fileNo}, #{attachOrgname}, #{attachSavename}, #{attachMime}, #{attachSize}, 'ipmg', #{tablePk}
 	  )
 	</insert>
 	
@@ -90,4 +96,22 @@
 		where ATTACH_NO = #{attachNo}
 	</select>
 	
+	<select id="getDetail" parameterType="string" resultMap="inspectionMap">
+	    SELECT f.frcs_name,
+	           i.frcs_id,
+	           i.ip_code,
+	           i.ip_stts,
+	           i.ip_date
+	    FROM frcs_ipmg i
+	    JOIN franchise f ON i.frcs_id = f.frcs_id
+	    WHERE i.frcs_id = #{frcsId}
+	    ORDER BY i.ip_date DESC
+	</select>
+	
+	<select id="getSearch" parameterType="string" resultType="franchiseVO">
+		select frcs_id, frcs_name
+		from franchise
+		where frcs_name like '%'|| upper(#{searchWord})||'%'or frcs_name like '%'||#{searchWord}||'%'
+	</select>
+
 </mapper>

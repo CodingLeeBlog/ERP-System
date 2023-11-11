@@ -9,7 +9,7 @@ public class FrcsBillVO {
 
 	private String feeCode;		// 청구코드
 	private String frcsId;		// 가맹점코드
-	private int frcsAmt;		// 가맹비
+	private int frcsAmt = 500000;		// 가맹비
 	private int frcsRowal;		// 로열티
 	private int orderAmt;		// 제품 구입비
 	private int tradAdd;		// 트레이딩 추가결제비
@@ -21,5 +21,8 @@ public class FrcsBillVO {
 	private String settleAt;	// 정산여부
 	
 	private Date thisMonth;	// 오늘 기준 년월
+	private String yearMonth;
+	
+	private int feeTotalPay; // 총 청구금액
 	
 }

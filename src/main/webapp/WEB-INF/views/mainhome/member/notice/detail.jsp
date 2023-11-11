@@ -4,9 +4,11 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <script src="${pageContext.request.contextPath }/resources/plugins/jquery/jquery.min.js"></script>
 <script src="${pageContext.request.contextPath }/resources/ckeditor/ckeditor.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
- 
-<sec:authentication property="principal.member" var="member"/> 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.member" var="member"/>
+</sec:authorize> 
  
  <!-- ======= menubar Section ======= -->
 <div id="menubar" class="d-flex align-items-center h-75 d-inline-block align-middle">
@@ -112,8 +114,8 @@ $(function(){
 		var cpnCd = $("#cpnCd").val();
 		var memId = '${member.memId}'
 		
-		if(memId == null){
-			alert("로그인 후 이용해주세요!");			
+		if(memId == null && memId == ""){
+			alert("로그인 후 이용해주세요!");		
 		}else{
 			
 			var data = {
@@ -131,11 +133,33 @@ $(function(){
 				contentType : "application/json; charset=utf-8",
 				success : function(res){
 					if(res === "OK"){
-						alert("쿠폰 등록이 완료되었습니다 !")
-						location.href = "/elly/mypage/coupon.do?memId=${member.memId }"
+						Swal.fire({
+							title: '알림창',
+							text: '쿠폰 등록이 완료되었습니다 !',
+							icon: 'success',
+						}).then((result) => {
+							if (result.isConfirmed) {
+								location.href = "/elly/main.do"; 
+							}
+						});
 					}else {
-						alert("중복으로 등록 불가능한 쿠폰입니다 !")
+				        Swal.fire({
+				            title: '경고',
+				            text: '중복으로 등록 불가능한 쿠폰입니다 !',
+				            icon: 'warning'
+				        });
 					}
+				},
+				error : function(xhr, status, error) {
+					Swal.fire({
+						title: '경고',
+						text: '로그인 후 이용해주세요!',
+						icon: 'warning',
+					}).then((result) => {
+						if (result.isConfirmed) {
+							location.href = "/elly/login.do"; 
+						}
+					});
 				}
 			});
 		};

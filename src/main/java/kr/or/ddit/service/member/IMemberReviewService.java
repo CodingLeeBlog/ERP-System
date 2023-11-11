@@ -4,11 +4,12 @@ import java.util.List;
 
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.vo.AlarmVO;
+import kr.or.ddit.vo.member.ResVO;
 import kr.or.ddit.vo.member.ReviewVO;
 
 public interface IMemberReviewService {
 
-	public ServiceResult create(ReviewVO reviewVO, AlarmVO alarmVO);
+	public ServiceResult create(ReviewVO reviewVO, ResVO resVO, AlarmVO alarmVO);
 
 	public List<ReviewVO> myReviewList(String memId);
 

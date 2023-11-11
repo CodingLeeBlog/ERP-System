@@ -41,34 +41,42 @@
 	
 	<!-- 가맹점조회 -->
 	<select id="selectTotalFrcsCount" resultType="int" parameterType="headPagingVO">
-		select count(frcs_name) as cnt
-		from frcs_ownership a, franchise f, member m
-		where m.mem_id = a.mem_id
-		and a.frcs_id = f.frcs_id
+		SELECT COUNT(FRCS_ID) AS CNT
+		FROM(
+		SELECT F.FRCS_ID, F.FRCS_NAME, F.FRCS_STATE, F.FRCS_TEL, F.FRCS_STDATE, 
+		F.FRCS_ENDDATE, F.FRCS_POST, F.FRCS_ADD1, F.FRCS_ADD2, F.FRCS_STTIME, 
+		F.FRCS_ENDTIME, F.FRCS_CDATE, F.FRCS_INSDATE, F.FRCS_INEDATE, 
+		F.FRCS_OPDATE, F.FRCS_XMAP, F.FRCS_YMAP, F.FRCS_STAR, F.FRCS_PSNCPA, F.OWNER_ID, F.REG_CODE, to_char(f.frcs_opdate,'yy/mm/dd') as fr_opdate,M.*
+		FROM 
+		MEMBER M, FRANCHISE F, FRCS_OWNERSHIP O
+		WHERE M.MEM_ID = O.MEM_ID 
+		AND O.FRCS_ID = F.FRCS_ID
 		<include refid="frcsSearch" />
+		)
+		
 	</select>
 
 	<select id="selectTotalFrcsList" parameterType="headPagingVO" resultType="totalInfoVO" >
 		select 
-         b.*
-      from (
-         select 
-            a.*, row_number() over (order by A.ip_stts desc) rnum
-         from(
-            SELECT F.*, M.*, A.IP_STTS, A.IP_DATE, A.TABLE_NAME, A.ST_EDU_FNSH_YN
-            FROM 
-            FRCS_IPMG A, MEMBER M, FRANCHISE F, FRCS_OWNERSHIP O
-            WHERE M.MEM_ID = O.MEM_ID 
-            AND O.FRCS_ID = F.FRCS_ID
-            AND A.FRCS_ID = F.FRCS_ID
-<!--             where 1=1 -->
+		b.*
+		from (
+		select 
+		a.*, row_number() over (order by frcs_opdate desc) rnum
+		from(
+		SELECT F.FRCS_ID, F.FRCS_NAME, F.FRCS_STATE, F.FRCS_TEL, F.FRCS_STDATE, 
+		F.FRCS_ENDDATE, F.FRCS_POST, F.FRCS_ADD1, F.FRCS_ADD2, F.FRCS_STTIME, 
+		F.FRCS_ENDTIME, F.FRCS_CDATE, F.FRCS_INSDATE, F.FRCS_INEDATE, 
+		F.FRCS_OPDATE, F.FRCS_XMAP, F.FRCS_YMAP, F.FRCS_STAR, F.FRCS_PSNCPA, F.OWNER_ID, F.REG_CODE, to_char(f.frcs_opdate,'yy/mm/dd') as fr_opdate,M.*
+		FROM 
+		MEMBER M, FRANCHISE F, FRCS_OWNERSHIP O
+		WHERE M.MEM_ID = O.MEM_ID 
+		AND O.FRCS_ID = F.FRCS_ID
             <include refid="frcsSearch" />
-            order by ip_stts desc
          )a
-      )b 
+      	)b 
         <![CDATA[
 				where b.rnum >= #{startRow} and b.rnum <= #{endRow}
-			]]>
+		]]>
 	</select>
 	<!-- 가맹점 조회 끝 -->
 	
@@ -89,6 +97,12 @@
 	</select>
 	
 	<select id="selectTotalOrderList" parameterType="headPagingVO" resultType="storeOrderHistoryVO">
+		SELECT 
+		B.*
+		FROM (
+		SELECT 
+		A.*, ROW_NUMBER() OVER (ORDER BY FRCSORDER_DATE DESC) RNUM
+		FROM(
 		SELECT FO.FRCS_ID, F.FRCS_NAME, F.FRCS_POST, F.FRCS_ADD1, F.FRCS_ADD2, 
         TO_CHAR(FO.FRCSORDER_DATE, 'YY/MM/DD') AS FRCSORDER_DATE, SUM(FO.FRCSORDER_AMT) AS FRCSORDER_AMT
 		FROM FRANCHISE F
@@ -96,7 +110,12 @@
 		WHERE 1=1
 		<include refid="frcsOrder" />
 		GROUP BY FO.FRCS_ID, F.FRCS_NAME, F.FRCS_POST, F.FRCS_ADD1, F.FRCS_ADD2, TO_CHAR(FO.FRCSORDER_DATE, 'YY/MM/DD')
-		ORDER BY FO.FRCS_ID, TO_CHAR(FO.FRCSORDER_DATE, 'YY/MM/DD')
+		ORDER BY FO.FRCS_ID, TO_CHAR(FO.FRCSORDER_DATE, 'YY/MM/DD') DESC
+		)A
+		)B
+		<![CDATA[
+				where b.rnum >= #{startRow} and b.rnum <= #{endRow}
+		]]>
 	</select>
 	
 	<select id="selectFrcsNameList" parameterType="storeOrderHistoryVO" resultType="storeOrderHistoryVO">
@@ -145,7 +164,7 @@
 		FROM
 		(
 		SELECT 
-		TO_CHAR(F.FRCSORDER_DATE, 'YY-MM-DD HH:MM:SS') FRCSORDER_DATE,  F.FRCSORDER_CONFM,
+		TO_CHAR(F.FRCSORDER_DATE, 'YY/MM/DD HH:MM:SS') FRCSORDER_DATE,  F.FRCSORDER_CONFM,
 		FD.FRCSORDER_NO, FD.FRCSORDER_QY, FD.HDFORWARD_PRICE,
 		FRCS.FRCS_ID, FRCS.FRCS_NAME
 		FROM FRCSORDER F, FRCSORDER_DETAIL FD, HEAD_INVENTORY HI, FRANCHISE FRCS
@@ -153,6 +172,7 @@
 		AND FD.VDPROD_CD = HI.VDPROD_CD
 		AND FRCS.FRCS_ID = F.FRCS_ID
 		AND TRUNC(F.FRCSORDER_DATE) = TO_DATE(#{frcsorderDate}, 'YY-MM-DD')
+		AND F.FRCS_ID = #{frcsId}
 		<include refid="storeDetailSearch" />
 		)
 		WHERE 1=1
@@ -189,6 +209,7 @@
 			    AND FRCSORDER_NO = #{frcsorderNo}
 			) A, FRCS_INVENTORY B
 			WHERE A.VDPROD_CD = B.VDPROD_CD
+			AND FRCS_ID = #{frcsId}
 		</select>
 		
 		<update id="updateFrcsInventory" parameterType="inventoryUpdateVO">
@@ -232,7 +253,7 @@
 	<!-- 가맹점 주문상세 승인 끝 -->
 	
 	<!-- 반려버튼 클릭 시 모달창에 데이터불러오기 시작 -->
-		<select id="frcsOrderDetails" parameterType="string" resultType="storeOrderHistoryVO">
+		<select id="frcsOrderDetails" parameterType="storeOrderHistoryVO" resultType="storeOrderHistoryVO">
 			SELECT 
 			 TO_CHAR(F.FRCSORDER_DATE, 'YY-MM-DD') FRCSORDER_DATE,  SUM(F.FRCSORDER_AMT) TOTAL_PRICE , F.FRCSORDER_CONFM,
 			 FD.FRCSORDER_NO, 
@@ -242,9 +263,7 @@
 			AND FD.VDPROD_CD = HI.VDPROD_CD
 			AND FRCS.FRCS_ID = F.FRCS_ID
 			AND F.FRCSORDER_NO IN(#{frcsorderNo})
-<!-- 			<foreach collection="java.util.List" item="item" index="index" separator="," open="(" close=")"> -->
-<!--                  #{item} -->
-<!--              </foreach> -->
+			AND F.FRCS_ID = #{frcsId}
 			GROUP BY FRCSORDER_DATE, F.FRCSORDER_CONFM, FD.FRCSORDER_NO, FRCS.FRCS_ID, FRCS.FRCS_NAME
 		</select>
 	<!-- 반려버튼 클릭 시 모달창에 데이터불러오기 끝 -->
@@ -263,20 +282,21 @@
 	<!-- Excel에 전달해줄 가맹점 조회 리스트 시작 -->
 		<select id="storeList" resultType="totalInfoVO">
 		select 
-			 b.*
-				from (
-				 select 
-				    a.*, row_number() over (order by A.ip_stts desc) rnum
-				 from(
-				    SELECT F.*, M.*, A.IP_STTS, A.IP_DATE, A.TABLE_NAME, A.ST_EDU_FNSH_YN
-				    FROM 
-				    FRCS_IPMG A, MEMBER M, FRANCHISE F, FRCS_OWNERSHIP O
-				    WHERE M.MEM_ID = O.MEM_ID 
-				    AND O.FRCS_ID = F.FRCS_ID
-				    AND A.FRCS_ID = F.FRCS_ID
-				    order by ip_stts desc
-				 )a
-			)b
+		b.*
+		from (
+		select 
+		a.*, row_number() over (order by frcs_opdate desc) rnum
+		from(
+		SELECT F.FRCS_ID, F.FRCS_NAME, F.FRCS_STATE, F.FRCS_TEL, F.FRCS_STDATE, 
+		F.FRCS_ENDDATE, F.FRCS_POST, F.FRCS_ADD1, F.FRCS_ADD2, F.FRCS_STTIME, 
+		F.FRCS_ENDTIME, F.FRCS_CDATE, F.FRCS_INSDATE, F.FRCS_INEDATE, 
+		F.FRCS_OPDATE, F.FRCS_XMAP, F.FRCS_YMAP, F.FRCS_STAR, F.FRCS_PSNCPA, F.OWNER_ID, F.REG_CODE, M.*
+		FROM 
+		MEMBER M, FRANCHISE F, FRCS_OWNERSHIP O
+		WHERE M.MEM_ID = O.MEM_ID 
+		AND O.FRCS_ID = F.FRCS_ID
+		)a
+		)b
 		</select>
 	<!-- Excel에 전달해줄 가맹점 조회 리스트 끝 -->
 	
@@ -292,13 +312,13 @@
 			WHERE
 			    FRCS_ID = #{frcsId}
 		</update>
-		<update id="registerFrcsIpmgExcel" parameterType="totalInfoVO">
-			UPDATE FRCS_IPMG
-			SET
-			     IP_STTS = #{ipStts}
-			WHERE
-			    FRCS_ID = #{frcsId}
-		</update>
+<!-- 		<update id="registerFrcsIpmgExcel" parameterType="totalInfoVO"> -->
+<!-- 			UPDATE FRCS_IPMG -->
+<!-- 			SET -->
+<!-- 			     IP_STTS = #{ipStts} -->
+<!-- 			WHERE -->
+<!-- 			    FRCS_ID = #{frcsId} -->
+<!-- 		</update> -->
 		<update id="registerMemberExcel" parameterType="totalInfoVO">
 			UPDATE MEMBER
 			SET
@@ -320,5 +340,54 @@
 			FROM FRANCHISE 
 			WHERE FRCS_NAME = #{frcsName} 
 		</select>
-<!--  가맹점 상세조회 끝  -->
+	<!--  가맹점 상세조회 끝  -->
+
+	<!-- 최근3일간 가맹점주문 count -->
+	<select id="selectOrderCnt" resultType="int">
+		select count(frcsorder_date) as cnt
+		from(
+		select fo.frcs_id, f.frcs_name, f.frcs_tel, fo.frcsorder_amt, to_char(fo.frcsorder_date, 'yy-mm-dd') as frcsorder_date, fo.frcsorder_no
+		from franchise f, frcsorder fo
+		where f.frcs_id = fo.frcs_id
+		and fo.frcsorder_date >= (select sysdate - 3 as start_date from dual)
+		and frcsorder_confm = '대기'
+		order by fo.frcsorder_date desc
+		)
+	</select>
+
+
+<!-- 알림 시작 -->
+	<!-- 발주 승인 메세지를 보낸 admin -->
+	<select id="getMemFrcs" parameterType="String" resultType="String">
+			SELECT DISTINCT MEM_ID	
+			FROM
+			    MEMBER
+			WHERE MEM_ID = 'admin'
+	</select>
+	
+	<!-- 승인 완료 메세지 받을 아이디 구하기 -->
+	<select id="getReceiveMemId" parameterType="String" resultType="String">
+			SELECT DISTINCT
+		    c.MEM_ID
+			FROM
+			    FRCSORDER a
+			LEFT OUTER JOIN FRCSORDER b ON a.FRCSORDER_NO = b.FRCSORDER_NO
+			LEFT OUTER JOIN FRCS_OWNERSHIP c ON a.FRCS_ID = c.FRCS_ID
+			WHERE
+			    a.FRCS_ID = #{frcsId}
+			AND
+			    a.FRCSORDER_CONFM = '승인'
+	</select>
+	
+	<!-- 관리자 홈페이지에서 보여지는 부분 -->
+	<insert id="insertAlarm" parameterType="alarmVO">
+		    INSERT INTO alarm (
+		        ALARM_NO, MEM_ID, ALARM_CONTENT, ALARM_DATE, ALARM_URL, RECEIVEMEM_ID, TBL_NAME, TBL_NO
+		    ) VALUES (
+		        SEQ_ALARM.nextval, #{memId}, '발주 승인 확인하기!', sysdate, '/owner/orderDetail.do', #{receiveMemId}, #{tblName}, #{tblNo}
+		    )
+	</insert>
+<!-- 알림 끝 -->
+
+
 </mapper>

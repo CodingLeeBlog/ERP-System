@@ -7,4 +7,6 @@ public interface IMemberPayService {
 
 	public ServiceResult create(PayVO payVO);
 
+	public ServiceResult delete(PayVO payVO);
+
 }

@@ -45,10 +45,10 @@ public class StoreInquiryServiceImpl implements IStoreInquiryService{
 		try {
 			log.info("registerExcel() -> 시작");
 			int updateFranchise = mapper.registerFranchiseExcel(store);
-			int updateFrcsIpmg = mapper.registerFrcsIpmgExcel(store);
+//			int updateFrcsIpmg = mapper.registerFrcsIpmgExcel(store);
 			int updateMember = mapper.registerMemberExcel(store);
 			log.debug("엑셀 업로드 조회 결과 : {}", updateFranchise);
-			if(updateFranchise > 0 && updateFrcsIpmg > 0 && updateMember > 0) {
+			if(updateFranchise > 0 && updateMember > 0) {
 				result = ServiceResult.OK;
 				log.debug("result값 -> {}", result);
 			}else {

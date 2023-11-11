@@ -67,7 +67,7 @@
                                 <div class="col-xl-2">
                                   <div class="clickBtn text-xl-end mt-xl-0 mt-2">
                                      <button id="commitBtn" data-type="commit" type="button" class="btn btn-info mb-2 fw-bold">승인</button>
-                                      <button id="cancleBtn" data-type="cancle" type="button" class="btn btn-danger mb-2 fw-bold" data-bs-toggle="modal" data-bs-target="#modal">반려</button>
+                                      <button id="cancleBtn" data-type="cancle" type="button" class="btn btn-danger mb-2 fw-bold">반려</button>
                                       <a href="/head/storeOrderHistory.do"><button type="button" class="btn btn-secondary mb-2 fw-bold">뒤로가기</button></a>
                                   </div>
                               </div><!-- end col-->
@@ -226,7 +226,6 @@ $(function(){
    var checkData = [];
    
    var searchForm = $("#searchForm");
-   var commitBtn = $("#commitBtn");
    var trData = $(".trData"); 
    var chk = $(".chk");
    var selectAll = $("#selectAll");
@@ -234,13 +233,54 @@ $(function(){
    var tbody = $("#tableCheck tbody");
    
    var clickBtn = $(".clickBtn");
-   var commitBtn = $("#commitBtn");
    var cancelBtn = $("#cancelBtn");
    
    var modal = $("#modal");
    var totalPrice = 0;
    var modalButton = $("#modalButton");
 
+   function formatWon(number) {
+	    // 숫자를 한국 표준 통화 형식으로 포맷팅
+	    var formattedNumber = new Intl.NumberFormat('ko-KR', {
+	      style: 'currency',
+	      currency: 'KRW'
+	    }).format(number);
+	    
+	    // "₩" 통화 기호 제거
+	    formattedNumber = formattedNumber.replace("₩", "");
+	    
+	    // "(원)" 추가
+	    return formattedNumber + "(원)";
+	}
+	
+	function typeNumber(number) {
+	    // 숫자를 한국 표준 통화 형식으로 포맷팅
+	    var formattedNumber = new Intl.NumberFormat('ko-KR', {
+	      style: 'currency',
+	      currency: 'KRW'
+	    }).format(number);
+	    
+	    // "₩" 통화 기호 제거
+	    formattedNumber = formattedNumber.replace("₩", "");
+	    
+	    // "(원)" 추가
+	    return formattedNumber;
+	}
+	
+	function typeDate(dateString) {
+		  // 입력된 날짜 문자열을 Date 객체로 파싱
+		  var date = new Date(dateString);
+
+		  // 년, 월, 일을 가져와서 원하는 형식으로 조합
+		  var year = date.getFullYear();
+		  var month = (date.getMonth() + 1).toString().padStart(2, '0'); // 월은 0부터 시작하므로 1을 더하고 2자리로 패딩
+		  var day = date.getDate().toString().padStart(2, '0'); // 일자를 2자리로 패딩
+
+		  // 원하는 형식으로 조합해서 반환
+		  var formattedDate = year + '/' + month + '/' + day;
+		  return formattedDate;
+		}
+   
    
    clickBtn.on("click", "button", function(){
       var type = $(this).data("type");
@@ -250,10 +290,25 @@ $(function(){
       
       console.log("배열에담긴 데이터 최종확인",checkData);
       
-      if(checkData.length !== 0){
          
          if(type === "commit"){
             
+        	 if(checkData.length == 0){
+        		 Swal.fire({
+                     title: "ERROR",
+                     text: "체크된 데이터가 존재하지 않습니다!",
+                     icon: "success",
+                     showCancelButton: true,
+                     confirmButtonColor: '#3085d6',
+                     cancelButtonColor: '#d33',
+                     confirmButtonText: "확인",
+                     cancelButtonText: "취소",
+                     // 확인 버튼 시 가맹점 주문 승인처리
+                     preConfirm: function() {}
+                 });
+        		 return false;
+        	 }
+        	 
         	 checkData.forEach(function(item) {
                  item.frcsId = $("#frcsId").val();
              });
@@ -307,6 +362,43 @@ $(function(){
             
 //             let data = {"checkData":checkData};
             
+            if(checkData.length == 0){
+       		 Swal.fire({
+                    title: "ERROR",
+                    text: "체크된 데이터가 존재하지 않습니다!",
+                    icon: "success",
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: "확인",
+                    cancelButtonText: "취소",
+                    // 확인 버튼 시 가맹점 주문 승인처리
+                    preConfirm: function() {}
+                });
+       		 return false;
+       	 }
+            
+            checkData.forEach(function(item) {
+                item.frcsId = $("#frcsId").val();
+            });
+            
+            console.log("반려클릭했을시 컨트롤러로 넘어가기전 확인 -> ", checkData);
+            
+            var frcsorderNo = "";
+            for(var a = 0; a < checkData.length; a++){
+            	frcsorderNo += checkData[a].frcsorderNo;
+            	if(checkData.length > 1){
+            		if(checkData.length == a){
+            			break;
+            		}
+            		frcsorderNo += ",";
+            	}
+            }
+            var data = {
+            	frcsId : checkData[0].frcsId,
+            	frcsorderNo : frcsorderNo
+            };
+            
             $.ajax({
                     type: "POST",
                     url : "/head/cancleModal.do",
@@ -314,7 +406,8 @@ $(function(){
                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");   //key value로 보낸다.
                 },
                 contentType : "application/json; charset=utf-8",
-                    data : JSON.stringify(checkData),
+//                     data : JSON.stringify(checkData),
+                    data : JSON.stringify(data),
                 success: function (res) {
                     console.log(res);
                    
@@ -389,6 +482,7 @@ $(function(){
                        
                        
                     });
+                    $("#modal").modal("show");
                 }
                  });
             
@@ -397,8 +491,6 @@ $(function(){
             
          }
          
-      }
-      
       console.log(type);
    });
    
@@ -428,16 +520,19 @@ $(function(){
       if(value == "all"){
          if($(this).is(":checked")){
             totalPrice = 0;
+            checkData = [];
             chk.each(function() {
                var clickCheckbox = $(this);
                   var statusCheck = $(this).closest('tr').find('td:eq(6)').text().trim();
                   if (statusCheck == "대기") {
+	            	checkData.push({"frcsorderNo" : clickCheckbox.val()}); // 배열에 발주번호 추가
                      priceText = $(this).closest("tr").find('td:eq(5)').text().trim().replace(/[^0-9.-]+/g, '');
                      price = parseInt(priceText, 10);
                      $(this).prop("checked", selectAll.prop("checked"));
                      
                      var className = "."+$(this).val();
                      $(className).remove();
+                     $(".all").remove();
                      
                      $.ajax({
                      type: "POST", 
@@ -465,9 +560,9 @@ $(function(){
                               html += "   <td style='text-align:center;'>"+ storeOrderHistoryVO.frcsorderNo +"</td>";
                               html += "   <td style='text-align:center;'>"+ storeOrderHistoryVO.vdprodCd +"</td>";
                               html += "   <td style='text-align:center;'>"+ storeOrderHistoryVO.vdprodName +"</td>";
-                              html += "   <td style='text-align:center;'>"+ storeOrderHistoryVO.hdforwardPrice +"</td>";
-                              html += "   <td style='text-align:center;'>"+ storeOrderHistoryVO.frcsorderQy +"</td>";
-                              html += "   <td style='text-align:center;'>"+ storeOrderHistoryVO.totalPrice +"</td>";
+                              html += "   <td style='text-align:center;'>"+ formatWon(storeOrderHistoryVO.hdforwardPrice) +"</td>";
+                              html += "   <td style='text-align:center;'>"+ typeNumber(storeOrderHistoryVO.frcsorderQy) +"</td>";
+                              html += "   <td style='text-align:center;'>"+ formatWon(storeOrderHistoryVO.totalPrice) +"</td>";
                               html += "</tr>";
                            });
                            clickCheckbox.closest('tr').after(html);
@@ -497,6 +592,7 @@ $(function(){
             priceText = "";
                price = 0;
             totalPrice = 0;
+            checkData = [];
          }
       }else{
          priceText = $(this).closest("tr").find('td:eq(5)').text().trim().replace(/[^0-9.-]+/g, '');
@@ -546,9 +642,9 @@ $(function(){
                         html += "   <td style='text-align:center;'>"+ storeOrderHistoryVO.frcsorderNo +"</td>";
                         html += "   <td style='text-align:center;'>"+ storeOrderHistoryVO.vdprodCd +"</td>";
                         html += "   <td style='text-align:center;'>"+ storeOrderHistoryVO.vdprodName +"</td>";
-                        html += "   <td style='text-align:center;'>"+ storeOrderHistoryVO.hdforwardPrice +"</td>";
-                        html += "   <td style='text-align:center;'>"+ storeOrderHistoryVO.frcsorderQy +"</td>";
-                        html += "   <td style='text-align:center;'>"+ storeOrderHistoryVO.totalPrice +"</td>";
+                        html += "   <td style='text-align:center;'>"+ formatWon(storeOrderHistoryVO.hdforwardPrice) +"</td>";
+                        html += "   <td style='text-align:center;'>"+ typeNumber(storeOrderHistoryVO.frcsorderQy) +"</td>";
+                        html += "   <td style='text-align:center;'>"+ formatWon(storeOrderHistoryVO.totalPrice) +"</td>";
                         html += "</tr>";
                      });
                      clickCheckbox.closest('tr').after(html);

@@ -49,7 +49,9 @@ public class MainHomeController {
 	 * @return
 	 */
 	@RequestMapping(value = "/store/find.do", method = RequestMethod.GET)
-	public String mapForm(Model model) {
+	public String mapForm(String frcsName, String frcsreview, Model model) {
+		model.addAttribute("resfrcsName", frcsName);
+		model.addAttribute("resfrcsReview", frcsreview);
 		return "mainhome/store/home3";
 	}
 	

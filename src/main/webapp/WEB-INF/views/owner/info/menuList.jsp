@@ -66,8 +66,8 @@
 					<c:set value="${list }" var="frcsMenuList"/>
 					<c:forEach items="${frcsMenuList}" var="frcsMenu">
 						<c:if test="${frcsMenu.menuCg eq '마른안주' }">
-							<div class="col-md-6 col-xxl-2">
-								<div class="card">
+							<div class="col-md-6 col-xxl-2 ">
+								<div class="card" style="height:400px">
 									<div class="card-body">
 										
 										<div class="float-end mb-1">
@@ -76,10 +76,9 @@
 										</div>
 		
 										<div class="text-center">
-											<img src="${pageContext.request.contextPath }/resources/upload/img/${frcsMenu.attachOrgname }" class="img-fluid rounded">
+											<img src="${pageContext.request.contextPath}/resources/upload/img/${frcsMenu.attachOrgname }" class="img-fluid rounded">
 											<h4 class="mt-3 my-1">
 												<a href="#" class="text-reset">${frcsMenu.menuName } 
-	<!-- 													<span class="badge bg-danger">New</span> -->
 												</a>
 											</h4>
 											<p class="mb-0 text-muted">${frcsMenu.menuPrice }</p>
@@ -188,7 +187,7 @@
 										</div>
 		
 										<div class="text-center">
-											<img src="${pageContext.request.contextPath }/resources/upload/img/${frcsMenu.attachOrgname }" class="img-fluid rounded">
+											<img src="${pageContext.request.contextPath }/resources/upload/img/${frcsMenu.attachOrgname}" class="img-fluid rounded">
 											<h4 class="mt-3 my-1">
 												<a href="#" class="text-reset">${frcsMenu.menuName }</a>
 											</h4>
@@ -219,53 +218,52 @@ $(function(){
 	var setBtn = $("#setBtn");
 	
 	setBtn.on("click", function() {
-		location.href='/owner/menu.do';
+		
+		$.ajax({
+            type: "POST",
+            url: "/owner/menuSet.do",
+            beforeSend: function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+			},
+            contentType: "application/json;charset=UTF-8",
+            success: function(response) {
+                
+                Swal.fire({
+				      title: '알림창',
+				      icon: 'success',
+				      text: '메뉴 세팅이 완료되었습니다!',
+				    }).then((result) => {
+			            if (result.isConfirmed) {
+			            	location.reload();
+			                    }
+			          });
+            },
+            error: function(error) {
+            	
+            	Swal.fire({
+					title: '알림창',
+				    icon: 'error',
+				    text: '다시 시도해주세요!'
+				}).then((result) => {
+		            if (result.isConfirmed) {
+		            	location.reload();
+		                    }
+		          });
+            }
+        });
 	});
 	
-// 	document.getElementById('switch').onclick = function(){
-// 		console.log("토글누름");
-// 	};
-	
-// 	toggleSwitch+menuCd(){
-// 		console.log("토글누름");
-// 	};
-	
-// 	udtBtn.on("click", function() {
-// 		var isChecked = $('#switch_' + ${frcsMenu.menuCd }).prop('checked'); // 스위치의 현재 상태 확인
-// 	    var valueToSend = isChecked ? 'Y' : 'N'; // 'Y' 또는 'N' 값을 결정
-	
-// 	    // AJAX 요청을 보내서 서버에 'Y' 또는 'N' 값을 전송
-// 	    $.ajax({
-// 	        type: 'POST', // 또는 'GET' 등 필요한 HTTP 메소드 선택
-// 	        url: "/owner/menuUpdate.do", // 서버 요청을 처리할 URL 입력
-// 	        data: {
-// 	            menuCd: menuCd,
-// 	            saleYn: valueToSend
-// 	        },
-// 	        success: function(response) {
-// 	            console.log('스위치 상태가 성공적으로 변경되었습니다.');
-// 	        },
-// 	        error: function(error) {
-// 	            console.error('스위치 상태 변경 중 오류가 발생하였습니다.');
-// 	        }
-// 	    });
-// 	});
-	
 	udtBtn.on("click", function() {
-		console.log("버튼누름");
-//         var menuCd = $("input[type=checkbox]").prop("id");
-// 		console.log(menuCd);
 // 	    // 모든 스위치의 상태를 서버에 저장
 		var menuData = [];
 	    $(".toggle").each(function() {
-// 	        var isChecked = $(this).prop("checked") ? "Y" : "N";
 	    	menuData.push({
 	    		menuCd: $(this).data('id'),
 	    		saleYn: $(this).prop("checked") ? "Y" : "N"
 	    	});
 	    });
 	    
-	    console.log("Data : " + JSON.stringify(menuData));
+// 	    console.log("Data : " + JSON.stringify(menuData));
 	
         // AJAX 요청을 보내서 서버에 'Y' 또는 'N' 값을 전송하여 저장
         $.ajax({
@@ -277,10 +275,26 @@ $(function(){
             data: JSON.stringify(menuData),
             contentType: "application/json;charset=UTF-8",
             success: function(response) {
-                console.log("메뉴 상태가 성공적으로 저장되었습니다.");
+                Swal.fire({
+				      title: '알림창',
+				      icon: 'success',
+				      text: '메뉴 상태가 성공적으로 저장되었습니다!',
+				    }).then((result) => {
+			            if (result.isConfirmed) {
+			            	location.reload();
+			                    }
+			          });
             },
             error: function(error) {
-                console.error("메뉴 상태 저장 중 오류가 발생하였습니다.");
+                Swal.fire({
+					title: '알림창',
+				    icon: 'error',
+				    text: '메뉴 상태 저장 중 오류가 발생하였습니다.'
+				}).then((result) => {
+		            if (result.isConfirmed) {
+		            	location.reload();
+		                    }
+		          });
             }
         });
 	});

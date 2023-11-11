@@ -32,6 +32,8 @@ public class StoreOrderHistoryVO {
 	private String hdrtrcvPrice;		// 최종입고단가
 	private String vdCode;				// 거래처코드
 	
+	private int rnum;
+	
 	private List<CancleModalVO> dataList;
 	
 	private int totalPrice;	// 총액

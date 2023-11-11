@@ -18,5 +18,8 @@ public class FrcsOrderVO {
 	private String frcsId;
 	private String frcsOrderName;
 
+	private Date thisMonth;	// 오늘 기준 년월
+	private String yearMonth;
+	
 	public List<FrcsOrderDetailVO> orderDetailList;
 }

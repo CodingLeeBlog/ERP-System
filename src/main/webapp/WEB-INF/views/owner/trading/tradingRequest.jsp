@@ -73,7 +73,7 @@
 		                        
 		                        <div class="col-xl-4">
 		                            <div class="text-xl-end mt-xl-0 mt-2">
-		                                <button type="button" class="btn btn-light mb-2">엑셀 다운로드</button>
+<!-- 		                                <button type="button" class="btn btn-light mb-2">엑셀 다운로드</button> -->
 		                            </div>
 		                        </div><!-- end col-->
 		                    </div>
@@ -131,10 +131,10 @@ $(function(){
 	var map = new kakao.maps.Map(mapContainer, mapOption); 
 	
 	// 내 가맹점 마커 표시
-	addMarker(new kakao.maps.LatLng(myXMap, myYMap));
+	addMarker(new kakao.maps.LatLng(myXMap, myYMap),"내 가맹점");
 
-	function addMarker(position) {
-	    var imageSrc = "${pageContext.request.contextPath }/resources/assets/img/marker.png";
+	function addMarker(position, frcsName) {
+	    var imageSrc = "${pageContext.request.contextPath}/resources/assets/img/marker.png";
 	    var imageSize = new kakao.maps.Size(58, 71); // 마커 이미지의 크기
 	    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 	    var marker = new kakao.maps.Marker({
@@ -142,9 +142,22 @@ $(function(){
 	        image: markerImage
 	    });
 
+	    var content = '<div class="customoverlay">' +
+	     '<span class="fctitle" style="font-weight:bold; font-size: 12px; background-color: azure;color: black;">' + frcsName + '</span></div>';
+
 	    marker.setMap(map); // 지도 위에 마커를 표출합니다
-	    markers.push(marker);	// 배열에 생성된 마커를 추가
-	    return marker;
+	    markers.push(marker); // 배열에 생성된 마커를 추가
+
+	    // 커스텀 오버레이가 표시될 위치입니다
+	    var overlayPosition = new kakao.maps.LatLng(position.getLat(), position.getLng());
+
+	    // 커스텀 오버레이를 생성하고 설정합니다
+	    var customOverlay = new kakao.maps.CustomOverlay({
+	        map: map,
+	        position: overlayPosition,
+	        content: content,
+	        yAnchor: 1
+	    });
 	}
 			
 	// 중심점에서 반경 10km 이내의 원형 영역 그리기
@@ -210,6 +223,7 @@ $(function(){
 				 	var otherXMap = otherFrcsInfo[j].otherXMap;
 				    var otherYMap = otherFrcsInfo[j].otherYMap;
 				    var otherFrcsId = otherFrcsInfo[j].otherFrcsId;
+				    var otherFrcsName = otherFrcsInfo[j].otherFrcsName;
 					
 				    // 거리 계산
 		            var distance = getDistance(myXMap, myYMap, otherXMap, otherYMap);
@@ -222,7 +236,7 @@ $(function(){
 					console.log(nearList);
 
 					// 모든 가맹점 마커 찍기
-					addMarker(new kakao.maps.LatLng(otherXMap, otherYMap));
+					addMarker(new kakao.maps.LatLng(otherXMap, otherYMap),otherFrcsName);
 				}
 			}
 		});

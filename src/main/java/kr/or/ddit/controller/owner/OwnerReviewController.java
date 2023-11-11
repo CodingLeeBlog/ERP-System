@@ -21,8 +21,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.service.owner.IFrcsIdService;
+import kr.or.ddit.service.owner.IFrcsMyPageService;
 import kr.or.ddit.service.owner.IFrcsReviewService;
 import kr.or.ddit.vo.AlarmVO;
+import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.FrcsInquiryVO;
 import kr.or.ddit.vo.owner.FrcsMenuVO;
 import kr.or.ddit.vo.owner.FrcsReviewVO;
@@ -40,6 +42,9 @@ public class OwnerReviewController {
 	@Inject
 	private IFrcsIdService idService;
 	
+	@Inject
+	private IFrcsMyPageService myPageService;
+	
 	@PreAuthorize("hasRole('ROLE_OWNER')")
 	@RequestMapping(value="/review.do", method = RequestMethod.GET )
 	public String ownerReviewList(
@@ -47,6 +52,11 @@ public class OwnerReviewController {
 			@RequestParam(required = false, defaultValue = "content") String searchType,
 			@RequestParam(required = false) String searchWord,
 			Model model) {
+		
+		//헤더 오른쪽 관리자 영역
+		String frcsId = idService.getFrcsId();
+		FranchiseVO frcsHead = myPageService.headerDetail(frcsId);
+		model.addAttribute("frcsHead", frcsHead);
 		
 		OwnerPaginationInfoVO<FrcsReviewVO> pagingVO = new OwnerPaginationInfoVO<FrcsReviewVO>();
 		
@@ -57,8 +67,6 @@ public class OwnerReviewController {
 			model.addAttribute("searchType", searchType);
 			model.addAttribute("searchWord", searchWord);
 		}
-		
-		String frcsId = idService.getFrcsId();
 		
 		pagingVO.setFrcsId(frcsId);
 		pagingVO.setCurrentPage(currentPage); // startRow, endRow, startPage, endPage가 결정
@@ -175,6 +183,13 @@ public class OwnerReviewController {
 		ServiceResult result = service.deleteclearAllAlarm(memId);
 		    
 		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
+	}
+	
+	// 리뷰차트 페이지
+	@PreAuthorize("hasRole('ROLE_OWNER')")
+	@RequestMapping(value="/reviewChart.do", method = RequestMethod.GET )
+	public String ownerReviewChart() {
+		return "owner/review/reviewChart";
 	}
 		
 	

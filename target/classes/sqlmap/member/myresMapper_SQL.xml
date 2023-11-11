@@ -6,12 +6,12 @@
 
 <select id="myResList" parameterType="string" resultType="resVO">
 	select
-		resv_no, a.mem_id, resv_mcnt, resv_time, resv_date, resv_yn, resv_state, resv_acc_date, resv_note, seat_cd, resv_price, b.frcs_id, b.mem_id, c.frcs_name
+	    resv_no, a.mem_id, resv_mcnt, resv_time, resv_date, resv_yn, resv_state, resv_acc_date, resv_note, seat_cd, resv_price, review_yn, b.frcs_id, b.mem_id, c.frcs_name
 	from reservation a 
-    	left join (select distinct frcs_id, mem_id from mem_menu ) b 
-    		on a.mem_id = b.mem_id
-    	left join franchise c
-    		on b.frcs_id = c.frcs_id
+	    left join (
+	        select max(frcs_id) as frcs_id, mem_id from mem_menu group by mem_id
+	    ) b on a.mem_id = b.mem_id
+	    left join franchise c on b.frcs_id = c.frcs_id
 	where a.mem_id = #{memId}
 </select>
 
@@ -23,4 +23,23 @@
 	where mem_id = #{memId}
 	and resv_no = #{resvNo}
 </update>
+
+<update id="myResReviewUpdate" parameterType="resVO">
+	update reservation
+	set
+		review_yn = #{reviewYn}
+</update>
+
+<delete id="myResDelete">
+	delete from reservation
+	where mem_id = #{memId}
+	and resv_no = #{resvNo}
+</delete>
+
+<delete id="myResMenuDelete">
+	delete from mem_menu
+	where mem_id = #{memId}
+	and resv_no = #{resvNo}
+</delete>
+
 </mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.owner.FrcsRestDayMapper">
+
+	<insert id="insert" parameterType="frcsRestDayVO">
+		INSERT INTO FRCS_REST_DAY(RSTDE_NO, FRCS_ID, RSTDE_STYMD, RSTDE_ENYMD, RSTDE_TTL, RSTDE_COLOR)
+		VALUES(seq_frcsrestday.nextval, #{frcsId}, #{rstdeStymd}, #{rstdeEnymd}, #{rstdeTtl}, #{rstdeColor})
+	</insert>
+	
+	<select id="findAll" resultType="frcsRestDayVO">
+		SELECT RSTDE_NO, FRCS_ID, RSTDE_STYMD, RSTDE_ENYMD, RSTDE_TTL, RSTDE_COLOR
+		FROM 
+		    FRCS_REST_DAY
+		WHERE
+		    FRCS_ID = #{frcsId}
+	</select>
+
+
+	<delete id="delete" parameterType="String">
+		DELETE FROM FRCS_REST_DAY WHERE RSTDE_STYMD = #{data}
+	</delete>
+	
+
+	<update id="update" parameterType="frcsRestDayVO">
+		UPDATE FRCS_REST_DAY
+		SET RSTDE_STYMD = #{rstdeStymd},
+		RSTDE_ENYMD = #{rstdeEnymd}
+		WHERE RSTDE_STYMD = #{oldRstdeStymd}
+	</update>
+
+
+</mapper>

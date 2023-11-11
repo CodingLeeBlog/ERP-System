@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.or.ddit.vo.AttachVO;
@@ -14,12 +15,15 @@ import lombok.Data;
 public class InspectionVO {
 
 	private String frcsId;
+	private String ipCode;
 	private int ipStts;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date ipDate;
 	private String tableName;
 	private String stEduFnshYn;
 	private String frcsName;
 	private int attachNo;
+	private int rnum;
 	
 	private Integer[] delBoardNo;
 	private MultipartFile[] boFile;

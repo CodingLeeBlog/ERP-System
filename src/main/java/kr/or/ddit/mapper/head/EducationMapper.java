@@ -20,4 +20,6 @@ public interface EducationMapper {
 
 	public EducationVO educationDetail(EducationVO educationVO);
 
+	public void educationUpdate(EducationVO educationVO);
+
 }

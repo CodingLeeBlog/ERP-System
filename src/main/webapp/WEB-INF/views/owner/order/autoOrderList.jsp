@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri= "http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri= "http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <input type="hidden" id="frcsId" value="${frcsId }">
 <div class="content-page">
@@ -64,9 +65,6 @@
 		                            <thead class="table-light">
 		                                <tr>
 		                                    <th style="width: 20px;">
-<!-- 		                                        <div> -->
-<%-- 		                                        	<input type="hidden" id="frcsId" value="${pagingVO.dataList[0].frcsId }" > --%>
-<!-- 		                                        </div> -->
 		                                    </th>
 		                                    <th style="text-align:center; width:100px;">제품 코드</th>
 		                                    <th style="text-align:center; width:200px;">제품명</th>
@@ -104,10 +102,10 @@
 					                                        ${autoOrder.atorderQy }
 					                                    </td>
 					                                    <td style="text-align:center" class="hdforwardPrice">
-					                                        ${autoOrder.hdforwardPrice }
+					                                        <fmt:formatNumber value="${autoOrder.hdforwardPrice }" type="number"/>
 					                                    </td>
 					                                    <td style="text-align:center" class="amount">
-					                                    	${autoOrder.hdforwardPrice*autoOrder.atorderQy  }
+					                                        <fmt:formatNumber value="${autoOrder.hdforwardPrice*autoOrder.atorderQy }" type="number"/>
 					                                    </td>
 					                                    <td style="text-align:center">
 															<button type="button" class="btn btn-info updateBtn" data-autono=${autoOrder.autoorderNo }> 수정</button>
@@ -173,9 +171,9 @@
 							                       <tr>
 								                       <th style="width: 20px;">
 				                                       </th>
-							                           <th>제품 코드</th>
-							                           <th>제품명</th>
-							                           <th>가격</th>
+							                           <th style="text-align:center;">제품 코드</th>
+							                           <th style="text-align:center;">제품명</th>
+							                           <th style="text-align:center;">가격</th>
 							                       </tr>
 							                   </thead>
 							                   <tbody id="modalBody">
@@ -186,9 +184,9 @@
 														            <input type="checkbox" class="form-check-input checkBox">
 														       </div>
 													       </td>
-							                               <td class="vdprodCd">${invent.vdprodCd}</td>
-							                               <td class="vdprodName">${invent.vdprodName}</td>
-							                               <td class="hdforwardPrice">${invent.hdforwardPrice}</td>
+							                               <td style="text-align:center;" class="vdprodCd">${invent.vdprodCd}</td>
+							                               <td style="text-align:center;" class="vdprodName">${invent.vdprodName}</td>
+							                               <td style="text-align:center;" class="hdforwardPrice"><fmt:formatNumber value="${invent.hdforwardPrice }" type="number"/></td>
 							                           </tr>
 							                       </c:forEach>
 							                    </tbody>								            
@@ -404,16 +402,17 @@ $(function(){
     var atorderQyInput = $(this);
     var amount = atorderQyInput.closest('tr').find(".amount");
     var hdforwardPriceTd = atorderQyInput.closest('tr').find(".hdforwardPrice").text();
-    var hdforwardPrice = parseInt(hdforwardPriceTd);
+//     var hdforwardPrice = parseInt(hdforwardPriceTd);
     var atorderQyVal = parseInt(atorderQyInput.val());
 
     if (isNaN(atorderQyVal)) {
     	atorderQyVal = 0;
         atorderQyInput.val(0);
     }
-   	
-    var total = hdforwardPrice * atorderQyVal;
-    amount.text(total);
+    var tempInt = parseInt(hdforwardPriceTd.replace(/,/g, ''))*atorderQyVal;
+	var temp = tempInt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+//     var total = hdforwardPrice * atorderQyVal;
+    amount.text(temp);
 	});
  
 	 
@@ -427,7 +426,9 @@ $(function(){
  		var inputEle = $(injectEle).find(".atorderQyInput").val();
  		atorderQyVal = parseInt(inputEle) + 1;
  		$(injectEle).find(".atorderQyInput").val(atorderQyVal);
- 		amount.text(parseInt(hdforwardPrice)*atorderQyVal);
+ 		var tempInt = parseInt(hdforwardPrice.replace(/,/g, ''))*atorderQyVal;
+ 		var temp = tempInt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+ 		amount.text(temp);
  	});
 
  	 // 자동발주 기준수량 - 버튼 눌렀을 때 숫자 감소
@@ -442,7 +443,9 @@ $(function(){
  		if(currentValue > 0){
  			var atorderQyVal = currentValue - 1;
 	 		$(injectEle).find(".atorderQyInput").val(atorderQyVal);
-	 		amount.text(parseInt(hdforwardPrice)*atorderQyVal);
+	 		var tempInt = parseInt(hdforwardPrice.replace(/,/g, ''))*atorderQyVal;
+	 		var temp = tempInt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	 		amount.text(temp);
  		}
  	});
 	 

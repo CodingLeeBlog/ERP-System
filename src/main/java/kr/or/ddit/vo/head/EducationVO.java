@@ -21,6 +21,7 @@ public class EducationVO {
 	private String eduFnshyn;
 	private String eduRemark;
 	private String tableName;
+	private int rnum;
 	
 	private Integer[] delBoardNo;
 	private MultipartFile[] boFile;

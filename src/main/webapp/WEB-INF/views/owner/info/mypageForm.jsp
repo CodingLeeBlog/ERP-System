@@ -44,20 +44,19 @@
 	                                    </div>
 	
 	                                    <!-- 비밀번호 확인 입력란은 수정했을때만 보여주기?! 어떻게 할지 생각해보고 추가하기 -->
-	                                    <!-- 비밀번호 조인해서 넣을것 -->
 	                                    <div class="mb-3">
-	                                        <label for="memPw" class="form-label">비밀번호</label>
-                                            <input type="password" id="memPw" class="form-control" value="${frcs.memPw }">
+	                                        <label for="memPw" class="form-label text-primary">비밀번호 *</label>
+<!-- 	                                        <div class="input-group input-group-merge"> -->
+										        <input type="text" id="memPw" class="form-control" value="${frcs.memPw }">
+<!-- 										        <div class="input-group-text" data-password="false"> -->
+<!-- 										            <span class="password-eye"></span> -->
+<!-- 										        </div> -->
+<!-- 										    </div> -->
 	                                    </div>
 	                                    
-<!-- 	                                    <div class="mb-3"> -->
-<!-- 	                                        <label for="memPw" class="form-label">새 비밀번호</label> -->
-<%--                                             <input type="password" id="memPw" name="memPw" class="form-control" value="${frcs.memPw }"> --%>
-<!-- 	                                    </div> -->
-	
 	                                    <div class="mb-3">
 	                                        <label for="frcsStdate" class="form-label">가맹등록일자</label>
-	                                        <input type="text" id="frcsStdate" class="form-control" readonly="" value="<fmt:formatDate value="${frcs.frcsStdate }" pattern="yyyy-MM-dd"/>">
+	                                        <input type="text" id="frcsStdate" class="form-control" readonly="" value="<fmt:formatDate value="${frcs.frcsStdate }" pattern="yyyy-MM-dd"/>" >
 	                                    </div>
 	
 	                                    <div class="mb-3">
@@ -67,7 +66,7 @@
 	
 	                                    <div class="mb-3">
 	                                        <label for="frcsCdate" class="form-label">계약체결일자</label>
-	                                        <input type="text" id="frcsCdate"  class="form-control" readonly="" value="<fmt:formatDate value="${frcs.frcsCdate }" pattern="yyyy-MM-dd"/>">
+	                                        <input type="text" id="frcsCdate"  class="form-control" readonly="" value="<fmt:formatDate value="${frcs.frcsCdate }" pattern="yyyy-MM-dd"/>" >
 	                                    </div>
 	
 	                                    <div class="mb-3">
@@ -79,17 +78,17 @@
 	                            	<div class="col-lg-6">
 	                                    <div class="mb-3">
 	                                        <label for="frcsId" class="form-label">가맹점코드</label>
-	                                        <input type="text" id="frcsId" name="frcsId" class="form-control" readonly="" value="${frcs.frcsId }">
+	                                        <input type="text" id="frcsId" name="frcsId" class="form-control" readonly="" value="${frcs.frcsId }" >
 	                                    </div>
 	
 										<div class="mb-3">
-	                                        <label for="frcsTel" class="form-label">전화번호</label>
+	                                        <label for="frcsTel" class="form-label text-primary">전화번호 *</label>
 	                                        <input type="text" id="frcsTel" name="frcsTel" class="form-control" value="${frcs.frcsTel }">
 	                                    </div>
 	
 	                                    <!-- 카카오지도 API넣기 -->
 	                                    <div class="mb-3">
-	                                        <label for="simpleinput" class="form-label">주소</label>
+	                                        <label for="simpleinput" class="form-label text-primary">주소 *</label>
 	                                        <div class="input-group">
 			                                    <input type="text" id="sample6_postcode" name="frcsPost" class="form-control" value="${frcs.frcsPost }">
 												<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기" class="btn btn-primary"><br>

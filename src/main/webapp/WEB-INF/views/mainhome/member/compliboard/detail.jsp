@@ -72,33 +72,68 @@
 				<div class="mb-4" style="color: rgb(0, 0, 0); border-bottom: 3px solid;"></div>
 					<div class="container-fluid ps-0 pe-0" style="color: rgb(0, 0, 0);">
 						<div class="row text-center">
-								<input type="hidden" name="tableNo" id="tableNo" value="${board.tableNo }"/>
-							<table style="height: 20px;">
-							  <tbody>
-								   <tr>
-								     <td class="align-baseline text-center mx-auto fs-5 text " style="width: 1200px;" id="boardTitle">${board.boardTitle }</td>
-								     <td class="align-text-top text-end pe-5 fs-5 text"><fmt:formatDate value="${board.boardRegdate }" pattern="yyyy. MM. dd"/></td>
-								   </tr>
-								 </tbody>
-							</table>
-						</div>
-					<div class="mt-4 mb-4" style="color: rgb(0, 0, 0); border-bottom: 1px solid;"></div>
-                 		 <div class="text-center" id="boardContent">${board.boardContent }</div>
-                 	<sec:csrfInput/>
-                 		 <div class="mb-4" style="color: rgb(0, 0, 0); border-bottom: 3px solid;"></div>
-                 	 <div class="d-flex justify-content-end">
-	                     <button type="button" id="btnList" class="btn btn-dark btn float-right btn-lg me-1">목록</button>
-				<sec:authorize access="isAuthenticated()">
-	         	   <sec:authentication property="principal.member" var="member"/>
-					</sec:authorize>
-					<c:choose>
-					    <c:when test="${member.memId eq board.memId}">
-					        <button type="button" id="btnModify" class="btn btn-dark btn float-right btn-lg me-1">수정</button>
-	                    	 <button type="button" id="btnDelete" class="btn btn-dark btn float-right btn-lg">삭제</button>
-					    </c:when>
-					    <c:otherwise>
-					    </c:otherwise>
-					</c:choose>
+								<c:forEach items="${proposalList }" var="proposal">
+	                       		<div class="modal fade" id="${proposal.tableNo }" tabindex="-1"
+									role="dialog" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h4 class="modal-title" id="myCenterModalLabel">상세보기</h4>
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+											</div>
+											<div class="modal-body" id="modal">
+													<div class="m-3">
+														<p>제목 ${proposal.boardTitle }</p>
+														<p>작성자 ${proposal.memId }</p>
+														<p>작성일 ${proposal.boardRegdate }</p>
+														<p>내용 ${proposal.boardContent }</p>
+													</div>
+													
+													<c:if test="${proposal.ansState eq 'N' }">
+			                                          	<form class="ps-3 pe-3" action="/head/proposalInsert.do" method="post" id="ansForm">
+															<div class="mb-3">
+																<label class="form-label">답변</label>
+																<textarea class="form-control" cols="10" rows="3" id="ansCn1" name="ansCn">${proposal.ansContent }</textarea>
+																<input type="hidden" id="tableNo" name="tableNo" value="${proposal.tableNo }">
+																<input type="hidden" id="memId" name="memId" value="${proposal.memId }">
+																<input type="hidden" id="ansId" name="ansId" value="${proposal.ansId }">
+															</div>
+				                  							<sec:csrfInput/>
+			                                         	</form>
+		                                         	</c:if>
+		                                         	
+		                                         	<c:if test="${proposal.ansState eq 'Y' }">
+		                                         		<form class="ps-3 pe-3" action="/head/proposalUpdate.do" method="post" id="ansUdtForm">
+			                                         		<div class="m-3">
+																<label class="form-label">답변</label>
+																<p>${proposal.ansContent }</p>
+																<label class="form-label">수정</label>
+																<textarea class="form-control" cols="10" rows="3" id="ansCn2" name="ansCn">${proposal.ansContent }</textarea>
+																<input type="hidden" id="tableNo" name="tableNo" value="${proposal.tableNo }">
+															</div>
+														<sec:csrfInput/>
+														</form>
+		                                         	</c:if>
+		                                         	
+												</div>
+												
+												<div class="modal-footer">
+													<button type="button" class="btn btn-light"	data-bs-dismiss="modal">닫기</button>
+													<c:if test="${proposal.ansState eq 'N' }">
+														<button type="button" class="btn btn-primary" id="subBtn">등록</button>
+													</c:if>
+													<c:if test="${proposal.ansState eq 'Y' }">
+														<button type="button" class="btn btn-light"	id="udtBtn">수정</button>
+													</c:if>
+												</div>
+												
+											</div>
+											<!-- /.modal-content -->
+										</div>
+										<!-- /.modal-dialog -->
+									</div>
+									<!-- /.modal -->
+								</c:forEach>
 	                
                  	 </div>
                   <br><br><br>

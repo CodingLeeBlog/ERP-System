@@ -1,8 +1,10 @@
 package kr.or.ddit.service.owner.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,7 @@ import kr.or.ddit.mapper.member.MyCouponMapper;
 import kr.or.ddit.mapper.owner.FrcsMenuMapper;
 import kr.or.ddit.service.owner.IFrcsMenuService;
 import kr.or.ddit.vo.AlarmVO;
-import kr.or.ddit.vo.AttachVO;
+import kr.or.ddit.vo.head.MenuVO;
 import kr.or.ddit.vo.member.MenuListVO;
 import kr.or.ddit.vo.member.ResVO;
 import kr.or.ddit.vo.owner.FrcsMenuVO;
@@ -36,10 +38,100 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 	public List<FrcsMenuVO> resfrcsMenuList(String frcsId) {
 		return frcsmenuMapper.resfrcsMenuList(frcsId);
 	}
+	
+	/**
+	 * 마른안주 목록 조회 서비스 로직
+	 * 
+	 * @param frcsId 가맹점코드
+	 * @return List<FrcsMenuVO> 타입의 객체 리턴
+	 */
+	@Override
+	public List<FrcsMenuVO> dryfrcsMenuList(String frcsId) {
+		
+		List<FrcsMenuVO> resMenuList = frcsmenuMapper.resfrcsMenuList(frcsId);
+		
+		List<FrcsMenuVO> dryMenu = new ArrayList<FrcsMenuVO>();
+		
+		for(int i = 0; i < resMenuList.size(); i++) {
+			
+			if(resMenuList.get(i).getMenuCg().equals("마른안주")) {
+				dryMenu.add(resMenuList.get(i));
+			}
+		}
+		return dryMenu;
+	}
+	
+	/**
+	 * 튀김안주 목록 조회 서비스 로직
+	 * 
+	 * @param frcsId 가맹점코드
+	 * @return List<FrcsMenuVO> 타입의 객체 리턴
+	 */
+	@Override
+	public List<FrcsMenuVO> friedfrcsMenuList(String frcsId) {
+		
+		List<FrcsMenuVO> resMenuList = frcsmenuMapper.resfrcsMenuList(frcsId);
+		
+		List<FrcsMenuVO> friedMenu = new ArrayList<FrcsMenuVO>();
+		
+		for(int i = 0; i < resMenuList.size(); i++) {
+			
+			if(resMenuList.get(i).getMenuCg().equals("튀김안주")) {
+				friedMenu.add(resMenuList.get(i));
+			}
+		}
+		return friedMenu;
+	}
+	
+	/**
+	 * 식사 목록 조회 서비스 로직
+	 * 
+	 * @param frcsId 가맹점코드
+	 * @return List<FrcsMenuVO> 타입의 객체 리턴
+	 */
+	@Override
+	public List<FrcsMenuVO> mainfrcsMenuList(String frcsId) {
+		
+		List<FrcsMenuVO> resMenuList = frcsmenuMapper.resfrcsMenuList(frcsId);
+		
+		List<FrcsMenuVO> mainMenu = new ArrayList<FrcsMenuVO>();
+		
+		for(int i = 0; i < resMenuList.size(); i++) {
+			
+			if(resMenuList.get(i).getMenuCg().equals("식사안주")) {
+				mainMenu.add(resMenuList.get(i));
+			}
+		}
+		return mainMenu;
+	}
+	
+	/**
+	 * 주류 목록 조회 서비스 로직
+	 * 
+	 * @param frcsId 가맹점코드
+	 * @return List<FrcsMenuVO> 타입의 객체 리턴
+	 */
+	@Override
+	public List<FrcsMenuVO> drinkfrcsMenuList(String frcsId) {
+		
+		List<FrcsMenuVO> resMenuList = frcsmenuMapper.resfrcsMenuList(frcsId);
+		
+		List<FrcsMenuVO> drinkMenu = new ArrayList<FrcsMenuVO>();
+		
+		for(int i = 0; i < resMenuList.size(); i++) {
+			
+			if(resMenuList.get(i).getMenuCg().equals("주류메뉴")) {
+				drinkMenu.add(resMenuList.get(i));
+			}
+		}
+		return drinkMenu;
+	}
 
 	/**
-	 * 매장 페이지 회원 예약 등록 기능
+	 * 매장 페이지 회원 예약 등록  및 쿠폰 사용 서비스 로직
 	 *
+	 * @param resVO 타입의 객체
+	 * @return result
 	 */
 	@Override
 	public ServiceResult resRegister(ResVO resVO, AlarmVO alarmVO) {
@@ -65,6 +157,7 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 			
 			for(int i = 0; i < menuList.size(); i++) {
 				MenuListVO menuListVO = menuList.get(i);
+				menuListVO.setResvNo(resvNo);
 				frcsmenuMapper.menuInsert(menuListVO);
 			}
 			
@@ -88,8 +181,15 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 	}
 
 	@Override
-	public void menuUpdate(FrcsMenuVO menu) {
-		frcsmenuMapper.menuUpdate(menu);
+	public ServiceResult menuUpdate(HttpServletRequest req, FrcsMenuVO menu) {
+		ServiceResult result = null;
+		int status = frcsmenuMapper.menuUpdate(menu);
+		if(status > 0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
 	}
 
 	@Override
@@ -103,12 +203,19 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 	}
 
 	@Override
-	public void frcsMenuDelete(String frcsId) {
-		frcsmenuMapper.frcsMenuDelete(frcsId);
+	public ServiceResult frcsMenuDelete(HttpServletRequest req, String frcsId) {
+		ServiceResult result = null;
+		int status = frcsmenuMapper.frcsMenuDelete(frcsId);
+		if(status > 0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		return result;
 	}
 
 	@Override
-	public ServiceResult frcsMenuInsert(FrcsMenuVO frcsMenuVO) {
+	public ServiceResult frcsMenuInsert(HttpServletRequest req, FrcsMenuVO frcsMenuVO) {
 		ServiceResult result = null;
 		int status = frcsmenuMapper.frcsMenuInsert(frcsMenuVO);
 		if(status > 0) {
@@ -117,6 +224,32 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 			result = ServiceResult.FAILED;
 		}
 		return result;
+	}
+
+	@Override
+	public List<MenuVO> selectHeadMenu() {
+		return frcsmenuMapper.selectHeadMenu();
+	}
+
+	@Override
+	public ServiceResult newInsert(FrcsMenuVO frcs) {
+		
+		ServiceResult result = null;
+		
+		int status = frcsmenuMapper.newInsert(frcs);
+		
+		if(status > 0) {
+			result = ServiceResult.OK;
+		}else {
+			result = ServiceResult.FAILED;
+		}
+		
+		return result;
+	}
+
+	@Override
+	public List<FrcsMenuVO> selectFrcsIdList(String frcsId) {
+		return frcsmenuMapper.selectFrcsIdList(frcsId);
 	}
 
 }

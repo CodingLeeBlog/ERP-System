@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import kr.or.ddit.ServiceResult;
 import kr.or.ddit.service.owner.IFrcsIdService;
+import kr.or.ddit.service.owner.IFrcsMyPageService;
 import kr.or.ddit.service.owner.IFrcsOrderService;
+import kr.or.ddit.vo.owner.FranchiseVO;
 import kr.or.ddit.vo.owner.FrcsAutoOrderVO;
 import kr.or.ddit.vo.owner.FrcsInventoryVO;
 import kr.or.ddit.vo.owner.OwnerPaginationInfoVO;
@@ -33,6 +35,9 @@ public class OwnerAutoOrderController {
 	@Inject
 	private IFrcsIdService commService;
 	
+	@Inject
+	private IFrcsMyPageService myPageService;
+	
 	// 자동발주 리스트
 	@PreAuthorize("hasRole('ROLE_OWNER')")
 	@RequestMapping(value = "/autoOrder.do", method=RequestMethod.GET)
@@ -43,6 +48,10 @@ public class OwnerAutoOrderController {
 			Model model) {
 		
 		String frcsId = commService.getFrcsId();
+		
+		//헤더 오른쪽 관리자 영역
+		FranchiseVO frcsHead = myPageService.headerDetail(frcsId);
+		model.addAttribute("frcsHead", frcsHead);
 		
 		OwnerPaginationInfoVO<FrcsAutoOrderVO> pagingVO = new OwnerPaginationInfoVO<FrcsAutoOrderVO>();
 		
