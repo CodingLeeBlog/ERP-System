@@ -116,39 +116,60 @@ public class ResMemberController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/store/review.do" , method = RequestMethod.POST)
-	public String reviewSuccess(
-			RedirectAttributes ra,
-			AlarmVO alarmVO, ReviewVO reviewVO, ResVO resVO, Model model
+	@RequestMapping(value = "/store/review.do")
+	public ResponseEntity<ServiceResult> reviewSuccess(
+			@RequestBody ReviewVO reviewVO, AlarmVO alarmVO, ResVO resVO, Model model
 			) {
 		
-		String goPage = "";
+		ServiceResult result = memberreviewService.create(reviewVO, resVO, alarmVO);
 		
-		Map<String, String> errors = new HashMap<String, String>();
-		
-		if(StringUtils.isBlank(reviewVO.getReviewContent())) {
-			errors.put("reviewText", "리뷰를 입력해주세요");
-		}
-		if(errors.size() > 0) {
-			model.addAttribute("errors", errors);
-			model.addAttribute("review", reviewVO);
-			goPage = "";
-		}else {
-			ServiceResult result = memberreviewService.create(reviewVO, resVO, alarmVO);
-			if(result.equals(ServiceResult.OK)) {
-				ra.addFlashAttribute("message", "리뷰등록이 완료되였습니다!");
-				goPage = "redirect:/elly/mypage/review.do?memId=" + reviewVO.getMemId();
-			}else {
-				model.addAttribute("bodyText", "register-page");
-				model.addAttribute("message", "서버 에러, 다시 시도해주세요!");
-				model.addAttribute("review", reviewVO);
-				goPage = "";
-			}
-			
-		}
-		
-		return goPage;
+		return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
+	
+	/**
+	 * 비동기처리로 인한 삭제
+	 * 매장 페이지에서 리뷰 등록 기능
+	 * 예약을 했을 경우 리뷰 버튼이 생기고 예약을 안 했을 경우 기존 예약 버튼 생성
+	 * 
+	 * @param ra
+	 * @param alarmVO
+	 * @param reviewVO
+	 * @param model
+	 * @return
+	 */
+//	@RequestMapping(value = "/store/review.do" , method = RequestMethod.POST)
+//	public String reviewSuccess(
+//			RedirectAttributes ra,
+//			AlarmVO alarmVO, ReviewVO reviewVO, ResVO resVO, Model model
+//			) {
+//		
+//		String goPage = "";
+//		
+//		Map<String, String> errors = new HashMap<String, String>();
+//		
+//		if(StringUtils.isBlank(reviewVO.getReviewContent())) {
+//			errors.put("reviewText", "리뷰를 입력해주세요");
+//		}
+//		if(errors.size() > 0) {
+//			model.addAttribute("errors", errors);
+//			model.addAttribute("review", reviewVO);
+//			goPage = "";
+//		}else {
+//			ServiceResult result = memberreviewService.create(reviewVO, resVO, alarmVO);
+//			if(result.equals(ServiceResult.OK)) {
+//				ra.addFlashAttribute("message", "리뷰등록이 완료되였습니다!");
+//				goPage = "redirect:/elly/mypage/review.do?memId=" + reviewVO.getMemId();
+//			}else {
+//				model.addAttribute("bodyText", "register-page");
+//				model.addAttribute("message", "서버 에러, 다시 시도해주세요!");
+//				model.addAttribute("review", reviewVO);
+//				goPage = "";
+//			}
+//			
+//		}
+//		
+//		return goPage;
+//	}
 	
 //	@PreAuthorize("hasRole('ROLE_MEMBER')")
 //	@ResponseBody

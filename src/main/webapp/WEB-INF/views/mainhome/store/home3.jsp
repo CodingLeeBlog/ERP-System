@@ -390,13 +390,47 @@ $(function(){
 								
 								$("#reviewBtn").on("click", function(){
 									
+									var memId = $("#memId").val();
+									var resvNo = $("#resvNo").val();
 									var reviewStar = $("#reviewStar").val();
+									var reviewContent = $("#reviewContent").val();
+									var frcsId = $("#frcsId").val();
 									
-									if(reviewStar == null && reviewStar == ""){
-										alert("별점을 입력해주세요")
-									}else{
-										$("#reviewForm").submit();
+									var data = {
+											memId : memId,
+											resvNo : resvNo,
+											reviewStar : reviewStar,
+											reviewContent : reviewContent,
+											frcsId : frcsId
 									}
+									
+									$.ajax({
+										type: "post",
+										url: "/elly/store/review.do",
+										beforeSend: function(xhr){
+											xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}")
+										},
+										data: JSON.stringify(data),
+										contentType : "application/json; charset=utf-8",
+										success : function(res){
+											Swal.fire({
+												title: '알림창',
+												text: '리뷰 등록이 완료되었습니다 !',
+												icon: 'success',
+											}).then((result) => {
+												if (result.isConfirmed) {
+													location.href = "/elly/mypage/review.do?memId=${member.memId }"; 
+												}
+											});
+										},
+										error : function(xhr, status, error) {
+											Swal.fire({
+												title: '경고',
+												text: '리뷰 등록 오류 발생 ! 다시 시도해주세요 !',
+												icon: 'warning',
+											})
+										}
+									});
 									
 								});
 			            	}else {
