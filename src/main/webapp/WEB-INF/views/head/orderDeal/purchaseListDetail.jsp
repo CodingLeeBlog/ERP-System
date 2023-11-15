@@ -94,7 +94,7 @@
                                           <td style="text-align:center">${list.vdprodCd }</td>
                                          <td style="text-align:center">${list.vdprodName }</td>
                                          <td style="text-align:center">
-                                         <fmt:formatDate value="${list.hdorderconfmDate }" pattern="yy/MM/dd"/>
+                                         <fmt:formatDate value="${list.hdrcvinDate }" pattern="yy/MM/dd"/>
                                          
                                          </td>
                                             <td style="text-align:center">

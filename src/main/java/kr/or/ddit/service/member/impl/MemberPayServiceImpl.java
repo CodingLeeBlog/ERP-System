@@ -21,9 +21,6 @@ public class MemberPayServiceImpl implements IMemberPayService {
 	
 	/**
 	 * 예약과 동시에 결제 내역 등록 서비스 로직
-	 * 
-	 * @param PayVO 타입의 객체
-	 * @return result
 	 */
 	@Override
 	public ServiceResult create(PayVO payVO) {
@@ -43,12 +40,6 @@ public class MemberPayServiceImpl implements IMemberPayService {
 		return result;
 	}
 
-	/**
-	 * 결제 취소 서비스 로직
-	 * 
-	 * @param PayVO 타입의 객체
-	 * @return result
-	 */
 	@Override
 	public ServiceResult delete(PayVO payVO) {
 		

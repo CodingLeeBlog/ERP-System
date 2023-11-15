@@ -43,93 +43,90 @@
 	        </div>
 	        <!-- end page title -->
 	
+	     
 	        <div class="row">
 	            <div class="col-12">
 	                <div class="card">
 	                    <div class="card-body">
-	                    
 	                        <div class="row">
-								<div id="selectedEmployee"></div>
-                            	<div class="col-lg-12">
-                                	<div class="mt-lg-0 mt-5 ms-4 me-4 mb-2">
-                                   		<div id="calendar"></div>
-                                	</div>
-                            	</div>
-	                		</div>
+						<div id="selectedEmployee"></div>
+                            <div class="col-lg-12">
+                                <div class="mt-lg-0 mt-5 ms-4 me-4 mb-2">
+                                    <div id="calendar"></div>
+                                </div>
+                            </div> <!-- end col -->
+	                </div> <!-- end card -->
 	
-							<!-- Add New Event MODAL -->
-							<div class="modal fade" id="register" tabindex="-1">
-								<div class="modal-dialog">
-							    	<div class="modal-content">
-							        	<form class="needs-validation" action="/owner/attendanceInsert.do" method="post" name="event-form" id="regForm" novalidate>
-							            	<div class="modal-header py-3 px-4 border-bottom-0">
-							                	<h5 class="modal-title" id="modal-title">휴무/점검일 입력</h5>
-							                  	<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-							              	</div>
-							            	<div class="modal-body px-4 pb-4 pt-0">
-							                	<div class="row">
-							                    	<div class="col-12">
-							                        	<div class="mb-3">
-							                            	<label class="control-label form-label">휴무/점검일</label>
-							                              	<select class="form-select frcsList" name="rstdeTtl" id="event-category" required>
-							                                	<option selected disabled value="">선택하세요</option>
-							                                	<option>점검일</option>
-							                                	<option>휴무일</option>
-							                              	</select>
-							                            <div class="invalid-feedback">날짜 유형을 선택해주세요!</div>
-							                        </div>
-							                    </div>
-							                         <div class="col-12">
-							                          <div class="mb-3">
-							                              <label class="control-label form-label">색상 선택</label>
-							                              <select class="form-select frcsList2" name="rstdeColor" id="event-category" required>
-							                                 <option selected disabled value="">선택하세요</option>
-							                                  <option value="#0ACF97" style="color: #0ACF97;">초록색</option>
-							                                  <option value="#39AFD1" style="color: #39AFD1;">파란색</option>
-							                                  <option value="#FFC35A" style="color: #FFC35A;">노란색</option>
-							                                  <option value="#FA5C7C" style="color: #FA5C7C;">빨간색</option>
-							                              </select>
-							                              <div class="invalid-feedback">근태 유형을 선택해주세요!</div>
-							                          </div>
-							                      </div>
-							                         <div class="col-12">
-							                          <div class="mb-3">
-							                              <label class="control-label form-label frcsList4">시작 날짜</label>
-							                              <input class="form-control" placeholder="" name="rstdeStymd" id="start-date" required readonly/>
-							                              <div class="invalid-feedback">날짜를 입력해주세요!</div>
-							                          </div>
-							                      </div>
-							                        <div class="col-12">
-							                          <div class="mb-3">
-							                              <label class="control-label form-label frcsList5">끝 날짜</label>
-							                              <input class="form-control" placeholder="" name="rstdeEnymd" id="end-date" required readonly/>
-							                              <div class="invalid-feedback">날짜를 입력해주세요!</div>
-							                          </div>
-							                      </div>
-							                      
-							                  </div>
-							                  <div class="row">
-							                      <div class="col-6 text-end">
-							                          <button type="button" class="btn btn-light me-1" data-bs-dismiss="modal">닫기</button>
-							                             <button type="button" id="subBtn" class="btn btn-success">저장</button>
-							                      </div>
-							                  </div>
-							              </div>
-							                <sec:csrfInput/>
-							          </form>
-							      </div> <!-- end modal-content-->
-							  </div> <!-- end modal dialog-->
-							</div><!-- end modal-->
-							
-	            		</div>
-	        		</div> 
-	    		</div> <!-- end col-12 -->
-			</div> <!-- end row -->
-			
-		</div>    
-		
-	</div>
-</div>        
+	                <!-- Add New Event MODAL -->
+	                  <div class="modal fade" id="register" tabindex="-1">
+	                    <div class="modal-dialog">
+	                        <div class="modal-content">
+	                            <form class="needs-validation" action="/owner/attendanceInsert.do" method="post" name="event-form" id="regForm" novalidate>
+	                                <div class="modal-header py-3 px-4 border-bottom-0">
+	                                    <h5 class="modal-title" id="modal-title">휴무/점검일 입력</h5>
+	                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	                                </div>
+	                                <div class="modal-body px-4 pb-4 pt-0">
+	                                    <div class="row">
+	                                            <div class="col-12">
+	                                            <div class="mb-3">
+	                                                <label class="control-label form-label">휴무/점검일</label>
+	                                                <select class="form-select frcsList" name="rstdeTtl" id="event-category" required>
+	                                                    <option selected disabled value="">선택하세요</option>
+	                                                    <option>점검일</option>
+	                                                    <option>휴무일</option>
+	                                                </select>
+	                                                <div class="invalid-feedback">날짜 유형을 선택해주세요!</div>
+	                                            </div>
+	                                        </div>
+	                                           <div class="col-12">
+	                                            <div class="mb-3">
+	                                                <label class="control-label form-label">색상 선택</label>
+	                                                <select class="form-select frcsList2" name="rstdeColor" id="event-category" required>
+	                                                   <option selected disabled value="">선택하세요</option>
+	                                                    <option value="#0ACF97" style="color: #0ACF97;">초록색</option>
+	                                                    <option value="#39AFD1" style="color: #39AFD1;">파란색</option>
+	                                                    <option value="#FFC35A" style="color: #FFC35A;">노란색</option>
+	                                                    <option value="#FA5C7C" style="color: #FA5C7C;">빨간색</option>
+	                                                </select>
+	                                                <div class="invalid-feedback">근태 유형을 선택해주세요!</div>
+	                                            </div>
+	                                        </div>
+	                                           <div class="col-12">
+	                                            <div class="mb-3">
+	                                                <label class="control-label form-label frcsList4">시작 날짜</label>
+	                                                <input class="form-control" placeholder="" name="rstdeStymd" id="start-date" required readonly/>
+	                                                <div class="invalid-feedback">날짜를 입력해주세요!</div>
+	                                            </div>
+	                                        </div>
+	                                          <div class="col-12">
+	                                            <div class="mb-3">
+	                                                <label class="control-label form-label frcsList5">끝 날짜</label>
+	                                                <input class="form-control" placeholder="" name="rstdeEnymd" id="end-date" required readonly/>
+	                                                <div class="invalid-feedback">날짜를 입력해주세요!</div>
+	                                            </div>
+	                                        </div>
+	                                        
+	                                    </div>
+	                                    <div class="row">
+	                                        <div class="col-6 text-end">
+	                                            <button type="button" class="btn btn-light me-1" data-bs-dismiss="modal">닫기</button>
+                                                <button type="button" id="subBtn" class="btn btn-success">저장</button>
+	                                        </div>
+	                                    </div>
+	                                </div>
+                                   <sec:csrfInput/>
+	                            </form>
+	                        </div> <!-- end modal-content-->
+	                    </div> <!-- end modal dialog-->
+	                </div>
+	                <!-- end modal-->
+	            </div>
+	            <!-- end col-12 -->
+	        </div> <!-- end row -->
+	    </div> <!-- container -->
+	</div> <!-- content -->
+</div>            
 <script>
 $(function(){
 	

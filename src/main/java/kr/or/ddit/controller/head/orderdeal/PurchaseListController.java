@@ -31,42 +31,28 @@ public class PurchaseListController {
 	private IPurchaseService service;
 	
 	@PreAuthorize("hasRole('ROLE_HEAD')")
-	   @RequestMapping(value = "/purchaseList.do")
-	   public String purchaseList(
-	         @RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
-	         Model model) {
-	      log.info("purchaseList() GET -> 매입내역관리 -> 시작");
+	@RequestMapping(value = "/purchaseList.do")
+	public String purchaseList(
+			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
+			Model model) {
+		log.info("purchaseList() GET -> 매입내역관리 -> 시작");
+		
+		HeadPaginationInfoVO<PurchaseVO> pagingVO = new HeadPaginationInfoVO<PurchaseVO>();
+		
+		pagingVO.setCurrentPage(currentPage);
+		int totalRecord = service.selectTotalPurchaseCount(pagingVO);
+		pagingVO.setTotalRecord(totalRecord);
+		log.debug("totalRecord -> {}", totalRecord);
+		
+		List<PurchaseVO> dataList = service.selectTotalPurchaseList(pagingVO);
+		pagingVO.setDataList(dataList);
+		
+		log.debug("dataList값 -> {}", dataList);
+		
+	    model.addAttribute("pagingVO", pagingVO);
 	      
-	      HeadPaginationInfoVO<PurchaseVO> pagingVO = new HeadPaginationInfoVO<PurchaseVO>();
-	      
-	      pagingVO.setCurrentPage(currentPage);
-	      int totalRecord = service.selectTotalPurchaseCount(pagingVO);
-	      pagingVO.setTotalRecord(totalRecord);
-	      log.debug("totalRecord -> {}", totalRecord);
-	      
-	      List<PurchaseVO> dataList = service.selectTotalPurchaseList(pagingVO);
-	      
-	      int thisMonth = 0;
-	      int thisDay = 0;
-	      
-	      for (PurchaseVO pcVO : dataList) {
-	         int tm = pcVO.getThisMonth();
-	         thisMonth += tm;
-	         
-	         int td = pcVO.getThisDay();
-	         thisDay += td;
-	      }
-	      
-	      pagingVO.setDataList(dataList);
-	      
-	      log.debug("dataList값 -> {}", dataList);
-	      
-	       model.addAttribute("pagingVO", pagingVO);
-	       model.addAttribute("thisMonth", thisMonth);
-	       model.addAttribute("thisDay", thisDay);
-	       
-	      return "head/orderDeal/purchaseList";
-	   }
+		return "head/orderDeal/purchaseList";
+	}
 	
 	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/purchaseListDetail.do")

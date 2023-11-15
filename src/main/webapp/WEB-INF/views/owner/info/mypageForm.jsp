@@ -232,15 +232,7 @@
     			return false;
     		}
         	
-        	Swal.fire({
-			      title: '수정 완료',
-			      icon: 'success',
-			      text: '수정이 완료되었습니다!'
-			    }).then((result) => {
-		            if (result.isConfirmed) {
-		            	mypageForm.submit();
-		                    }
-		          });
+        	mypageForm.submit();
         });
     });
 </script>

@@ -194,7 +194,7 @@
                                              <td id="hdLtno">${officeLetter.hdLtno }</td>
                                              <td><a href="#" class="viewDetails" data-toggle="modal" data-target="#exampleModal" data-hdLtno="${officeLetter.hdLtno}">${officeLetter.hdLttitle }</a></td>
                                              <td><fmt:formatDate
-                                                   value="${officeLetter.hdLtsdate }" pattern="yy/MM/dd" /></td>
+                                                   value="${officeLetter.hdLtsdate }" pattern="yyyy-MM-dd" /></td>
                                              <td><span class="badge bg-success">${officeLetter.hdLtstate }</span></td>
                                              <td>
                                                 <button type="button"

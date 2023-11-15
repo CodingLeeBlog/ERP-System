@@ -61,7 +61,7 @@ public class OwnerMyPageController {
 		String goPage = "";
 		ServiceResult result = service.update(req, franchiseVO);
 		if(result.equals(ServiceResult.OK)) {
-//			ra.addFlashAttribute("message", "수정이 완료되었습니다!");
+			ra.addFlashAttribute("message", "수정이 완료되었습니다!");
 			goPage = "redirect:/owner/mypageDetail.do";
 		}else {
 			model.addAttribute("message", "수정에 실패했습니다!");

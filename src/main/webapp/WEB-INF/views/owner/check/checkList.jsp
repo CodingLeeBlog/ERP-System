@@ -102,7 +102,7 @@
 			                                <div class="card rounded-0 shadow-none m-0 border-start border-light">
 			                                    <div class="card-body text-center">
 			                                        <i class="ri-calendar-check-line text-muted font-24"></i>
-			                                        <h3><span><fmt:formatDate value="${checkList.get(0).ipDate }" pattern="yyyy/MM/dd"/></span></h3>
+			                                        <h3><span><fmt:formatDate value="${checkList.get(0).ipDate }" pattern="yyyy-MM-dd"/></span></h3>
 			                                        <p class="text-muted font-15 mb-0">최근 점검일자</p>
 			                                    </div>
 			                                </div>
@@ -177,7 +177,7 @@
 	                                			<c:forEach items="${checkList }" var="check">
 				                                    <tr>
 				                                        <td style="text-align:center">${check.rnum }</td>
-				                                        <td style="text-align:center"><fmt:formatDate value="${check.ipDate }" pattern="yyyy/MM/dd"/></td>
+				                                        <td style="text-align:center"><fmt:formatDate value="${check.ipDate }" pattern="yyyy-MM-dd"/></td>
 				                                        <td style="text-align:center">${check.frcsName }</td>
 				                                        <td style="text-align:center">${check.ipStts }</td>
 				                                        <td style="text-align:center">

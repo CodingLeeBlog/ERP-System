@@ -11,8 +11,8 @@
             integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ"
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+	<!-- sweetAlert cdn -->
+	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
 
 	<style>
 	    body {
@@ -124,7 +124,7 @@
 </body>
 
 <script src="${pageContext.request.contextPath }/resources/assets/js/seat-arrangement.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
 <script>
 	// 파라미터 가져오기
     var t2 = <%= request.getParameter("t2") %>;
@@ -193,36 +193,39 @@
     			},
                 data: JSON.stringify(seatData),  // 배열을 문자열로 변환하여 전송
                 contentType: "application/json;charset=UTF-8",
-                success: function(response) {
-                    console.log(response);  
+                success : function(result){
+    				console.log("result : " + result);
+    			}
+//                 success: function(response) {
+//                     console.log(response);  
                     
-                    Swal.fire({
-					      title: '생성 완료',
-					      icon: 'success',
-					      text: '좌석 생성이 완료되었습니다!',
-					    }).then((result) => {
-				            if (result.isConfirmed) {
-				                opener.parent.location.reload('/owner/seat.do');
-				                window.close();
-				                    }
-				          });
-                },
-                error: function(error) {
-                    console.error(error);  
+//                     Swal.fire({
+// 					      title: '알림창',
+// 					      icon: 'success',
+// 					      text: '좌석 생성이 완료되었습니다!',
+// 					    }).then((result) => {
+// 				            if (result.isConfirmed) {
+// 				                    }
+// 				          });
+//                 },
+//                 error: function(error) {
+//                     console.error(error);  
                     
-                    Swal.fire({
-						title: '생성 에러',
-					    icon: 'error',
-					    text: '다시 시도해주세요!'
-					}).then((result) => {
-			            if (result.isConfirmed) {
-			            	location.reload();
-			                    }
-			          });
-                }
+//                     Swal.fire({
+// 						title: '알림창',
+// 					    icon: 'error',
+// 					    text: '다시 시도해주세요!'
+// 					}).then((result) => {
+// 			            if (result.isConfirmed) {
+// 			            	location.reload();
+// 			                    }
+// 			          });
+                    
+//                 }
 
             });
-
+        window.close();
+        opener.parent.location.reload('/owner/seat.do');
         });
     });
 

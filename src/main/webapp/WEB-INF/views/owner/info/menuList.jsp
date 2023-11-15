@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <div class="content-page">
 	<div class="content">
 
@@ -82,7 +81,7 @@
 												<a href="#" class="text-reset">${frcsMenu.menuName } 
 												</a>
 											</h4>
-											<p class="mb-0 text-muted"><fmt:formatNumber value="${frcsMenu.menuPrice }" pattern="#,###"/> 원</p>
+											<p class="mb-0 text-muted">${frcsMenu.menuPrice }</p>
 											<hr class="bg-dark-lighten my-2">
 											<h5 class="mt-3 fw-semibold text-muted">${frcsMenu.menuDes }</h5>
 										</div>
@@ -118,7 +117,7 @@
 											<h4 class="mt-3 my-1">
 												<a href="#" class="text-reset">${frcsMenu.menuName }</a>
 											</h4>
-											<p class="mb-0 text-muted"><fmt:formatNumber value="${frcsMenu.menuPrice }" pattern="#,###"/> 원</p>
+											<p class="mb-0 text-muted">${frcsMenu.menuPrice }</p>
 											<hr class="bg-dark-lighten my-2">
 											<h5 class="mt-3 fw-semibold text-muted">${frcsMenu.menuDes }</h5>
 										</div>
@@ -155,7 +154,7 @@
 											<h4 class="mt-3 my-1">
 												<a href="#" class="text-reset">${frcsMenu.menuName }</a>
 											</h4>
-											<p class="mb-0 text-muted"><fmt:formatNumber value="${frcsMenu.menuPrice }" pattern="#,###"/> 원</p>
+											<p class="mb-0 text-muted">${frcsMenu.menuPrice }</p>
 											<hr class="bg-dark-lighten my-2">
 											<h5 class="mt-3 fw-semibold text-muted">${frcsMenu.menuDes }</h5>
 										</div>
@@ -192,7 +191,7 @@
 											<h4 class="mt-3 my-1">
 												<a href="#" class="text-reset">${frcsMenu.menuName }</a>
 											</h4>
-											<p class="mb-0 text-muted"><fmt:formatNumber value="${frcsMenu.menuPrice }" pattern="#,###"/> 원</p>
+											<p class="mb-0 text-muted">${frcsMenu.menuPrice }</p>
 											<hr class="bg-dark-lighten my-2">
 											<h5 class="mt-3 fw-semibold text-muted">${frcsMenu.menuDes }</h5>
 										</div>
@@ -230,7 +229,7 @@ $(function(){
             success: function(response) {
                 
                 Swal.fire({
-				      title: '세팅 완료',
+				      title: '알림창',
 				      icon: 'success',
 				      text: '메뉴 세팅이 완료되었습니다!',
 				    }).then((result) => {
@@ -242,7 +241,7 @@ $(function(){
             error: function(error) {
             	
             	Swal.fire({
-					title: '세팅 에러',
+					title: '알림창',
 				    icon: 'error',
 				    text: '다시 시도해주세요!'
 				}).then((result) => {
@@ -277,7 +276,7 @@ $(function(){
             contentType: "application/json;charset=UTF-8",
             success: function(response) {
                 Swal.fire({
-				      title: '저장 완료',
+				      title: '알림창',
 				      icon: 'success',
 				      text: '메뉴 상태가 성공적으로 저장되었습니다!',
 				    }).then((result) => {
@@ -288,7 +287,7 @@ $(function(){
             },
             error: function(error) {
                 Swal.fire({
-					title: '저장 에러',
+					title: '알림창',
 				    icon: 'error',
 				    text: '메뉴 상태 저장 중 오류가 발생하였습니다.'
 				}).then((result) => {

@@ -23,12 +23,6 @@ public class MemberReviewServiceImpl implements IMemberReviewService {
 	@Inject
 	private MyResMapper myresMapper;
 	
-	/**
-	 * 리뷰를 등록 서비스 로직
-	 * 
-	 * @param reviewVO 타입의 객체
-	 * @return result
-	 */
 	@Override
 	public ServiceResult create(ReviewVO reviewVO, ResVO resVO, AlarmVO alarmVO) {
 		

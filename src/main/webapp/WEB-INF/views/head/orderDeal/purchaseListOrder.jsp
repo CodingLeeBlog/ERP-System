@@ -242,14 +242,10 @@
                                     </div>
                                     <hr>
                                     <div class="card-body">
-                                        <div class="col-12 mb-2 input-group">
-                                        	<div class="col-6"></div>
-            	                            	<div class="col-6">
-            	                            		<div class="col-3 input-group align-items-center">
-														<label for="billing-phone" class="form-label">
-														<span class="text-danger">*</span>총계&nbsp;:&nbsp;</label> 
-														<input style="text-align: right;" class="form-control" type="text" placeholder="0(원)" id="headorderTotal" value=""/>
-                	                        	</div>
+                                        <div class="col-6 mb-2 input-group">
+											<label for="billing-phone" class="form-label">
+											<span class="text-danger">*</span>총계</label> 
+											<input class="form-control" type="text" placeholder="0(원)" id="headorderTotal" value=""/>
 										</div>
                                     </div>
                                 </div>

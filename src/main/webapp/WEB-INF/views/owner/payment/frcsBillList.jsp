@@ -100,11 +100,12 @@
                                                  </tbody>
                                        		</table>
                                        </div> 
-                                           <div class="col-sm-12">
+                                       <div class="row mt-4">
+                                           <div class="col-sm-6">
+                                               	<h4>총계 : <fmt:formatNumber value="${billVO.feeTotalPay }" type="number"/>(원)</h4> 
+                                           </div>
+                                           <div class="col-sm-6">
                                                <div class="text-sm-end">
-                                       	    	<h4>총계 : <fmt:formatNumber value="${billVO.feeTotalPay }" type="number"/>(원)</h4> 
-                                               </div>
-                                                <div class="text-sm-end">
                                                <c:if test="${billVO.settleAt eq 'Y' }">
                                                	<button class="btn btn-light"><fmt:formatDate value="${billVO.settleDate }" pattern="yy-MM-dd에 납부된 건입니다"/></button>
                                                </c:if>
@@ -113,6 +114,7 @@
                                                </c:if>
                                                </div>
                                            </div>
+                                       </div>
                                        </div>
                                        <div class="col-lg-6">
                                       	  <div class="border p-3 mt-4 mt-lg-0 rounded" style="height:100%">

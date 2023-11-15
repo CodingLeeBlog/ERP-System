@@ -86,25 +86,21 @@
 												<hr class="bg-dark-lighten my-2">
 												<h5 class="mt-2 fw-semibold text-muted">
 													${emp.frcsEmpRspofc }</h5>
-												
-												<div class="d-flex justify-content-center">
-													<div>
-														<p class="mb-0 text-muted text-start">
-															<i class="mdi mdi-cellphone me-1"></i><b>연락처&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> &nbsp;&nbsp;${emp.frcsEmpTelno }
-														</p>
-														<p class="mb-0 text-muted text-start">
-															<i class="mdi mdi-cake-variant me-1"></i><b>생년월일&nbsp;&nbsp;:</b>
-															 &nbsp;&nbsp;<fmt:formatDate value="${emp.frcsEmpBrdt }" pattern="yyyy-MM-dd" />
-														</p>
-														<p class="mb-0 text-muted text-start">
-															<i class="mdi mdi-cash me-1"></i><b>급여&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b>
-															 &nbsp;&nbsp;<fmt:formatNumber value="${emp.frcsEmpSalary }" pattern="#,###,###"/> 원
-														</p>
-														<p class="mb-0 text-muted text-start">
-															<i class="mdi mdi-badge-account-horizontal me-1"></i><b>직원코드&nbsp;&nbsp;:</b> &nbsp;&nbsp;${emp.frcsEmpCd }
-														</p>
-													</div>
-												</div>	
+												<p class="mb-0 text-muted"><i
+														class="mdi mdi-cellphone me-1"></i><b>연락처 :</b>
+													${emp.frcsEmpTelno }</p>
+												<p class="mb-0 text-muted"><i
+														class="mdi mdi-cake-variant me-1"></i><b>생년월일
+														:</b>
+													<fmt:formatDate value="${emp.frcsEmpBrdt }"
+														pattern="yyyy-MM-dd" />
+												</p>
+												<p class="mb-0 text-muted"><i
+														class="mdi mdi-cash me-1"></i><b>급여 :</b>
+													${emp.frcsEmpSalary } 원</p>
+												<p class="mb-0 text-muted"><i
+														class="mdi mdi-badge-account-horizontal me-1"></i><b>직원코드
+														:</b> ${emp.frcsEmpCd }</p>
 
 												<div class="row mt-3">
 													<div class="col-4">
@@ -172,30 +168,27 @@
 												</div>
 												<h4 class="mt-3 my-1">
 													<a href="" class="text-body" data-bs-toggle="modal"
-														data-bs-target="#detail${emp.frcsEmpCd }">${emp.frcsEmpNm}</a>
+														data-bs-target="#detail${emp.frcsEmpCd }">${emp.frcsEmpNm
+														}</a>
 												</h4>
 												<hr class="bg-dark-lighten my-2">
 												<h5 class="mt-2 fw-semibold text-muted">
 													${emp.frcsEmpRspofc }</h5>
-													
-												<div class="d-flex justify-content-center">
-													<div>
-														<p class="mb-0 text-muted text-start">
-															<i class="mdi mdi-cellphone me-1"></i><b>연락처&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b> &nbsp;&nbsp;${emp.frcsEmpTelno }
-														</p>
-														<p class="mb-0 text-muted text-start">
-															<i class="mdi mdi-cake-variant me-1"></i><b>생년월일&nbsp;&nbsp;:</b>
-															 &nbsp;&nbsp;<fmt:formatDate value="${emp.frcsEmpBrdt }" pattern="yyyy-MM-dd" />
-														</p>
-														<p class="mb-0 text-muted text-start">
-															<i class="mdi mdi-cash me-1"></i><b>급여&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</b>
-															 &nbsp;&nbsp;<fmt:formatNumber value="${emp.frcsEmpSalary }" pattern="#,###,###"/> 원
-														</p>
-														<p class="mb-0 text-muted text-start">
-															<i class="mdi mdi-badge-account-horizontal me-1"></i><b>직원코드&nbsp;&nbsp;:</b> &nbsp;&nbsp;${emp.frcsEmpCd }
-														</p>
-													</div>
-												</div>	
+												<p class="mb-0 text-muted"><i
+														class="mdi mdi-cellphone me-1"></i><b>연락처 :</b>
+													${emp.frcsEmpTelno }</p>
+												<p class="mb-0 text-muted"><i
+														class="mdi mdi-cake-variant me-1"></i><b>생년월일
+														:</b>
+													<fmt:formatDate value="${emp.frcsEmpBrdt }"
+														pattern="yyyy-MM-dd" />
+												</p>
+												<p class="mb-0 text-muted"><i
+														class="mdi mdi-cash me-1"></i><b>급여 :</b>
+													${emp.frcsEmpSalary } 원</p>
+												<p class="mb-0 text-muted"><i
+														class="mdi mdi-badge-account-horizontal me-1"></i><b>직원코드
+														:</b> ${emp.frcsEmpCd }</p>
 
 												<div class="row mt-3">
 													<div class="col-4">
@@ -756,9 +749,10 @@
 					data: JSON.stringify(selectedItems),
 					contentType: "application/json;charset=UTF-8",
 					success: function (response) {
+						console.log("삭제 성공:", response);
 						
 						Swal.fire({
-						      title: '삭제 완료',
+						      title: '알림창',
 						      icon: 'success',
 						      text: '삭제가 완료되었습니다!',
 						    }).then((result) => {
@@ -768,9 +762,10 @@
 					          });
 					},
 					error: function (error) {
+						console.error("삭제 실패:", error);
 
 						Swal.fire({
-							title: '삭제 실패',
+							title: '알림창',
 						    icon: 'error',
 						    text: '다시 시도해주세요!'
 						}).then((result) => {
@@ -781,7 +776,7 @@
 					}
 				});
 			} else {
-				alert("삭제할 직원을 선택하세요.");
+				alert("삭제할 리뷰를 선택하세요.");
 			}
 
 		});

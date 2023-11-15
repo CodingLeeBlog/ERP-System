@@ -114,7 +114,7 @@
 						                                            <a href="/owner/docDetailHead.do?hdLtno=${officeLetter.hdLtno }" class="email-subject">
 						                                                ${officeLetter.hdLttitle }
 						                                            </a>
-						                                            <div class="email-date" style="width: 150px"><fmt:formatDate value="${officeLetter.hdLtsdate }" pattern="yyyy/MM/dd HH:mm"/></div>
+						                                            <div class="email-date" style="width: 150px"><fmt:formatDate value="${officeLetter.hdLtsdate }" pattern="yyyy-MM-dd HH:mm"/></div>
 						                                        </div>
 						                                        <div class="email-action-icons">
 						                                            <ul class="list-inline">
@@ -188,7 +188,7 @@
 						                                            <a href="/owner/docDetail.do?frcsOfldcNo=${frcsOfldc.frcsOfldcNo}" class="email-subject">
 						                                                ${frcsOfldc.frcsOfldcTtl }
 						                                            </a>
-						                                            <div class="email-date" style="width: 150px"><fmt:formatDate value="${frcsOfldc.frcsOfldcDspymd }" pattern="yyyy/MM/dd HH:mm"/></div>
+						                                            <div class="email-date" style="width: 150px"><fmt:formatDate value="${frcsOfldc.frcsOfldcDspymd }" pattern="yyyy-MM-dd HH:mm"/></div>
 						                                        </div>
 						                                        <div class="email-action-icons">
 						                                            <ul class="list-inline">

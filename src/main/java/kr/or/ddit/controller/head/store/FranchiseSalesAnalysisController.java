@@ -29,7 +29,7 @@ public class FranchiseSalesAnalysisController {
 	private IFranchiseSalesAnalysisService service;
 	
 	@PreAuthorize("hasRole('ROLE_HEAD')")
-	@RequestMapping(value = "/franchiseSalesAnalysis.do")
+	@RequestMapping(value = "/franchiseSalesAnalysis.do", method=RequestMethod.GET)
 	public String frSalesAnalysis(
 			@RequestParam(name="page", required = false, defaultValue = "1") int currentPage,
 			@RequestParam(required = false) String searchArea,

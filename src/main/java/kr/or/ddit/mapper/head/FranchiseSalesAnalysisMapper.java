@@ -29,13 +29,5 @@ public interface FranchiseSalesAnalysisMapper {
 	public int selectPurchasePrice(FranchiseSalesAnalysisVO fsVO);
 	// 차트에그려줄 월별 데이터 받아오기
 	public int selectAllMonthData(FranchiseSalesAnalysisVO frcs);
-	// 가맹점평균 총매출액
-	public List<FranchiseSalesAnalysisVO> selectAvgPrice(FranchiseSalesAnalysisVO fsaVO);
-	// 가맹점평균 로얄티
-	public List<FranchiseSalesAnalysisVO> selectAvgRowal(FranchiseSalesAnalysisVO fsaVO);
-	// 가맹점평균 공과금
-	public int selectAvgPublicDuesTotal(FranchiseSalesAnalysisVO fsVO);
-	// 가맹점평균 매입가
-	public int selectAvgPurchasePrice(FranchiseSalesAnalysisVO fsVO);
 	
 }

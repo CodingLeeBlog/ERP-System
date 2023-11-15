@@ -165,72 +165,50 @@
                                         <table class="table table-bordered table-centered ms-5">
                                             <thead class="table-dark" style="text-align: center;">
                                                 <tr>
-                                                    <th style="width: 400px;">과목</th>
-                                                    <th style="width: 350px;">금액(원)</th>
-                                                    <th style="width: 350px;">전체 가맹점 평균</th>
-                                                    <th style="width: 200px;">비율</th>
+                                                    <th style="width: 500px;">과목</th>
+                                                    <th style="width: 500px;">금액(원)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
                                                     <td style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="총매출액">Ⅰ.총매출액</td>
                                                     <td id="totalPrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="가맹점 총 매출액"></td>
-                                                    <td id="avgtotalPrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="가맹점 총매출액 평균"></td>
-                                                    <td id="pertotalPrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="가맹점 총매출액 평균"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="판매비와관리비">Ⅱ. 판매비와관리비</td>
                                                     <td id="variableCost" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="로얄티 + 인건비 + 공과금"></td>
-                                                    <td id="avgvariableCost" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="로얄티 + 인건비 + 공과금"></td>
-                                                    <td id="pervariableCost" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="로얄티 + 인건비 + 공과금"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="가맹비">가맹비</td>
                                                     <td id="frcsCost" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="고정비용 -> 500,000(원)"></td>
-                                                    <td id="avgfrcsCost" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="고정비용 -> 500,000(원)"></td>
-                                                    <td id="perfrcsCost" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="로얄티 + 인건비 + 공과금"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="로얄티">로얄티</td>
                                                     <td id="frcsRowal" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="가맹점 월 총매출의 3%"></td>
-                                                    <td id="avgfrcsRowal" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="가맹점 로얄티 평균"></td>
-                                                    <td id="perfrcsRowal" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="로얄티 + 인건비 + 공과금"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="인건비">인건비</td>
                                                     <td id="personCost" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="가맹점의 월 인건비"></td>
-                                                    <td id="avgpersonCost" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="가맹점의 월 인건비"></td>
-                                                    <td id="perpersonCost" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="로얄티 + 인건비 + 공과금"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="공과금">공과금</td>
                                                     <td id="publicduesTotal" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="수도세 + 전기세 + 가스비 + 월세"></td>
-                                                    <td id="avgpublicduesTotal" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="수도세 + 전기세 + 가스비 + 월세"></td>
-                                                    <td id="perpublicduesTotal" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="로얄티 + 인건비 + 공과금"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="매출원가">Ⅲ. 매출원가</td>
                                                     <td id="originPrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="월 총매출액 - 월 매입가"></td>
-                                                    <td id="avgoriginPrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="월 총매출액 - 월 매입가"></td>
-                                                    <td id="peroriginPrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="로얄티 + 인건비 + 공과금"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="매입가">매입가</td>
                                                     <td id="purchasePrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="이번달 발주금액"></td>
-                                                    <td id="avgpurchasePrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="이번달 발주금액"></td>
-                                                    <td id="perpurchasePrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="로얄티 + 인건비 + 공과금"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="영업이익">Ⅳ. 영업이익</td>
                                                     <td id="profitPrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="매출원가 - 판매비와관리비"></td>
-                                                    <td id="avgprofitPrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="매출원가 - 판매비와관리비"></td>
-                                                    <td id="perprofitPrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="로얄티 + 인건비 + 공과금"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="당기순이익">Ⅴ. 당기순이익</td>
                                                     <td id="incomePrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="영업이익 - 세금(10%)"></td>
-                                                    <td id="avgincomePrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="영업이익 - 세금(10%)"></td>
-                                                    <td id="perincomePrice" style="text-align: center;" tabindex="0" data-bs-placement="auto" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="로얄티 + 인건비 + 공과금"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -316,7 +294,6 @@ var dataObject = {};
 
 var sales = [];
 var profit = [];
-var avgProfit = [];
 
 // 차트헤더에 띄워줄 가맹점명
 var selectFrcsName = $("#selectFrcsName");
@@ -398,146 +375,6 @@ $(".tbody").on("click", ".frName", function(){
 			console.log("여기까지왔나");
 			console.log(res);
 			
-			let str = "";
-			
-			let totalPrice = res.pertotalPrice;
-			if(isNaN(totalPrice)){
-				totalPrice = 0;
-			}
-			let pervariableCost = res.pervariableCost;
-			let perfrcsCost = res.perfrcsCost;
-			let perfrcsRowal = res.perfrcsRowal;
-			if(isNaN(perfrcsRowal)){
-				perfrcsRowal = 0;
-			}
-			let perpersonCost = res.perpersonCost;
-			let perpublicduesTotal = res.perpublicduesTotal;
-			if(isNaN(perpublicduesTotal)){
-				perpublicduesTotal = 0;
-			}
-			let peroriginPrice = res.peroriginPrice;
-			if(isNaN(peroriginPrice)){
-				peroriginPrice = 0;
-			}
-			let perpurchasePrice = res.perpurchasePrice;
-			if(isNaN(perpurchasePrice)){
-				perpurchasePrice = 0;
-			}
-			let perprofitPrice = res.perprofitPrice;
-			let perincomePrice = res.perincomePrice;
-			
-			console.log("totalPrice -> " + totalPrice);
-			console.log("pervariableCost -> " + pervariableCost);
-			console.log("perfrcsCost -> " + perfrcsCost);
-			console.log("perfrcsRowal -> " + perfrcsRowal);
-			console.log("perpersonCost -> " + perpersonCost);
-			console.log("perpublicduesTotal -> " + perpublicduesTotal);
-			console.log("peroriginPrice -> " + peroriginPrice);
-			console.log("perpurchasePrice -> " + perpurchasePrice);
-			console.log("perprofitPrice -> " + perprofitPrice);
-			console.log("perincomePrice -> " + perincomePrice);
-			
-			 
-			if(res.totalPrice < res.avgtotalPrice){
-				totalPrice = totalPrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+totalPrice+"</span>%</span>";
-			}else{
-				totalPrice = totalPrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+totalPrice+"</span>%</span>";
-			}
-			
-			$("#pertotalPrice").html(str);
-			
-			if(res.variableCost < res.avgvariableCost){
-				pervariableCost = pervariableCost + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+pervariableCost+"</span>%</span>";
-			}else{
-				pervariableCost = pervariableCost + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+pervariableCost+"</span>%</span>";
-			}
-			
-			$("#pervariableCost").html(str);
-			
-			if(perfrcsCost < 0){
-				perfrcsCost = perfrcsCost + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perfrcsCost+"</span>%</span>";
-			}else{
-				perfrcsCost = perfrcsCost + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perfrcsCost+"</span>%</span>";
-			}
-			
-			$("#perfrcsCost").html(str);
-			
-			if(res.frcsRowal < res.avgfrcsRowal){
-				perfrcsRowal = perfrcsRowal + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perfrcsRowal+"</span>%</span>";
-			}else{
-				perfrcsRowal = perfrcsRowal + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perfrcsRowal+"</span>%</span>";
-			}
-			
-			$("#perfrcsRowal").html(str);
-			
-			if(res.personCost < res.avgpersonCost){
-				perpersonCost = perpersonCost + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perpersonCost+"</span>%</span>";
-			}else{
-				perpersonCost = perpersonCost + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perpersonCost+"</span>%</span>";
-			}
-			
-			$("#perpersonCost").html(str);
-			
-			if(res.publicduesTotal < res.avgpublicduesTotal){
-				perpublicduesTotal = perpublicduesTotal + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perpublicduesTotal+"</span>%</span>";
-			}else{
-				perpublicduesTotal = perpublicduesTotal + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perpublicduesTotal+"</span>%</span>";
-			}
-			
-			$("#perpublicduesTotal").html(str);
-			
-			if(res.originPrice < res.avgoriginPrice){
-				peroriginPrice = peroriginPrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+peroriginPrice+"</span>%</span>";
-			}else{
-				peroriginPrice = peroriginPrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+peroriginPrice+"</span>%</span>";
-			}
-			
-			$("#peroriginPrice").html(str);
-			
-			if(res.purchasePrice < res.avgpurchasePrice){
-				perpurchasePrice = perpurchasePrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perpurchasePrice+"</span>%</span>";
-			}else{
-				perpurchasePrice = perpurchasePrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perpurchasePrice+"</span>%</span>";
-			}
-			
-			$("#perpurchasePrice").html(str);
-			
-			if(res.profitPrice < res.avgprofitPrice){
-				perprofitPrice = perprofitPrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perprofitPrice+"</span>%</span>";
-			}else{
-				perprofitPrice = perprofitPrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perprofitPrice+"</span>%</span>";
-			}
-			
-			$("#perprofitPrice").html(str);
-			
-			if(res.incomePrice < res.avgincomePrice){
-				perincomePrice = perincomePrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perincomePrice+"</span>%</span>";
-			}else{
-				perincomePrice = perincomePrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perincomePrice+"</span>%</span>";
-			}
-			
-			$("#perincomePrice").html(str);
-			
 			$("#totalPrice").html(formatWon(res.totalPrice));
 			$("#variableCost").html(formatWon(res.variableCost));
 			$("#frcsCost").html(formatWon(res.frcsCost));
@@ -548,17 +385,6 @@ $(".tbody").on("click", ".frName", function(){
 			$("#purchasePrice").html(formatWon(res.purchasePrice));
 			$("#profitPrice").html(formatWon(res.profitPrice));
 			$("#incomePrice").html(formatWon(res.incomePrice));
-			$("#avgtotalPrice").html(formatWon(res.avgtotalPrice));
-			$("#avgfrcsRowal").html(formatWon(res.avgfrcsRowal));
-			$("#avgfrcsCost").html(formatWon(res.avgfrcsCost));
-			$("#avgpersonCost").html(formatWon(res.avgpersonCost));
-			$("#avgpublicduesTotal").html(formatWon(res.avgpublicduesTotal));
-			$("#avgvariableCost").html(formatWon(res.avgvariableCost));
-			$("#avgpurchasePrice").html(formatWon(res.avgpurchasePrice));
-			$("#avgoriginPrice").html(formatWon(res.avgoriginPrice));
-			$("#avgprofitPrice").html(formatWon(res.avgprofitPrice));
-			$("#avgincomePrice").html(formatWon(res.avgincomePrice));
-			
 			
 			$.ajax({
 				type : "post",
@@ -602,29 +428,8 @@ $(".tbody").on("click", ".frName", function(){
 					profit.push(res.twelveIncome);
 					
 					console.log("당기순이익",profit);
+					chartSetting(sales,profit);
 					
-					// 프로시져로 데이터를 넣어서 12월매출데이터도 들어가있음 차트에 보이는걸 막기위해
-					let avgtwelve = res.avgtwelveIncome;
-					if(year == 2023){
-						avgtwelve = 0;
-					}
-					
-					avgProfit = []; // 배열 초기화
-					avgProfit.push(res.avgoneIncome);
-					avgProfit.push(res.avgtwoIncome);
-					avgProfit.push(res.avgthreeIncome);
-					avgProfit.push(res.avgfourIncome);
-					avgProfit.push(res.avgfiveIncome);
-					avgProfit.push(res.avgsixIncome);
-					avgProfit.push(res.avgsevenIncome);
-					avgProfit.push(res.avgeightIncome);
-					avgProfit.push(res.avgnineIncome);
-					avgProfit.push(res.avgtenIncome);
-					avgProfit.push(res.avgelevenIncome);
-					avgProfit.push(avgtwelve);
-					
-					console.log("월평균 당기순이익",avgProfit);
-					chartSetting(sales,profit,avgProfit);
 				}
 			});
 			
@@ -673,146 +478,6 @@ $("#leftMonth").on("click", function(){
 			console.log("여기까지왔나");
 			console.log(res);
 			
-			let str = "";
-						
-			let totalPrice = res.pertotalPrice;
-			if(isNaN(totalPrice)){
-				totalPrice = 0;
-			}
-			let pervariableCost = res.pervariableCost;
-			let perfrcsCost = res.perfrcsCost;
-			let perfrcsRowal = res.perfrcsRowal;
-			if(isNaN(perfrcsRowal)){
-				perfrcsRowal = 0;
-			}
-			let perpersonCost = res.perpersonCost;
-			let perpublicduesTotal = res.perpublicduesTotal;
-			if(isNaN(perpublicduesTotal)){
-				perpublicduesTotal = 0;
-			}
-			let peroriginPrice = res.peroriginPrice;
-			if(isNaN(peroriginPrice)){
-				peroriginPrice = 0;
-			}
-			let perpurchasePrice = res.perpurchasePrice;
-			if(isNaN(perpurchasePrice)){
-				perpurchasePrice = 0;
-			}
-			let perprofitPrice = res.perprofitPrice;
-			let perincomePrice = res.perincomePrice;
-			
-			console.log("totalPrice -> " + totalPrice);
-			console.log("pervariableCost -> " + pervariableCost);
-			console.log("perfrcsCost -> " + perfrcsCost);
-			console.log("perfrcsRowal -> " + perfrcsRowal);
-			console.log("perpersonCost -> " + perpersonCost);
-			console.log("perpublicduesTotal -> " + perpublicduesTotal);
-			console.log("peroriginPrice -> " + peroriginPrice);
-			console.log("perpurchasePrice -> " + perpurchasePrice);
-			console.log("perprofitPrice -> " + perprofitPrice);
-			console.log("perincomePrice -> " + perincomePrice);
-			
-			 
-			if(res.totalPrice < res.avgtotalPrice){
-				totalPrice = totalPrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+totalPrice+"</span>%</span>";
-			}else{
-				totalPrice = totalPrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+totalPrice+"</span>%</span>";
-			}
-			
-			$("#pertotalPrice").html(str);
-			
-			if(res.variableCost < res.avgvariableCost){
-				pervariableCost = pervariableCost + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+pervariableCost+"</span>%</span>";
-			}else{
-				pervariableCost = pervariableCost + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+pervariableCost+"</span>%</span>";
-			}
-			
-			$("#pervariableCost").html(str);
-			
-			if(perfrcsCost < 0){
-				perfrcsCost = perfrcsCost + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perfrcsCost+"</span>%</span>";
-			}else{
-				perfrcsCost = perfrcsCost + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perfrcsCost+"</span>%</span>";
-			}
-			
-			$("#perfrcsCost").html(str);
-			
-			if(res.frcsRowal < res.avgfrcsRowal){
-				perfrcsRowal = perfrcsRowal + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perfrcsRowal+"</span>%</span>";
-			}else{
-				perfrcsRowal = perfrcsRowal + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perfrcsRowal+"</span>%</span>";
-			}
-			
-			$("#perfrcsRowal").html(str);
-			
-			if(res.personCost < res.avgpersonCost){
-				perpersonCost = perpersonCost + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perpersonCost+"</span>%</span>";
-			}else{
-				perpersonCost = perpersonCost + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perpersonCost+"</span>%</span>";
-			}
-			
-			$("#perpersonCost").html(str);
-			
-			if(res.publicduesTotal < res.avgpublicduesTotal){
-				perpublicduesTotal = perpublicduesTotal + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perpublicduesTotal+"</span>%</span>";
-			}else{
-				perpublicduesTotal = perpublicduesTotal + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perpublicduesTotal+"</span>%</span>";
-			}
-			
-			$("#perpublicduesTotal").html(str);
-			
-			if(res.originPrice < res.avgoriginPrice){
-				peroriginPrice = peroriginPrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+peroriginPrice+"</span>%</span>";
-			}else{
-				peroriginPrice = peroriginPrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+peroriginPrice+"</span>%</span>";
-			}
-			
-			$("#peroriginPrice").html(str);
-			
-			if(res.purchasePrice < res.avgpurchasePrice){
-				perpurchasePrice = perpurchasePrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perpurchasePrice+"</span>%</span>";
-			}else{
-				perpurchasePrice = perpurchasePrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perpurchasePrice+"</span>%</span>";
-			}
-			
-			$("#perpurchasePrice").html(str);
-			
-			if(res.profitPrice < res.avgprofitPrice){
-				perprofitPrice = perprofitPrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perprofitPrice+"</span>%</span>";
-			}else{
-				perprofitPrice = perprofitPrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perprofitPrice+"</span>%</span>";
-			}
-			
-			$("#perprofitPrice").html(str);
-			
-			if(res.incomePrice < res.avgincomePrice){
-				perincomePrice = perincomePrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perincomePrice+"</span>%</span>";
-			}else{
-				perincomePrice = perincomePrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perincomePrice+"</span>%</span>";
-			}
-			
-			$("#perincomePrice").html(str);
-			
 			$("#totalPrice").html(formatWon(res.totalPrice));
 			$("#variableCost").html(formatWon(res.variableCost));
 			$("#frcsCost").html(formatWon(res.frcsCost));
@@ -823,16 +488,7 @@ $("#leftMonth").on("click", function(){
 			$("#purchasePrice").html(formatWon(res.purchasePrice));
 			$("#profitPrice").html(formatWon(res.profitPrice));
 			$("#incomePrice").html(formatWon(res.incomePrice));
-			$("#avgtotalPrice").html(formatWon(res.avgtotalPrice));
-			$("#avgfrcsRowal").html(formatWon(res.avgfrcsRowal));
-			$("#avgfrcsCost").html(formatWon(res.avgfrcsCost));
-			$("#avgpersonCost").html(formatWon(res.avgpersonCost));
-			$("#avgpublicduesTotal").html(formatWon(res.avgpublicduesTotal));
-			$("#avgvariableCost").html(formatWon(res.avgvariableCost));
-			$("#avgpurchasePrice").html(formatWon(res.avgpurchasePrice));
-			$("#avgoriginPrice").html(formatWon(res.avgoriginPrice));
-			$("#avgprofitPrice").html(formatWon(res.avgprofitPrice));
-			$("#avgincomePrice").html(formatWon(res.avgincomePrice));
+			
 		}
 	});
 });
@@ -874,146 +530,6 @@ $("#rightMonth").on("click", function(){
 			console.log("여기까지왔나");
 			console.log(res);
 			
-			let str = "";
-			
-			let totalPrice = res.pertotalPrice;
-			if(isNaN(totalPrice)){
-				totalPrice = 0;
-			}
-			let pervariableCost = res.pervariableCost;
-			let perfrcsCost = res.perfrcsCost;
-			let perfrcsRowal = res.perfrcsRowal;
-			if(isNaN(perfrcsRowal)){
-				perfrcsRowal = 0;
-			}
-			let perpersonCost = res.perpersonCost;
-			let perpublicduesTotal = res.perpublicduesTotal;
-			if(isNaN(perpublicduesTotal)){
-				perpublicduesTotal = 0;
-			}
-			let peroriginPrice = res.peroriginPrice;
-			if(isNaN(peroriginPrice)){
-				peroriginPrice = 0;
-			}
-			let perpurchasePrice = res.perpurchasePrice;
-			if(isNaN(perpurchasePrice)){
-				perpurchasePrice = 0;
-			}
-			let perprofitPrice = res.perprofitPrice;
-			let perincomePrice = res.perincomePrice;
-			
-			console.log("totalPrice -> " + totalPrice);
-			console.log("pervariableCost -> " + pervariableCost);
-			console.log("perfrcsCost -> " + perfrcsCost);
-			console.log("perfrcsRowal -> " + perfrcsRowal);
-			console.log("perpersonCost -> " + perpersonCost);
-			console.log("perpublicduesTotal -> " + perpublicduesTotal);
-			console.log("peroriginPrice -> " + peroriginPrice);
-			console.log("perpurchasePrice -> " + perpurchasePrice);
-			console.log("perprofitPrice -> " + perprofitPrice);
-			console.log("perincomePrice -> " + perincomePrice);
-			
-			 
-			if(res.totalPrice < res.avgtotalPrice){
-				totalPrice = totalPrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+totalPrice+"</span>%</span>";
-			}else{
-				totalPrice = totalPrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+totalPrice+"</span>%</span>";
-			}
-			
-			$("#pertotalPrice").html(str);
-			
-			if(res.variableCost < res.avgvariableCost){
-				pervariableCost = pervariableCost + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+pervariableCost+"</span>%</span>";
-			}else{
-				pervariableCost = pervariableCost + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+pervariableCost+"</span>%</span>";
-			}
-			
-			$("#pervariableCost").html(str);
-			
-			if(perfrcsCost < 0){
-				perfrcsCost = perfrcsCost + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perfrcsCost+"</span>%</span>";
-			}else{
-				perfrcsCost = perfrcsCost + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perfrcsCost+"</span>%</span>";
-			}
-			
-			$("#perfrcsCost").html(str);
-			
-			if(res.frcsRowal < res.avgfrcsRowal){
-				perfrcsRowal = perfrcsRowal + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perfrcsRowal+"</span>%</span>";
-			}else{
-				perfrcsRowal = perfrcsRowal + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perfrcsRowal+"</span>%</span>";
-			}
-			
-			$("#perfrcsRowal").html(str);
-			
-			if(res.personCost < res.avgpersonCost){
-				perpersonCost = perpersonCost + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perpersonCost+"</span>%</span>";
-			}else{
-				perpersonCost = perpersonCost + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perpersonCost+"</span>%</span>";
-			}
-			
-			$("#perpersonCost").html(str);
-			
-			if(res.publicduesTotal < res.avgpublicduesTotal){
-				perpublicduesTotal = perpublicduesTotal + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perpublicduesTotal+"</span>%</span>";
-			}else{
-				perpublicduesTotal = perpublicduesTotal + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perpublicduesTotal+"</span>%</span>";
-			}
-			
-			$("#perpublicduesTotal").html(str);
-			
-			if(res.originPrice < res.avgoriginPrice){
-				peroriginPrice = peroriginPrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+peroriginPrice+"</span>%</span>";
-			}else{
-				peroriginPrice = peroriginPrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+peroriginPrice+"</span>%</span>";
-			}
-			
-			$("#peroriginPrice").html(str);
-			
-			if(res.purchasePrice < res.avgpurchasePrice){
-				perpurchasePrice = perpurchasePrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perpurchasePrice+"</span>%</span>";
-			}else{
-				perpurchasePrice = perpurchasePrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perpurchasePrice+"</span>%</span>";
-			}
-			
-			$("#perpurchasePrice").html(str);
-			
-			if(res.profitPrice < res.avgprofitPrice){
-				perprofitPrice = perprofitPrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perprofitPrice+"</span>%</span>";
-			}else{
-				perprofitPrice = perprofitPrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perprofitPrice+"</span>%</span>";
-			}
-			
-			$("#perprofitPrice").html(str);
-			
-			if(res.incomePrice < res.avgincomePrice){
-				perincomePrice = perincomePrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perincomePrice+"</span>%</span>";
-			}else{
-				perincomePrice = perincomePrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perincomePrice+"</span>%</span>";
-			}
-			
-			$("#perincomePrice").html(str);
-			
 			$("#totalPrice").html(formatWon(res.totalPrice));
 			$("#variableCost").html(formatWon(res.variableCost));
 			$("#frcsCost").html(formatWon(res.frcsCost));
@@ -1024,16 +540,7 @@ $("#rightMonth").on("click", function(){
 			$("#purchasePrice").html(formatWon(res.purchasePrice));
 			$("#profitPrice").html(formatWon(res.profitPrice));
 			$("#incomePrice").html(formatWon(res.incomePrice));
-			$("#avgtotalPrice").html(formatWon(res.avgtotalPrice));
-			$("#avgfrcsRowal").html(formatWon(res.avgfrcsRowal));
-			$("#avgfrcsCost").html(formatWon(res.avgfrcsCost));
-			$("#avgpersonCost").html(formatWon(res.avgpersonCost));
-			$("#avgpublicduesTotal").html(formatWon(res.avgpublicduesTotal));
-			$("#avgvariableCost").html(formatWon(res.avgvariableCost));
-			$("#avgpurchasePrice").html(formatWon(res.avgpurchasePrice));
-			$("#avgoriginPrice").html(formatWon(res.avgoriginPrice));
-			$("#avgprofitPrice").html(formatWon(res.avgprofitPrice));
-			$("#avgincomePrice").html(formatWon(res.avgincomePrice));
+			
 		}
 	});
 	
@@ -1059,146 +566,6 @@ function yearChange(year) {
 			console.log("여기까지왔나");
 			console.log(res);
 			
-			let str = "";
-			
-			let totalPrice = res.pertotalPrice;
-			if(isNaN(totalPrice)){
-				totalPrice = 0;
-			}
-			let pervariableCost = res.pervariableCost;
-			let perfrcsCost = res.perfrcsCost;
-			let perfrcsRowal = res.perfrcsRowal;
-			if(isNaN(perfrcsRowal)){
-				perfrcsRowal = 0;
-			}
-			let perpersonCost = res.perpersonCost;
-			let perpublicduesTotal = res.perpublicduesTotal;
-			if(isNaN(perpublicduesTotal)){
-				perpublicduesTotal = 0;
-			}
-			let peroriginPrice = res.peroriginPrice;
-			if(isNaN(peroriginPrice)){
-				peroriginPrice = 0;
-			}
-			let perpurchasePrice = res.perpurchasePrice;
-			if(isNaN(perpurchasePrice)){
-				perpurchasePrice = 0;
-			}
-			let perprofitPrice = res.perprofitPrice;
-			let perincomePrice = res.perincomePrice;
-			
-			console.log("totalPrice -> " + totalPrice);
-			console.log("pervariableCost -> " + pervariableCost);
-			console.log("perfrcsCost -> " + perfrcsCost);
-			console.log("perfrcsRowal -> " + perfrcsRowal);
-			console.log("perpersonCost -> " + perpersonCost);
-			console.log("perpublicduesTotal -> " + perpublicduesTotal);
-			console.log("peroriginPrice -> " + peroriginPrice);
-			console.log("perpurchasePrice -> " + perpurchasePrice);
-			console.log("perprofitPrice -> " + perprofitPrice);
-			console.log("perincomePrice -> " + perincomePrice);
-			
-			 
-			if(res.totalPrice < res.avgtotalPrice){
-				totalPrice = totalPrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+totalPrice+"</span>%</span>";
-			}else{
-				totalPrice = totalPrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+totalPrice+"</span>%</span>";
-			}
-			
-			$("#pertotalPrice").html(str);
-			
-			if(res.variableCost < res.avgvariableCost){
-				pervariableCost = pervariableCost + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+pervariableCost+"</span>%</span>";
-			}else{
-				pervariableCost = pervariableCost + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+pervariableCost+"</span>%</span>";
-			}
-			
-			$("#pervariableCost").html(str);
-			
-			if(perfrcsCost < 0){
-				perfrcsCost = perfrcsCost + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perfrcsCost+"</span>%</span>";
-			}else{
-				perfrcsCost = perfrcsCost + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perfrcsCost+"</span>%</span>";
-			}
-			
-			$("#perfrcsCost").html(str);
-			
-			if(res.frcsRowal < res.avgfrcsRowal){
-				perfrcsRowal = perfrcsRowal + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perfrcsRowal+"</span>%</span>";
-			}else{
-				perfrcsRowal = perfrcsRowal + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perfrcsRowal+"</span>%</span>";
-			}
-			
-			$("#perfrcsRowal").html(str);
-			
-			if(res.personCost < res.avgpersonCost){
-				perpersonCost = perpersonCost + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perpersonCost+"</span>%</span>";
-			}else{
-				perpersonCost = perpersonCost + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perpersonCost+"</span>%</span>";
-			}
-			
-			$("#perpersonCost").html(str);
-			
-			if(res.publicduesTotal < res.avgpublicduesTotal){
-				perpublicduesTotal = perpublicduesTotal + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perpublicduesTotal+"</span>%</span>";
-			}else{
-				perpublicduesTotal = perpublicduesTotal + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perpublicduesTotal+"</span>%</span>";
-			}
-			
-			$("#perpublicduesTotal").html(str);
-			
-			if(res.originPrice < res.avgoriginPrice){
-				peroriginPrice = peroriginPrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+peroriginPrice+"</span>%</span>";
-			}else{
-				peroriginPrice = peroriginPrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+peroriginPrice+"</span>%</span>";
-			}
-			
-			$("#peroriginPrice").html(str);
-			
-			if(res.purchasePrice < res.avgpurchasePrice){
-				perpurchasePrice = perpurchasePrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perpurchasePrice+"</span>%</span>";
-			}else{
-				perpurchasePrice = perpurchasePrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perpurchasePrice+"</span>%</span>";
-			}
-			
-			$("#perpurchasePrice").html(str);
-			
-			if(res.profitPrice < res.avgprofitPrice){
-				perprofitPrice = perprofitPrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perprofitPrice+"</span>%</span>";
-			}else{
-				perprofitPrice = perprofitPrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perprofitPrice+"</span>%</span>";
-			}
-			
-			$("#perprofitPrice").html(str);
-			
-			if(res.incomePrice < res.avgincomePrice){
-				perincomePrice = perincomePrice + "";
-				str = "<span class='text-danger me-2'><i class='mdi mdi-arrow-down-bold'></i><span>"+perincomePrice+"</span>%</span>";
-			}else{
-				perincomePrice = perincomePrice + "";
-				str = "<span class='text-success me-2'><i class='mdi mdi-arrow-up-bold'></i><span>"+perincomePrice+"</span>%</span>";
-			}
-			
-			$("#perincomePrice").html(str);
-			
 			$("#totalPrice").html(formatWon(res.totalPrice));
 			$("#variableCost").html(formatWon(res.variableCost));
 			$("#frcsCost").html(formatWon(res.frcsCost));
@@ -1209,16 +576,6 @@ function yearChange(year) {
 			$("#purchasePrice").html(formatWon(res.purchasePrice));
 			$("#profitPrice").html(formatWon(res.profitPrice));
 			$("#incomePrice").html(formatWon(res.incomePrice));
-			$("#avgtotalPrice").html(formatWon(res.avgtotalPrice));
-			$("#avgfrcsRowal").html(formatWon(res.avgfrcsRowal));
-			$("#avgfrcsCost").html(formatWon(res.avgfrcsCost));
-			$("#avgpersonCost").html(formatWon(res.avgpersonCost));
-			$("#avgpublicduesTotal").html(formatWon(res.avgpublicduesTotal));
-			$("#avgvariableCost").html(formatWon(res.avgvariableCost));
-			$("#avgpurchasePrice").html(formatWon(res.avgpurchasePrice));
-			$("#avgoriginPrice").html(formatWon(res.avgoriginPrice));
-			$("#avgprofitPrice").html(formatWon(res.avgprofitPrice));
-			$("#avgincomePrice").html(formatWon(res.avgincomePrice));
 			
 			$.ajax({
 				type : "post",
@@ -1262,29 +619,7 @@ function yearChange(year) {
 					profit.push(res.twelveIncome);
 					
 					console.log("당기순이익",profit);
-					
-					// 프로시져로 데이터를 넣어서 12월매출데이터도 들어가있음 차트에 보이는걸 막기위해
-					let avgtwelve = res.avgtwelveIncome;
-					if(year == 2023){
-						avgtwelve = 0;
-					}
-					
-					avgProfit = []; // 배열 초기화
-					avgProfit.push(res.avgoneIncome);
-					avgProfit.push(res.avgtwoIncome);
-					avgProfit.push(res.avgthreeIncome);
-					avgProfit.push(res.avgfourIncome);
-					avgProfit.push(res.avgfiveIncome);
-					avgProfit.push(res.avgsixIncome);
-					avgProfit.push(res.avgsevenIncome);
-					avgProfit.push(res.avgeightIncome);
-					avgProfit.push(res.avgnineIncome);
-					avgProfit.push(res.avgtenIncome);
-					avgProfit.push(res.avgelevenIncome);
-					avgProfit.push(avgtwelve);
-					
-					console.log("월평균 당기순이익",avgProfit);
-					chartSetting(sales,profit,avgProfit);
+					chartSetting(sales,profit);
 					
 				}
 			});
@@ -1301,7 +636,7 @@ pagingArea.on("click","a", function(event){
 	searchForm.submit();
 });
 
-function chartSetting(sales,profit,avgProfit){
+function chartSetting(sales,profit){
 	removeChart();
 	var canvas = $("<div><canvas id='mixed-chart' width='800' height='450'></canvas></div>");
 	
@@ -1335,13 +670,6 @@ function chartSetting(sales,profit,avgProfit){
 	          borderColor: "#FFA8A5",
 	          backgroundColor: "#FFA8A5", // 배경색을 핑크로 지정
 	          data: profit,
-	          fill: false
-		     },{
-	          label: "# 월평균 당기순이익",
-	          type: "line",
-	          borderColor: "#0091FF ",
-	          backgroundColor: "#0091FF", // 배경색을 핑크로 지정
-	          data: avgProfit,
 	          fill: false
 		     }
 	      ]

@@ -60,7 +60,7 @@
 								<div>
 									<h5 class="font-18 d-inline">${frcsOfldcVO.frcsOfldcTtl }</h5>
 									<div class="float-end ">
-										<fmt:formatDate value="${frcsOfldcVO.frcsOfldcDspymd }" pattern="yyyy/MM/dd HH:mm"/>
+										<fmt:formatDate value="${frcsOfldcVO.frcsOfldcDspymd }" pattern="yyyy-MM-dd"/>
 									</div>
 								</div>
 								

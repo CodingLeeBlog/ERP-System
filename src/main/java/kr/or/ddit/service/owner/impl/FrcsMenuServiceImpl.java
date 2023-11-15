@@ -39,11 +39,6 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 		return frcsmenuMapper.resfrcsMenuList(frcsId);
 	}
 	
-	/**
-	 * 마른안주 조회 서비스 로직
-	 * @param frcsId 가맹점 코드
-	 * @return List<FrcsMenuVO> 리스트 리턴
-	 */
 	@Override
 	public List<FrcsMenuVO> dryfrcsMenuList(String frcsId) {
 		
@@ -59,12 +54,7 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 		}
 		return dryMenu;
 	}
-
-	/**
-	 * 튀김 조회 서비스 로직
-	 * @param frcsId 가맹점 코드
-	 * @return List<FrcsMenuVO> 리스트 리턴
-	 */
+	
 	@Override
 	public List<FrcsMenuVO> friedfrcsMenuList(String frcsId) {
 		
@@ -81,11 +71,6 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 		return friedMenu;
 	}
 	
-	/**
-	 * 식사안주 조회 서비스 로직
-	 * @param frcsId 가맹점 코드
-	 * @return List<FrcsMenuVO> 리스트 리턴
-	 */
 	@Override
 	public List<FrcsMenuVO> mainfrcsMenuList(String frcsId) {
 		
@@ -102,11 +87,6 @@ public class FrcsMenuServiceImpl implements IFrcsMenuService {
 		return mainMenu;
 	}
 	
-	/**
-	 * 주류메뉴 조회 서비스 로직
-	 * @param frcsId 가맹점 코드
-	 * @return List<FrcsMenuVO> 리스트 리턴
-	 */
 	@Override
 	public List<FrcsMenuVO> drinkfrcsMenuList(String frcsId) {
 		
