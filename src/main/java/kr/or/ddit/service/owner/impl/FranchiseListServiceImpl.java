@@ -16,6 +16,12 @@ public class FranchiseListServiceImpl implements IFranchiseListService {
 	@Inject
 	private FrcsListMapper frcsListmapper;
 	
+	/**
+	 * 매장 페이지 매장 목록 조회 서비스 로직
+	 * 
+	 * @param FranchiseVO 객체
+	 * @return List<FranchiseVO> 리스트 리턴
+	 */
 	@Override
 	public List<FranchiseVO> findStore(FranchiseVO franchise) {
 		List<FranchiseVO> result = frcsListmapper.findStore(franchise);

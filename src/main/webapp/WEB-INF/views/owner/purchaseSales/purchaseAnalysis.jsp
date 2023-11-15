@@ -285,7 +285,7 @@ $(function(){
 					var str = "";
 					str += '<a href="javascript:void(0);" id="leftMonth">';
 	           		str += '<i class="me-3 ri-arrow-left-s-line" style="font-size: 20px"></i></a>';
-	           		str += +year+"/"+month+ "월 매출 총이익 분석";
+	           		str += +year+"/"+month+ "월 매입 분석";
 	           		str += '<a href="javascript:void(0);" id="rightMonth">';
 	           		str +='<i class="ms-3 ri-arrow-right-s-line" style="font-size: 20px"></i></a>'
 				}
@@ -298,19 +298,19 @@ $(function(){
 					if(intMonth == 1){
 						str += '<a href="javascript:void(0);" id="leftMonth">';
 		           		str += '<i class="me-3 ri-arrow-left-s-line" style="font-size: 20px"></i></a>';
-		           		str += (intYear-1)+"/11~"+year+"/"+month+ "월 매출 총이익 분석";
+		           		str += (intYear-1)+"/11~"+year+"/"+month+ "월 매입 분석";
 		           		str += '<a href="javascript:void(0);" id="rightMonth">';
 		           		str +='<i class="ms-3 ri-arrow-right-s-line" style="font-size: 20px"></i></a>'
 					}else if(intMonth == 2){	// 2월이면
 						str += '<a href="javascript:void(0);" id="leftMonth">';
 		           		str += '<i class="me-3 ri-arrow-left-s-line" style="font-size: 20px"></i></a>';
-		           		str += (intYear-1)+"/12~"+year+"/"+month+ "월 매출 총이익 분석";
+		           		str += (intYear-1)+"/12~"+year+"/"+month+ "월 매입 분석";
 		           		str += '<a href="javascript:void(0);" id="rightMonth">';
 		           		str +='<i class="ms-3 ri-arrow-right-s-line" style="font-size: 20px"></i></a>'
 					}else{
 						str += '<a href="javascript:void(0);" id="leftMonth">';
 		           		str += '<i class="me-3 ri-arrow-left-s-line" style="font-size: 20px"></i></a>';
-		           		str += year+"/0"+(intMonth-2)+"~"+year+"/"+month+ "월 매출 총이익 분석";
+		           		str += year+"/0"+(intMonth-2)+"~"+year+"/"+month+ "월 매입 분석";
 		           		str += '<a href="javascript:void(0);" id="rightMonth">';
 		           		str +='<i class="ms-3 ri-arrow-right-s-line" style="font-size: 20px"></i></a>'
 					}
@@ -336,7 +336,7 @@ $(function(){
 					}
 					str += '<a href="javascript:void(0);" id="leftMonth">';
 	           		str += '<i class="me-3 ri-arrow-left-s-line" style="font-size: 20px"></i></a>';
-	           		str += intYear+"/"+pre+"~"+year+"/"+month+ "월 매출 총이익 분석";
+	           		str += intYear+"/"+pre+"~"+year+"/"+month+ "월 매입 분석";
 	           		str += '<a href="javascript:void(0);" id="rightMonth">';
 	           		str +='<i class="ms-3 ri-arrow-right-s-line" style="font-size: 20px"></i></a>'
 				}

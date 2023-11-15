@@ -181,7 +181,7 @@ public class OwnerInventoryController {
 			cell4.setCellValue(invent.getHdforwardPrice());
 			cell4.setCellStyle(formatCs);
 			
-			row.createCell(5).setCellValue(invent.getAtorderQy());
+			row.createCell(5).setCellValue(invent.getFrcsorderQy());
 			row.createCell(6).setCellValue(invent.getDlivyQy());
 
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");

@@ -105,7 +105,7 @@
 									<i class="mdi mdi-minus-circle me-2"></i> 좌석 삭제하기
 								</button>
 								
-								<button type="button" class="btn btn-light"	id="reBtn">
+								<button type="button" class="btn btn-primary" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="새로고침" id="reBtn">
 									<i class="mdi mdi-reload"></i>
 								</button>
 								
@@ -224,7 +224,7 @@ $(function(){
 		   if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
 		     
 		   	  Swal.fire({
-			      title: '알림창',
+			      title: '삭제 완료',
 			      icon: 'success',
 			      text: '삭제가 완료되었습니다!'
 			    }).then((result) => {

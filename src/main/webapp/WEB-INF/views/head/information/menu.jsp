@@ -89,7 +89,7 @@
 														<td style='text-align: center'><fmt:formatNumber value="${menu.menuPrice }"
 																type="number" />(원)</td>
 														<td style='text-align: center'><fmt:formatDate value="${menu.menuRsdate }"
-																pattern="yyyy/MM/dd" /></td>
+																pattern="yy/MM/dd" /></td>
 														<td style='text-align: center'>
 															<button type="button" class="btn btn-info btn-sm"
 																id="detailBtn" data-menucd="${menu.menuCd}">상세보기</button>
@@ -272,6 +272,20 @@ $(function() {
 	var searchForm = $("#searchForm");
 	var pagingArea = $("#pagingArea");
 	
+	function formatWon(number) {
+	    // 숫자를 한국 표준 통화 형식으로 포맷팅
+	    var formattedNumber = new Intl.NumberFormat('ko-KR', {
+	      style: 'currency',
+	      currency: 'KRW'
+	    }).format(number);
+	    
+	    // "₩" 통화 기호 제거
+	    formattedNumber = formattedNumber.replace("₩", "");
+	    
+	    // "(원)" 추가
+	    return formattedNumber + "(원)";
+	}
+	
 	// 페이징
 	pagingArea.on("click", "a", function(event){
 		event.preventDefault();
@@ -301,7 +315,7 @@ $(function() {
 				$("#modalMenuName").val(res.menuName);
 				$("#modalDescription").val(res.menuDes);
 				$("#modalCategory").val(res.menuCg);
-				$("#modalPrice").val(res.menuPrice);
+				$("#modalPrice").val(formatWon(res.menuPrice));
 				infoHeaderModal.modal("show");
 
 				// "수정" 버튼의 텍스트 변경

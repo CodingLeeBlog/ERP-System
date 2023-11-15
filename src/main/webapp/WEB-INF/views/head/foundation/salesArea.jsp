@@ -28,41 +28,32 @@
                         </div>
                         <!-- end page title -->
 
-                        <div class="row justify-content-xxl-around">
-                            <div class="col-xxl-3 col-md-6">
-                                <div class="card widget-inline" style="width: 410px;">
-                                    <div class="card-body p-3 m-1">
-                                        <div class="row g-0">
-                                            <div class="col-lg-12">
-                                                <div class="card rounded-0 shadow-none m-0">
-                                                    <div class="card-body text-left">
-                                                        <!-- <div class="spinner-grow text-success" role="status"></div> -->
-                                                        <h2><span>전체가맹점수</span></h2>
-                                                        <h3><span style="color:aquamarine">TOTAL : </span>${totalRecord }</h3>
-                                                        <p class="text-muted font-15 mb-0">최신 오픈매장 : ${latestInfoVO.frcsName }</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> <!-- end row -->
-                                    </div>
-                                </div> <!-- end card-box-->
-                            </div> <!-- end col-->
+					<div class="col-12">
+                        <div class="row">
+                            <div class="col-3">
+                               <div class="card rounded-0">
+                                     <div class="card-body text-left">
+                                         <!-- <div class="spinner-grow text-success" role="status"></div> -->
+                                         <h2><span>전체가맹점수</span></h2>
+                                         <h3><span style="color:aquamarine">TOTAL : </span>${totalRecord }</h3>
+                                         <p class="text-muted font-15">최신 오픈매장 : ${latestInfoVO.frcsName }</p>
+                                     </div>
+                                 </div>
+                   		</div> <!-- end col-->
 
-                            <div class="col-xxl-4 col-md-6">
-                                <div class="card ribbon-box" style="width: 480px; height: 220px;">
-                                    <div class="card-body p-4">
+                            <div class="col-9">
+                                <div class="card rounded-0 ribbon-box">
+                                 <div class="card-body">
                                         <div class="ribbon-two ribbon-two-success"><span>지점 매출</span></div>
-                                        <p class="m-1 mb-sm-2 font-20 text-primary fw-bold"> 안녕하세요 예비 가맹점주님!! </p>
-                                        <p class="m-1 mb-0 font-15 text">1982엘리 할머니 맥주에서는 예비 가맹점주님들께서 결정을 더 손쉽게 하실 수 있도록, 현재 가맹점들의
-                                            지역별 / 지점별 매출분석표를 제공하고있습니다.
-                                        </p>
-                                    </div> <!-- end card-body -->
+                                        <p class="m-2 mb-sm-2 font-20 text-primary fw-bold"> 안녕하세요 예비 가맹점주님!! </p>
+                                        <p class="m-2 mb-0 font-15 text">엘리 할머니 맥주에서는 예비 가맹점주님들께서 결정을 더 손쉽게 하실 수 있도록, 현재 가맹점들의 지역별 / 지점별 매출분석표를 제공하고있습니다. </p>
+                                        <p class="m-2 mb-0 font-15 text">검색버튼 옆 원하시는 지역의 가맹점을 조회하실 수 있습니다. 추가로 궁금하신사항 문의주신다면 친절히 안내해드리겠습니다.</p>
+                                        <p></p>
                                 </div> <!-- end card-->
+                           		 </div>
                             </div>
-
-
                         </div><!-- end row-->
-
+					</div>
 
                         <div class="row">
                         <div class="col-lg-12">
