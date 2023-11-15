@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.or.ddit.ServiceResult;
 import kr.or.ddit.service.head.IOfficeService;
 import kr.or.ddit.service.owner.IFrcsIdService;
 import kr.or.ddit.service.owner.IFrcsOfficialDocService;
@@ -43,6 +44,15 @@ public class OfficeLetterController {
 	@Inject
 	private IFrcsIdService idService;
 
+	/**
+	 * 공문 리스트를 가져오는 기능
+	 * 
+	 * @param currentPage
+	 * @param searchType
+	 * @param searchWord
+	 * @param model
+	 * @return
+	 */
 	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/officeLetter.do", method=RequestMethod.GET)
 	public String officeLetterList(
@@ -94,13 +104,12 @@ public class OfficeLetterController {
 	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@ResponseBody
 	@RequestMapping(value = "/officeLetterRegister.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
-	public ResponseEntity<String> officeLetterRegister(HttpServletRequest req, OfficeLetterVO officeLetterVO) {
+	public ResponseEntity<ServiceResult> officeLetterRegister(HttpServletRequest req, OfficeLetterVO officeLetterVO) {
 		
 		officeLetterVO.setHdLtcontent(officeLetterVO.getHdLtcontent().substring(officeLetterVO.getHdLtcontent().split(" ")[0].length() + 1));
-	    officeService.officeLetterRegister(req, officeLetterVO);
+	    ServiceResult result = officeService.officeLetterRegister(req, officeLetterVO);
 	    
-	    ResponseEntity<String> entity = new ResponseEntity<String>("{\"result\": \"OK\"}", HttpStatus.OK);
-	    return entity;
+	    return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_HEAD')")
@@ -120,12 +129,12 @@ public class OfficeLetterController {
 	@ResponseBody
 	@PreAuthorize("hasRole('ROLE_HEAD')")
 	@RequestMapping(value = "/officeLtDetailRegister.do")
-	public ResponseEntity<String> officeLtDetailRegister(@RequestBody List<HeadLtDetailVO> requestBody, AlarmVO alarmVO) {
+	public ResponseEntity<ServiceResult> officeLtDetailRegister(@RequestBody List<HeadLtDetailVO> requestBody, AlarmVO alarmVO) {
 	    
-	    officeService.officeLtDetailRegister(requestBody, alarmVO);
+	    ServiceResult result = officeService.officeLtDetailRegister(requestBody, alarmVO);
 
-	    ResponseEntity<String> entity = new ResponseEntity<String>("{\"result\": \"OK\"}", HttpStatus.OK);
-	    return entity;
+	    
+	    return new ResponseEntity<ServiceResult>(result, HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('ROLE_HEAD')")

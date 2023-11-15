@@ -593,9 +593,6 @@ $(function() {
 	var saveBtn = $("#saveBtn");
 
 	saveBtn.on("click", function() {
-		
-// 		var spanElement = document.querySelector('.CodeMirror-line span')
-// 	    var sendContent = spanElement.textContent; // simpleMDE의의 내용을 가져오도록 수정
 	    
 	    var sendContent = $('.CodeMirror-lines').text();
 		
@@ -780,16 +777,16 @@ $(function() {
     });
 
     // 발송 클릭 이벤트
-    var sendBtn = $(".sendBtn")
-    
-   sendBtn.on("click", function() {
+	var sendBtn = $(".sendBtn")
+	 
+	sendBtn.on("click", function() {
        
-      var hdLtno = $(this).data("hdltno");
+		var hdLtno = $(this).data("hdltno");
       
       
 //        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-       var displayContainer = document.querySelector('.container');
-       var selectedItems = [];
+	    var displayContainer = document.querySelector('.container');
+	    var selectedItems = [];
 
 //        checkboxes.forEach(function(checkbox) {
 //            checkbox.addEventListener('change', function() {
@@ -809,38 +806,38 @@ $(function() {
 //                }
 //            });
 //        });
-      var admin = '${member.memId}'
-      $('.region').on('change', 'input[type="checkbox"]', function () {
-         var selectedItemText = $(this).next('label').text();
-         var memId = $(this).closest('.text-left').find('.memId').val();
-         console.log(memId)
-         var selectedItemIndex = selectedItems.findIndex(function (item) {
-            return item.hdLtreciever === selectedItemText;
-         });
-      
-         if (this.checked) {
-            if (selectedItemIndex === -1) {
-               selectedItems.push({ hdLtreciever: selectedItemText, hdLtno: hdLtno, memId : memId, admin : admin });
-               updateDisplay();
-            }
-         } else {
-            if (selectedItemIndex !== -1) {
-               selectedItems.splice(selectedItemIndex, 1);
-               updateDisplay();
-            }
-         }
-         console.log(selectedItems)
-      });
+		var admin = '${member.memId}'
+		$('.region').on('change', 'input[type="checkbox"]', function () {
+		   var selectedItemText = $(this).next('label').text();
+		   var memId = $(this).closest('.text-left').find('.memId').val();
+		   console.log(memId)
+		   var selectedItemIndex = selectedItems.findIndex(function (item) {
+		      return item.hdLtreciever === selectedItemText;
+		   });
+		
+		   if (this.checked) {
+		      if (selectedItemIndex === -1) {
+		         selectedItems.push({ hdLtreciever: selectedItemText, hdLtno: hdLtno, memId : memId, admin : admin });
+		         updateDisplay();
+		      }
+		   } else {
+		      if (selectedItemIndex !== -1) {
+		         selectedItems.splice(selectedItemIndex, 1);
+		         updateDisplay();
+		      }
+		   }
+		   console.log(selectedItems)
+		});
 
-       function updateDisplay() {
-           displayContainer.innerHTML = '';
-
-           selectedItems.forEach(function(item) {
-               var selectedItem = document.createElement('div');
-               selectedItem.textContent = item.hdLtreciever;
-               displayContainer.appendChild(selectedItem);
-           });
-       }
+		function updateDisplay() {
+		    displayContainer.innerHTML = '';
+		
+		    selectedItems.forEach(function(item) {
+		        var selectedItem = document.createElement('div');
+		        selectedItem.textContent = item.hdLtreciever;
+		        displayContainer.appendChild(selectedItem);
+			});
+		}
        
        $("#insertBtn").on("click", function(){          
           $.ajax({

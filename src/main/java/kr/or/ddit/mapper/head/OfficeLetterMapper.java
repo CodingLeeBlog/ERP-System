@@ -15,10 +15,10 @@ public interface OfficeLetterMapper {
 
 	public List<OfficeLetterVO> selectLetterList(HeadPaginationInfoVO<OfficeLetterVO> pagingVO);
 	public int selectLetterCount(HeadPaginationInfoVO<OfficeLetterVO> pagingVO);
-	public void officeLetterRegister(OfficeLetterVO officeLetterVO);
+	public int officeLetterRegister(OfficeLetterVO officeLetterVO);
 	public void officeLetterAttachRegister(AttachVO attachVO);
 	public void officeLetterDelete(int hdLtno);
-	public void officeLtDetailRegister(HeadLtDetailVO headLtDetailVO);
+	public int officeLtDetailRegister(HeadLtDetailVO headLtDetailVO);
 	public OfficeLetterVO officeLetterDetail(OfficeLetterVO officeLetterVO);
 	public OfficeLetterVO officeLetterDetail(int hdLtno);
 	public void deleteChildRecords(int hdLtno);
