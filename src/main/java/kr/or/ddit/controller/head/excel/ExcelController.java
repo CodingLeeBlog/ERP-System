@@ -128,7 +128,7 @@ public class ExcelController {
     	try {
     		
     		// 업로드 받은 파일을 저장할 경로
-    		String uploadFolder = "D:\\99.JSP_SPRING\\02. SPRING2\\uploadExcel";
+    		String uploadFolder = "D:\\99.JSP_SPRING\\02.SPRING2\\upload";
     		// 파일 복사
     		File fileUpload = new File(uploadFolder, excelFile.getOriginalFilename());
     		excelFile.transferTo(fileUpload);

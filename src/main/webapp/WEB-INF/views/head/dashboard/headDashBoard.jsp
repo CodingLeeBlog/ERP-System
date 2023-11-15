@@ -354,29 +354,47 @@ tr > td {
 		</div>
 	</div>
 	
-	 <!-- 슬라이드 -->   
-		<c:set value="${officeLetterList}" var="list" />
-		<c:set value="${openFranchise}" var="op" />
-	    <c:set value="${dataList }" var="data" />
-	    <c:set value="${counselList }" var="counsel" />
-		<div class="col-12 card widget-inline" style="height: 50px; background-color: #65A4BE; display: flex; justify-content: space-between;">
-		    <div id="scrolling-text-container" class="text-center p-1">
-		        <c:forEach items="${list}" var="officelist" begin="0" end="0">
-		   			 <c:forEach items="${op}" var="open" begin="0" end="0">
-						<c:forEach items="${data }" var="dt" begin="0" end="0">
-								<c:forEach items="${counsel }" var="counsel" begin="0" end="0">
-		            <div id="scrolling-text" style="color: #fff; font-size: 16px; font-weight: bold;">
-		                      <i class="ri-send-plane-2-fill text-white"></i>&nbsp;<a href="/head/officeLetter.do" class="text-warning fw-bold fs-4 text"> ${officelist.frcsOfldcSndpty }</a>님이 보낸 공문을 확인해주세요! 오늘 공문은 <a href="/head/officeLetter.do" class="text-warning fw-bold fs-3 text"> ${officeLetterCount }</a>
-		            	건입니다! &nbsp;&nbsp;&nbsp;&nbsp; <i class="ri-send-plane-2-fill text-white"></i> &nbsp; 오픈 매장 <a href="/head/plan.do" class="text-warning fw-bold fs-4 text"> ${open.frcsName }</a>을 확인해주세요!&nbsp; 최근 오픈 매장은 <a href="/head/plan.do" class="text-warning fw-bold fs-3 text">${openCount }</a>건 입니다!
-		            	&nbsp;&nbsp;&nbsp;&nbsp;<i class="ri-send-plane-2-fill text-white"></i> &nbsp; 최근 가맹점 주문 <a href="/head/storeOrderHistory.do" class="text-warning fw-bold fs-4 text">${dt.frcsName }</a>을 확인해주세요!&nbsp; 가맹점 주문은 <a href="/head/plan.do" class="text-warning fw-bold fs-3 text">${orderCount }</a>건 입니다!
-		            	&nbsp;&nbsp;&nbsp;&nbsp;<i class="ri-send-plane-2-fill text-white"></i> &nbsp; 창업 문의 <a href="/head/counseling.do" class="text-warning fw-bold fs-4 text">${counsel.ownerName}님</a>의 가맹 문의를 확인해주세요!&nbsp; 창업 문의는 <a href="/head/dashboard.do" class="text-warning fw-bold fs-3 text">${counselCount }</a>건 입니다!</div>
-				        	</c:forEach>
-				        </c:forEach>
-			        </c:forEach>
-		        </c:forEach>
-		    </div>
-		</div>
-				
+<!-- 슬라이드 -->  
+	 
+<c:set value="${officeLetterList}" var="list" />
+<c:set value="${openFranchise}" var="op" />
+<c:set value="${dataList}" var="data" />
+<c:set value="${counselList}" var="counsel" />
+
+<div class="col-12 card widget-inline" style="height: 50px; background-color: #65A4BE; display: flex; justify-content: space-between;">
+    <div id="scrolling-text-container" class="text-center p-1">
+        <c:choose>
+            <c:when test="${not empty list or not empty op or not empty data or not empty counsel}">
+                <div id="scrolling-text" style="color: #fff; font-size: 16px; font-weight: bold;">
+                    <c:if test="${not empty list}">
+                        <i class="ri-send-plane-2-fill text-white"></i>&nbsp;<a href="/head/officeLetter.do" class="text-warning fw-bold fs-4 text">${list[0].frcsOfldcSndpty}</a> 님이 보낸 공문을 확인해주세요! 오늘 공문은 <a href="/head/officeLetter.do" class="text-warning fw-bold fs-3 text">${officeLetterCount}</a>건입니다!
+                    </c:if>
+                    <c:if test="${not empty op}">
+                        &nbsp;&nbsp;&nbsp;&nbsp; <i class="ri-send-plane-2-fill text-white"></i> &nbsp; 
+                        오픈 매장 <a href="/head/plan.do" class="text-warning fw-bold fs-4 text">${open[0].frcsName}</a>을 확인해주세요!&nbsp; 최근 오픈 매장은 <a href="/head/plan.do" class="text-warning fw-bold fs-3 text">${openCount}</a>건 입니다!
+                    </c:if>
+                    <c:if test="${not empty data}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;<i class="ri-send-plane-2-fill text-white"></i> &nbsp; 
+                        최근 가맹점 주문 <a href="/head/storeOrderHistory.do" class="text-warning fw-bold fs-4 text">${data[0].frcsName}</a>을 확인해주세요!&nbsp; 가맹점 주문은 <a href="/head/plan.do" class="text-warning fw-bold fs-3 text">${orderCount}</a>건 입니다!
+                    </c:if>
+                    <c:if test="${not empty counsel}">
+                        &nbsp;&nbsp;&nbsp;&nbsp;<i class="ri-send-plane-2-fill text-white"></i> &nbsp; 
+                        창업 문의 <a href="/head/counseling.do" class="text-warning fw-bold fs-4 text">${counsel[0].ownerName}님</a>의 가맹 문의를 확인해주세요!&nbsp; 창업 문의는 <a href="/head/dashboard.do" class="text-warning fw-bold fs-3 text">${counselCount}</a>건 입니다!
+                    </c:if>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <!-- 하나라도 데이터가 없을 때의 처리 -->
+                <div id="scrolling-text" style="color: #fff; font-size: 16px; font-weight: bold;">
+                    데이터가 없습니다.
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</div>
+
+	 
+
 				</div>
 			</div>
 		</div>

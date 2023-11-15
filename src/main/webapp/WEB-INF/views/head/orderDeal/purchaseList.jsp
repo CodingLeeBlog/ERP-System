@@ -51,12 +51,25 @@
                                               </select>
                                           </div>
                                       </div>
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <div class="input-group">
                                                 <label for="inputPassword2" class="visually-hidden">Search</label>
                                               <input type="search" class="form-control" id="inputPassword2" placeholder="Search">
                                                 <button type="button" class="btn btn-secondary">검색</button>
                                             </div>
+                                      </div>
+                                      <div class="col-2">
+                                            <div class="col-12">
+                                               <span style="color: red; font-weight: bold;">11월 TOTAL :</span><span id="monthTotal" style="font-weight: bold;">
+                                               <fmt:formatNumber value="${thisMonth }" type="number"/>(원)   
+                                               </span>      
+                                            </div>
+                                            <div class="col-12">
+                                               <span style="color: red; font-weight: bold;">금일 TOTAL :</span><span id="dayTotal" style="font-weight: bold;">
+                                               <fmt:formatNumber value="${thisDay }" type="number"/>(원)
+                                               </span>
+                                            </div>
+                                          
                                       </div>
                                       <sec:csrfInput/>
                                   </form>                            
@@ -64,7 +77,7 @@
                               
                               <div class="col-xl-2">
                                   <div class="text-xl-end mt-xl-0 mt-2">
-                                     	<button id="orderBtn" type="button" class="btn btn-success mb-2 fw-bold">발주하기</button>
+                                        <button id="orderBtn" type="button" class="btn btn-success mb-2 fw-bold">발주하기</button>
                                   </div>
                               </div><!-- end col-->
                           </div>
@@ -76,7 +89,7 @@
                               <table id="myTable" class="table table-centered table-nowrap mb-0 table-hover">
                                   <thead class="table-light">
                                       <tr>
-                                      		<th></th>
+                                            <th></th>
                                           <th style="text-align:center; width:100px;">순번</th>
                                             <th style="text-align:center; width:200px;">거래처코드</th>
                                           <th style="text-align:center; width:200px;">거래처명</th>
@@ -91,7 +104,7 @@
                                   <tbody>
                                   <c:forEach items="${dataList }" var="list" varStatus="status">
                                       <tr class="trlist">
-                                      	<td><input class="orderNo" type="hidden" value="${list.hdorderNo }"></td>
+                                         <td><input class="orderNo" type="hidden" value="${list.hdorderNo }"></td>
                                           <td style="text-align:center">${list.rnum }</td>
                                             <td style="text-align:center">${list.vdCode }</td>
                                           <td style="text-align:center">${list.vdName }</td>
@@ -109,19 +122,19 @@
                                              </a>
                                              <c:if test="${list.hdorderConfm eq '반려'}"><button type="button" class="cancelReason btn btn-info fw-bold" data-bs-toggle="modal" data-bs-target="#bs-example-modal-lg">반려사유</button>
                                              <div id="bs-example-modal-lg" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-											    <div class="modal-dialog modal-sm modal-dialog-centered">
-											        <div class="modal-content">
-											            <div class="modal-body p-4">
-											                <div class="text-center">
-											                    <i class="ri-alert-line h1 text-warning"></i>
-											                    <h3 class="mt-2">반려사유</h3>
-											                    <h4 class="mt-3">${list.hdorderReturn }</h4>
-											                    <button type="button" class="btn btn-warning my-2" data-bs-dismiss="modal">확인</button>
-											                </div>
-											            </div>
-											        </div>
-											    </div>
-											 </div>
+                                     <div class="modal-dialog modal-sm modal-dialog-centered">
+                                         <div class="modal-content">
+                                             <div class="modal-body p-4">
+                                                 <div class="text-center">
+                                                     <i class="ri-alert-line h1 text-warning"></i>
+                                                     <h3 class="mt-2">반려사유</h3>
+                                                     <h4 class="mt-3">${list.hdorderReturn }</h4>
+                                                     <button type="button" class="btn btn-warning my-2" data-bs-dismiss="modal">확인</button>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>
+                                  </div>
                                              </c:if>
                                           </td>
                                           <td class="cancelBtn" style="text-align:center;">
@@ -200,14 +213,14 @@
       var totalPrice = 0;
       
       trlist.each(function(){
-    	  var priceText = $(this).find("td:eq(7)").text().trim();
-    	  var price = parseInt(priceText.replace(/,/g, '')); // 쉼표를 제거하고 숫자로 변환
-    	  var hdorderConfm = $(this).closest("tr").find("td:eq(6)").text(); // 승인/반려 상태
-    	  
-    	  if(hdorderConfm === "승인"){
-    		  totalPrice += price;  
-    	  }
-    	  
+         var priceText = $(this).find("td:eq(7)").text().trim();
+         var price = parseInt(priceText.replace(/,/g, '')); // 쉼표를 제거하고 숫자로 변환
+         var hdorderConfm = $(this).closest("tr").find("td:eq(6)").text(); // 승인/반려 상태
+         
+         if(hdorderConfm === "승인"){
+            totalPrice += price;  
+         }
+         
       });
       
       console.log(totalPrice);
@@ -216,90 +229,90 @@
       totalPrices.html(totalPrice.toLocaleString() + "(원)");
       
       $("#orderBtn").on("click", function(){
-    	  location.href= '/head/purchaseListOrder.do'; 
+         location.href= '/head/purchaseListOrder.do'; 
       })
       
       $(".detailBtn").on("click", ".cancelDetail", function(){
-    	  var hdorderConfm = $(this).closest("tr").find("td:eq(6)").text(); // 승인/반려 상태
-    	  var hdorderConfmBtn = $(this).closest("tr").find("td:eq(8)").text().trim(); // 상세 버튼 텍스트
-    	  
-    	  if(hdorderConfm === '취소'){
-    		  return false;
-    	  }
+         var hdorderConfm = $(this).closest("tr").find("td:eq(6)").text(); // 승인/반려 상태
+         var hdorderConfmBtn = $(this).closest("tr").find("td:eq(8)").text().trim(); // 상세 버튼 텍스트
+         
+         if(hdorderConfm === '취소'){
+            return false;
+         }
       });
       
       $(".cancelBtn").on("click", ".cancel", function(){
-    	  var vdCode = $(this).closest("tr").find("td:eq(2)").text();		// 거래처코드
-    	  var vdName = $(this).closest("tr").find("td:eq(3)").text();		// 거래처명
-    	  var hdorderDate = $(this).closest("tr").find("td:eq(4)").text();	// 발주일자
-    	  var hdorderConfm = $(this).closest("tr").find("td:eq(6)").text(); // 승인/반려 상태
-    	  var hdorderConfmBtn = $(this).closest("tr").find("td:eq(8)").text().trim(); 
-    	  var hdNo = $(this).closest("tr").find(".orderNo").val();		// 발주번호
-    	  
-    	  console.log(vdCode);
-    	  console.log(vdName);
-    	  console.log(hdorderDate);
-    	  console.log(hdorderConfm);
-    	  console.log(hdNo);
-    	  console.log(hdorderConfmBtn);
-    	  
-    	  if(hdorderConfm === '승인'){
-    		  Swal.fire({
-		            title: "취소하시겠습니까?",
-		            text: "다시 되돌릴 수 없습니다. 신중하세요.",
-		            input: 'text',
-		            inputPlaceholder:'취소사유 입력',
-		            icon: "warning",
-		            showCancelButton: true,
-		            confirmButtonColor: '#3085d6',
-		            cancelButtonColor: '#d33',
-		            confirmButtonText: "확인",
-		            cancelButtonText: "취소",
-		            // 확인 버튼 시 반려처리
-		            preConfirm: function() {
-		            	
-		            	var hdorderNo = {"hdorderNo" : hdNo};
-		            	
-		            	$.ajax({
-			           		type: "POST",
-			           		url : "/head/updateCancelOrderList.do",
-			           		beforeSend : function(xhr){	// csrf토큰 보내기 위함
-			    				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");	//key value로 보낸다.
-			    			},
-			    			contentType : "application/json; charset=utf-8",
-			           		data : JSON.stringify(hdorderNo),
-			    			success: function (res) {
-	 		    			    if(res === "OK"){
-	 		    			    	
-	 		    			    	Swal.fire({
-	 		    			            title: "알림",
-	 		    			            text: "취소처리 되었습니다",
-	 		    			            confirmButtonText: "확인",
-	 		    			            icon: "success",
-	 		    			            preConfirm: function () {
-	 		    			                location.href = "/head/purchaseList.do";
-	 		    			            }
-	 		    			        });
-	 		    			    }
-			    			}
-			           	});
-		            	
-		            	
-		            },
-		        });
-		    	// SweetAlarm 끝
-		    	
-    	  }
+         var vdCode = $(this).closest("tr").find("td:eq(2)").text();      // 거래처코드
+         var vdName = $(this).closest("tr").find("td:eq(3)").text();      // 거래처명
+         var hdorderDate = $(this).closest("tr").find("td:eq(4)").text();   // 발주일자
+         var hdorderConfm = $(this).closest("tr").find("td:eq(6)").text(); // 승인/반려 상태
+         var hdorderConfmBtn = $(this).closest("tr").find("td:eq(8)").text().trim(); 
+         var hdNo = $(this).closest("tr").find(".orderNo").val();      // 발주번호
+         
+         console.log(vdCode);
+         console.log(vdName);
+         console.log(hdorderDate);
+         console.log(hdorderConfm);
+         console.log(hdNo);
+         console.log(hdorderConfmBtn);
+         
+         if(hdorderConfm === '승인'){
+            Swal.fire({
+                  title: "취소하시겠습니까?",
+                  text: "다시 되돌릴 수 없습니다. 신중하세요.",
+                  input: 'text',
+                  inputPlaceholder:'취소사유 입력',
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: "확인",
+                  cancelButtonText: "취소",
+                  // 확인 버튼 시 반려처리
+                  preConfirm: function() {
+                     
+                     var hdorderNo = {"hdorderNo" : hdNo};
+                     
+                     $.ajax({
+                          type: "POST",
+                          url : "/head/updateCancelOrderList.do",
+                          beforeSend : function(xhr){   // csrf토큰 보내기 위함
+                         xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");   //key value로 보낸다.
+                      },
+                      contentType : "application/json; charset=utf-8",
+                          data : JSON.stringify(hdorderNo),
+                      success: function (res) {
+                           if(res === "OK"){
+                              
+                              Swal.fire({
+                                   title: "알림",
+                                   text: "취소처리 되었습니다",
+                                   confirmButtonText: "확인",
+                                   icon: "success",
+                                   preConfirm: function () {
+                                       location.href = "/head/purchaseList.do";
+                                   }
+                               });
+                           }
+                      }
+                       });
+                     
+                     
+                  },
+              });
+             // SweetAlarm 끝
+             
+         }
       });
       
    // 페이지 접속 또는 새로고침 시 행마다 반복하며 조건에맞는 행은 체크박스 disable, line-through처리
-  	$('.trlist').each(function() {
-  	    var statusCheck = $(this).closest('tr').find('td:eq(6)').text().trim();
-  	    
-  	    if (statusCheck === "취소" || statusCheck === "반려") {
-  	        $(this).closest('tr').css('text-decoration', 'line-through');
-  	    }
-  	});
+     $('.trlist').each(function() {
+         var statusCheck = $(this).closest('tr').find('td:eq(6)').text().trim();
+         
+         if (statusCheck === "취소" || statusCheck === "반려") {
+             $(this).closest('tr').css('text-decoration', 'line-through');
+         }
+     });
       
    });
    

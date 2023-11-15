@@ -103,11 +103,15 @@
 								<div class="row">
 									<div class="col-1"></div>
 									<div class="col mt-3">
-										<div class="row justify-content-center" style="font-size: 40px;">결제내역</div>
+										<div class="row justify-content-center" style="font-size: 40px;">결제 정보</div>
 										<div class="mt-4 mb-4" style="color: #5a5a5a; border-bottom: 3px dashed;"></div>
 										<div class="row mb-4">
 										<div class="col text-start">예 약 번 호</div>
 										<div class="col text-end resvNo"></div>
+										</div>
+										<div class="row mb-4">
+										<div class="col text-start">가 맹 점 명</div>
+										<div class="col text-end resvfrcsName"></div>
 										</div>
 										<div class="row mb-4">
 										<div class="col text-start">결 제 일 자</div>
@@ -291,9 +295,11 @@ $(function(){
 		
 		var memId = '${member.memId}';
 		var resvNo = $(this).closest(".row").find(".resvNo").text();
+		var frcsName = $(this).closest(".row").find(".name").val();
 		var resvDate = $(this).closest(".row").find(".resvDate").text();
 		
         $(".resvNo").html(resvNo);
+        $(".resvfrcsName").html(frcsName);
         $(".resvDate").html(resvDate);
 		
 		$("#cancelModal").modal("show");

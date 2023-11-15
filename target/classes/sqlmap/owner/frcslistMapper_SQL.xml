@@ -11,6 +11,7 @@
 <!-- 		where frcs_add1 like '%'||#{frcsAdd1}||'%' -->
 <!-- </select> -->
 
+<!-- 매장 조회 -->
 <select id="findStore" parameterType="franchiseVO" resultType="franchiseVO">
 	select
 	    a.frcs_id, frcs_name, frcs_state, frcs_tel, frcs_stdate, frcs_enddate, frcs_post, frcs_add1, frcs_add2, frcs_sttime, frcs_endtime, frcs_cdate, frcs_insdate, frcs_inedate, frcs_opdate, frcs_xmap, frcs_ymap, frcs_star, frcs_psncpa, b.frcs_id, b.mem_id, c.resv_no, c.mem_id, c.resv_yn, c.review_yn

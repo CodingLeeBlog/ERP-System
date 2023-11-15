@@ -160,10 +160,10 @@ $(function(){
 	    });
 	}
 			
-	// 중심점에서 반경 10km 이내의 원형 영역 그리기
+	// 중심점에서 반경 5km 이내의 원형 영역 그리기
 	var circle = new kakao.maps.Circle({
 	    center: new kakao.maps.LatLng(myXMap, myYMap), // 중심 좌표 설정
-	    radius: 10000, // 미터단위
+	    radius: 5000, // 미터단위
 	    strokeWeight: 3, // 선의 두께 설정
 	    strokeColor: '#75B8FA', // 선의 색깔 설정
 	    strokeOpacity: 0.4, // 선의 불투명도 설정
@@ -198,7 +198,7 @@ $(function(){
 		},
 		success : function(res){
 			// 반경 10km 안에 있는 가맹점은 가맹점코드를 따로 배열에 저장하기 > 리스트로 출력해줘야해서...	
-			var radius = 10000; // 10km 반경 (미터)
+			var radius = 5000; // 10km 반경 (미터)
 			
 			
 			for(var i=0; i<res.length; i++){
@@ -229,7 +229,7 @@ $(function(){
 		            var distance = getDistance(myXMap, myYMap, otherXMap, otherYMap);
 		
 		            // 10km 이내에 있는 가맹점들을 nearList에 추가
-	                if (distance <= 10) {
+	                if (distance <= 5) {
 	                    nearList.push(otherFrcsId);
 	                }
 					

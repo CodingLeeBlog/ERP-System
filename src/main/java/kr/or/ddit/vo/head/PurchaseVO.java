@@ -14,18 +14,18 @@ public class PurchaseVO {
    private int hdordertotalPrice;      // 총발주금액
    private String hdorderConfm;      // 승인여부
    private Date hdorderconfmDate;      // 승인일시
-   private String hdorderReturn;		// 반려사유
+   private String hdorderReturn;      // 반려사유
    
    // 거래처
    private String vdName;            // 거래처이름
-   private String vdPhone;			// 거래처전화번호
-   private String vdPost;			// 거래처우편번호
+   private String vdPhone;         // 거래처전화번호
+   private String vdPost;         // 거래처우편번호
    private String vdAdd1;            // 거래처기본주소
    private String vdAdd2;            // 거래처상세주소
-   private String vdManager;		// 거래처담당자
-   private String vdEmail;			// 거래처메일
+   private String vdManager;      // 거래처담당자
+   private String vdEmail;         // 거래처메일
    private String vdCategory;         // 거래처분류
-   private String vdEtc;			// 의견
+   private String vdEtc;         // 의견
    private int rnum;
    
    // 본사발주상세
@@ -53,4 +53,7 @@ public class PurchaseVO {
    private String hdprodLifestartday;   // 본사유통기한시작일
    private String hdprodLifeendday;   // 본사유통기한종료일
    private int hdrtrcvPrice;         // 본사최종입고단가
+   
+   private int thisMonth;          // 금월 총계
+   private int thisDay;            // 금일 총계
 }
