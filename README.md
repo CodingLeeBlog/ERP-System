@@ -48,7 +48,7 @@
 	<a href="mailto:admin@yermi.co.kr">
 		<img src="https://img.shields.io/badge/Mail-30B980?style=flat&logo=Gmail&logoColor=white" />
 	</a>
-	<a href="https://www.notion.so/First-Project-Planning-dd7a387deb16483a83a8514bb124d4bb?pvs=4">
+	<a href="https://iris-willow-ec1.notion.site/First-Project-Planning-dd7a387deb16483a83a8514bb124d4bb?pvs=4">
 		<img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=Notion&logoColor=white" />
 	</a>
 </div>
